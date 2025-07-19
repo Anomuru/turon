@@ -1,0 +1,38 @@
+@import "app/styles/abstracts/mixins"
+@import "app/styles/abstracts/variables"
+
+.employer
+  width: 100%
+  //background: #00C2FF
+  height: 56rem
+  //overflow: hidden
+  overflow: auto
+  position: relative
+  .thead
+    position: sticky
+    top: 0
+  .checkbox__minus
+    height: 30px
+    width: 30px
+    background: #F43F5E
+    display: flex
+    justify-content: center
+    align-items: center
+    border-radius: 5px
+    @include btn-active
+    i
+      color: white
+  .checkbox__checked
+    height: 30px
+    width: 30px
+    background: #22C55E
+    border-radius: 5px
+
+    display: flex
+    justify-content: center
+    align-items: center
+    i
+      color: white
+  .delete
+    i
+      color: $color-danger

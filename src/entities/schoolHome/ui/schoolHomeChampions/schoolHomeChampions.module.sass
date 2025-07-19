@@ -1,0 +1,109 @@
+@import "app/styles/abstracts/variables"
+
+.champions
+  display: flex
+  flex-direction: column
+  padding: 6rem 15rem
+  gap: 3rem
+  &__title
+    display: flex
+    justify-content: space-between
+    h1
+      color: $btn-switch-school
+      font-size: 3.2rem
+      font-weight: 700
+  &__locations
+    display: flex
+    gap: .8rem
+    span
+      background: var(--Background-Brand-Tertiary, #F5F5F5)
+      color: #757575
+      padding: .8rem
+      border-radius: .8rem
+      font-size: 1.6rem
+  &__container
+    overflow: hidden
+    padding: 1rem
+
+  &__wrapper
+    display: flex
+    gap: 8rem
+  &__item
+    max-width: 34.5rem
+    max-height: 49rem
+    display: flex
+    flex-direction: column
+    box-shadow: rgba(0, 0, 0, 0.24) 0 3px 8px
+    .info
+      padding: 2rem
+      display: flex
+      flex-direction: column
+      gap: 2rem
+
+      &__header
+        //padding: 1.7rem
+        display: flex
+        width: 100%
+        align-items: center
+        justify-content: space-between
+        &__name
+          font-size: 2rem
+          color: #96BB7C
+          font-weight: bold
+        &__ratingBox
+          display: flex
+          align-items: center
+          justify-content: center
+          gap: 1rem
+          padding: 1rem
+          background: #072E92
+          border-radius: 20px
+          &__ratingImg
+            width: 1.7rem
+          p
+            font-size: 1.7rem
+            color: white
+            font-weight: bold
+      p
+        font-size: 1.8rem
+        letter-spacing: .2rem
+      h2
+        font-size: 1.7rem
+        font-weight: bold
+
+@media (max-width: 430px)
+  .champions
+    padding: 3rem 2rem
+    gap: 2rem
+    &__title
+      align-items: center
+      h1
+        font-size: 1.6rem
+    &__locations
+      span
+        font-size: 1.2rem
+    &__item
+      img
+        width: 26rem
+        height: 22.3rem
+      .info
+        &__header
+          &__name
+            font-size: .9rem
+          &__ratingBox
+            width: 3.7rem
+            height: 2rem
+            gap: .4rem
+            &__ratingImg
+              width: 1rem
+            p
+              font-size: .9rem
+        p
+          font-size: .9rem
+        h2
+          font-size: 1.2rem
+
+@media (max-width: 320px)
+  .champions
+    padding: 3rem 1rem
+

@@ -1,0 +1,124 @@
+@import "app/styles/abstracts/variables"
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@100;200;300;400;600;700;800;900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Risque&family=Space+Grotesk:wght@300..700&display=swap')
+
+.champions
+  display: flex
+  flex-direction: column
+  padding: 6rem 15rem
+
+  &__title
+    display: flex
+    justify-content: space-between
+
+    h1
+      color: $btn-switch-school
+      font-size: 3.2rem
+      font-weight: 700
+
+  &__locations
+    display: flex
+    gap: .8rem
+
+    span
+      background: var(--Background-Brand-Tertiary, #F5F5F5)
+      color: #757575
+      padding: .8rem
+      border-radius: .8rem
+      font-size: 1.6rem
+
+
+  &__container
+    display: flex
+    justify-content: center
+    margin-top: 5rem
+    gap: 8rem
+    flex-wrap: wrap
+
+    &_box
+      border-radius: 10px
+      transition: 1s all
+      box-shadow: 0 0 5px 0
+
+      &:hover
+        transform: scale(1.1)
+
+      img
+        border-radius: 10px 10px 0 0
+        object-fit: cover
+
+      &_info
+        display: flex
+        justify-content: center
+        flex-direction: column
+        align-items: center
+        padding: 3.6rem
+
+        h2
+          font-size: 2.4rem
+          font-weight: 400
+          color: rgba(0, 0, 0, 1)
+          font-family: "Blinker", sans-serif
+
+        & > div
+          background-color: rgba(0, 27, 97, 1)
+          color: rgba(255, 255, 255, 1)
+          font-size: 1.6rem
+          font-family: "Blinker", sans-serif
+          font-weight: 400
+          padding: 1.2rem
+          border-radius: 10px
+          margin-top: 10px
+          cursor: pointer
+
+  &__footer
+    display: flex
+    justify-content: space-around
+    flex-wrap: wrap
+    margin-top: 5rem
+    gap: 8rem
+
+    &_box
+      border-radius: 10px
+      transition: 1s all
+
+      &_img
+        background-color: rgba(0, 27, 97, 1)
+        padding: 5rem
+        border-radius: 10px
+
+        img
+
+          object-fit: cover
+
+      &_info
+        display: flex
+        justify-content: center
+        flex-direction: column
+        align-items: center
+        padding: 3.6rem
+
+        h2
+          font-size: 3.2rem
+          font-weight: 600
+          color: rgba(0, 0, 0, 1)
+          font-family: "Blinker", sans-serif
+
+        & > div
+          background-color: rgba(34, 197, 94, 1)
+          color: rgba(255, 255, 255, 1)
+          font-size: 1.6rem
+          font-family: "Blinker", sans-serif
+          font-weight: 400
+          padding: 1.2rem
+          border-radius: 10px
+          margin-top: 10px
+          cursor: pointer
+
+@media (max-width: 800px)
+
+  .champions
+    padding: .5rem
+    &__title
+      padding: 2rem
+    &__locations
+      display: none

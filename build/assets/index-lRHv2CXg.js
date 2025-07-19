@@ -1,0 +1,1 @@
+import{R as a,a as c}from"./filterRoomsSlice-ClpK4_Fa.js";import"./index-Cux8sda1.js";import"./room_image-CsXp1EfD.js";import"./switch-sjHY-EbU.js";import"./modal-BR27MEf1.js";import"./cross-BXlnQeE0.js";import"./filters.module-C8GjSCwu.js";const s=o=>o.filteredRoomsSlice?.rooms;export{a as RoomsFilter,c as filteredRoomsSlice,s as getFilteredRooms};

@@ -1,0 +1,1 @@
+export const getVissionData = (state) => state.visionSchoolSlice.data

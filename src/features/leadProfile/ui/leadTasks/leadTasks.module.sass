@@ -1,0 +1,86 @@
+@import "app/styles/abstracts/variables"
+
+
+.tasks
+  width: 50%
+  background-color: white
+  min-height: 50rem
+  display: flex
+  flex-direction: column
+  align-items: center
+  padding: 1rem
+  &__wrapper
+    width: 100%
+    height: 70%
+    flex-grow: 1
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 2rem
+    padding: 2rem
+    .task
+      width: 85%
+      background-color: #f3f3f3
+      //box-shadow: $box-shadow
+      border-radius: 15px
+      padding: 2rem
+      &__header
+        display: flex
+        align-items: center
+        justify-content: space-between
+        margin-bottom: 1rem
+        h1
+          font-size: 1.7rem
+        .change
+          background-color: $color-school-main
+          display: flex
+          align-items: center
+          justify-content: center
+          border-radius: 50%
+          width: 3rem
+          height: 3rem
+          fill: black
+      &__footer
+        margin-top: 1rem
+        display: flex
+        justify-content: flex-end
+        align-items: center
+
+      .comment
+        font-size: 1.5rem
+
+
+
+  &__form
+    width: 95%
+    display: flex
+    border-radius: 10px
+    border: 1px solid #8c8c8c
+    position: relative
+    padding: 2rem
+    form
+      display: flex
+      flex-direction: column
+      gap: 1.5rem
+      width: 100%
+    .date
+      position: absolute
+      width: 18rem
+      border: 1px solid $color-grey-dark
+      padding: 1rem
+      border-radius: 10px
+      top: 1rem
+      right: 1rem
+    .title
+      width: 35rem
+      border: none
+      outline: none
+      font-size: 1.7rem
+    textarea
+      border: none
+      outline: none
+      font-size: 1.6rem
+      resize: none
+      height: 5rem
+    hr
+      width: 100%

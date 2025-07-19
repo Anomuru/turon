@@ -1,0 +1,1 @@
+import{a as r,u as s,A as t,h as c}from"./index-Cux8sda1.js";const o=r("TeacherProfileSlice/fetchTeacherProfileData",async e=>{const{request:a}=s();return a(`${t}Teachers/teachers/${e}/`,"GET",null,c())});export{o as f};

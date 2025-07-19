@@ -1,0 +1,110 @@
+@import "app/styles/abstracts/variables"
+@import "app/styles/abstracts/mixins"
+@import "app/styles/themes/center"
+@import "app/styles/themes/school"
+
+
+.btn
+  display: flex
+  justify-content: center
+  gap: 5px
+  font-weight: 700
+  align-items: center
+  //width: 35rem
+  width: fit-content
+  //height: fit-content
+  padding: 10px 20px 10px 20px
+  color: #F5F5F5
+  border-radius: 5px
+  cursor: pointer
+  outline: none
+  text-transform: capitalize
+  margin: 5px
+  @include btn-active
+  //border: 2px solid #008ac6
+  background-color: $btn-gennis
+  border: none
+  transition: .1s all
+  &:hover
+    background: none
+    border: none
+    color: black
+    box-shadow: 0 0 4px 0
+  img
+    width: 16px
+  &.simple
+    @include btn-active
+    color: white
+    border: 2px solid var(--btn-border-color)
+    background-color: var(--btn-bg-color)
+  &.simple__add
+    color: var(--btn-bg-color)
+    background: none
+    border: none
+
+    font-weight: 600
+    font-size: 1.5rem
+  &.success
+    @include btn-active
+    background-color: $btn-success
+    border: 2px solid #BBF7D0
+    &:hover
+      color: white
+
+  &.danger
+    @include btn-active
+    background-color: $btn-danger
+    border: 1px solid #fecdd3
+    color: white
+    &:hover
+      color: white
+
+  &.warning
+    @include btn-active
+    background-color: $btn-warning
+    border: 2px solid #FEF08A
+
+  &.disabled
+    background: #eeeeee
+    border: none
+    backdrop-filter: blur(5px)
+    color: #9f9d9d
+    cursor: not-allowed
+    transform: none
+    transition: .5s all
+
+  &.star
+    @include btn-active
+    padding: 0
+    width: 50px
+    height: 50px
+    border-radius: 50%
+    border: none
+    background-color: $btn-gennis
+    img
+      transform: translate(0, -1px)
+  &.filter
+    background-color:  #F3F3F3
+    color: #1E1E1E
+    border: 1px solid #7F7F7F
+    //width: 12rem
+  &.login
+    background-color: #2C2C2C
+    border: none
+    color: #F5F5F5
+    //width: 15.2rem
+  &.editPlus
+    width: 60px
+    height: 60px
+    background: $search-background
+    color: $gennis-back-color
+    font-size: 21px
+    border-radius: 15px
+    transition: all .1s
+  &.delete
+    width: 35px
+    height: 40px
+    background: $btn-danger
+    font-size: 18px
+    border-radius: 15px
+    transition: all .1s

@@ -1,0 +1,13 @@
+.create {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.create__input {
+  margin: 0 !important;
+}
+.create__btn {
+  align-self: flex-end;
+}
+
+/*# sourceMappingURL=timeTableCreate.module.css.map */

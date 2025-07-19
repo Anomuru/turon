@@ -1,0 +1,59 @@
+@import "app/styles/themes/school"
+
+.filter
+  display: flex
+  flex-direction: column
+  gap: 3rem
+  width: 400px
+  &__container
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    font-size: 1.6rem
+
+  &__select
+    width: 130%
+  &__age
+    display: flex
+    flex-direction: column
+    gap: 2rem
+
+  &__input
+    width: 70rem !important
+    margin: 0 !important
+  //padding: 0 !important
+
+  &__status
+    display: flex
+    gap: 3rem
+    justify-content: center
+
+  &__inner
+    display: flex
+    align-items: center
+    gap: .5rem
+    color: #22C55E
+
+  &__radio
+    margin: 0 !important
+    color: #22C55E !important
+
+  .yellow
+    color: #EAB308 !important
+
+  .red
+    color: #F43F5E !important
+
+  &__switch
+    display: flex
+    justify-content: space-between
+    align-items: center
+
+.inputAge
+  width: 100% !important
+.submitBtn
+  width: 100%
+  background-color: var(--balance-card-bg-color)
+  &:hover
+    background-color: rgba(0, 27, 97, 0.87)
+    color: white

@@ -1,0 +1,84 @@
+.totalRating
+  display: none
+  width: 100%
+  font-size: 1.6rem
+
+  &.active
+    display: flex
+
+  &__header
+    display: flex
+    justify-content: flex-end
+    gap: 2rem
+
+  &__container
+    display: grid
+    grid-template-areas: "total classroom" "daily test" "other other"
+    grid-gap: 8rem
+
+    .inner
+      font-size: 1.6rem
+      grid-area: rating
+      align-items: center
+
+      &__title
+        display: flex
+        flex-direction: column
+        align-self: flex-start
+        gap: .7rem
+
+        p
+          font-size: 1.4rem
+          color: #9CA3AF
+
+      &__inner
+        width: 350px
+        height: 143px
+        display: flex
+        justify-content: center
+        align-items: center
+
+        .progress
+          width: 145px
+          height: 143px
+          border: 1px solid
+          border-radius: 50%
+          display: flex
+          justify-content: center
+          align-items: center
+
+    .commonRating
+      grid-area: total
+
+    .classRoomRating
+      grid-area: classroom
+
+    .dailyRating
+      grid-area: daily
+
+    .testRating
+      grid-area: test
+
+    .items
+      grid-area: other
+      flex-direction: row
+      justify-content: space-around
+      font-size: 1.5rem
+      &__item
+        width: 320px
+        display: flex
+        flex-direction: column
+        align-items: center
+        gap: 2rem
+
+      &__title
+        align-self: flex-start
+
+      &__progress
+        width: 145px
+        height: 143px
+        border: 1px solid
+        border-radius: 50%
+        display: flex
+        justify-content: center
+        align-items: center

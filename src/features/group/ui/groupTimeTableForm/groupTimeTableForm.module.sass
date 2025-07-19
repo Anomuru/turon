@@ -1,0 +1,43 @@
+@import "app/styles/abstracts/variables"
+@import "app/styles/abstracts/mixins"
+
+.timeTable
+  display: flex
+  flex-direction: column
+  gap: 3.5rem
+  &__scroll
+    overflow: auto
+    max-height: 300px
+    &::-webkit-scrollbar
+      width: .7rem
+
+    &::-webkit-scrollbar-track
+      border-radius: .4rem
+      box-shadow: inset 0 0 5px $color-grey-dark
+
+    &::-webkit-scrollbar-thumb
+      border-radius: .4rem
+      background: #797979
+
+    &::-webkit-scrollbar-thumb:hover
+      background: $color-grey-dark
+  &Form
+    display: flex
+    gap: 1rem
+  &AddPlus
+    height: 40px
+    display: flex
+    align-items: center
+    align-self: center
+    justify-content: center
+    width: 40px
+    //padding: 1rem
+    border-radius: 50%
+    color: #0EA5E9
+    font-size: 2rem
+    background: #BAE6FD
+    @include btn-active
+  &FooterBtn
+    align-self: flex-end
+    transition: .2s all
+//@include btn-active

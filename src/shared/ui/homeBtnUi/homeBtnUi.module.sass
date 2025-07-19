@@ -1,0 +1,92 @@
+@import "src/app/styles/abstracts/mixins"
+.button
+  width: 30rem
+  height: 5.6rem
+  background: rgba(202, 167, 127, 1)
+  color: white
+  border-radius: 70px
+  //padding: 3rem
+  //padding: 3rem
+
+  outline: none
+  padding-left: 2rem
+  font-size: 1.6rem
+  font-family: "Montserrat", sans-serif
+  font-weight: 700
+  display: flex
+  gap: 2rem
+  align-items: center
+  cursor: pointer
+
+  //text-align: left
+  border: none
+  @include btn-active
+  &:hover
+    background: rgba(177, 128, 72, 1)
+    transition: .5s all
+  &.disabled
+    background: rgba(199, 199, 204, 1)
+    cursor: not-allowed
+  &.submit
+    width: 100%
+    background: white
+    color: black
+    height: 3rem
+    display: flex
+    justify-content: center
+    font-family: "Montserrat", sans-serif
+    font-weight: 500
+    font-size: 1.6rem
+  &.request
+    width: 21rem
+    color: black
+    height: 4rem
+    display: flex
+    justify-content: center
+    background: white
+    font-size: 1.4rem
+    padding: 0
+    border: 1px solid
+    color: rgba(7, 46, 146, 1)
+    @media (max-width: 1200px)
+      width: 15rem
+      font-size: 1rem
+    @media (max-width: 1070px)
+      width: 20rem
+      font-size: 1.4rem
+  &.formBtn
+    width: 100%
+    height: 4rem
+    background: rgba(7, 46, 146, 1)
+    color: white
+    display: flex
+    justify-content: center
+  &.contact
+    background: rgba(7, 46, 146, 1)
+    color: white
+    display: flex
+    justify-content: center
+    padding-left: 0
+    border-radius: 6px
+  &.download
+    background: rgba(7, 46, 146, 1)
+    color: white
+    display: flex
+    justify-content: center
+    padding: 1.2rem
+    //padding-left: 0
+    border-radius: 6px
+    width: 100%
+    height: fit-content
+    font-size: 1.4rem
+  &.downloadWhite
+    background: white
+    color: black
+    display: flex
+    justify-content: center
+    padding: 1.2rem
+    //padding-left: 0
+    border-radius: 6px
+    width: 100%
+    height: fit-content
+    font-size: 1.4rem

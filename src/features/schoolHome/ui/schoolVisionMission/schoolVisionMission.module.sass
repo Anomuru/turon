@@ -1,0 +1,132 @@
+@import "app/styles/abstracts/mixins"
+
+.visionMission
+  display: flex
+  width: 100%
+
+  &__title
+    padding-left: 13rem
+    color: #001B61
+    font-size: 3.2rem
+
+  &__info
+    position: relative
+    display: flex
+    flex-direction: column
+    width: 50%
+    padding: 4.5rem 0
+    gap: 3.3rem
+
+    .container
+      display: flex
+      flex-direction: column
+
+      &__item
+        display: flex
+        flex-direction: column
+        gap: 1.7rem
+        padding: 22px 66px 22px 130px
+        transition: .3s
+
+        &.active
+          background: #072E92
+
+          h3
+            color: #FFFFFF
+
+          p
+            color: #D8D8D8
+
+        h3
+          color: #001B61
+          font-size: 2.4rem
+
+        p
+          color: #696A68
+          font-size: 2.4rem
+
+  &__image
+    width: 50%
+    position: relative
+    //background: linear-gradient(246.76deg, #000F01 -51.06%, rgba(30, 33, 30, 0.38) 109.99%)
+
+    img
+      width: 100%
+      object-fit: cover
+
+  &__imageFilter
+    width: 100%
+    height: 100%
+    background: linear-gradient(246.76deg, #000F01 -51.06%, rgba(30, 33, 30, 0.38) 109.99%)
+    position: absolute
+    top: 0
+    display: flex
+    flex-direction: column
+    align-items: flex-end
+    justify-content: center
+
+  &__change
+    position: absolute
+    top: 3.1rem
+    background: #001B61
+    padding: .8rem
+    transition: .1s
+    border-radius: .5rem
+    @include btn-active
+
+    i
+      font-size: 1.6rem
+      color: #fff
+
+  &__add
+    position: absolute
+    top: 2.9rem
+    right: 3.73rem
+    background: #FFFFFF
+    padding: 1.6rem 1.985rem
+    transition: .1s
+    @include btn-active
+
+    i
+      color: #072E92
+
+  &__icon
+    color: #fff
+    font-size: 4rem
+
+.textEdit
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 3rem
+
+  &__btns
+    display: flex
+    justify-content: space-between
+    align-self: flex-start
+
+.imageEdit
+  display: flex
+  flex-direction: column
+  gap: 3rem
+
+  .image
+    padding: 0 6.35rem
+
+    &__container
+      background: #D1D5DB
+      display: flex
+      align-items: center
+      justify-content: center
+      min-width: 467px
+      min-height: 177px
+
+
+  i
+    font-size: 4rem
+
+  &__btns
+    display: flex
+    justify-content: space-between
+
+

@@ -1,0 +1,1 @@
+export {RoomImageAddModal} from './ui/roomImageAddModal'

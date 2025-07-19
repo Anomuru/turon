@@ -1,0 +1,54 @@
+@import "app/styles/abstracts/variables"
+
+$box-shadow-border: 0 0 0 calc(1px / var(--scale-x, 1)) rgba(63, 63, 68, 0.05)
+
+
+.leadCard
+  min-width: 100%
+  max-width: 30rem
+
+  border: 1px solid $color-grey-dark
+  padding: 2rem
+  border-radius: 5px
+  background-color: white
+  color: $color-grey-dark
+  transform: translate3d(var(--translate-x, 0), var(--translate-y, 0), 0) scaleX(var(--scale-x, 1)) scaleY(var(--scale-y, 1))
+  transform-origin: 0 0
+  touch-action: manipulation
+
+  &.dragging:not(.dragOverlay)
+    opacity: var(--dragging-opacity, 0.5)
+    z-index: 0
+    &:focus
+      box-shadow: $box-shadow
+
+  &.dragOverlay
+    --scale: 1.05
+    --box-shadow: $box-shadow
+    --box-shadow-picked-up: $box-shadow-border,-1px 0 15px 0 rgba(34, 33, 81, 0.01),0px 15px 15px 0 rgba(34, 33, 81, 0.25)
+    z-index: 999
+
+
+
+
+
+  .header
+    width: 100%
+    display: flex
+    align-items: flex-start
+    justify-content: space-between
+    margin-bottom: 1rem
+    border-bottom: 1px solid $color-grey-dark
+    padding-bottom: 1rem
+
+    .info
+      display: flex
+      flex-direction: column
+      font-size: 1.7rem
+      gap: .3rem
+    .date
+      font-size: 1.6rem
+  .footer
+    width: 100%
+    .task
+      font-size: 1.8rem

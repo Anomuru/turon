@@ -1,0 +1,117 @@
+@import "app/styles/abstracts/variables"
+
+
+.dndContainer
+  width: fit-content
+  height: fit-content
+
+
+
+.fullscreen
+  width: 95vw
+  height: 95vh
+  background-color: white
+  margin-top: 3rem
+  position: relative
+  overflow: auto
+  .btns
+    display: flex
+    align-items: center
+    justify-content: center
+  .wrapper
+    width: 100%
+    height: 100%
+    padding: 2rem
+    display: flex
+    flex-direction: column
+    .header
+      width: 100%
+      margin-left: 15rem
+      display: flex
+      position: sticky
+      background-color: white
+      .item
+        width: 20rem
+        padding: 2rem
+        border: 1px solid black
+        display: flex
+        align-items: center
+        justify-content: center
+        font-size: 1.6rem
+
+
+    .footer
+      display: flex
+      flex-direction: column
+      width: 100%
+
+      .rooms
+        display: flex
+        .room
+          min-width: 15rem
+          height: 7rem
+          display: flex
+          align-items: center
+          justify-content: center
+          border: 1px solid black
+          font-size: 1.6rem
+          position: sticky
+          background-color: white
+
+        .containers
+          width: 100%
+          position: relative
+          display: flex
+
+          .droppableContainer
+            min-width: 20rem
+            min-height: 7rem
+            height: 7rem
+            border: 1px solid $color-fonts
+
+
+.draggableContainer
+  width: 20rem
+  height: 7rem
+  display: flex
+  flex-direction: column
+  background-color: $btn-gennis
+  //z-index: 102
+  position: absolute
+  user-select: none
+  padding: .7rem
+  //border: 1px solid $color-grey-dark
+  &.isFlow
+    background-color: white
+    display: flex
+    align-items: center
+    justify-content: center
+    border: 1px solid black
+    h1
+      //vertical-align: middle
+      //writing-mode: vertical-rl
+      text-orientation: mixed
+
+      color: black
+    .info
+      span
+        color: black
+  h1
+    color: white
+    text-align: center
+    font-size: 1.6rem
+
+  .info
+    width: 100%
+    display: flex
+    flex-direction: column
+
+    span
+      text-align: center
+      width: 100%
+      white-space: nowrap !important
+      overflow: hidden !important
+      font-size: 1.6rem
+      text-overflow: ellipsis
+      border-radius: 5px
+      color: white

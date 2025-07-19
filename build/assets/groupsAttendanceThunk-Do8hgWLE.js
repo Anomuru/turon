@@ -1,0 +1,1 @@
+import{a as n,u as a,A as s,h as c}from"./index-Cux8sda1.js";const r=n("groupAttendance/getAttendance",t=>{const{request:e}=a();return e(`${s}Attendance/school-to-attend-days/${t}/`,"GET",null,c())}),d=n("groupAttendance/fetchGroupAttendend",t=>{const{request:e}=a();return e(`${s}Attendance/attendance_list_school/${t}/`,"GET",null,c())});export{d as f,r as g};

@@ -1,0 +1,51 @@
+@import "app/styles/abstracts/variables"
+
+.attendance
+  height: fit-content
+  grid-area: attendance
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  font-size: 1.6rem
+  &__contauner
+    max-height: 25rem
+    overflow: auto
+    &::-webkit-scrollbar
+      width: .7rem
+
+    &::-webkit-scrollbar-track
+      border-radius: .4rem
+      box-shadow: inset 0 0 5px $color-grey-dark
+
+    &::-webkit-scrollbar-thumb
+      border-radius: .4rem
+      background: #797979
+
+    &::-webkit-scrollbar-thumb:hover
+      background: $color-grey-dark
+    .days
+      //width: fit-content
+      font-size: 1.3rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      p
+        color: gray
+.attendance_header
+  display: flex
+  align-items: center
+  width: 95%
+  justify-content: flex-end
+  gap: 5rem
+  margin-bottom: 10px
+  .attendance_plus
+    font-size: 3rem
+    font-weight: bolder
+    //box-shadow: rgba(14, 30, 37, 0.12) 0 2px 4px 0, rgba(14, 30, 37, 0.32) 0 2px 16px 0
+    color: #7F7F7F
+    width: 5rem
+    height: 5rem
+    display: grid
+    place-content: center
+    border-radius: 50%
+    cursor: pointer

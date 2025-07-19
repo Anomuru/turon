@@ -1,0 +1,54 @@
+.changeImage
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  font-size: 1.5rem
+  &__inner
+    min-height: 10rem
+    height: fit-content
+    display: flex
+    flex-direction: column
+    gap: 3rem
+    padding: 0 5rem
+    .settings
+      display: flex
+      flex-direction: column
+      gap: 2rem
+      &__inner
+        display: flex
+        align-items: center
+        font-size: 1.6rem
+        gap: 1.5rem
+      &__input
+        margin: 0 !important
+        display: flex
+  &__input
+    width: 100% !important
+    margin: 0 !important
+  &__dropzone
+    max-width: 40rem
+    max-height: 31rem
+    img
+      max-width: 40rem !important
+      max-height: 31rem !important
+  &__drop
+    width: 100%
+    height: 100%
+    border: 1px dotted #626262
+    display: flex
+    justify-content: center
+    align-items: center
+    &.notImage
+      width: 40rem
+      height: 31rem
+  &__icon
+    font-size: 20rem
+    color: #626262
+  &__img
+    width: 100%
+    object-fit: cover
+  &__btns
+    width: 100%
+    display: flex
+    justify-content: center
+    gap: 3rem

@@ -1,0 +1,83 @@
+.calendarHeader
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 1rem
+  color: #001B61
+  position: relative
+  padding-top: 15rem
+  &__titleMain
+    top: 5rem
+    left: 0
+    position: absolute
+    background: rgba(0, 27, 97, 1)
+    display: flex
+    justify-content: center
+    align-items: center
+    width: 35rem
+    font-size: 3.2rem
+    height: 8.2rem
+    color: rgba(255, 255, 255, 1)
+    font-family: "Blinker", sans-serif
+    font-weight: 600
+    cursor: pointer
+    font-style: normal
+  &__btn
+    align-self: flex-end
+  &__title
+    display: flex
+    gap: 1rem
+    font-size: 1.6rem
+    align-items: center
+    i
+      font-size: 2rem
+.calendar
+  padding-bottom: 5rem
+  display: flex
+  justify-content: space-around
+  flex-wrap: wrap
+  gap: 3rem
+  padding-top: 2rem
+.inner
+  width: 39rem
+  display: flex
+
+  flex-direction: column
+  &_title
+    width: 100%
+    background-color: #001B61
+    font-size: 2rem
+    text-align: center
+    color: #FFFFFF
+    padding: .85rem 2rem
+    margin-bottom: 10px
+.table
+  //width: 10rem!important
+  //max-width: 39rem
+  //width: fit-content
+  thead
+    tr
+      border: none
+      background: none
+      th
+        min-width: fit-content
+        text-align: center
+        padding: 0
+    tbody
+      tr
+        border: none
+        &:hover
+          background: none
+        td
+          cursor: pointer
+          padding: 1rem 0 1rem 1rem
+          font-size: 2rem
+          border: 2px solid #B2B2B2
+          text-align: center
+
+@media (max-width: 820px)
+  .inner
+    width: 29rem
+  .table
+    max-width: 29rem
+

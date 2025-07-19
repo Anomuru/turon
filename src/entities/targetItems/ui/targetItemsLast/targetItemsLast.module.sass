@@ -1,0 +1,101 @@
+@import "app/styles/themes/center"
+@import "app/styles/themes/school"
+
+.home
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  padding: 2rem 4rem 10rem 4rem
+  &__title
+    font-size: 3rem
+  &__desc
+    font-size: 1.6rem
+    font-weight: 400
+    color: #000000B2
+    .inner
+      color: #111F4C
+  &__image
+    border-radius: 1rem
+  &__container
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    background: #111F4C
+    border-radius: 2rem
+    padding: 3rem 2rem
+    .mainTitle
+      text-align: center
+      font-size: 2rem
+      color: #FFFFFF
+      font-family: "Montserrat", sans-serif
+      font-optical-sizing: auto
+      font-weight: 500
+
+      font-style: normal
+    .list
+      display: flex
+      flex-wrap: wrap
+      justify-content: center
+      gap: 2em
+      &__item
+        width: 40rem
+        padding: 2rem
+        display: flex
+        flex-direction: column
+        gap: 1.5rem
+        border: 1px solid var(--Grays-Gray-4, #D1D1D6)
+        background: #FFFFFF
+        border-radius: 1rem
+        .title
+          font-size: 1.5rem
+          color: #4900B6
+          font-family: "Montserrat", sans-serif
+          font-weight: 500
+        .descs
+          font-size: 1.3rem
+          color: rgba(0, 0, 0, 0.9)
+          list-style: none
+          display: flex
+          flex-direction: column
+          font-family: "Montserrat", sans-serif
+          font-weight: 500
+          justify-content: space-between
+          height: 100%
+  &__menu
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    .title
+      width: 100%
+      font-size: 2rem
+      color: rgba(255, 255, 255, 1)
+      background: #111F4C
+      height: 4rem
+      padding: 0 2rem
+      display: flex
+      //justify-content: center
+      align-items: center
+      border-radius: 1rem
+      font-family: "Montserrat", sans-serif
+      font-weight: 500
+    .list
+      list-style: none
+      //padding-left: 2rem
+      font-size: 2rem
+      display: flex
+      flex-direction: column
+      gap: 1rem
+  &__btn
+    align-self: flex-end
+
+@media (max-width: 900px)
+  .home__btn
+    width: 100%
+    height: 5rem
+    font-size: 1.8rem
+@media (max-width: 430px)
+  .home
+    padding: 2rem 2rem 5rem 2rem
+
+
+

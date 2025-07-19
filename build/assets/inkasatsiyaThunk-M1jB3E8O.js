@@ -1,0 +1,1 @@
+import{a as t,u as e,A as i,h as r}from"./index-Cux8sda1.js";const h=t("inkasatsiyaSlice/inkasatsiyaThunk",async({res:a,branchId:s})=>{const{request:n}=e();return await n(`${i}Encashment/encashment/?branch=${s}/`,"POST",JSON.stringify(a),r())});export{h as i};

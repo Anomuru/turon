@@ -1,0 +1,177 @@
+@import "app/styles/abstracts/variables"
+@import "app/styles/abstracts/mixins"
+
+.announcement
+  display: flex
+  flex-direction: column
+  gap: 4rem
+  padding: 4rem 15rem
+  .title
+    width: 100%
+    display: flex
+    justify-content: space-between
+    h1
+      color: $btn-switch-school
+      font-size: 3.2rem
+    &__container
+      display: flex
+      gap: .8rem
+      span
+        background: var(--Background-Brand-Tertiary, #F5F5F5)
+        color: #757575
+        padding: .8rem
+        border-radius: .8rem
+        font-size: 1.6rem
+  .tags
+    padding: 1rem
+    overflow: hidden
+    background: #F5F5F5
+    border-radius: 1.2rem
+    position: relative
+    &__wrapper
+      display: flex
+      gap: 2.4rem
+    &__end
+      top: 0
+      right: -10rem
+      position: absolute
+      width: 15.5rem
+      height: 100%
+      background: radial-gradient(100% 225% at 100% 50%, #F5F5F5 52.44%, rgba(245, 245, 245, 0.3827) 82.29%, rgba(245, 245, 245, 0) 100%)
+    &__item
+      user-select: none
+      min-width: 17rem
+      min-height: 4.8rem
+      position: relative
+      border-radius: 1.2rem
+      transition: .1s
+      @include btn-active
+      cursor: pointer
+      img
+        height: 100%
+        width: 100%
+        object-fit: cover
+        border-radius: 1.2rem
+    &__title
+      width: 100%
+      height: 100%
+      top: 0
+      position: absolute
+      border-radius: 1.2rem
+      backdrop-filter: blur(5px)
+      display: flex
+      justify-content: center
+      align-items: center
+      h2
+        color: #FFF
+        font-size: 1.6rem
+        font-family: sans-serif, "Roboto Thin" !important
+        font-weight: 400 !important
+  .slider
+    overflow: hidden
+    width: 100%
+    &__wrapper
+      display: flex
+      gap: 5rem
+    &__item
+      position: relative
+      img
+        border-radius: 1.5rem 0 0 1.5rem
+    &__info
+      width: 97%
+      position: absolute
+      bottom: 1rem
+      right: -1.4rem
+      background: rgba(255, 255, 255, 0.6)
+      backdrop-filter: blur(10px)
+      border-radius: 1.2rem
+      display: flex
+      flex-direction: column
+      gap: 1.6rem
+      padding: 1.6rem
+      h2
+        color: #000000
+        font-size: 2.5rem
+      p
+        color: #000000BF
+        font-size: 1.4rem
+      h2, p
+        font-family: sans-serif, "Roboto Thin" !important
+        font-weight: 400 !important
+  .posts
+    display: flex
+    flex-direction: column
+    gap: 3rem
+    position: relative
+    h2
+      font-family: sans-serif, "Roboto Thin" !important
+    &__title
+      padding-left: 1rem
+      color: #3E3232
+      font-size: 2rem
+      font-weight: 500
+    &__pseudo
+      top: .6rem
+      width: .4rem
+      height: 1rem
+      border-radius: 1.2rem
+      position: absolute
+      left: 0
+      background: #F81539
+    &__container
+      overflow: hidden
+    &__wrapper
+      gap: 5rem
+      display: flex
+    &__item
+      box-shadow: 0 0 32px 0 #00000012
+      border-radius: 1.2rem
+      background: #FFFFFF
+      padding: 1rem
+      display: flex
+      flex-direction: column
+      gap: 1.6rem
+      img
+        border-radius: 1.2rem
+        max-width: 34rem
+        max-height: 26rem
+    &__info
+      display: flex
+      flex-direction: column
+      gap: 1.6rem
+      padding-bottom: 1rem
+      h2
+        color: #3E3232
+        font-size: 1.6rem
+        font-weight: 500
+      p
+        color: #3E3232BF
+        font-size: 1.4rem
+        font-weight: 400
+
+@media (max-width: 430px)
+  .announcement
+    padding: 1.6rem 2.8rem
+    .title
+      h1
+        font-size: 2rem
+      &__container
+        display: none
+    .tags
+      &__item
+        min-width: 10.4rem
+    .slider
+      &__item
+        img
+          width: 26rem
+          height: 35rem
+      &__info
+        width: 95%
+        right: .6rem
+        h2
+          font-size: 1.6rem
+    .posts
+      &__item
+        img
+          max-width: 23rem
+          max-height: 26rem

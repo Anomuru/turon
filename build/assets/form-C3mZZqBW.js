@@ -1,0 +1,1 @@
+import{r as a,j as m,i as e}from"./index-Cux8sda1.js";const c="_form_1nfz2_25",u="_submit_1nfz2_29",t={form:c,submit:u},l=a.memo(({id:o,extraClassname:s,onSubmit:i,children:r,typeSubmit:n="inside"})=>m.jsxs("form",{id:o,className:e(t.form,s),onSubmit:i,children:[r,n==="inside"?m.jsx("input",{value:"Tasdiqlash",className:`${t.submit} ${s}`,type:"submit"}):null]}));export{l as F};

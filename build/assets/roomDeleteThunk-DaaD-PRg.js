@@ -1,0 +1,1 @@
+import{a as s,u as t,A as a,h as r}from"./index-Cux8sda1.js";const m=s("roomsSlice/deleteRoom",async e=>{const{request:o}=t();return await o(`${a}Rooms/rooms_delete/${e}/`,"DELETE",null,r()),e});export{m as d};

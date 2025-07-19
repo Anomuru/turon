@@ -1,0 +1,23 @@
+@import "app/styles/abstracts/variables"
+@import "app/styles/abstracts/mixins"
+@import "app/styles/themes/school"
+@import "app/styles/themes/center"
+
+
+.form
+  width: 100%
+  padding-bottom: 1rem
+  .submit
+    height: 3.6rem
+    border-radius: .5rem
+    padding: 0.5rem 2rem
+    font-size: 1.7rem
+    min-width: 100%
+    outline: none
+    border: none
+    cursor: pointer
+    background-color: var(--form-button-bg-color)
+    color: white
+    transition: all .2s
+    @include btn-active
+

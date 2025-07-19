@@ -1,0 +1,105 @@
+@import "app/styles/abstracts/mixins"
+
+.gallery
+  padding: 5rem 10rem
+  display: flex
+  flex-direction: column
+  gap: 5rem
+  background: #F7FDFF
+  &__wrapper
+    display: flex
+    justify-content: space-between
+    width: 100%
+  &__title
+    font-size: 3.2rem
+    color: #001B61
+  &__add
+    //padding: 3rem 1.6rem
+    background: rgba(0, 27, 97, 1)
+    width: 7.2rem
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 7.9rem
+  &__container
+    display: flex
+    justify-content: center
+    gap: 3rem
+    flex-wrap: wrap
+    .item
+      max-width: 36rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      text-align: center
+      gap: 2rem
+      //padding: 1rem
+      border-radius: 1rem
+      overflow: hidden
+      position: relative
+      box-shadow: 0 4px 8px 0 #0000001A, 0 14px 14px 0 #00000017, 0 32px 19px 0 #0000000D, 0 56px 23px 0 #00000003, 0 88px 25px 0 #00000000
+      &:hover .item__text
+        top: 0
+      &__change
+        z-index: 50
+        position: absolute
+        top: 1.3rem
+        left: 1.8rem
+        background: #001B61
+        padding: .8rem
+        transition: .1s
+        border-radius: .5rem
+        @include btn-active
+        i
+          font-size: 1.6rem
+          color: #fff
+      &__image
+        max-height: 33.8rem
+      &__title
+        font-size: 3.2rem
+        color: #001B61
+
+        &.active
+          color: white
+      &__text
+        font-size: 1.6rem
+        position: absolute
+        top: -100%
+        background: #001B61
+        padding: 3rem
+        width: 100%
+        height: 100%
+        align-items: center
+        justify-content: center
+        display: flex
+        color: white
+        transition: .4s ease-in
+    .itemMain
+      width: 36rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      text-align: center
+      gap: 2rem
+      padding: 3rem
+      border-radius: 1rem
+      justify-content: center
+      &.active
+        background: #001B61
+        color: white
+      &__titles
+        color: white
+        font-size: 3.2rem
+
+@media (max-width: 1024px)
+  .gallery
+    padding: 5rem
+    &__container
+      gap: 2rem
+      .item
+        padding: 2.3rem
+        &__title
+          font-size: 2.6rem
+        &__text
+          font-size: 1.5rem
+

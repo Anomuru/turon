@@ -1,0 +1,46 @@
+@import "app/styles/abstracts/mixins"
+
+
+.capital
+  &__wrapper
+    display: flex
+    gap: 3rem 4rem
+    flex-wrap: wrap
+  &__box
+    width: fit-content
+    border-radius: 5px
+
+    box-shadow: rgba(50, 50, 93, 0.25) 0 13px 27px -5px, rgba(0, 0, 0, 0.3) 0 8px 16px -8px
+    padding: 2rem
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    @include btn-active
+    cursor: pointer
+    transition: all .5s
+    &:hover
+      //transform: scale(1.1)
+      box-shadow: 0 0 8px 0
+      //padding: 2rem 4rem
+      background-color: rgba(183, 174, 174, 0.25)
+    //
+    //&:hover .capital__img
+    //  filter: drop-shadow(1px -1px 8px white)
+
+
+  &__img
+    img
+      object-fit: cover
+      //height: fit-content
+      width: 30rem
+      height: 25rem
+      //object-fit: cover
+  &__descr
+    display: flex
+    flex-direction: column
+    gap: 2rem
+
+
+
+.home__modal_img
+  width: 20rem

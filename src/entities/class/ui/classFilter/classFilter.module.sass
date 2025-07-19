@@ -1,0 +1,32 @@
+.classFilter
+  padding-top: 2rem
+  ul
+    list-style: none
+    display: flex
+    justify-content: space-around
+    background: #EFF6FF
+    padding: 2rem
+    li
+      cursor: pointer
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      font-weight: bolder
+      font-size: 1.6rem
+      position: relative
+      color: var(--btn-bg-color)
+      div
+        margin-top: 5px
+        span
+          margin-left: 5px
+      &.active:before
+        content: ""
+        display: block
+        width: 100%
+        height: 5px
+        left: 0
+        border-radius: 5px 5px 0 0
+        background: #001B61
+        position: absolute
+        bottom: -2rem

@@ -1,0 +1,320 @@
+@import "app/styles/abstracts/mixins"
+
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@100;200;300;400;600;700;800;900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Risque&family=Space+Grotesk:wght@300..700&display=swap')
+
+
+.homeMain
+  width: 100%
+  //height: 100%
+  display: flex
+  flex-direction: column
+  background: linear-gradient(0deg, #111F4C 30%, #072E92 100%)
+
+
+  .wrapper
+    padding: 0 10rem 5rem 10rem
+
+  &__info
+    width: 100%
+    padding-left: 10rem
+    padding-right: 5rem
+    display: flex
+    justify-content: space-between
+    align-items: center
+    //gap: 5rem
+    .info
+      //align-self: flex-start
+      color: white
+      display: flex
+      flex-direction: column
+      gap: 3rem
+
+      &__title
+        font-size: 6.4rem
+      //color: white
+      &__text
+        font-size: 2.4rem
+        font-weight: 400
+
+        font-family: "Blinker", sans-serif
+      //color: white
+      .programsInfo__mainEdit
+        background: #c4b6b6
+        padding: .8rem
+        //position: absolute
+        //right: 0
+        //top: -30%
+        width: fit-content
+        border-radius: .5rem
+        transition: .1s
+        @include btn-active
+
+        i
+          font-size: 1.6rem
+          color: #001B61
+
+  &__programs
+    //margin: 0 10rem 5rem 10rem
+    padding: 0 7rem 0 6.8rem
+    background: #FFFFFF1F
+    display: flex
+    align-items: center
+    gap: 3rem
+    border-radius: 1.5rem
+    overflow: hidden
+
+    .programsInfo
+      min-width: 34rem
+      //margin-right: 3rem
+      display: flex
+      flex-direction: column
+      gap: 2rem
+      color: white
+      position: relative
+      padding: 2rem 0
+
+      &__title
+        font-size: 4.8rem
+
+      &__text
+        font-size: 2rem
+        color: #FFFFFFBD
+
+    .items
+      overflow: hidden
+      width: 100%
+      display: flex
+      padding: 2rem
+
+      &__wrapper
+        display: flex
+        align-items: center
+        gap: 3rem
+
+      &__plus
+        height: fit-content
+        background: #fff
+        padding: 2rem
+        border-radius: 50%
+        transition: .1s
+        @include btn-active
+
+        i
+          font-size: 3rem
+      //.homeSlider
+      //  div
+      //    padding: 1rem
+      //    width: fit-content !important
+      //    display: flex
+      //  ul
+      //    bottom: 13px
+      //    width: 60%
+      //    li, button, button:before
+      //      height: 10px
+      //      width: 30px
+      //      text-align: center
+      //    button:before
+      //      border-radius: 20px
+      //      background: black
+      //      font-size: 0
+      &__inner
+        min-width: 25rem
+        max-width: fit-content !important
+        cursor: pointer
+        padding: 3rem 2.1rem 3rem 2.1rem !important
+        display: flex
+        flex-direction: column
+        gap: 1.4rem
+        border-radius: 1.361rem
+        transition: .3s
+        position: relative
+
+        &:hover
+          box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.25)
+
+        &.active
+          background: #6100FF
+
+        img
+          min-width: 5rem
+          min-height: 5rem
+
+      &__edit
+        top: .9rem
+        right: 2.1rem
+        position: absolute
+        background: #FFFFFF
+        padding: .8rem
+        border-radius: .5rem
+        transition: .1s
+        @include btn-active
+
+        i
+          font-size: 1.6rem
+          color: #001B61
+
+      &__image
+        width: 5.416rem
+
+      &__title
+        color: white
+        font-size: 2.4rem
+
+      &__more
+        color: white
+        font-size: 1.6rem
+.home__btn
+  width: 13.7rem !important
+  background-color: rgba(255, 255, 255, 1)
+  height: 5.4rem!important
+  font-family: "Blinker", sans-serif
+  font-size: 2rem!important
+  color: rgba(0, 27, 97, 1)
+
+  font-weight: 700
+  font-style: normal
+
+@media (max-width: 1440px)
+  .homeMain
+    &__programs
+      .items
+      .homeSlider
+        ul
+          width: 40%
+
+      &__inner
+        min-width: 24.5rem
+
+      &__title
+    //fz
+    .info
+      &__title
+        font-size: 4.8rem
+
+      &__text
+        font-size: 1.8rem
+
+    .image
+      min-width: 63rem
+      min-height: 50rem
+      display: flex
+      align-items: flex-end
+
+      img
+        width: 100%
+
+@media (max-width: 1024px)
+  .homeMain
+    height: 80%
+
+    &__programs
+      gap: 0
+
+      .items
+        .homeSlider
+          ul
+            width: 30%
+
+        &__inner
+          min-width: 21.5rem
+
+        &__title
+          font-size: 2rem
+
+    &__info
+      padding-left: 5rem
+
+    .wrapper
+      padding: 0 5rem 5rem 5rem
+
+    .info
+      &__title
+        font-size: 3.8rem
+
+      &__text
+        font-size: 1.4rem
+
+    .image
+      min-width: 48rem
+      min-height: 35rem
+
+    .programsInfo
+      &__title
+        font-size: 3rem
+
+      &__text
+        font-size: 1.8rem
+
+@media (max-width: 768px)
+  .homeMain
+    &__info
+      flex-direction: column
+
+      .info
+        align-self: flex-start
+
+    &__programs
+      padding: 2.2rem 5.2rem 2.2rem 5.2rem
+      gap: 2rem
+
+      .programsInfo
+        min-width: 27rem
+
+        &__title
+          font-size: 2.7rem
+
+        &__text
+          font-size: 1.6rem
+
+      .items
+        .homeSlider
+          ul
+            width: 20%
+
+        &__inner
+          min-width: 20rem
+
+        &__image
+          width: 4.1rem
+
+        &__title
+          font-size: 1.85rem
+
+@media (max-width: 430px)
+  .homeMain
+
+    &__info
+      padding-left: 1.5rem
+      align-items: normal
+
+      .info
+        &__title
+          font-size: 2.4rem
+
+        &__text
+          font-size: 1.2rem
+
+    .image
+      min-width: 40rem
+      min-height: 30rem
+
+    &__programs
+      flex-direction: column
+      align-items: normal
+
+      .items
+        .homeSlider
+          ul
+            width: 15%
+
+      .programsInfo
+        min-width: 17rem
+        padding-bottom: 2rem
+        border-bottom: 1px solid white
+
+@media (max-width: 375px)
+  .homeMain
+    .image
+      min-width: 33rem
+
+

@@ -1,0 +1,133 @@
+@import "app/styles/abstracts/mixins"
+
+.certificats
+  padding: 18rem 10rem 5rem 10rem
+  display: flex
+  flex-direction: column
+  gap: 5rem
+  position: relative
+  background: #F7FDFF
+  &__wrapper
+    width: 100%
+    display: flex
+    justify-content: space-between
+  &__title
+    top: 5rem
+    left: 0
+    position: absolute
+    background: rgba(0, 27, 97, 1)
+    display: flex
+    justify-content: center
+    align-items: center
+    width: 35rem
+    font-size: 3.2rem
+    height: 8.2rem
+    color: rgba(255, 255, 255, 1)
+    font-family: "Blinker", sans-serif
+    font-weight: 600
+    cursor: pointer
+    font-style: normal
+  &__add
+    //padding: 3rem 1.6rem
+    background: rgba(0, 27, 97, 1)
+    width: 7.2rem
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 7.9rem
+  .item
+    display: flex
+    justify-content: center
+    flex-wrap: wrap
+    gap: 3rem 15rem
+    &__container
+      min-height: 24rem
+      border-radius: 1rem
+      position: relative
+      max-width: 65rem
+      min-width: 65rem
+      display: flex
+      box-shadow: 0 3px 7px 0 #0000001A, 0 12px 12px 0 #00000017, 0 27px 16px 0 #0000000D, 0 48px 19px 0 #00000003, 0 75px 21px 0 #00000000
+    &__image
+      position: absolute
+      top: 50%
+      left: -13.5%
+      transform: translateY(-50%)
+      min-height: 17.8rem
+      min-width: 17.8rem
+      max-height: 17.8rem
+      max-width: 17.8rem
+      border-radius: 2rem
+    &__inner
+      padding: 3rem 2rem 3rem 13rem
+      display: flex
+      flex-direction: column
+      gap: 1.5rem
+    &__change
+      z-index: 50
+      position: absolute
+      top: 2.4rem
+      right: 3rem
+      background: #001B61
+      padding: .8rem
+      transition: .1s
+      border-radius: .5rem
+      @include btn-active
+      i
+        font-size: 1.6rem
+        color: #fff
+    &__title
+      color: #F47B20
+      font-size: 3.2rem
+    &__text
+      font-size: 1.6rem
+
+@media (max-width: 1440px)
+  .certificats
+    .item
+      align-items: flex-end
+      &__container
+        max-width: 110rem
+      &__image
+        left: -8.5%
+      &__inner
+        padding: 3rem 2rem 7rem 13rem
+
+@media (max-width: 1024px)
+  .certificats
+    padding: 5rem
+    .item
+      //justify-content: flex-end
+      &__container
+        max-width: 75rem
+      &__title
+        font-size: 3rem
+      &__text
+        font-size: 1.4rem
+
+@media (max-width: 768px)
+  .certificats
+    .item
+      &__container
+        max-width: 55rem
+      &__image
+        width: 12rem
+        height: 12rem
+      &__title
+        font-size: 2rem
+      &__inner
+        padding: 3rem 2rem 4rem 10rem
+
+@media (max-width: 430px)
+  .certificats
+    .item
+      gap: 5rem
+      &__container
+        flex-direction: column
+        box-shadow: none
+        padding-top: 3rem
+      &__image
+        margin-bottom: -3.7rem
+        position: unset
+      &__inner
+        padding: 0

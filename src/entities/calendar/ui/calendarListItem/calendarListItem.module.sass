@@ -1,0 +1,155 @@
+@import "app/styles/abstracts/mixins"
+@import "app/styles/abstracts/variables"
+
+.calendarListItem
+  font-size: 1.6rem
+  display: flex
+  gap: 1.5rem
+  .inner
+    width: 39rem
+    display: flex
+    flex-direction: column
+    &__title
+      width: 100%
+      background-color: #001B61
+      font-size: 2rem
+      text-align: center
+      color: #FFFFFF
+      padding: .85rem 2rem
+    &__items
+      max-width: 39rem
+      width: fit-content
+      thead
+        tr
+          border: none
+          background: none
+          th
+            min-width: fit-content
+            text-align: center
+            padding: 0
+      tbody
+        tr
+          border: none
+          &:hover
+            background: none
+          td
+            cursor: pointer
+            padding: 1rem 0 1rem 1rem
+            font-size: 2rem
+            border: 2px solid #B2B2B2
+            text-align: center
+            //display: flex
+            //flex-direction: column
+            //justify-content: center
+            //align-items: center
+    &__days
+      width: 100%
+      display: flex
+      justify-content: space-between
+    &__day
+      transition: .2s
+      //display: flex
+      //align-items: center
+      &.active
+        background: #3B82F6
+        color: #FFFFFF
+      &:hover
+        background: #3B82F6
+        color: #FFFFFF
+      &.demoActive
+        background: rgba(59, 130, 246, 0.65)
+        color: #FFFFFF
+    &__number
+      width: fit-content
+      border-radius: 50%
+      padding: .5rem 1.2rem
+      color: white
+    &__item
+      font-size: 2rem
+      padding: .65rem 0
+  &__item
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 1rem
+  &__title
+    display: flex
+    justify-content: space-between
+    width: 39rem
+    border-bottom: 3px solid #B2B2B2
+    font-size: 2rem
+    padding: .7rem 2rem
+    background-color: #DBDBDB
+  &__display
+    display: flex
+    align-items: center
+    gap: 1rem
+  &__container
+    width: 100%
+    max-height: 24rem
+    display: flex
+    flex-direction: column
+    gap: 1.5rem
+    overflow: auto
+    &::-webkit-scrollbar
+      width: .7rem
+
+    &::-webkit-scrollbar-track
+      border-radius: .4rem
+      box-shadow: inset 0 0 5px $color-grey-dark
+
+    &::-webkit-scrollbar-thumb
+      border-radius: .4rem
+      background: #797979
+
+    &::-webkit-scrollbar-thumb:hover
+      background: $color-grey-dark
+    .all
+      display: flex
+      flex-direction: column
+      gap: 1rem
+      &__active
+        height: 0
+        padding: 0 3rem
+        transition: .3s
+        //position: relative
+        visibility: hidden
+        &.active
+          height: fit-content
+          visibility: visible
+      &__inner
+        //position: sticky
+        display: flex
+        flex-direction: column
+        gap: 1rem
+        //top: -100%
+        .small
+          display: flex
+          gap: 1rem
+          background: #EEEEEE
+          padding: 1rem 2rem
+          border-radius: 3rem
+      .item
+        display: flex
+        justify-content: space-between
+        background: #EEEEEE
+        padding: 1rem 2rem
+        &__inner
+          display: flex
+          gap: 1rem
+        &__icons
+          display: flex
+          gap: 2rem
+        &__icon
+          cursor: pointer
+          transition: .2s
+          &:active
+            transform: scale(0.9)
+          &:hover
+            color: red
+  &__btn
+    align-self: flex-end
+  &__icon
+    font-size: 2.8rem
+    cursor: pointer
+    @include btn-active

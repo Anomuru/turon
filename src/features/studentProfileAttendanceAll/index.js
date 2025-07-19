@@ -1,0 +1,1 @@
+export {StudentAttendanceAll} from './ui/studentProfileAttendanceAll/studentAttendanceAll'

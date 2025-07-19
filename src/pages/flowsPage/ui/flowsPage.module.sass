@@ -1,0 +1,78 @@
+.flow
+  padding: 1rem 2rem
+  display: flex
+  flex-direction: column
+  gap: 3rem
+
+  &Main
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    &__wrapper
+      //gap: 3rem
+      display: flex
+
+  &__header
+    display: flex
+    flex-direction: column
+    gap: 3rem
+
+  &__location
+    align-self: flex-end
+
+  &__filter
+    display: flex
+    justify-content: space-between
+    //gap: 2rem
+
+  &__radioFilter
+    display: flex
+    gap: 2rem
+    align-self: flex-end
+    text-transform: capitalize
+
+    & > div
+      color: #0EA5E9
+
+  &__itemClass
+    color: #0EA5E9
+    background-color: #F5F5F5
+    width: fit-content
+    padding: .9rem
+    border-radius: 5px
+    cursor: pointer
+
+  .table
+    display: flex
+    flex-direction: column
+    gap: 2rem
+
+    h2
+      font-size: 2rem
+      color: #0EA5E9
+
+    &__wrapper
+      height: calc(100vh - 55vh)
+
+.modal
+  font-size: 1.6rem
+.flowModal
+  padding: 2rem
+
+  &Header
+    display: flex
+    padding: 1rem 0
+    //align-items: center
+    justify-content: space-between
+  &Form
+    padding: 2rem 0
+    form
+      display: flex
+      flex-direction: column
+      gap: 2rem
+      select, textarea, input
+        width: 45rem !important
+
+      button
+        align-self: flex-end!important
+        transition: .1s

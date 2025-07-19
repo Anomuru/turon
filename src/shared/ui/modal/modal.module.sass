@@ -1,0 +1,36 @@
+@import "app/styles/themes/school"
+@import "app/styles/themes/center"
+@import "app/styles/abstracts/mixins"
+
+.modal
+  width: 100%
+  min-height: 100vh
+  max-height: 100%
+  position: fixed
+  top: 0
+  left: 0
+  bottom: 0
+  right: 0
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+  background-color: rgba(0, 0, 0, 0.65)
+  z-index: 1500
+
+  &__inner
+    min-width: 250px
+    min-height: 100px
+    padding: 2rem 3rem
+    background: white
+    border-radius: .5rem
+    position: relative
+
+  &__close
+    position: absolute
+    top: 1.6rem
+    right: 2.5rem
+    width: 30px
+    height: 30px
+    cursor: pointer
+    @include btn-active

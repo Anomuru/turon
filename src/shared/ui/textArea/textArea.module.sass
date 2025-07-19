@@ -1,0 +1,35 @@
+@import "app/styles/abstracts/variables"
+
+.textareaLabel
+  display: block
+  .info
+    width: 100%
+    display: flex
+    align-items: center
+    justify-content: space-between
+    span
+      font-weight: 600
+      font-size: 1.2rem
+      margin-bottom: 1rem
+  .textarea
+    border: 1px solid $main-border-color
+    outline: none
+    font-size: 1.6rem
+    padding: 1rem
+    width: 350px
+    height: 10rem
+    border-radius: 3px
+
+    resize: none
+    &:focus
+      outline: 1px solid $main-border-color
+    &.error
+      border: none
+      outline: 2px solid  $error-outline-color
+  .message
+    position: relative
+    margin-top: 1rem
+    &__error
+      font-size: 1.5rem
+      color: $error-color
+

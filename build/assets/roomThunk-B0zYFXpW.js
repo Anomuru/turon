@@ -1,0 +1,1 @@
+import{a as t,u as e,A as a,h as n}from"./index-Cux8sda1.js";const c=t("roomsSlice/fetchInsideRoom",async o=>{const{request:s}=e();return await s(`${a}Rooms/rooms/${o}`,"GET",null,n())}),i=t("roomsEditModal/editRoom",async({id:o,updatedRoom:s})=>{const{request:r}=e();return await r(`${a}Rooms/rooms_update/${o}/`,"PATCH",JSON.stringify(s))});export{i as e,c as f};

@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@100;200;300;400;600;700;800;900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Risque&family=Space+Grotesk:wght@300..700&display=swap')
+
+.main
+  display: flex
+  flex-direction: column
+  justify-content: center
+  padding: 4.7rem 3.7rem 0 15rem
+  &__header
+    display: flex
+    align-items: center
+    justify-content: space-between
+  &__edit
+    width: 3.2rem
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 3.2rem
+    background: rgba(0, 27, 97, 1)
+    position: absolute
+    left: 1.4rem
+    top: 3rem
+    border-radius: 5px
+
+    & > img
+      width: 1.6rem !important
+      height: 1.6rem !important
+
+  &__add
+    //padding: 3rem 1.6rem
+    background: rgba(0, 27, 97, 1)
+    width: 7.2rem
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 7.9rem
+
+
+  &__title
+    color: rgba(0, 27, 97, 1)
+    font-size: 3.2rem
+    font-family: "Blinker", sans-serif
+    font-weight: 700
+    font-style: normal
+
+  &__wrapper
+    display: flex
+    gap: 2rem
+    padding-top: 8.2rem
+    flex-wrap: wrap
+
+  &__box
+    width: 52.7rem
+
+    &_main
+      padding: 2.6rem 2.4rem 0 4.5rem
+      display: flex
+      flex-direction: column
+      gap: 2rem
+    &_date
+      color: rgba(96, 101, 103, 1)
+      font-size: 1.6rem
+      font-family: "Blinker", sans-serif
+      font-weight: 400
+      font-style: normal
+    &_title
+      color: rgba(0, 0, 0, 1)
+      font-size: 4.6rem
+      font-family: "Blinker", sans-serif
+      font-weight: 600
+      font-style: normal
+
+
+    &_descr
+      color: rgba(102, 102, 102, 1)
+      font-size: 2rem
+      font-family: "Blinker", sans-serif
+      font-weight: 400
+      font-style: normal
+
+    &_img
+      position: relative
+      img
+        border-radius: 15px
+        //max-width: 36.8rem
+        height: 34rem
+        width: 100%
+
+
+@media (max-width: 777px)
+  .main
+    padding: 3rem 2.7rem 0 2rem
+    &__add
+      width: 4.4rem
+      height: 4.9rem
+      img
+        width: 1.9rem
+        height: 1.9rem
+    &__wrapper
+      padding-top: 3rem
+    &__box
+      &_main
+        padding: 2rem 2rem 0 5.3rem
+      &_date
+        font-size: 2rem
+      &_title
+        font-size: 3.2rem
+      &_descr
+        font-size: 1.6rem
+
+
+
+@media (max-width: 510px)
+  .main
+    padding: 3rem 2.7rem 0 2rem
+    &__edit
+      //top: 8rem
+    &__box
+      &_main
+        padding: 2rem 2rem 0 5.3rem
+      &_date
+        font-size: 1.8rem
+      &_title
+        font-size: 2.8rem
+      &_descr
+        font-size: 1.6rem
+
+@media (max-width: 388px)
+  .main
+    padding: 3rem 2.7rem 0 2rem
+    &__edit
+      //top: 10rem
