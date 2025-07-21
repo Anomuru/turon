@@ -38,7 +38,6 @@ import {
 } from "../../model/selector/studentProfileSelector";
 
 import cls from "./studentProfilePage.module.sass";
-import {getSystem} from "features/themeSwitcher";
 import {getBranch} from "features/branchSwitcher";
 import {fetchStudentDebtorData, getMonthDataThunk} from "../../../../features/studentPayment/model/studentPaymentThunk";
 import {getMonth} from "../../../../features/studentPayment/model/selectors/selectors";
@@ -85,7 +84,6 @@ export const StudentProfilePage = () => {
 
 
 
-    const system = useSelector(getSystem)
 
     useEffect(() => {
         if (id ) {
@@ -101,7 +99,7 @@ export const StudentProfilePage = () => {
 
         }
 
-    }, [id , system,branch?.id])
+    }, [id ,branch?.id])
 
 
     // if (!userData || !userData.user) {
@@ -154,7 +152,6 @@ export const StudentProfilePage = () => {
                 content={userData}
                 contract={userData}
                 newImage={newImage}
-                system={system}
                 month={month}
                 charity={charity}
             />

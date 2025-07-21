@@ -11,12 +11,10 @@ import {getUserBranchId, getUserPermission, getUserProfileData} from "entities/p
 import cls from "./menuBar.module.sass";
 import defaultUserImage from "shared/assets/images/user_image.png";
 import {NavLink} from "react-router-dom";
-import {getSystem} from "features/themeSwitcher";
 import {getSelectedLocations} from "features/locations";
 import {getBranch} from "features/branchSwitcher";
 import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader";
 import {MiniLoader} from "shared/ui/miniLoader";
-import {clearSystems} from "features/themeSwitcher/modal/slice/themeSwitcherSlice";
 
 export const Menubar = () => {
     const navigate = useNavigate();
@@ -32,14 +30,12 @@ export const Menubar = () => {
     // const changeLocations = 1;
     const location = useSelector(getUserBranchId)
     const userId = useSelector(getUserId)
-    const system = useSelector(getSystem)
     const selectedLocations = useSelector(getSelectedLocations)
     const branch = useSelector(getBranch)
     const dispatch = useDispatch()
 
     const onClickExit = () => {
         navigate("/login")
-        dispatch(clearSystems())
 
     }
 
@@ -50,7 +46,6 @@ export const Menubar = () => {
         return menuConfig.map((item, index) => {
             const linkId = selectedLocations?.length > 1 && !item.multi ? "" : selectedLocations?.length > 1 && item.multi ? "/list" : `/${branch?.id}`
             if (selectedLocations > 1 && !item.branches) return;
-            if (!item?.system.includes(system.name)) return;
             if ((typeof item.roles === "object" && user?.job.some(job => item.roles.includes(job))) || (typeof item.roles === "boolean" && item.roles)) {
                 return (
                     <NavLink

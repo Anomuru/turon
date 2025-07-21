@@ -8,11 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {createLocationThunk} from "../../model/createThunk/locationThunk";
 
 import {useCallback, useEffect, useState} from "react";
-import {getLocationThunk, getSystemId} from "../../model/createThunk/createBranchThunk";
-import {getSystemIdSelector} from "../../model/createSelector/locationSelector";
-import {Modal} from "../../../../shared/ui/modal";
-import {getSystemName} from "../../../editCreates";
-import {getSystemThunk} from "../../../editCreates/model/thunk/systemThunk";
+import {Modal} from "shared/ui/modal";
 
 
 export const LocationCreate = ({active , setActive}) => {
@@ -21,17 +17,11 @@ export const LocationCreate = ({active , setActive}) => {
     const [select, setSelect] = useState([])
 
     const dispatch = useDispatch()
-    const systemId = useSelector(getSystemName)
-
-    useEffect(() => {
-        dispatch(getSystemThunk())
-    }, [])
 
 
     const onClick = (data) => {
         const res = {
             ...data,
-            system: select
 
         }
         dispatch(createLocationThunk(res))
@@ -39,7 +29,6 @@ export const LocationCreate = ({active , setActive}) => {
         setActive(!active)
         setValue("name", "")
         setValue("number", "")
-        setValue("system", "")
     }
 
 
@@ -51,7 +40,6 @@ export const LocationCreate = ({active , setActive}) => {
                    <Form onSubmit={handleSubmit(onClick)} extraClassname={cls.form}>
                        <Input register={register} name={"name"} placeholder={"Name"}/>
                        <Input placeholder={"Number"} register={register} name={"number"}/>
-                       <Select options={systemId} title={"System name"} onChangeOption={setSelect}/>
                    </Form>
                </div>
            </div>

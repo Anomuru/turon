@@ -12,7 +12,6 @@ import {
     getRoomsProfilePage,
     getEmployerProfile,
     getBranch,
-    getSystem,
     getLocations,
     getRouteCreateGroup,
     getEmployerSalaryInsideSource,
@@ -49,10 +48,6 @@ const EmployerSalaryPage = lazyPage(() => import("pages/employerSalaryPage"), "E
 const GiveSalaryPage = lazyPage(() => import("pages/giveSalaryPage"), "GiveSalaryPage");
 const GiveTeacherSalaryPage = lazyPage(() => import("pages/giveSalaryPage"), "GiveTeacherSalaryPage");
 
-const Branch = lazyPage(() => import("entities/editCreates"), "Branch");
-const Education = lazyPage(() => import("entities/editCreates"), "Education");
-const Location = lazyPage(() => import("entities/editCreates"), "Location");
-const System = lazyPage(() => import("entities/editCreates"), "System");
 
 const Inkasatsiya = lazyPage(() => import("pages/inkasatsiyaPage"), "Inkasatsiya");
 
@@ -173,21 +168,6 @@ export const routersConfigProfile = [
 
 
 
-    {
-        name: "location",
-        path: getLocations(":id"),
-        element: <Location/>
-    },
-    {
-        name: "branch",
-        path: getBranch(":idBranch"),
-        element: <Branch/>
-    },
-    {
-        name: "system",
-        path: getSystem(":id"),
-        element: <System/>
-    },
     {
         name: "inkasatsiya",
         path: getInkasatsiya(":idBranch"),

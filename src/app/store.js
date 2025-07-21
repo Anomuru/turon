@@ -77,8 +77,6 @@ async function loadSlices() {
         teacher
     } = await import("entities/accounting");
 
-    const { postBranch, postEducation, postSystem } = await import("entities/creates");
-    const { getBranchSlice, getEducation, systemSlice } = await import("entities/editCreates");
 
     const { teacherSalarySlice } = await import("entities/teacherSalary");
     const { employerSalarySlice } = await import("entities/employerSalary");
@@ -100,7 +98,6 @@ async function loadSlices() {
     const { alertSlice } = await import("features/alert");
     const { classSlice } = await import("entities/class");
     const { locationsSlice } = await import("features/locations");
-    const { themeSwitcherSlice } = await import("features/themeSwitcher");
     const { branchSwitcherSlice } = await import("features/branchSwitcher");
     const { multiPageSlice } = await import("widgets/multiPage");
     const { studiyngStudentDelSlice } = await import("features/studiyngStudentDelModal");
@@ -161,12 +158,6 @@ async function loadSlices() {
         overHeadSlice,
         studentSlice,
         teacher,
-        postBranch,
-        postEducation,
-        postSystem,
-        getBranchSlice,
-        getEducation,
-        systemSlice,
         teacherSalarySlice,
         employerSalarySlice,
         giveEmployerSalarySlice,
@@ -185,7 +176,6 @@ async function loadSlices() {
         alertSlice,
         classSlice,
         locationsSlice,
-        themeSwitcherSlice,
         branchSwitcherSlice,
         multiPageSlice,
         studiyngStudentDelSlice,
@@ -237,10 +227,8 @@ async function loadSlices() {
 //     studentSlice,
 //     teacher
 // } from "entities/accounting";
-// import {postBranch, postEducation, postSystem} from "entities/creates";
 // import {
 //     getBranchSlice, getEducation,
-//     systemSlice
 // } from "entities/editCreates";
 // import {teacherSalarySlice} from "entities/teacherSalary";
 // import {employerSalarySlice} from "entities/employerSalary";
@@ -327,8 +315,6 @@ export const store = configureStore({
         // vacancyPageParseSlice,
         // vacancyWorkPageSlice,
         // accountingSlice,
-        // postSystem,
-        // systemSlice,
         // postBranch,
         // getBranchSlice,
         // // timeTableSchool,

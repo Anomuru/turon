@@ -18,8 +18,7 @@ export const fetchLocationsThunk = createAsyncThunk(
 
 
 
-            dispatch(clearSelectedLocations(selectedSystemIds))
-            return {list:response, systemId:selectedSystemIds};
+            return {list:response};
         } catch (error) {
             return rejectWithValue(error.message);
         }

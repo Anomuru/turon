@@ -6,14 +6,10 @@ import {Modal} from 'shared/ui/modal';
 import {Input} from 'shared/ui/input';
 import {Button} from 'shared/ui/button';
 import cls from './roomsAddModal.module.sass';
-import {addRoom} from "pages/roomsPage/model/roomsAddSlice";
-import {getBranchThunk, getLocations} from "entities/editCreates";
-import {Select} from "shared/ui/select";
-import {value} from "lodash/seq";
 import {fetchRoomsData} from "entities/rooms";
 import {onAddAlertOptions} from "../../alert/model/slice/alertSlice";
-import {API_URL, branchQueryId, headers, useHttp} from "../../../shared/api/base";
-import {onAddRooms} from "../../../entities/rooms/model/roomsSlice";
+import {API_URL, branchQueryId, headers, useHttp} from "shared/api/base";
+import {onAddRooms} from "entities/rooms/model/roomsSlice";
 
 export const RoomModal = ({isOpen, onClose, branch}) => {
     const [groupName, setGroupName] = useState('');

@@ -1,6 +1,5 @@
 import {getUserBranchId} from "entities/profile/userProfile";
 import {getBranch} from "features/branchSwitcher";
-import {getSystem} from "features/themeSwitcher";
 import React, {useEffect, useMemo, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -34,7 +33,6 @@ export const GroupsPage = () => {
     // const {"*": id} = useParams()
     const {id} = useSelector(getBranch)
     const userBranchId = id
-    const system = useSelector(getSystem)
     const [deletedGroups, setDeletedGroups] = useState([])
     const [active, setActive] = useState(false);
     const [activeSwitch, setActiveSwitch] = useState(false)
@@ -103,8 +101,7 @@ export const GroupsPage = () => {
                         <>
                             <div className={cls.table}>
 
-                                <h2>{activeSwitch ? system.name === "center" ? "Deleted Groups" : "Deleted Classes" :
-                                    system.name === "center" ? "Groups" : "Classes"}</h2>
+                                <h2>{activeSwitch ? "Deleted Classes" : "Classes"}</h2>
                                 {activeSwitch ? <DeletedGroups currentTableData={currentTableData}/> : <GroupsList
                                     currentTableData={currentTableData}
                                 />}

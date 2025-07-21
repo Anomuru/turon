@@ -15,7 +15,7 @@ import {
 import {MiniLoader} from "shared/ui/miniLoader";
 
 
-export const Location = ({systemId}) => {
+export const Location = () => {
 
 
     const locations = useSelector(getLocations)
@@ -30,10 +30,6 @@ export const Location = ({systemId}) => {
     const dispatch = useDispatch();
 
 
-    // useEffect(() => {
-    //     if (systemId)
-    //     dispatch(fetchLocationsThunk(systemId))
-    // },[systemId])
 
 
     // useEffect(() => {

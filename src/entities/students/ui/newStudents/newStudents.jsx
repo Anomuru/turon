@@ -15,7 +15,6 @@ export const NewStudents = memo(({currentTableData, setSelectStudents, theme, br
     const [isDeleted, setIsDeleted] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
     const navigation = useNavigate()
-    const userSystem = JSON.parse(localStorage.getItem("selectedSystem"))
 
 
     const renderStudents = () => {
@@ -84,12 +83,7 @@ export const NewStudents = memo(({currentTableData, setSelectStudents, theme, br
                         <th>Full name</th>
                         <th>Age</th>
                         <th>Til</th>
-                        {
-                            userSystem?.name === "school" ? <th>Sinf</th> : <>
-                                <th>Telefon numer</th>
-                                <th>Fani</th>
-                            </>
-                        }
+                        <th>Sinf</th>
 
                         <th>Reg. sana</th>
 

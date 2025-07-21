@@ -16,7 +16,7 @@ import {fetchClassNumberData, fetchClassTypeData} from "../../../../oftenUsed";
 import {fetchCategories} from "../../../../oftenUsed/model/oftenUsedThunk";
 
 
-export const TeacherProfileInfo = memo(({active, setActive, setActiveModal, newImage, system}) => {
+export const TeacherProfileInfo = memo(({active, setActive, setActiveModal, newImage}) => {
 
     const loading = useSelector(getLoading)
     const dispatch = useDispatch()
@@ -98,9 +98,6 @@ export const TeacherProfileInfo = memo(({active, setActive, setActiveModal, newI
                     <p>Summa</p>
 
                     <div className={cls.info__money}>
-                        {system.name === "center" ?
-                            <h2>$ 570.000</h2> :
-                            null}
                         <p>$ 390.000</p>
                     </div>
 

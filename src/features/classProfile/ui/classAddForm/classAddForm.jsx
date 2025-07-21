@@ -9,7 +9,6 @@ import {
 } from "entities/profile/groupProfile";
 import {getGroupProfileFilteredStudents} from "entities/profile/groupProfile/model/groupProfileSelector";
 import {filteredStudents} from "entities/profile/groupProfile/model/groupProfileThunk";
-import {getUserBranchId, getUserSystemId} from "entities/profile/userProfile";
 import {fetchTeachersData} from "entities/teachers";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import React, {memo, useEffect, useMemo, useState} from 'react';
@@ -49,7 +48,6 @@ export const ClassAddForm = memo((props) => {
     const loading = useSelector(getGroupProfileLoading)
     const students = useSelector(getGroupProfileFilteredStudents)
     const data = useSelector(getGroupProfileData)
-    const systemId = useSelector(getUserSystemId)
     const timeTable = useSelector(getTimeTable)
 
     const [activeModal, setActiveModal] = useState(false)
@@ -85,7 +83,6 @@ export const ClassAddForm = memo((props) => {
                     msg: "xatolik yuz berdi (outside classAdd)"
                 }))
             })
-        // const place = userSystemId === 1 ? "guruh" : "sinf"
         // dispatch(changeGroupProfile({
         //     data: {
         //         students: selectedId,

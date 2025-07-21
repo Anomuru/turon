@@ -12,7 +12,6 @@ import { userSetPermissionThunk} from "entities/vacancy/ui/vacancyWorkerList";
 
 export const VacancyWorkerEdit = React.memo(({ active, setActive, user_id }) => {
     const { register, handleSubmit, setValue } = useForm();
-    const [selectedSystems, setSelectedSystems] = useState([]);
     const [selectedLocations, setSelectedLocations] = useState([]);
     const [selectedBranches, setSelectedBranches] = useState([]);
     const dispatch = useDispatch();
@@ -26,15 +25,10 @@ export const VacancyWorkerEdit = React.memo(({ active, setActive, user_id }) => 
 
 
 
-    const systemsOptions = getBranches?.systems?.map(system => ({
-        value: system.id,
-        label: system.name,
-    }));
 
     const onSubmit = async () => {
         const newPermission = {
             user: user_id,
-            systems: selectedSystems.map(system => system.value),
             locations: selectedLocations.map(location => location.value),
             branchs: selectedBranches.map(branch => branch.value),
         };
@@ -46,12 +40,6 @@ export const VacancyWorkerEdit = React.memo(({ active, setActive, user_id }) => 
         setActive(!active)
     };
 
-    const handleSystemChange = (selectedSystems) => {
-        setSelectedSystems(selectedSystems);
-
-        const selectedSystemIds = selectedSystems.map(system => system.value);
-        // dispatch(fetchLocationsForSystemsThunk(selectedSystemIds));
-    };
 
     const handleLocationChange = (selectedLocations) => {
         setSelectedLocations(selectedLocations);
@@ -73,13 +61,6 @@ export const VacancyWorkerEdit = React.memo(({ active, setActive, user_id }) => 
     return (
         <Modal active={active} setActive={setActive}>
             <Form onSubmit={handleSubmit(onSubmit)} extraClassname={cls.filter}>
-                <EditableCard extraClass={cls.cardSelect}>
-                    <AnimatedMulti
-                        options={systemsOptions}
-                        value={selectedSystems}
-                        onChange={handleSystemChange}
-                    />
-                </EditableCard>
                 <EditableCard extraClass={cls.cardSelect}>
                     <AnimatedMulti
                         options={locationOptions}

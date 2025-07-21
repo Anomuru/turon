@@ -8,7 +8,7 @@ import {
     getTimeTable
 } from "entities/profile/groupProfile";
 import {getGroupProfileFilteredStudents} from "entities/profile/groupProfile/model/groupProfileSelector";
-import {getUserBranchId, getUserSystemId} from "entities/profile/userProfile";
+import {getUserBranchId} from "entities/profile/userProfile";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import React, {memo, useEffect, useMemo, useState} from 'react';
 import {useForm} from "react-hook-form";
@@ -44,7 +44,6 @@ export const GroupAddForm = memo((props) => {
     const students = useSelector(getGroupProfileFilteredStudents)
     const data = useSelector(getGroupProfileData)
     const branchId = useSelector(getUserBranchId)
-    const systemId = useSelector(getUserSystemId)
     const timeTable = useSelector(getTimeTable)
 
     const [activeModal, setActiveModal] = useState(false)
@@ -62,7 +61,6 @@ export const GroupAddForm = memo((props) => {
             update_method: "add_students",
             group_type: "center"
         }
-        // const place = userSystemId === 1 ? "guruh" : "sinf"
         request(`${API_URL}Group/groups/profile/${data?.id}/`, "PATCH", JSON.stringify(res), headers())
             .then(res => {
                 dispatch(onAddAlertOptions({
@@ -106,7 +104,7 @@ export const GroupAddForm = memo((props) => {
     }, [data])
 
     useEffect(() => {
-        if (branchId && data && timeTable && systemId === 1) {
+        if (branchId && data && timeTable) {
             const res = {
                 time_tables: timeTable.map(item => ({
                     week: item.week.id,
@@ -124,7 +122,7 @@ export const GroupAddForm = memo((props) => {
             }))
         }
 
-    }, [branchId, data, timeTable, systemId])
+    }, [branchId, data, timeTable])
 
     const searched = useMemo(() => {
         const filteredSlice = students?.slice()

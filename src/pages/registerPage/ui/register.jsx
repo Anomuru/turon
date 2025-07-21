@@ -18,8 +18,6 @@ import {MiniLoader} from "shared/ui/miniLoader";
 import {API_URL, useHttp, headers} from "shared/api/base";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {getCategories} from "../model/registerSelector";
-import {getSystems} from "../../../features/themeSwitcher";
-import {getSystemName} from "entities/editCreates";
 import {AnimatedMulti} from "features/workerSelect";
 import {
     getSubjectsData,
@@ -77,8 +75,6 @@ export const Register = () => {
 
     const username = watch("username", "");
     const {theme} = useTheme()
-    const getSystem = useSelector(getSystemName)
-    const userSystem = JSON.parse(localStorage.getItem("selectedSystem"))
     // const classNumbers = useSelector(getSchoolClassNumbers)
     const branch = localStorage.getItem("selectedBranch")
     const categories = useSelector(getCategories)
@@ -207,7 +203,6 @@ export const Register = () => {
 
         if (registerType === 'student') {
             let result;
-            if (userSystem?.name === "school") {
                 result = {
                     class_number: selectedClass,
                     parents_fullname: data.parents_fullname,
@@ -221,11 +216,6 @@ export const Register = () => {
                     student_seria_num: data.student_seria_num,
                     student_seria: data.student_seria
                 }
-            } else {
-                result = {
-                    subject: selectedSubject.map(subject => subject.value) || null,
-                }
-            }
             res = {
                 ...res,
                 shift: selectedTimes?.id || "",
@@ -234,7 +224,6 @@ export const Register = () => {
             };
             registerAction = registerUser(res);
         } else if (registerType === 'teacher') {
-            if (userSystem?.name === "school") {
                 res = {
                     ...res,
                     total_students: 1212,
@@ -244,13 +233,6 @@ export const Register = () => {
                     subject: selectedSubject.map(subject => subject.value) || null,
                 };
                 registerAction = registerTeacher({res, file: res?.user?.resume})
-            } else {
-                res = {
-                    ...res,
-                    total_students: 1212,
-                };
-                registerAction = registerTeacher(res);
-            }
         } else if (registerType === 'employer') {
             res2 = {
                 ...res2,
@@ -260,7 +242,7 @@ export const Register = () => {
         }
 
         if (registerAction) {
-            if (registerType === 'teacher' && userSystem?.name === "school") {
+            if (registerType === 'teacher') {
                 dispatch(registerTeacherImage({id: res?.user?.username, file: res?.user?.resume}))
             }
             dispatch(registerAction).then((action) => {
@@ -337,10 +319,6 @@ export const Register = () => {
                         {/*    name={"parents_phone"}*/}
                         {/*/>*/}
 
-
-                        {
-                            (userSystem?.name === "school") ? (
-                                <>
                                     <Select
                                         extraClass={cls.extraClasses}
                                         title={"Sinf"}
@@ -368,32 +346,6 @@ export const Register = () => {
                                            placeholder={"tug'ilgan yili "} type={"date"}/>
                                     <Input register={register} name={"parent_region"}
                                            placeholder={"yashash joyi"}/>
-                                </>
-                            ) : (
-                                <>
-                                    <AnimatedMulti
-                                        options={subjectOptions}
-                                        onChange={handleAddSubject}
-                                        extraClass={cls.multiSelect}
-                                        fontSize={15}
-                                    />
-                                    {/*<Select*/}
-                                    {/*    extraClass={cls.extraClasses}*/}
-                                    {/*    name={"subject_id"}*/}
-                                    {/*    onChangeOption={setSelectedSubject}*/}
-                                    {/*    options={subjects}*/}
-                                    {/*/>*/}
-
-                                    <Select
-                                        title={"Kelish vaqti"}
-                                        extraClass={cls.extraClasses}
-                                        name={"shift"}
-                                        onChangeOption={setSelectedTime}
-                                        options={shift}
-                                    />
-                                </>
-                            )
-                        }
                     </>
                 );
             case 'teacher':
@@ -413,9 +365,6 @@ export const Register = () => {
                             extraClass={cls.multiSelect}
                             fontSize={15}
                         />
-                        {
-                            (userSystem?.name === "school") && (
-                                <>
                                     <Select
                                         extraClass={cls.extraClasses}
                                         name={"category"}
@@ -439,9 +388,6 @@ export const Register = () => {
                                             extraClassName={cls.resume__input}
                                         />
                                     </div>
-                                </>
-                            )
-                        }
                     </>
                 );
             case 'employer':
@@ -516,7 +462,7 @@ export const Register = () => {
                                 required
                                 name={"father_name"}
                             />
-                            {userSystem?.name === "school" && registerType === "student" ?
+                            {registerType === "student" ?
                                 <>
                                     <div className={cls.seriya}>
                                         <Input register={register}
@@ -557,7 +503,7 @@ export const Register = () => {
                                 name={"phone"}
                             />
 
-                            {userSystem?.name === "center " && registerType === 'student' ?
+                            {registerType === 'student' ?
                                 <Input
                                     register={register}
                                     placeholder="Ota-ona telefon raqami"
@@ -620,8 +566,6 @@ export const Register = () => {
 // import {API_URL, useHttp, headers} from "shared/api/base";
 // import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 // import {getCategories} from "../model/registerSelector";
-// import {getSystems} from "../../../features/themeSwitcher";
-// import {getSystemName} from "entities/editCreates";
 // import {AnimatedMulti} from "features/workerSelect";
 // import {
 //     getSubjectsData,
@@ -683,8 +627,6 @@ export const Register = () => {
 //     // const registerType = watch("registerType", "student");
 //     const username = watch("username", "");
 //     const {theme} = useTheme()
-//     const getSystem = useSelector(getSystemName)
-//     const userSystem = JSON.parse(localStorage.getItem("selectedSystem"))
 //     // const classNumbers = useSelector(getSchoolClassNumbers)
 //     const branch = localStorage.getItem("selectedBranch")
 //     const categories = useSelector(getCategories)
@@ -813,7 +755,6 @@ export const Register = () => {
 //
 //         if (registerType === 'student') {
 //             let result;
-//             if (userSystem?.name === "school") {
 //                 result = {
 //                     class_number: selectedClass,
 //                     parents_fullname: data.parents_fullname,
@@ -841,7 +782,6 @@ export const Register = () => {
 //
 //             registerAction = registerUser(res);
 //         } else if (registerType === 'teacher') {
-//             if (userSystem?.name === "school") {
 //                 res = {
 //                     ...res,
 //                     total_students: 1212,
@@ -869,7 +809,6 @@ export const Register = () => {
 //         }
 //
 //         if (registerAction) {
-//             if (registerType === 'teacher' && userSystem?.name === "school") {
 //                 dispatch(registerTeacherImage({id: res?.user?.username, file: res?.user?.resume}))
 //             }
 //
@@ -932,7 +871,6 @@ export const Register = () => {
 //
 //
 //                         {
-//                             (userSystem?.name === "school") ? (
 //                                 <>
 //                                     <Select
 //                                         extraClass={cls.extraClasses}
@@ -1007,7 +945,6 @@ export const Register = () => {
 //                         {/*    fontSize={15}*/}
 //                         {/*/>*/}
 //                         {/*{*/}
-//                         {/*    (userSystem?.name === "school") && (*/}
 //                         {/*        <>*/}
 //                         {/*            <Select*/}
 //                         {/*                extraClass={cls.extraClasses}*/}
@@ -1113,7 +1050,6 @@ export const Register = () => {
 //                                 required
 //                                 name={"father_name"}
 //                             />
-//                             {userSystem?.name === "school" && registerType === "student" ?
 //                                 <>
 //                                     <div className={cls.seriya}>
 //                                         <Input register={register}
@@ -1155,7 +1091,6 @@ export const Register = () => {
 //                                 name={"phone"}
 //                             />
 //
-//                             {userSystem?.name === "center " && registerType === 'student' ?
 //                                 <Input
 //                                     register={register}
 //                                     placeholder="Ota-ona telefon raqami"

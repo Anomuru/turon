@@ -30,7 +30,6 @@ export const loginSlice =createSlice({
                 if (+oldUserId !== +decodedToken.user_id) {
                     localStorage.removeItem("selectedLocations")
                     localStorage.removeItem("selectedBranch")
-                    localStorage.removeItem("selectedSystem")
                 }
 
 

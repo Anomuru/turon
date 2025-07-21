@@ -27,8 +27,6 @@ import {
 } from "entities/profile/userProfile";
 
 import cls from "./userProfilePage.module.sass";
-import {getSystem} from "../../../../features/themeSwitcher";
-import {getBranch} from "../../../../features/branchSwitcher";
 
 export const UserProfilePage = () => {
 
@@ -45,7 +43,6 @@ export const UserProfilePage = () => {
     const salaryData = useSelector(getUserSalaryData)
     const salaryInnerData = useSelector(getUserSalaryInnerData)
     const search = useSelector(getSearchValue)
-    const system = useSelector(getSystem)
     const data = useMemo(() => [
         {
             name: "name",
@@ -142,7 +139,6 @@ export const UserProfilePage = () => {
                 setActive={setActiveModal}
                 setStatus={setCurrentStatus}
                 data={userData}
-                system={system}
             />
             <div className={cls.userProfilePage__inner}>
                 <h1

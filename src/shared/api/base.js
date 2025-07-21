@@ -1,9 +1,9 @@
 //
 // export const API_URL_DOC = `http://192.168.1.61:8000/`
-export const API_URL_DOC = `http://26.253.30.50:8000/`
+// export const API_URL_DOC = `http://26.253.30.50:8000/`
 // export const API_URL_DOC = `http://26.12.122.72:7622/`
 
-// export const API_URL_DOC = `https://school.gennis.uz/`
+export const API_URL_DOC = `https://school.gennis.uz/`
 export const API_URL = `${API_URL_DOC}api/`
 
 // export const CLASSROOM_API_URL = `https://classroom.gennis.uz/`

@@ -14,9 +14,6 @@ export const getUserProfileLoading = (state) =>
 export const getUserBranchId = (state) =>
     state.userProfileSlice.userBranchId
 
-export const getUserSystemId = (state) =>
-    state.userProfileSlice.userSystemId
-
 
 export const getUserPermission = (state) =>
     state.userProfileSlice.userPermissions

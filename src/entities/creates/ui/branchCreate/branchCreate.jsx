@@ -61,7 +61,6 @@ export const BranchCreate = ({active , setActive , loading}) => {
                 <div className={cls.formBox}>
                     <h1 className={cls.formTitle}>Branches</h1>
                     <Form onSubmit={handleSubmit(onClick)} extraClassname={cls.form} typeSubmit={""}>
-                        <Select options={getLocationId} title={"System_id"} onChangeOption={setSelected}/>
                         <Input register={register} name={"name"} placeholder={"Name"}/>
                         <Input register={register} name={"number"} placeholder={"Number"}/>
                         <Input register={register} name={"location_text"} placeholder={"Location"}/>

@@ -10,8 +10,6 @@ import {ImageCrop} from "features/imageCrop";
 import {changeStudentProfileImage} from "../../model/thunk/studentProfileThunk";
 
 import cls from "./profileTeacherPage.module.sass"
-import {getSystem} from "features/themeSwitcher";
-import {getBranch} from "../../../../features/branchSwitcher";
 export const ContextStuPro = createContext(null)
 
 export const ProfileTeacherPage = () => {
@@ -25,7 +23,6 @@ export const ProfileTeacherPage = () => {
     const [activeModal, setActiveModal] = useState("")
     const [newImage, setNewImage] = useState("")
     const {theme} = useTheme()
-    const system = useSelector(getSystem)
 
 
     useEffect(() => {
@@ -55,7 +52,6 @@ export const ProfileTeacherPage = () => {
                     active={active}
                     setActiveModal={setActiveModal}
                     newImage={newImage}
-                    system={system}
                 />
 
                 {/*// actives={actives}*/}

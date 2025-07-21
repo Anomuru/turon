@@ -1,6 +1,5 @@
 import {deleteGroup} from "entities/groups/model/slice/groupsSlice";
 import {getGroupProfileNextLsData} from "entities/profile/groupProfile/model/groupProfileSelector";
-import {getUserSystemId} from "entities/profile/userProfile";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import React, {memo, useEffect, useState} from 'react';
 import {useForm} from "react-hook-form";
@@ -35,7 +34,7 @@ import {ConfirmModal} from "../../../../shared/ui/confirmModal";
 import {getBranch} from "../../../branchSwitcher";
 
 
-export const GroupProfileInfoForm = memo(({system,branch}) => {
+export const GroupProfileInfoForm = memo(({}) => {
 
     const {
         register,
@@ -51,7 +50,6 @@ export const GroupProfileInfoForm = memo(({system,branch}) => {
     const data = useSelector(getGroupProfileData)
     const nextLesson = useSelector(getGroupProfileNextLsData)
     const languages = useSelector(getLanguagesData)
-    const userSystem = JSON.parse(localStorage.getItem("selectedSystem")) // changed
     // const schoolClassNumbers = useSelector(getSchoolClassNumbers)
     const schoolClassNumbers = useSelector(getClassNumberData)
     // const schoolClassColors = useSelector(getSchoolClassColors)
@@ -84,7 +82,6 @@ export const GroupProfileInfoForm = memo(({system,branch}) => {
     const onDelete = () => {
         dispatch(deleteGroupProfile({
             id,
-            res: {type: userSystem?.name}
         }))
         dispatch(deleteGroup(id))
         navigate(-2)
@@ -94,11 +91,9 @@ export const GroupProfileInfoForm = memo(({system,branch}) => {
         setValue("name", data?.name)
         setValue("price", data?.price)
         setValue("language", data?.language?.id)
-        if (userSystem?.name === "school") {
             setValue("color", data?.color?.id)
             setValue("class_number", data?.class_number?.id)
-        }
-    }, [userSystem?.name, data])
+    }, [data])
 
 
     return (
@@ -187,17 +182,6 @@ export const GroupProfileInfoForm = memo(({system,branch}) => {
                         name={"name"}
                         required
                     />
-                    {
-                        system.name === "center" ? <Input
-                            extraClassName={cls.form__input}
-                            placeholder={"Guruh narxi"}
-                            register={register}
-                            name={"price"}
-                            type={"number"}
-                            required
-                        /> : null
-                    }
-
                     <Select
                         extraClass={cls.form__select}
                         options={languages}
@@ -207,8 +191,6 @@ export const GroupProfileInfoForm = memo(({system,branch}) => {
                         defaultValue={data?.language?.id}
                         required
                     />
-                    {
-                        userSystem?.name === "school" ? <>
                             <>
                                 <Select
                                     extraClass={cls.form__select}
@@ -253,9 +235,6 @@ export const GroupProfileInfoForm = memo(({system,branch}) => {
                                         register={register}
                                     />
                             }
-
-                        </> : null
-                    }
                     <div className={cls.form__switch}>
                         <p>Guruh statusi: </p>
                         <Switch

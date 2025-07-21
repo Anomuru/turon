@@ -14,14 +14,6 @@ export const createBranchThunk = createAsyncThunk(
 )
 
 
-export const getSystemId = createAsyncThunk(
-    "postCreateBranch/getSystemId",
-    async () => {
-        const {request }= useHttp()
-        return await request(`${API_URL}System/systems/` , "GET" , null  ,headers())
-
-    }
-)
 
 export const getLocationThunk = createAsyncThunk(
     "getLocationSlice/getLocationThunk",

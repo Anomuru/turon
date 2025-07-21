@@ -33,7 +33,6 @@ import {
 } from "entities/profile/groupProfile";
 import {fetchRoomsData} from "entities/rooms";
 import {fetchClassColors, fetchClassNumberList} from "entities/students";
-import {getUserBranchId, getUserSystemId} from "entities/profile/userProfile";
 import {fetchTeachersData} from "entities/teachers";
 import {fetchGroupsData} from "entities/groups";
 import {API_URL, headers, useHttp} from "shared/api/base";
@@ -47,8 +46,6 @@ import {
 
 import cls from "./groupProfilePage.module.sass";
 import {getBranch} from "features/branchSwitcher";
-import {system} from "features/workerSelect";
-import {getSystem} from "features/themeSwitcher";
 import {Modal} from "../../../../shared/ui/modal";
 import {Select} from "../../../../shared/ui/select";
 import {Button} from "../../../../shared/ui/button";
@@ -66,8 +63,6 @@ export const GroupProfilePage = () => {
     const timeTable = useSelector(getTimeTable)
     const loading = useSelector(getGroupProfileLoading)
     const {id: branch} = useSelector(getBranch)
-    const system = useSelector(getSystem)
-    const systemId = useSelector(getUserSystemId)
     // const groupAttendance  = useSelector(getGroupAttendance)
 
 
@@ -100,7 +95,6 @@ export const GroupProfilePage = () => {
     }, [branch])
 
     useEffect(() => {
-        // if (systemId === 1) {
         //     request(
         //         `${API_URL}SchoolTimeTable/check-next-lesson/?id=${id}&type=class`,
         //         "POST",
@@ -124,7 +118,7 @@ export const GroupProfilePage = () => {
             })
             .catch(err => console.log(err))
         // }
-    }, [id, system])
+    }, [id])
 
     // useEffect(() => {
     //     if (branchId && data) {
@@ -149,7 +143,7 @@ export const GroupProfilePage = () => {
     }, [data])
 
     useEffect(() => {
-        if (branch && data && timeTable && system.name === "center") {
+        if (branch && data && timeTable) {
             const res = {
                 time_tables: timeTable.map(item => ({
                     week: item.week.id,
@@ -167,14 +161,14 @@ export const GroupProfilePage = () => {
             }))
         }
 
-    }, [branch, data, timeTable, system])
+    }, [branch, data, timeTable])
 
 
     if (loading) {
         return <DefaultPageLoader/>
     } else return (
         <div className={cls.profile}>
-            <GroupProfileInfoForm branch={branch} system={system}/>
+            <GroupProfileInfoForm branch={branch} />
             {/*<GroupProfileInfo/>*/}
             <div
                 className={classNames(cls.profile__mainContent, {
@@ -183,19 +177,11 @@ export const GroupProfilePage = () => {
             >
                 <GroupProfileModalTeachers branch={branch}/>
                 {/*<GroupProfileTeacher setActive={setActiveModal}/>*/}
-                <GroupProfileDeleteForm branch={branch} system={system}/>
+                <GroupProfileDeleteForm branch={branch} />
                 {/*<GroupProfileStudents/>*/}
                 <GroupProfileAttendanceForm  data={data?.students} setAttendance={setAttendance} attendance={attendance}/>
                 {/*<GroupProfileAttendance/>*/}
-                {
-                    system.name === "center" ? <>
-                        <GroupProfileStatistics setActive={setActive}/>
 
-                        <GroupProfileTimeForm/>
-                        {/*<GroupProfileSubjectList/>*/}
-                        <GroupProfileMore/>
-                    </> : null
-                }
             </div>
             <div className={classNames(cls.profile__otherContent, {
                 [cls.active]: active

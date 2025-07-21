@@ -8,7 +8,6 @@ import {
 
 const initialState = {
     userBranchId: null,
-    userSystemId: null,
     userData: null,
     userJob: null,
     userPermissions: null,
@@ -222,7 +221,6 @@ const userProfileSlice = createSlice({
 
                 localStorage.setItem("username",  action.payload.username)
 
-                // state.userSystemId = action.payload.user.branch.location.system.id
                 state.userPermissions = action.payload.permissions
                 state.loading = false
                 state.error = null

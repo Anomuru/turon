@@ -9,15 +9,13 @@ import {useDispatch} from "react-redux";
 import {fetchVacancyData} from "features/vacancyModals/vacancyPageAdd";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 
-export const VacancyPageEdit = React.memo(({modal, setModal, vacancy, onSave, systems}) => {
+export const VacancyPageEdit = React.memo(({modal, setModal, vacancy, onSave}) => {
     const [selectedSubject, setSelectedSubject] = useState(vacancy?.group?.name || "");
-    const [selectedType, setSelectedType] = useState(vacancy?.system_id?.id || "");
 
 
     useEffect(() => {
         if (vacancy) {
             setSelectedSubject(vacancy.group.name);
-            setSelectedType(vacancy.system_id.id);
         }
     }, [vacancy]);
 
@@ -29,7 +27,6 @@ export const VacancyPageEdit = React.memo(({modal, setModal, vacancy, onSave, sy
         const updatedVacancy = {
             ...vacancy,
             name: selectedSubject,
-            system_id: selectedType,
         };
         onSave(updatedVacancy);
 
@@ -73,8 +70,6 @@ export const VacancyPageEdit = React.memo(({modal, setModal, vacancy, onSave, sy
                         onChange={(e) => setSelectedSubject(e.target.value)}
                     />
                     <Select
-                        // title={"Systemlar"}
-                        options={systems}
                         onChangeOption={setSelectedType}
                         defaultValue={selectedType}
                     />

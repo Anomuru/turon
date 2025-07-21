@@ -11,7 +11,6 @@ export {
 export {
     getUserBranchId,
     getUserPermission,
-    getUserSystemId,
     getUserProfileData,
     getUserSalaryInnerData,
     getUserSalaryData,

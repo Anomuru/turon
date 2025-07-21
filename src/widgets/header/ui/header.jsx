@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useLocation, useNavigate} from 'react-router';
 import {SearchPlatformInput, getSearchStr} from 'features/searchInput';
 import {getLocations, getSelectedLocations, Location} from 'features/locations';
-import {getSystem, ThemeSwitcher} from 'features/themeSwitcher';
 import {useDebounce} from 'shared/lib/hooks/useDebounce';
 import {Button} from 'shared/ui/button';
 
@@ -39,7 +38,6 @@ export const Header = () => {
 
     const selectedLocations = useSelector(getSelectedLocations)
     const locations = useSelector(getLocations)
-    const system = useSelector(getSystem)
 
 
     useEffect(() => {
@@ -99,9 +97,9 @@ export const Header = () => {
         dispatch(getSearchStr(checkedValue));
     }
 
-    const onDelete = (id) => {
-        dispatch(deleteSelectedLocations(id))
-    }
+    // const onDelete = (id) => {
+    //     dispatch(deleteSelectedLocations(id))
+    // }
 
     // useEffect(() => {
     //     if (selectedLocations.length < 1) {
@@ -118,14 +116,13 @@ export const Header = () => {
                     defaultSearch={valueData ?? searchParams.get('search')}
                     onSearch={setValueData}
                 />
-                <div className={cls.inner}>
-                    <ThemeSwitcher/>
-                    <Location systemId={system.id}/>
-                    {
-                        selectedLocations.length  < 2 ?
-                        <BranchSwitcher location={selectedLocations[0]}/> : null
-                    }
-                </div>
+                {/*<div className={cls.inner}>*/}
+                {/*    <ThemeSwitcher/>*/}
+                {/*    {*/}
+                {/*        selectedLocations.length  < 2 ?*/}
+                {/*        <BranchSwitcher location={selectedLocations[0]}/> : null*/}
+                {/*    }*/}
+                {/*</div>*/}
             </div>
             <div className={cls.header__bottom}>
 
@@ -143,20 +140,20 @@ export const Header = () => {
                     }}
                 />
 
-                <div className={cls.header__selected}>
-                    {locations.length > 1 && selectedLocations.map(item => (
-                        <div className={cls.header__item} key={item?.id}>
-                            {
-                                selectedLocations.length >= 2 ? <i
-                                    onClick={() => onDelete(item?.id)}
-                                    className="fa fa-times"
-                                /> : null
-                            }
+                {/*<div className={cls.header__selected}>*/}
+                {/*    {locations.length > 1 && selectedLocations.map(item => (*/}
+                {/*        <div className={cls.header__item} key={item?.id}>*/}
+                {/*            {*/}
+                {/*                selectedLocations.length >= 2 ? <i*/}
+                {/*                    onClick={() => onDelete(item?.id)}*/}
+                {/*                    className="fa fa-times"*/}
+                {/*                /> : null*/}
+                {/*            }*/}
 
-                            <p>{item?.name}</p>
-                        </div>
-                    ))}
-                </div>
+                {/*            <p>{item?.name}</p>*/}
+                {/*        </div>*/}
+                {/*    ))}*/}
+                {/*</div>*/}
             </div>
         </header>
     );

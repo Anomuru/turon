@@ -19,7 +19,6 @@ import {getMonthDataThunk, getMonthData} from "features/studentPayment";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {fetchStudentProfileData} from "pages/profilePage/model/thunk/studentProfileThunk";
-import {getSystem} from "../../../../../features/themeSwitcher";
 import {
     getMonth,
     getCherityYear,
@@ -52,7 +51,6 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
     const [checkModalStatus, setCheckModalStatus] = useState(false);
     const [payment, setPayment] = useState(1);
     const dispatch = useDispatch();
-    const userSystem = JSON.parse(localStorage.getItem("selectedSystem"));
     const [discountCharity, setDiscountCharity] = useState("")
     const [reasonCharity, setReasonCharity] = useState(0)
     // const [date , setDate] = useState(null)
@@ -71,7 +69,6 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
     }, [year])
 
     const {theme} = useTheme();
-    const system = useSelector(getSystem)
     const {request} = useHttp();
 
     useEffect(() => {
@@ -288,7 +285,6 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                             onSubmit={handleSubmit(handleAddPayment)}
                             extraClassname={cls.form__wrapper}
                         >
-                            {(theme === "app_school_theme" || userSystem?.id === 2) && (
                                 <Select
                                     extraClass={cls.monthSelect}
                                     title={"Oyni tanlang"}
@@ -298,7 +294,6 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                                         onSelect(value);
                                     }}
                                 />
-                            )}
                             <div className={cls.items}>
                                 {amountTypes.map((item, index) => (
                                     <div
@@ -359,7 +354,7 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                             </div>
                         </Form>
                     )}
-                    {activeService === "Xayriya" && system.name === "school" ?
+                    {activeService === "Xayriya" ?
 
                         <Form onSubmit={handleSubmit(postStudentDiscount)}>
                             <div className={cls.form__container}>
@@ -390,25 +385,7 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
 
                         :
 
-                        system.name === "school" ? null : <Form onSubmit={handleSubmit(handleAddCharity)}>
-                            <div className={cls.form__container}>
-                                <Select
-                                    extraClass={cls.form__select}
-                                    options={group_id}
-                                    onChangeOption={setOption}
-                                />
-                                <div className={cls.form__inner}>
-                                    <p>{activeService} miqdori</p>
-                                    <Input
-                                        {...register("amount")}
-                                        placeholder={"Summa"}
-                                        type={"number"}
-                                        value={charitysum}
-                                        onChange={(e) => setCharitySum(e.target.value)}
-                                    />
-                                </div>
-                            </div>
-                        </Form>
+                       null
                     }
 
 

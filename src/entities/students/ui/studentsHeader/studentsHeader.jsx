@@ -10,7 +10,6 @@ import React, {useCallback, useState} from "react";
 import {API_URL, useHttp} from "../../../../shared/api/base";
 import {useSelector} from "react-redux";
 import {getBranch} from "../../../../features/branchSwitcher";
-import {getSystem} from "../../../../features/themeSwitcher";
 
 export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onClick}) => {
 

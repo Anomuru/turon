@@ -11,7 +11,7 @@ import {
     GroupCreateForm,
     GroupAddForm, GroupTimeTableForm
 } from "features/group";
-import {AnimatedMulti, location} from "features/workerSelect";
+import {AnimatedMulti} from "features/workerSelect";
 import {
     getCurseLevelData,
     getCurseTypesData,

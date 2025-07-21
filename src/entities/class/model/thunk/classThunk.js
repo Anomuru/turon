@@ -2,7 +2,6 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {API_URL, headers, useHttp} from "../../../../shared/api/base";
 import {useDispatch} from "react-redux";
 import {onAddAlertOptions} from "../../../../features/alert/model/slice/alertSlice";
-import {branch} from "../../../../features/workerSelect";
 
 
 export const createClassType = createAsyncThunk(

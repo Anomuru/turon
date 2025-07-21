@@ -3,7 +3,6 @@ import {fetchLocationsThunk} from "features/locations/model/thunk/locationsThunk
 
 const initialState = {
     locations: [],
-    systemId: null,
     selectedLocations: [],
     loading: false,
     fetchStatus: "idle",
@@ -54,9 +53,6 @@ const locationsSlice = createSlice({
 
         clearSelectedLocations: (state,action) => {
             state.selectedLocations = []
-            if (state.systemId && action.payload !== state.systemId) {
-                localStorage.removeItem("selectedLocations")
-            }
 
 
         }
@@ -71,7 +67,6 @@ const locationsSlice = createSlice({
             .addCase(fetchLocationsThunk.fulfilled, (state, action) => {
 
 
-                state.systemId = action.payload.systemId
 
                 const localstorageLocs = JSON.parse(localStorage.getItem("selectedLocations"))
 

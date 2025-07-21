@@ -79,12 +79,12 @@ export const AppRouter = () => {
                                         path={item.path}
                                         element={
 
-                                            <RequireBranch>
+                                            // <RequireBranch>
                                                 <Suspense fallback={<div>Loading...</div>}>
                                                     {item.element}
                                                 </Suspense>
 
-                                            </RequireBranch>
+                                            // </RequireBranch>
                                         }
                                     />
                                 )

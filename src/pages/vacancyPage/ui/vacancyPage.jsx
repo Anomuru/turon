@@ -12,7 +12,6 @@ import {VacancyAdd} from "entities/vacancy/ui/vacancyAdd";
 import {useDispatch, useSelector} from "react-redux";
 import {getVacancyJobs, fetchVacancyData} from "features/vacancyModals/vacancyPageAdd";
 import {getSearchValue} from "features/searchInput";
-import {getSystems} from "features/themeSwitcher";
 
 
 export const VacancyPage = () => {
@@ -28,7 +27,6 @@ export const VacancyPage = () => {
     const dispatch = useDispatch()
     const data = useSelector(getVacancyJobs)
     const loading = useSelector(getVacancyLoading)
-    const systems = useSelector(getSystems)
 
     // const getVacancy = getVacancyData?.
 
@@ -42,8 +40,7 @@ export const VacancyPage = () => {
         if (!search) return filteredHeroes;
 
         return filteredHeroes.filter(item =>
-            item?.group?.name?.toLowerCase().includes(search.toLowerCase()) ||
-            item?.system_id?.name?.toLowerCase().includes(search.toLowerCase())
+            item?.group?.name?.toLowerCase().includes(search.toLowerCase())
         )
 
     }, [data, search]);
@@ -117,13 +114,11 @@ export const VacancyPage = () => {
                 modal={modal}
                 vacancy={currentEditingVacancy}
                 onSave={handleVacancyChange}
-                systems={systems}
             />
             <VacancyAdd
                 setActive={setModalActive}
                 active={modalActive}
                 addVacancy={addVacancy}
-                systems={systems}
             />
         </div>
     );

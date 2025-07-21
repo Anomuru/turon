@@ -3,9 +3,7 @@ import {getGroupProfileFilteredTeachers} from "entities/profile/groupProfile/mod
 import {changeGroupProfile, fetchFilteredTeachers} from "entities/profile/groupProfile/model/groupProfileThunk";
 import {fetchTeachersData, getTeachers} from "entities/teachers";
 import {getUserBranchId} from "entities/profile/userProfile";
-import {getUserSystemId} from "entities/profile/userProfile/model/userProfileSelector";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import {system} from "features/workerSelect";
 import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router";
@@ -26,7 +24,6 @@ export const GroupProfileModalTeachers = memo(({branch}) => {
 
     // const branch = localStorage.getItem("selectedBranch")
     const navigation = useNavigate()
-    const userSystem = JSON.parse(localStorage.getItem("selectedSystem")) // changed
     const userBranchId = useSelector(getUserBranchId)
     const dispatch = useDispatch()
     const {id} = useParams()
@@ -44,12 +41,8 @@ export const GroupProfileModalTeachers = memo(({branch}) => {
     const [currentTeachersData, setCurrentTeachersData] = useState([])
 
     useEffect(() => {
-        if (userSystem?.name === "school") {
             setCurrentTeachersData(schoolTeachers)
-        } else {
-            setCurrentTeachersData(centerTeachers)
-        }
-    }, [theme, userSystem?.name, centerTeachers, schoolTeachers])
+    }, [theme,centerTeachers, schoolTeachers])
 
     const [active, setActive] = useState(false)
     const [searchValue, setSearchValue] = useState("")
@@ -59,7 +52,6 @@ export const GroupProfileModalTeachers = memo(({branch}) => {
         dispatch(changeGroupProfile({
             data: {teacher: [teacherId]},
             id: id,
-            group_type: userSystem?.name
         }))
         dispatch(onAddAlertOptions({
             type: "success",

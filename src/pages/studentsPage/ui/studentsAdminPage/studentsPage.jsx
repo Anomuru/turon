@@ -62,7 +62,6 @@ import {
 import cls from "./students.module.sass"
 import {getTeachersSelect} from "entities/oftenUsed/model/oftenUsedSelector";
 import {fetchTeachersForSelect} from "entities/oftenUsed/model/oftenUsedThunk";
-import {getSystem} from "../../../../features/themeSwitcher";
 
 const studentsFilter = [
     {name: "new_students", label: "New Students"},
@@ -84,7 +83,6 @@ export const StudentsPage = () => {
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams();
     const {register, handleSubmit} = useForm();
-    const userSystem = JSON.parse(localStorage.getItem("selectedSystem")) // changed
     // const {"*": id} = useParams()
     const {id} = useSelector(getBranch)
     const userBranchId = id
@@ -116,7 +114,6 @@ export const StudentsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [activeFormBtn, setActiveFormBtn] = useState(true)
 
-    const system = useSelector(getSystem)
     let PageSize = useMemo(() => 50, []);
 
 
@@ -160,12 +157,12 @@ export const StudentsPage = () => {
 
     useEffect(() => {
         // console.log("render fetch useEffect") ||
-        if (userSystem?.name === "school" && userBranchId) {
+        if (userBranchId) {
             // dispatch(fetchSchoolStudents({userBranchId}))
             dispatch(fetchClassColorData())
             dispatch(fetchClassNumberData({branch: userBranchId}))
         }
-    }, [userSystem?.name, userBranchId])
+    }, [userBranchId])
 
     const onSubmit = (data) => {
         if (!selectColor && schoolClassColors.length <= 3) {
@@ -179,7 +176,6 @@ export const StudentsPage = () => {
             color: data?.color ?? selectColor,
             branch: userBranchId,
             create_type: "school",
-            system: userSystem.id
         }
         setData(res)
         setActive("post")
@@ -339,15 +335,6 @@ export const StudentsPage = () => {
                         extraClassname={cls.modal__form}
                         typeSubmit={activeFormBtn ? "" : "inside"}
                     >
-                        {
-                            system.name === "school" ? null : <Input
-                                required
-                                extraClassName={cls.modal__input}
-                                placeholder={"Sinf nomi"}
-                                name={"name"}
-                                register={register}
-                            />
-                        }
                         <Select
                             required
                             extraClass={cls.modal__select}

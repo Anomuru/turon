@@ -54,8 +54,6 @@ export const GroupCreateForm = memo((props) => {
             subject: selectedSubjectId,
             branch: branch,
             time_table: selectedTime,
-            create_type: theme === "app_center_theme" ? "center" : "school",
-            system: 1
         }
         request(`${API_URL}Group/groups/create/`, "POST", JSON.stringify(res), headers())
             .then(res => {
