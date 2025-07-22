@@ -1,5 +1,6 @@
-@import "app/styles/abstracts/variables"
-@import "app/styles/abstracts/mixins"
+@use "app/styles/abstracts/variables" as mixins
+@use "app/styles/abstracts/mixins" as mixins
+
 
 
 .layoutTarget
@@ -8,7 +9,7 @@
   .header
     height: 10rem
     width: 100%
-    background-color: $color-school-main
+    background-color: mixins.$color-school-main
     display: flex
     align-items: center
     justify-content: space-between

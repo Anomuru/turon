@@ -1,5 +1,5 @@
-@import "app/styles/abstracts/mixins"
-@import "app/styles/abstracts/variables"
+@use "app/styles/abstracts/mixins" as mixin
+@use "app/styles/abstracts/variables" as mixins
 
 .switcher
   position: relative
@@ -47,6 +47,6 @@
       font-size: 1.6rem
       gap: 1rem
       transition: all .8s
-      @include btn-active
+      @include mixin.btn-active
       img
         width: 2rem

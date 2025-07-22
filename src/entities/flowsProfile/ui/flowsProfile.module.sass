@@ -1,4 +1,4 @@
-@import "app/styles/abstracts/mixins"
+@use "app/styles/abstracts/mixins" as mixins
 
 .flowProfile
   display: flex
@@ -141,7 +141,7 @@
     font-size: 2rem
     cursor: pointer
     transition: .3s
-    @include btn-active
+    @include mixins.btn-active
     &:hover
       color: #FF3B30
   &__status

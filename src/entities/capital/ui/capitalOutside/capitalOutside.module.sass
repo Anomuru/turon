@@ -1,6 +1,4 @@
-@import "app/styles/abstracts/mixins"
-
-
+@use "app/styles/abstracts/mixins" as mixins
 .capital
   &__wrapper
     display: flex
@@ -15,7 +13,7 @@
     display: flex
     flex-direction: column
     gap: 2rem
-    @include btn-active
+    @include mixins.btn-active
     cursor: pointer
     transition: all .5s
     &:hover

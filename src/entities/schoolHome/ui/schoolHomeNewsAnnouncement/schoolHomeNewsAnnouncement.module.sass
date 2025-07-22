@@ -1,5 +1,5 @@
-@import "app/styles/abstracts/variables"
-@import "app/styles/abstracts/mixins"
+@use "app/styles/abstracts/variables" as mixins
+@use "app/styles/abstracts/mixins" as mixin
 
 .announcement
   display: flex
@@ -11,7 +11,7 @@
     display: flex
     justify-content: space-between
     h1
-      color: $btn-switch-school
+      color: mixins.$btn-switch-school
       font-size: 3.2rem
     &__container
       display: flex
@@ -45,7 +45,7 @@
       position: relative
       border-radius: 1.2rem
       transition: .1s
-      @include btn-active
+      @include mixin.btn-active
       cursor: pointer
       img
         height: 100%

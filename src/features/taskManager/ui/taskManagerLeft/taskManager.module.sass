@@ -1,5 +1,5 @@
-@import "app/styles/abstracts/variables"
-@import "app/styles/abstracts/mixins"
+@use "app/styles/abstracts/variables" as mixins
+@use "app/styles/abstracts/mixins" as mixin
 
 .taskLeft
   display: flex
@@ -63,7 +63,7 @@
       .plus
         width: 5rem
         height: 5rem
-        background-color: $color-school-main
+        background-color: mixins.$color-school-main
         border-radius: 50%
         display: flex
         align-items: center
@@ -71,7 +71,7 @@
         cursor: pointer
         transition: all 0.2s
         user-select: none
-        @include btn-active
+        @include mixin.btn-active
 
     &_table
       padding-right: 2rem

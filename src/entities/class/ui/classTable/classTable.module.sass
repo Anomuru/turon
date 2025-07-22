@@ -1,4 +1,4 @@
-@import "app/styles/abstracts/mixins"
+@use "app/styles/abstracts/mixins" as mixins
 
 .select
   width: 35rem!important
@@ -62,7 +62,7 @@
   border-radius: 5px
   &.active
     background: #22C55E
-  @include btn-active
+  @include mixins.btn-active
   i
     color: white!important
 

@@ -1,4 +1,4 @@
-@import "app/styles/abstracts/mixins"
+@use "app/styles/abstracts/mixins" as mixins
 
 .gallery
   padding: 5rem 10rem
@@ -49,7 +49,7 @@
         padding: .8rem
         transition: .1s
         border-radius: .5rem
-        @include btn-active
+        @include mixins.btn-active
         i
           font-size: 1.6rem
           color: #fff

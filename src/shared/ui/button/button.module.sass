@@ -1,5 +1,7 @@
+
+@use "app/styles/abstracts/mixins" as mixins
 @import "app/styles/abstracts/variables"
-@import "app/styles/abstracts/mixins"
+
 @import "app/styles/themes/center"
 @import "app/styles/themes/school"
 
@@ -20,7 +22,7 @@
   outline: none
   text-transform: capitalize
   margin: 5px
-  @include btn-active
+  @include mixins.btn-active
   //border: 2px solid #008ac6
   background-color: $btn-gennis
   border: none
@@ -33,7 +35,7 @@
   img
     width: 16px
   &.simple
-    @include btn-active
+    @include mixins.btn-active
     color: white
     border: 2px solid var(--btn-border-color)
     background-color: var(--btn-bg-color)
@@ -45,14 +47,14 @@
     font-weight: 600
     font-size: 1.5rem
   &.success
-    @include btn-active
+    @include mixins.btn-active
     background-color: $btn-success
     border: 2px solid #BBF7D0
     &:hover
       color: white
 
   &.danger
-    @include btn-active
+    @include mixins.btn-active
     background-color: $btn-danger
     border: 1px solid #fecdd3
     color: white
@@ -60,7 +62,7 @@
       color: white
 
   &.warning
-    @include btn-active
+    @include mixins.btn-active
     background-color: $btn-warning
     border: 2px solid #FEF08A
 
@@ -74,7 +76,7 @@
     transition: .5s all
 
   &.star
-    @include btn-active
+    @include mixins.btn-active
     padding: 0
     width: 50px
     height: 50px

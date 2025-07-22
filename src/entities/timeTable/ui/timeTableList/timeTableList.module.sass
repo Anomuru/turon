@@ -1,5 +1,4 @@
-@import "app/styles/abstracts/mixins"
-
+@use "app/styles/abstracts/mixins" as mixins
 .timeTableList
   max-height: 55rem
   overflow: auto
@@ -19,4 +18,4 @@
     width: 1rem
 
   &__icon
-    @include btn-active
+    @include mixins.btn-active

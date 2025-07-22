@@ -1,5 +1,5 @@
-@import "app/styles/abstracts/mixins"
-@import "app/styles/abstracts/variables"
+@use "app/styles/abstracts/mixins" as mixin
+@use "app/styles/abstracts/variables" as mixins
 
 .employer
   width: 100%
@@ -19,7 +19,7 @@
     justify-content: center
     align-items: center
     border-radius: 5px
-    @include btn-active
+    @include mixin.btn-active
     i
       color: white
   .checkbox__checked
@@ -35,4 +35,4 @@
       color: white
   .delete
     i
-      color: $color-danger
+      color: mixins.$color-danger

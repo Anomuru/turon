@@ -1,5 +1,4 @@
-@import "app/styles/abstracts/mixins"
-
+@use "app/styles/abstracts/mixins" as mixin
 .visionMission
   display: flex
   width: 100%
@@ -72,7 +71,7 @@
     padding: .8rem
     transition: .1s
     border-radius: .5rem
-    @include btn-active
+    @include mixin.btn-active
 
     i
       font-size: 1.6rem
@@ -85,7 +84,7 @@
     background: #FFFFFF
     padding: 1.6rem 1.985rem
     transition: .1s
-    @include btn-active
+    @include mixin.btn-active
 
     i
       color: #072E92
