@@ -5,7 +5,7 @@ export const fetchUserProfileData = createAsyncThunk(
     "userProfile/fetchUserProfileData",
     async (id) => {
         const {request} = useHttp()
-        return await request({url: `Users/users/${id}/`, headers: headers()})
+        return await request(`${API_URL}Users/users/${id}/`, "GET", null, headers())
     }
 )
 
@@ -13,12 +13,12 @@ export const changeUserProfileData = createAsyncThunk(
     "userProfile/changeUserProfileData",
     async ({id, data}) => {
         const {request} = useHttp()
-        return await request({
-            url: `Users/users/update/${id}/`,
-            method: "PATCH",
-            body: JSON.stringify(data),
-            headers: headers()
-        })
+        return await request(
+            `${API_URL}Users/users/update/${id}/`,
+            "PATCH",
+            JSON.stringify(data),
+            headers()
+        )
     }
 )
 
@@ -28,7 +28,7 @@ export const changeUserProfileImage = createAsyncThunk(
         const {request} = useHttp()
         const formData = new FormData
         formData.append("profile_img", data)
-        return request({url: `Users/users/update/${id}/`, method: "PATCH", body: formData, headers: headersImg()})
+        return request(`${API_URL}Users/users/update/${id}/`, "PATCH", formData, headersImg())
     }
 )
 

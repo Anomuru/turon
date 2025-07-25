@@ -53,30 +53,15 @@ export const branchQueryId = () => {
 
 
 export const useHttp = () => {
-    const request = async (props) => {
-        let {
-            url = "",
-            method = 'GET',
-            body = undefined,
-            headers = {'Content-Type': 'application/json'},
-            typeUrl = "auto",
-            isJson = true
-        } = props;
+    const request = async (url, method = 'GET', body = null, headers = {'Content-Type': 'application/json'}) => {
         try {
-            let newUrl = typeUrl === "auto" ? API_URL + url : url;
-            const headersObject = new Headers(headers);
-
-            if (body instanceof FormData) {
-                headersObject.delete("Content-Type");
-            }
-            const response = await fetch(newUrl, {method, mode: 'cors', body, headers: headersObject});
-
+            const response = await fetch(url, {method, mode: 'cors', body, headers});
 
             if (!response.ok) {
                 throw new Error(`Could not fetch ${url}, status: ${response.status}`);
             }
 
-            return isJson ? await response?.json() : response;
+            return await response.json();
 
         } catch (e) {
             throw e;
@@ -84,7 +69,6 @@ export const useHttp = () => {
     }
 
     return {request}
-
 }
 
 export const ParamUrl = (params) => {
