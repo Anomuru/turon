@@ -1,1 +1,0 @@
-export {StudentAttendanceData} from './ui/studentProfileAttendanceData/studentAttendanceData'

@@ -1,1 +1,0 @@
-export  {savePageTypeToLocalStorage, getPageTypeFromLocalStorage, removePageTypeFromLocalStorage} from './ui/pagesType'

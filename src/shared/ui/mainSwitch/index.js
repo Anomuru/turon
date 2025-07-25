@@ -1,1 +1,0 @@
-export {MainSwitch} from "./mainSwitch"

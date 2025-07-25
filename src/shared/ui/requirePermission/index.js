@@ -1,1 +1,0 @@
-export {RequirePermission} from "./requirePermission"

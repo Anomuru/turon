@@ -1,1 +1,0 @@
-export {TeacherSalaryPage} from "./ui/teacherSalaryPage";

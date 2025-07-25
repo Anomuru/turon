@@ -1,1 +1,0 @@
-export const getContactInfo = (state) => state.homeContactUsSlice.data

@@ -1,1 +1,0 @@
-export const getSchoolLatestSlice = (state) => state.schoolLatestSlice.data

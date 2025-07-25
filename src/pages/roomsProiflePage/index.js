@@ -1,1 +1,0 @@
-export {RoomsProfilePage} from './ui/roomsProfilePage'

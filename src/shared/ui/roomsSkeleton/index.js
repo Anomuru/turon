@@ -1,1 +1,0 @@
-import {SkeletonCard} from "./roomsSkeleton"

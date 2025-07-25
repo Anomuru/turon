@@ -1,1 +1,0 @@
-export const groups = [1, 2];

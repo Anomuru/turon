@@ -1,1 +1,0 @@
-export {SearchProvider} from "src/app/providers/searchProvider/ui/searchProvider.jsx";

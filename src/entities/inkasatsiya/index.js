@@ -1,1 +1,0 @@
-export {default as  inkasatsiyaSlice} from "./model/inkasatsiyaSlice"

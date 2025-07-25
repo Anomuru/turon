@@ -1,1 +1,0 @@
-export {useHorizontalScroll} from "./useHorizontalScroll";

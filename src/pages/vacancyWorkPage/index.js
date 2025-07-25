@@ -1,1 +1,0 @@
-export {VacancyWorkPage} from './ui/vacancyWorkPage'

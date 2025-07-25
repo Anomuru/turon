@@ -1,1 +1,0 @@
-export {useResultsSearch} from "./search"

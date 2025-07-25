@@ -1,1 +1,0 @@
-export {TargetItemsReg} from "./ui/targetForm/targetItemsReg"

@@ -1,1 +1,0 @@
-export const getSchoolLeaderShip =(state) => state.schoolLeaderSheapSlice.data
