@@ -9,6 +9,7 @@ import {fetchUserData} from "entities/user";
 import {getUserRefreshLoading, getUserRole, userRefresh, userRefreshData} from "pages/loginPage";
 import {API_URL, useHttp} from "shared/api/base";
 import {DefaultPageLoader} from "../../../shared/ui/defaultLoader";
+import {store} from "app/store.js";
 
 
 // http://192.168.68.123:8000/Api/token/refresh/
@@ -23,7 +24,14 @@ export const RequireAuth = ({roles, children}) => {
 
     const dispatch = useDispatch()
 
+    console.log(refreshLoading, "refreshLoading")
+
     useEffect(() => {
+        // useEffect(() => {
+            import("pages/loginPage").then((module) => {
+                store.injectReducer("loginSlice", module.loginSlice);
+            });
+        // }, []);
         // dispatch(fetchUserData(refresh_token))
         dispatch(userRefreshData({refresh: refresh_token}))
         // request(`${API_URL}Api/token/refresh/`, "POST", JSON.stringify({refresh: refresh_token}))

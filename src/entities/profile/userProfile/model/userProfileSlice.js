@@ -11,190 +11,8 @@ const initialState = {
     userData: null,
     userJob: null,
     userPermissions: null,
-    salaryData: [
-        {
-            id: 1,
-            salary: 10000000000,
-            theRest: 1000,
-            received: 2000,
-            month: "may"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "june"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "july"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "aug"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "september"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "may"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "june"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "july"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "aug"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "september"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "may"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "june"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "july"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "aug"
-        },
-        {
-            id: 1,
-            salary: 3000,
-            theRest: 1000,
-            received: 2000,
-            month: "september"
-        }
-    ],
-    salaryInnerData: [
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        }, {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        },
-        {
-            salary: 390.000,
-            salaryType: "Click",
-            date: "2024.01.11"
-        }
-
-    ],
+    salaryData: [],
+    salaryInnerData: [],
     loading: false,
     salaryLoading: false,
     error: null
@@ -212,6 +30,7 @@ const userProfileSlice = createSlice({
             })
             .addCase(fetchUserProfileData.fulfilled, (state, action) => {
 
+                console.log(action.payload, "action.payload")
 
 
                 state.userData = action.payload
@@ -237,3 +56,4 @@ export const {
     changingUserProfile
 } = userProfileSlice.actions
 export default userProfileSlice.reducer
+export const {reducer: userProfileReducer} = userProfileSlice

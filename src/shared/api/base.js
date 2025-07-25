@@ -53,15 +53,30 @@ export const branchQueryId = () => {
 
 
 export const useHttp = () => {
-    const request = async (url, method = 'GET', body = null, headers = {'Content-Type': 'application/json'}) => {
+    const request = async (props) => {
+        let {
+            url = "",
+            method = 'GET',
+            body = undefined,
+            headers = {'Content-Type': 'application/json'},
+            typeUrl = "auto",
+            isJson = true
+        } = props;
         try {
-            const response = await fetch(url, {method, mode: 'cors', body, headers});
+            let newUrl = typeUrl === "auto" ? API_URL + url : url;
+            const headersObject = new Headers(headers);
+
+            if (body instanceof FormData) {
+                headersObject.delete("Content-Type");
+            }
+            const response = await fetch(newUrl, {method, mode: 'cors', body, headers: headersObject});
+
 
             if (!response.ok) {
                 throw new Error(`Could not fetch ${url}, status: ${response.status}`);
             }
 
-            return await response.json();
+            return isJson ? await response?.json() : response;
 
         } catch (e) {
             throw e;
@@ -69,4 +84,21 @@ export const useHttp = () => {
     }
 
     return {request}
+
 }
+
+export const ParamUrl = (params) => {
+    const paramsList = Object.keys(params);
+    let res = '';
+
+    for (let i = 0; i < paramsList.length; i++) {
+        const key = paramsList[i];
+        const value = params[key];
+
+        if (value !== undefined && value !== null) {
+            res += `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}&`;
+        }
+    }
+
+    return res.slice(0, -1);
+};

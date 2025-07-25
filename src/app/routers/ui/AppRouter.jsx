@@ -139,7 +139,7 @@ export const AppRouter = () => {
 
                         <Route
                             index
-                            element={<Navigate to={"register/*"}/>}
+                            element={<Navigate to={"register"}/>}
                         />
                     </Route>
                 </Route>

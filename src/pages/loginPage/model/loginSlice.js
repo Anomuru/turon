@@ -18,6 +18,7 @@ export const loginSlice =createSlice({
     initialState,
     reducers: {
         getUserData: (state, action) => {
+            console.log(action.payload, "action.payload")
             sessionStorage.setItem('token', action.payload.access);
             sessionStorage.setItem('refresh_token', action.payload.refresh);
             if (action.payload.access) {
@@ -98,5 +99,5 @@ export const loginSlice =createSlice({
             })
 
 })
-export default loginSlice.reducer
+export const loginReducer = loginSlice.reducer;
 export const {getUserData, userRefresh} = loginSlice.actions

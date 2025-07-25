@@ -1,3 +1,3 @@
 
 
-export const getAlerts = (state) => state.alertSlice.alert
+export const getAlerts = (state) => state.alertSlice?.alert

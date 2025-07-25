@@ -212,4 +212,5 @@ const oftenUsedSlice = createSlice({
             })
 })
 
+export const oftenUsedReducer = oftenUsedSlice.reducer;
 export default oftenUsedSlice.reducer

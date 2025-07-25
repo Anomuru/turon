@@ -63,7 +63,7 @@ export const Login = () => {
         setLoading(!loading)
 
 
-        request(`${API_URL}token/`, "POST", JSON.stringify(res))
+        request({url:`token/`, method:"POST", body: JSON.stringify(res)})
             .then(res => {
                 dispatch(getUserData(res))
                 navigate("/platform")

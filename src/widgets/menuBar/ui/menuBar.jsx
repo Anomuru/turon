@@ -39,6 +39,8 @@ export const Menubar = () => {
 
     }
 
+    console.log(user, "user")
+
 
     const renderMultipleMenu = useCallback(() => {
 

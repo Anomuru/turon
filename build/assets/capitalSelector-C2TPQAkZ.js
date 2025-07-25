@@ -1,1 +1,0 @@
-const t=a=>a.capital?.capitalsData,i=a=>a.capital?.capitalCategoryInfo,s=a=>a.capital?.loading,p=a=>a.capital.capitalPermission,e=a=>a.capital?.capitalInsideCategory,c=a=>a.capital?.paymentTypes;export{p as a,t as b,e as c,c as d,i as e,s as g};

@@ -1,1 +1,0 @@
-import{a as r,u as t,A as n,b as p}from"./index-Cux8sda1.js";const c=r("rooms/uploadRoomImage",async({roomId:e,imageFile:o})=>{const{request:s}=t(),a=new FormData;a.append("image",o),a.append("room",e);const m=await s(`${n}Rooms/rooms_image_create/`,"POST",a,p());return{roomId:e,imageUrl:m.imageUrl}});export{c as u};
