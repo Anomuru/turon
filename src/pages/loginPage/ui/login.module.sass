@@ -1,0 +1,212 @@
+.container
+  height: fit-content
+  overflow: auto
+  background-color: #00C2FF
+  width: 100%
+.login
+  width: 100%
+  display: flex
+  justify-content: center
+  height: 100vh
+  align-items: center
+
+  &__logo
+    display: none
+    //position: fixed
+    width: 100%
+    //background-color: rgba(186, 230, 253, 0.53)
+    //top: 0
+    //backdrop-filter: blur(4px)
+    align-items: center
+    //box-shadow: 0 0 8px -5px
+    padding: 20px 0 0 20px
+    height: 5rem
+  &__boxes
+    background-color: white
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.10), 0 6px 14px 0 rgba(0, 0, 0, 0.10), 0 25px 25px 0 rgba(0, 0, 0, 0.09), 0 56px 33px 0 rgba(0, 0, 0, 0.05), 0 99px 40px 0 rgba(0, 0, 0, 0.01), 0 155px 43px 0 rgba(0, 0, 0, 0.00)
+    padding: 20px 30px 20px 30px
+    display: flex
+    align-items: center
+    gap: 40px
+    border-radius: 5px
+    height: fit-content
+  &__box
+    display: flex
+    justify-content: space-around
+    flex-direction: column
+    height: 50rem
+    width: 45rem
+    .box
+      &__header
+        &_img
+          padding: 30px 0
+        &_title
+          text-transform: capitalize
+          font-size: 28px
+          font-family: Arial
+          margin-bottom: 10px
+        &_img
+          img
+            width: 15rem
+      &__form
+        padding: 30px 0
+
+        form
+          display: flex
+          flex-direction: column
+          //gap: 10px
+          .checkbox
+            width: 20px
+            height: 20px
+            margin-right: 5px
+          .login__btn
+            background-color: #2C2C2C
+            border: none
+            color: #F5F5F5
+            width: 35.2rem
+            //margin: 0
+  &__error
+    font-size: 16px
+    font-weight: bold
+    color: red
+  &__aside
+    //height: 35rem
+    padding: 10px
+    background-color: #bae6fd
+    border-radius: 10px
+    display: flex
+    justify-content: center
+    align-items: center
+    img
+      width: 50rem
+
+@media (max-width: 1440px)
+  .login
+    height: 100vh
+    &__box
+      //height: 30rem
+      .box
+        &__header
+          &_title
+            font-size: 26px
+          &_img
+            img
+              width: 14rem
+        &__form
+          form
+            button
+              margin-top: 20px
+@media (max-width: 1060px)
+  .login
+    &__boxes
+      display: flex
+      justify-content: space-evenly
+      border-radius: 5px
+      width: fit-content
+      background-color: white
+    &__box
+      display: flex
+      justify-content: space-evenly
+      flex-direction: column
+      width: 30rem
+      .box
+        &__header
+          &_title
+            font-size: 24px
+            margin-bottom: 10px
+          &_img
+            img
+              width: 13rem
+        &__form
+          form
+            .login__btn
+              width: 20rem
+              margin-top: 18px
+    &__aside
+      display: flex
+      justify-content: center
+      align-items: center
+      img
+        width: 45rem
+
+
+@media (max-width: 911px)
+  .container
+    background-color: #bae6fd
+    display: flex
+    flex-direction: column
+    justify-content: center
+  .login
+    align-items: flex-start
+    padding-top: 10px
+    &__boxes
+      box-shadow: none
+      flex-direction: column-reverse
+      padding: 0
+      gap: 0
+      background: none
+    &__logo
+      display: flex
+      img
+        width: fit-content
+    &__box
+      //height: 30rem
+      .box
+        &__header
+          &_title
+            margin-bottom: 20px
+            font-size: 20px
+          &_img
+            display: none
+        &__form
+          form
+            button
+              width: fit-content
+              //margin-top: 10px
+              margin: 15px auto
+    &__aside
+      display: flex
+      background: none
+      img
+        width: 30rem
+@media (max-width: 540px)
+  .container
+    background-color: #bae6fd
+    display: flex
+    flex-direction: column
+    justify-content: center
+  .login
+    display: flex
+
+    padding-top: 10rem
+    &__boxes
+      box-shadow: none
+      flex-direction: column-reverse
+      padding: 0
+      gap: 0
+    &__logo
+      display: flex
+      align-self: start
+      padding: 20px 0 0 50px
+      img
+        width: fit-content
+    &__box
+      height: 25rem
+      .box
+        &__header
+          &_title
+            margin-bottom: 20px
+            font-size: 18px
+          &_img
+            display: none
+        &__form
+          form
+            button
+              width: 15rem
+              margin: 15px auto
+    &__aside
+      display: flex
+      height: 15rem
+      background: none
+      img
+        width: 15rem

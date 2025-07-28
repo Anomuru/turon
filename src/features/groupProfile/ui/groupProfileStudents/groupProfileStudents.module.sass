@@ -1,0 +1,54 @@
+@import "app/styles/abstracts/variables"
+
+.students
+  height: fit-content
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  font-size: 1.6rem
+  grid-area: students
+  img
+    width: 5rem
+  &__title
+    display: flex
+    justify-content: space-between
+  &__list
+    height: 23.3rem
+    overflow: auto
+    &::-webkit-scrollbar
+      width: .7rem
+
+    &::-webkit-scrollbar-track
+      border-radius: .4rem
+      box-shadow: inset 0 0 5px $color-grey-dark
+
+    &::-webkit-scrollbar-thumb
+      border-radius: .4rem
+      background: #797979
+
+    &::-webkit-scrollbar-thumb:hover
+      background: $color-grey-dark
+    .delete
+      display: flex
+      align-items: center
+      gap: 1rem
+      &__input
+        margin: 0 !important
+      &__icon
+        color: red
+  &__upper
+    width: .9rem
+    height: 3rem
+    border-radius: 2rem
+  &__money
+    background: #DCFCE7
+    border: 1.23px solid #22C55E
+    padding: 2.45px 9.82px 2.45px 9.82px
+    text-align: center
+    border-radius: 61.35px
+    &.yellow
+      background: #FEF08A
+      border: 1px solid #EAB308
+    &.red
+      background: #FECDD3
+      border: 1px solid #F43F5E

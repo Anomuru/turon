@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@100;200;300;400;600;700;800;900&family=Funnel+Sans:ital,wght@0,300..800;1,300..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap')
+.wrapper
+  display: flex
+  flex-direction: column
+  width: 100%
+  align-items: center
+  //height: 100vh
+  justify-content: center
+  padding-top: 6rem
+  &__error
+    color: red
+    font-size: 15px
+    margin-top: 4px
+    font-weight: 500
+    font-family: "Montserrat", sans-serif
+
+  &__check
+    display: flex
+    align-items: center
+    flex-direction: column
+    height: 50vh
+    justify-content: center
+    gap: 2rem
+    & > img
+      width: 10rem
+      height: 10rem
+
+    & > h1
+      color: rgba(30, 35, 44, 1)
+      font-family: "Montserrat", sans-serif
+      font-weight: 700
+    &  >span
+      text-align: center
+      font-size: 1.5rem
+      color: rgba(131, 145, 161, 1)
+  &__container
+    display: flex
+    flex-direction: column
+    gap: 4rem
+
+  &__form
+    display: flex
+    flex-direction: column
+    gap: 1rem
+
+    &_title
+      font-family: "Montserrat", sans-serif
+      font-optical-sizing: auto
+      font-weight: 600
+      color: rgba(8, 40, 126, 1)
+
+  &__title
+    text-align: left
+
+    display: flex
+    flex-direction: column
+    gap: 1rem
+    align-self: flex-start
+    font-family: "Montserrat", sans-serif
+    font-optical-sizing: auto
+    font-weight: 500
+    font-size: 2rem
+    font-style: normal
+
+    & > span
+      font-size: 1.5rem
+      color: rgba(153, 158, 161, 1)
+
+
+  &__buttons
+    display: flex
+    justify-content: space-between
+    width: 100%
+
+    &_cancel
+      background: rgba(244, 244, 244, 1)
+      color: rgba(108, 111, 116, 1)
+
+    &_post, &_cancel
+      width: 50%
+
+  &__contact
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 2rem
+
+    &_header
+      display: flex
+      flex-direction: column
+      gap: 1rem
+      align-items: center
+
+      & > h1
+        font-family: "Montserrat", sans-serif
+        font-optical-sizing: auto
+        font-weight: 600
+        font-size: 2.2rem
+
+      & > span
+        font-family: "Montserrat", sans-serif
+        font-optical-sizing: auto
+        font-weight: 600
+        font-size: 14px
+        color: rgba(153, 158, 161, 1)
+
+    &_icons
+      display: flex
+      justify-content: space-evenly
+      width: 100%
+      flex-wrap: wrap
+
+      &_icon
+        width: 6rem
+        height: 5rem
+        background: white
+        box-shadow: 0 0 6px 0
+        border-radius: 10px
+        display: flex
+        justify-content: center
+        align-items: center
+
+        & > img
+
+          width: 2.2rem
+          height: 2.2rem
+          object-fit: cover
+
+@media (max-width: 400px)
+  .wrapper
+    &__container
+      width: 90%
+    &__contact
+      &_header
+        text-align: center
+      &_icons
+        flex-wrap: wrap
+        justify-content: center
+        gap: 1rem
+    &__buttons
+      flex-direction: column-reverse
+      & > button
+        width: 100%

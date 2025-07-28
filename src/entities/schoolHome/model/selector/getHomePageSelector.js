@@ -1,0 +1,1 @@
+export const getHomePageType = (state) => state.getHomePageSlice.data

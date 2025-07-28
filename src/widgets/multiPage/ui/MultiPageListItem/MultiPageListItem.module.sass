@@ -1,0 +1,70 @@
+
+
+
+
+.studentsListItem
+  max-height: 70rem
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 2rem
+  box-shadow: 0 1.6rem 3.2rem -.4rem #0C0C0D1A
+  border-radius: 3rem
+  padding: 3rem
+  color: #334155
+  overflow-y: auto
+  overflow-x: hidden
+  scroll-margin: 3rem
+  width: 40rem
+  z-index: 20
+  position: relative
+
+
+  &::-webkit-scrollbar
+    width: .8rem
+
+  &::-webkit-scrollbar-track
+    margin-bottom: 4rem
+    margin-top: 4rem
+    box-shadow: inset 0 0 5px #F9FAFB
+    background-color: #F9FAFB
+
+  &::-webkit-scrollbar-thumb
+    background: #E5E7EB
+
+  &::-webkit-resizer
+    width: 1rem
+
+  &__title
+    display: flex
+    gap: 2rem
+
+  &__item
+    width: 100%
+    border-bottom: .2rem solid #CBD5E1
+    display: flex
+    flex-direction: column
+    gap: 1.5rem
+    font-size: 1.4rem
+    padding-bottom: 1.5rem
+
+  &__innerTitle
+    width: 100%
+    display: flex
+    justify-content: space-between
+    color: #22C55E
+
+    &.eval
+      color: #3B82F6
+
+  &__inner
+    width: 100%
+    display: flex
+    justify-content: space-between
+    padding: 2.4rem
+    border: .1rem solid #22C55E
+    border-radius: 1rem
+    color: #1E1E1E
+
+    &.eval
+      border: .1rem solid #3B82F6

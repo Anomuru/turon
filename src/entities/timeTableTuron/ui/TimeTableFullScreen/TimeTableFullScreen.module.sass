@@ -1,0 +1,69 @@
+@import "app/styles/abstracts/variables"
+
+
+.dndContainer
+  width: fit-content
+  height: fit-content
+
+
+
+.fullscreen
+  width: 95vw
+  height: 95vh
+  background-color: white
+  margin-top: 3rem
+  position: relative
+  .wrapper
+    width: 100%
+    height: 100%
+    padding: 2rem
+    overflow: auto
+    display: flex
+    flex-direction: column
+    .header
+      width: 100%
+      margin-left: 15rem
+      display: flex
+      position: sticky
+      background-color: white
+      .item
+        width: 20rem
+        padding: 2rem
+        border: 1px solid black
+        display: flex
+        align-items: center
+        justify-content: center
+        font-size: 1.6rem
+
+
+    .footer
+      display: flex
+      flex-direction: column
+      width: 100%
+
+      .rooms
+        display: flex
+        .room
+          min-width: 15rem
+          height: 7rem
+          display: flex
+          align-items: center
+          justify-content: center
+          border: 1px solid black
+          font-size: 1.6rem
+          position: sticky
+          background-color: white
+
+        .containers
+          width: 100%
+          position: relative
+          display: flex
+
+          .droppableContainer
+            min-width: 20rem
+            min-height: 7rem
+            height: 7rem
+            border: 1px solid $color-fonts
+            border-radius: 10px
+
+

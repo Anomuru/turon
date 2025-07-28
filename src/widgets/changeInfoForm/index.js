@@ -1,0 +1,1 @@
+export {ChangeInfoForm} from "./ui/changeInfoForm";

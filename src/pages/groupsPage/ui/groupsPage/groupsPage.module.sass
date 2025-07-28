@@ -1,0 +1,68 @@
+@import "app/styles/abstracts/variables"
+
+.deletedGroups
+  padding: 20px
+
+  .mainContainer_filterPanelBox
+    display: flex
+    justify-content: space-between
+    margin-bottom: 39px
+
+  .table
+    overflow: auto
+    height: calc(100vh - 35rem)
+    display: flex
+    flex-direction: column
+    gap: 3rem
+    h2
+      color: #0EA5E9
+      font-size: 1.8rem
+
+
+
+    &__head
+      thead
+        background-color: #EFF6FF
+
+        tr
+          border: none
+
+      tbody
+        tr
+          background: none
+          td:last-child
+            div
+              display: flex
+              align-items: center
+              justify-content: center
+              width: 30px
+              height: 30px
+              border-radius: 50%
+              background-color: rgba(36, 255, 0, 0.37)
+              div
+                transform: translate(0.5px)
+                width: 15px
+                height: 15px
+                background-color: #24FF00
+          td:nth-child(4)
+            div
+              border: 1px solid
+              display: flex
+              align-items: center
+              justify-content: center
+              border-radius: 8px
+              height: 4rem
+              width: fit-content
+              //margin: 5px 0
+              padding: 2rem
+          td:nth-child(6)
+            div
+              border: 1px solid $btn-gennis
+              display: flex
+              align-items: center
+              justify-content: center
+              border-radius: 8px
+              height: 4rem
+              width: fit-content
+              //margin: 5px 0
+              padding: 2rem

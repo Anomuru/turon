@@ -1,0 +1,51 @@
+@import "app/styles/abstracts/variables"
+
+
+.paymentTypes
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 2rem
+  font-size: 2rem
+  &__item
+    display: flex
+    align-items: center
+    justify-content: center
+    gap: 1rem
+
+
+.list
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  padding: 1rem
+
+
+  &__title
+    font-size: 1.8rem
+
+  &__container
+    display: flex
+    gap: 2rem
+
+    .otchot
+      border-radius: 5px
+      padding: 1rem
+      font-weight: bolder
+      font-size: 1.5rem
+      box-shadow: 0 0 3px 0
+
+.header
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: flex-start
+  margin-top: 2rem
+  .header__item
+    padding: 1rem 2rem
+    font-size: 1.8rem
+    border-bottom: 2px solid white
+    cursor: pointer
+    user-select: none
+    &.active
+      border-bottom: 2px solid $color-main-dark

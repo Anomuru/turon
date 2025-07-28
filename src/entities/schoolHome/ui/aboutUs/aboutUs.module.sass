@@ -1,0 +1,367 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@100;200;300;400;600;700;800;900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Risque&family=Space+Grotesk:wght@300..700&display=swap')
+.aboutMain
+  padding: 10px 0
+  width: 100%
+
+.about
+  display: flex
+  //justify-content: center
+  overflow: hidden
+  padding: 5rem 0
+  justify-content: center
+  &__wrapper
+    display: flex
+    flex-direction: column
+    padding: 2rem
+  &__box
+    display: flex
+    gap: 4rem
+    width: 100%
+    justify-content: space-between
+    flex-wrap: wrap
+    //img
+    //  width: 950px!important
+    &:nth-child(1)
+      margin-bottom: 6.8rem
+    &_last
+      //padding-left: 11rem
+    &_img
+      width: 50%
+
+      img
+        //height: 100vh
+        width: 100%
+  &__title
+    color: #001B61
+    font-size: 3.2rem
+    font-family: "Blinker", sans-serif
+    font-weight: 700
+
+    margin-top: 2rem
+    margin-bottom: 2rem
+  &__descr
+    width: 80rem
+    font-size: 3.2rem
+    font-family: "Blinker", sans-serif
+    font-weight: 400
+.coreValue
+  padding-left: 11rem
+
+  &__wrapper
+    display: flex
+    flex-wrap: wrap
+    gap: 3rem
+  &__title
+    color: #001B61
+    font-size: 3.2rem
+    font-family: "Blinker", sans-serif
+    font-weight: 700
+    margin-bottom: 10rem
+  &__box
+    display: flex
+    width: 80rem
+    border-radius: 10px
+    gap: 8rem
+    align-items: center
+    padding-right: 15px
+
+
+    box-shadow: rgba(12, 12, 13, 0.4)  0 16px 32px -8px
+    img
+      border-radius: 10px 0 0 10px
+    &_descr
+      & > h2
+        color: #001B61
+        font-size: 3.2rem
+        font-family: "Blinker", sans-serif
+        font-weight: 700
+      & > span
+        color: rgba(0, 0, 0, 1)
+        font-size: 2.4rem
+        font-family: Inter
+        font-weight: 400
+    //background-color:
+
+.leaderShip
+  padding: 26rem 0 4rem 0
+  &__header
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    &_span
+      font-size: 1.6rem
+      font-family: "Blinker", sans-serif
+      font-weight: 700
+      color: rgba(40, 40, 40, 1)
+      font-style: normal
+    &_title
+      font-size: 5.4rem
+      font-family: "Blinker", sans-serif
+      font-weight: 600
+      color: rgba(40, 40, 40, 1)
+      font-style: normal
+
+      margin-top: .4rem
+    &_descr
+      color: rgba(95, 105, 128, 1)
+      font-size: 2rem
+      font-family: "Blinker", sans-serif
+      font-weight: 400
+      text-align: center
+      margin-top: 1.6rem
+      width: 96rem
+
+      font-style: normal
+  &__wrapper
+    display: flex
+    //justify-content: center
+    align-items: center
+    padding: 5rem
+    flex-wrap: wrap
+    gap: 2rem
+
+    &_box
+      border: 1px solid rgba(234, 236, 240, 1)
+      width: 31rem
+      img
+        width: 100%
+        object-fit: cover
+      &_info
+        padding: 1.6rem
+        display: flex
+        flex-direction: column
+        gap: 2.3rem
+        &_name
+          color: rgba(40, 40, 40, 1)
+          font-size: 1.8rem
+          font-family: "Blinker", sans-serif
+          font-weight: 700
+        &_job , &_descr
+          color: rgba(62, 62, 89, 1)
+          font-family: "Blinker", sans-serif
+          font-weight: 400
+          font-size: 1.5rem
+        &_descr
+          color: rgba(95, 105, 128, 1)
+  &__subHeader
+    display: flex
+    justify-content: space-between
+    align-items: center
+    width: 100%
+    &_title
+      font-size: 5.4rem
+      font-family: "Blinker", sans-serif
+      font-weight: 600
+      color: #001B61
+      font-style: normal
+    &_location
+      display: flex
+      gap: 2rem
+      align-items: center
+      &_box
+        border-radius: 10px
+        background-color: rgba(245, 245, 245, 1)
+        padding: .8rem
+
+        cursor: pointer
+        font-size: 1.6rem
+        color: rgba(117, 117, 117, 1)
+        text-transform: capitalize
+.footer
+  width: 100%
+  img
+    width: 100%
+  &__wrapper
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    padding: 3rem 0 0 13rem
+    &_title
+      color: #001B61
+      font-size: 4.8rem
+      font-family: "Blinker", sans-serif
+      font-weight: 700
+      font-style: normal
+    &_descr
+      font-size: 3.2rem
+      color: rgba(0, 0, 0, 1)
+      font-family: "Blinker", sans-serif
+      font-weight: 400
+      max-width: 1600px
+    &_list
+      &_title
+        font-size: 3.6rem
+        font-family: "Blinker", sans-serif
+        font-weight: 400
+        color: rgba(0, 0, 0, 1)
+        font-style: normal
+      ul
+        li
+          list-style: none
+          font-size: 2rem
+          font-family: "Blinker", sans-serif
+          font-weight: 400
+          color: rgba(0, 0, 0, 1)
+          font-style: normal
+
+/*about start*/
+@media (max-width: 1710px)
+  .about
+    justify-content: flex-start
+    &__box_last
+      flex-direction: column-reverse
+    &__box
+      margin-bottom: 2rem
+      &_img
+        width: 100%
+    &__logo
+      width: 50%
+      img
+        width: 100%
+    &__info
+      min-width: 90%
+      max-width: 100%
+    &__descr
+      width: 100%
+@media (max-width: 700px)
+  .about
+    &__descr
+      font-size: 1.6rem
+
+
+
+
+
+/* about end */
+
+
+
+
+/*core values start */
+
+@media (max-width: 850px)
+
+  .coreValue
+    padding: 3rem
+
+    &__wrapper
+      display: flex
+      flex-wrap: wrap
+      gap: 3rem
+    &__title
+      color: #001B61
+      font-size: 3.2rem
+      font-family: "Blinker", sans-serif
+      font-weight: 700
+      margin-bottom: 10rem
+    &__box
+      display: flex
+      width: 100%
+      border-radius: 10px
+      gap: 2rem
+      align-items: center
+      padding-right: 15px
+      &_descr
+        width: 50%
+        & > h2
+          color: #001B61
+          font-size: 2rem
+          font-family: "Blinker", sans-serif
+          font-weight: 700
+        & > span
+          color: rgba(0, 0, 0, 1)
+          font-size: 1.2rem
+          font-family: Inter
+          font-weight: 400
+
+
+      box-shadow: rgba(12, 12, 13, 0.4)  0 16px 32px -8px
+    &__img
+      width: 50%
+      img
+        border-radius: 10px 0 0 10px
+        width: 100%
+
+
+
+
+
+/*core values end */
+
+
+
+
+@media (max-width: 850px)
+  .leaderShip
+    &__wrapper
+      padding: 2rem
+      justify-content: center
+      &_box
+        width: 100%
+    &__header
+      &_title
+        text-align: center
+        font-size: 4rem
+      &_descr
+        font-size: 1.6rem
+        width: fit-content
+        padding: 2rem
+        margin-top: 10px
+    &__subHeader
+      &_title
+        font-size: 4rem
+@media (max-width: 570px)
+  .leaderShip
+    &__subHeader
+      display: none
+      flex-direction: column
+      //justify-content: flex-end
+      align-items: flex-start
+
+
+/*footer start*/
+
+
+@media(max-width: 800px)
+
+  .footer
+    width: 100%
+    img
+      width: 100%
+    &__wrapper
+      display: flex
+      flex-direction: column
+      gap: 2rem
+      padding: 3rem
+      &_title
+        color: #001B61
+        font-size: 3.6rem
+        font-family: "Blinker", sans-serif
+        font-weight: 700
+        font-style: normal
+      &_descr
+        font-size: 1.8rem
+        color: rgba(0, 0, 0, 1)
+        font-family: "Blinker", sans-serif
+        font-weight: 400
+        max-width: 100%
+      &_list
+        &_title
+          font-size: 2rem
+          font-family: "Blinker", sans-serif
+          font-weight: 400
+          color: rgba(0, 0, 0, 1)
+          font-style: normal
+        ul
+          li
+            list-style: none
+            font-size: 1.6rem
+            font-family: "Blinker", sans-serif
+            font-weight: 400
+            color: rgba(0, 0, 0, 1)
+            font-style: normal
+
+
+
+/*footer end*/

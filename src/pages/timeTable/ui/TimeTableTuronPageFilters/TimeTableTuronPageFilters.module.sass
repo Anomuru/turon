@@ -1,0 +1,33 @@
+.filters
+  display: flex
+  flex-direction: column
+  gap: 1.5rem
+  .navigators
+    width: 100%
+    display: flex
+    justify-content: space-between
+    align-items: center
+    &__inner
+      display: flex
+      gap: 2rem
+  &__icon
+    width: fit-content
+    background-color: #6E83BB
+    border-radius: 50%
+    padding: 1rem
+    align-self: flex-end
+    i
+      font-size: 2rem
+      color: #FFFFFF
+  .colorList
+    display: flex
+    &__inner
+      color: #767676
+      border-bottom: 1px solid #767676
+      font-size: 1.6rem
+      padding: .7rem 1.2rem
+      cursor: pointer
+      transition: .3s
+      &.active
+        color: #22C55E
+        border-bottom: 2px solid

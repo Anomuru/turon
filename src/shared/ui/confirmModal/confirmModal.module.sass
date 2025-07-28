@@ -1,0 +1,96 @@
+@import "app/styles/abstracts/variables"
+.filter
+  display: flex
+  flex-direction: column
+  gap: 3rem
+  width: 440px
+
+  //&__title
+    ali
+
+  &__container
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    font-size: 1.6rem
+
+  &__select
+    width: 100% !important
+
+  &__age
+    display: flex
+    gap: 2rem
+
+  &__input
+    width: 200px !important
+    margin: 0 !important
+  //padding: 0 !important
+
+  &__status
+    display: flex
+    gap: 3rem
+    justify-content: center
+
+  &__inner
+    display: flex
+    align-items: center
+    gap: .5rem
+    color: #22C55E
+
+  &__radio
+    margin: 0 !important
+    color: #22C55E !important
+
+  .yellow
+    color: #EAB308 !important
+
+  .red
+    color: #F43F5E !important
+
+  &__switch
+    display: flex
+    justify-content: space-between
+    align-items: center
+
+.buttonStyle
+  background: #49454F
+
+.deleteHead
+  width: 100%
+  height: 20px
+  display: flex
+  align-items: center
+  gap: 20px
+  padding-right: 2.5rem
+  h2
+    font-weight: 600
+    font-size: 1.8rem
+    color: #3C3C3C
+
+//padding: 4rem
+
+.deleteText
+  width: 100%
+  height: 20px
+  display: flex
+  align-items: center
+  span
+    font-size: 1.8rem
+    color: #656565
+    margin-left: 5rem
+.deleteButtons
+  width: 100%
+  height: auto
+  display: flex
+  align-items: center
+  justify-content: end
+  gap: 10px
+
+.deleteButton
+  background: $error-color
+
+.cancelButton
+  background: #ECD0D7
+  color: #DF184F
+  &:hover
+    color: #DF184F

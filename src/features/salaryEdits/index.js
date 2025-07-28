@@ -1,0 +1,7 @@
+export {default as teacherSalaryDeleteSlice} from './model/teacherSalaryDeleteSlice'
+export {teacherSalaryDeleteThunk} from './model/teacherSalaryDeleteThunk'
+export {SalaryDeleteModal} from './ui/salaryDeleteModal/salaryDeleteModal'
+export {getLoadingDelete} from './model/selectors/selectors'
+export {default as employerSalaryDeleteSlice} from './model/employerSalaryDeleteSlice'
+export {employerSalaryDeleteThunk} from './model/employerSalaryDeleteThunk'
+export {EmployerSalaryDeleteModal} from './ui/salaryDeleteModal/employerSalaryDeleteModal'

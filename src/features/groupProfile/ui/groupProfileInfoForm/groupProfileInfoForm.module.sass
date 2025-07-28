@@ -1,0 +1,128 @@
+@import "app/styles/abstracts/variables"
+@import "app/styles/themes/center"
+@import "app/styles/themes/school"
+
+.info
+  //width: 400px
+  //grid-area: info
+  height: 100%
+  justify-content: space-between
+  align-items: center
+
+  &__avatar
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 2rem
+
+  &__image
+    width: 18rem
+    height: 18rem
+    border-radius: 50%
+
+  &__role
+    border: 1px solid #86EFAC
+    background-color: #DCFCE7
+    color: #22C55E
+    padding: .2rem .8rem
+    border-radius: 5rem
+
+  &__text
+    width: 100%
+    display: flex
+    flex-direction: column
+    align-items: center
+    font-size: 1.6rem
+    gap: 3rem
+    position: relative
+
+    p
+      width: 100%
+      display: flex
+      justify-content: space-between
+
+  &__name
+    &:hover
+  &__hoverName
+    z-index: 10
+    position: absolute
+    top: -3rem
+    left: 50%
+    box-shadow: 0 8px 16px 0 #00000014
+    background: white
+    visibility: hidden
+  //padding: .6rem
+  //transform: translate(50%)
+
+  &__addInfo
+    width: 5rem
+    height: 5rem
+    font-size: 2.5rem
+    background-color: #8DE3FE
+    color: $color-main-dark
+    border-radius: 50%
+    display: flex
+    justify-content: center
+    align-items: center
+
+    i
+      font-weight: 100
+
+  &__balance
+    border-radius: 3rem
+    padding: 1.5rem 2rem
+    width: 32rem
+    //background-color: var(--balance-card-bg-color)
+    background-color: #BAE6FD
+    color: black
+    font-size: 1.6rem
+    display: flex
+    flex-direction: row
+    align-items: center
+  //justify-content: space-between
+
+  &__title
+    display: flex
+    flex-direction: column
+    gap: 2rem
+
+  &__money
+    display: flex
+    justify-content: space-between
+    align-items: flex-end
+
+    p
+      color: var(--balance-p-color)
+
+.infoModal
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  &__btn
+    align-self: flex-end
+  .form
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    &__input
+      min-width: 100% !important
+      margin: 0 !important
+    &__select
+      width: 100%
+    &__switch
+      display: flex
+      align-items: center
+      gap: .7rem
+      align-self: center
+      font-size: 1.6rem
+    &__radios
+      display: flex
+      gap: 3rem
+      align-self: center
+    &__inner
+      display: flex
+      gap: 1rem
+      align-items: center
+      font-size: 1.8rem
+    &__item
+      margin: 0 !important

@@ -1,0 +1,25 @@
+.profile
+  width: 100%
+  height: fit-content
+  padding: 3rem
+  display: grid
+  grid-gap: 2rem
+  grid-template-areas: "info outlet"
+  grid-template-columns: 380px auto
+
+  &__mainContent
+    display: grid
+    grid-gap: 2rem
+    grid-template-areas: "teacher students students" "rating attendance attendance" "subjectList subjectList more"
+    grid-template-columns: 45.5rem auto auto
+    grid-template-rows: min-content min-content min-content
+
+    &.active
+      display: none
+
+  &__otherContent
+    display: none
+
+    &.active
+      display: flex !important
+

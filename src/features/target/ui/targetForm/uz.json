@@ -1,0 +1,21 @@
+{
+  "title": "Ariza yuborish",
+  "subtitle": "Bugunoq biz bilan bog‘laning!",
+  "formName": "Ism",
+  "formNamePlaceholder": "Ismingizni kiriting",
+  "formSurname": "Familiya",
+  "formSurnamePlaceholder": "Familiyangizni kiriting",
+  "formPhone": "Telefon raqam",
+  "formPhonePlaceholder": "Telefon raqamingizni kiriting",
+  "formFilial": "Filial",
+  "formFilialPlaceholder": "Filialni tanlang",
+  "errorName": "Iltimos, ismingizni kiriting",
+  "errorSurname": "Iltimos, familiyangizni kiriting",
+  "errorPhone": "Iltimos, telefon raqamingizni kiriting",
+  "errorFilial": "Iltimos, filialni tanlang",
+  "errorPhoneExist": "Telefon raqami ro'yxatdan o'tgan",
+  "cancel": "Bekor qilish",
+  "formPost": "Arizani yuborish",
+  "success": "Muvaffaqiyatli yuborildi!",
+  "successTitle": " Operatorlarimiz siz bilan tez orada bog‘lanadi. Qo‘shimcha savollar bo‘lsa, bemalol murojaat qiling."
+}

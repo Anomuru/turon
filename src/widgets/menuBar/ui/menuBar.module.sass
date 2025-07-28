@@ -1,0 +1,114 @@
+@import "app/styles/abstracts/variables"
+
+.menu
+  height: 100svh
+  min-width: 18rem
+  width: $appMenu-width
+  border: 1px solid $main-border-color
+  background-color: #FFFFFF
+  border-radius: 1.6rem
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+
+  &__user
+    display: flex
+    gap: 2.5rem
+    justify-content: center
+    align-items: center
+    background-color: #FAFAFA
+    border-bottom: .2rem solid $main-border-color
+    padding: 1.8rem
+    border-radius: 1.6rem 1.6rem 0 0
+    .userImage
+      border-radius: 50%
+      height: 5rem
+      width: 5rem
+    .userInfo
+      display: flex
+      flex-direction: column
+      gap: .7rem
+      font-size: 1.4rem
+
+  &__inner
+    font-family: Inter, serif
+    width: 100%
+    height: fit-content
+    padding: 3rem 0 3rem 2.7rem
+    display: flex
+    flex-direction: column
+    gap: 1.5rem
+    overflow: auto
+
+    &::-webkit-scrollbar
+      width: .7rem
+
+    &::-webkit-scrollbar-track
+      border-radius: .4rem
+      box-shadow: inset 0 0 5px $color-grey-dark
+
+    &::-webkit-scrollbar-thumb
+      border-radius: .4rem
+      background: #797979
+
+    &::-webkit-scrollbar-thumb:hover
+      background: $color-grey-dark
+
+  .link
+    list-style: none
+    padding: 1rem 1.2rem
+    width: fit-content
+    transition: .3s
+    &.active
+      background-color: #F6F6F6
+      border-radius: .8rem
+    &:hover
+      background-color: #F6F6F6
+      border-radius: .8rem
+
+    &__href
+      color: $main-font-color
+      display: flex
+      align-items: center
+      gap: 1.5rem
+      transition: .7s
+      i
+        font-size: 2rem
+        transition: .3s
+
+    &__title
+      letter-spacing: .1rem
+      font-size: 1.6rem
+  &__footer
+    min-height: 8rem
+    justify-self: flex-end
+    padding: 2.4rem
+    border-top: .2rem solid $main-border-color
+    background-color: #FAFAFA
+    border-radius: 0 0 1.6rem 1.6rem
+    display: flex
+    align-items: center
+    justify-content: center
+    color: #5C5E64
+    font-size: 1.3rem
+    gap: 1rem
+    i
+      font-size: 3rem
+  &__exit
+    display: flex
+    align-items: center
+    gap: 1rem
+    cursor: pointer
+
+@media (max-width: 1440px)
+  .menu
+    &__inner
+      padding: 2rem 0 2rem .5rem
+    .link
+      padding: 1rem
+      &__href
+        gap: 1.2rem
+    &__footer
+      i
+        font-size: 2.8rem
+

@@ -1,0 +1,169 @@
+.attendance
+  padding: 2rem
+  //width: 45%
+
+  &_end
+    display: flex
+    align-items: center
+    &_select
+      display: flex
+      gap: 2rem
+      select
+        min-width: 15rem!important
+  .attendance_header
+    display: flex
+    gap: 2rem
+    align-items: center
+    justify-content: space-between
+    //justify-content: flex-end
+    margin-bottom: 3rem
+    padding-left: 1rem
+    h2
+      font-size: 3rem
+      //text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0, 0, 0, .1), 0 0 5px rgba(0, 0, 0, .1), 0 1px 3px rgba(0, 0, 0, .3), 0 3px 5px rgba(0, 0, 0, .2), 0 5px 10px rgba(0, 0, 0, .25), 0 10px 10px rgba(0, 0, 0, .2), 0 20px 20px rgba(0, 0, 0, .15)
+      color: #202020
+
+
+
+.attendance_icon
+  display: flex
+  .attendance_check
+    color: green
+    font-size: 3rem
+
+  .attendance_times
+    color: red
+    font-size: 3rem
+.attended
+  &_table
+    margin-top: 10px
+    padding: 2rem
+    height: 30rem
+    overflow: auto
+    .attended_times
+      font-size: 3rem
+      color: red
+
+    .attended_check
+      font-size: 3rem
+      color: green
+
+  &_header
+    font-size: 1.8rem
+    padding-right: 5rem
+  &_btn
+    margin:  2rem auto
+.attendance_plus
+  font-size: 3rem
+  font-weight: bolder
+  //box-shadow: rgba(14, 30, 37, 0.12) 0 2px 4px 0, rgba(14, 30, 37, 0.32) 0 2px 16px 0
+  color: #7F7F7F
+  width: 5rem
+  height: 5rem
+  display: grid
+  place-content: center
+  border-radius: 50%
+  cursor: pointer
+
+  ::-webkit-scrollbar
+    width: 10px
+
+
+
+  ::-webkit-scrollbar-track
+    background: #d3bbbb
+    margin: 10px 0 10px 0
+    border-radius: 10px
+
+
+
+  ::-webkit-scrollbar-thumb
+    background: #989090
+    border-radius: 10px
+
+  ::-webkit-scrollbar-thumb:hover
+    background: #555
+
+
+.attendanceModal
+  padding: 2rem
+
+  &_header
+    gap: 1rem
+    display: flex
+    justify-content: space-between
+    margin-top: 10px
+    .select
+      min-width: 10rem
+.attendedModal
+  padding: 2rem
+  display: flex
+  flex-direction: column
+
+.checkedStudents__item
+  padding: 2rem
+  border-bottom: 1px solid
+.infoStudent
+  width: 100%
+  display: flex
+  align-items: center
+.typeChecked
+  margin-left: 2rem
+  padding: 0 1rem
+  display: flex
+  align-items: center
+  justify-content: center
+  i
+    font-size: 3rem
+  .green
+    color: #65ec65
+  .red
+    color: #fc5757
+.info
+  font-size: 1.8rem
+
+.button
+  align-self: center
+.absent
+  padding: 1rem
+  textarea
+    margin-bottom: 10px
+.text
+  font-size: 1.8rem
+  font-weight: bolder
+  div
+    margin-top: 10px
+    font-size: 1.6rem
+    color: #7F7F7F
+.reason
+  margin-top: 1rem
+  font-size: 1.4rem
+  font-weight: 200
+  width: 100%
+  text-align: left
+
+
+
+
+.check
+  color: red!important
+  font-size: 3rem!important
+
+
+.th
+  position: relative
+  &:hover
+    .popup
+      opacity: 1
+      //background-color: #b72f09
+      //left: 0
+.popup
+  transition: .9s all
+  background-color: #9f9292
+  width: fit-content
+  padding: .5rem
+  border-radius: 5px
+  position: absolute
+  //left: -20px
+  color: white
+  opacity: 0

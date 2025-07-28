@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Poppins&display=swap')
+
+.footer
+  background-color: #001B61
+  padding-top: 3rem
+  display: flex
+
+  flex-direction: column
+  gap: 5rem
+  &_top
+    padding: 5rem 10rem
+    display: flex
+    justify-content: space-between
+    flex-wrap: wrap
+    //margin-bottom: 2rem
+    &_item
+      color: #FFFFFF
+      h2
+        font-size: 3rem
+      ul
+        list-style: none
+        display: flex
+        flex-direction: column
+
+        gap: 2rem
+        font-size: 1.8rem
+        margin-top: 10px
+        cursor: pointer
+        li:hover
+          color: #7F7F7F
+  &_bottom
+    padding: 3rem
+    display: flex
+    justify-content: space-between
+    align-items: center
+    &_ul
+      display: flex
+      list-style: none
+      cursor: pointer
+      align-items: center
+      gap: 2rem
+      .list
+        color: gray!important
+        font-size: 1.4rem!important
+        font-family: "DM Sans", sans-serif
+        font-optical-sizing: auto
+        font-weight: 500
+        font-style: normal
+      li
+        a
+          display: flex
+          gap: 1rem
+          color: #FFFFFF
+  &_contact
+    color: #FFFFFF
+    display: flex
+    flex-direction: column
+    gap: 1rem
+    font-size: 2rem
+  &__number
+    font-size: 1.4rem
+
+
+@media (max-width: 900px)
+  .footer
+    &_top
+      &_item
+        h2
+          font-size: 2rem
+        ul
+          font-size: 1.5rem
+
+@media (max-width: 800px)
+  .footer
+    &_top
+      &_item
+        h2
+          font-size: 1.8rem
+        ul
+          font-size: 1.4rem
+    &_contact
+      font-size: 1.8rem

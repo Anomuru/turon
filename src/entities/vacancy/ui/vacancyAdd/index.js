@@ -1,0 +1,1 @@
+export {VacancyAdd} from './ui/vacancyAdd'

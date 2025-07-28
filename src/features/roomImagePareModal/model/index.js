@@ -1,0 +1,1 @@
+export {getRoomImage} from './selectors/selectors'

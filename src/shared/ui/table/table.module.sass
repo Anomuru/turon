@@ -1,0 +1,47 @@
+@import "app/styles/abstracts/variables"
+@import "app/styles/themes/center"
+@import "app/styles/themes/school"
+
+.table
+  width: 100%
+  padding: 1rem
+  border-collapse: collapse
+  thead
+    tr
+      width: 100%
+      border-bottom: 2px solid  #CFCFCF
+      background-color: var(--thead-bg-color)
+    th
+      min-width: 10rem
+      padding: 2rem
+      margin: 0
+      border: none
+      outline: none
+      //padding: 1rem
+      font-size: 1.7rem
+      text-align: left
+      color: $color-grey-dark
+
+      &:first-child
+        min-width: 5rem
+        width: 5rem
+
+  tbody
+    tr
+      width: 100%
+      transition: all .1s
+      border-bottom: 2px solid #CFCFCF
+      &:hover
+        background-color: #f3faff
+
+    td
+      width: fit-content
+      padding: 1.5rem
+      font-size: 1.6rem
+      color: $color-grey-dark
+      i
+        cursor: pointer
+        font-size: 2rem
+        margin: 0 1rem
+        transition: all .1s
+        color: $color-grey-dark

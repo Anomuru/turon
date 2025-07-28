@@ -1,0 +1,59 @@
+.schedule
+  min-width: fit-content
+  &__inner
+    border: 1px solid #000000
+    .index
+      position: absolute
+      top: .7rem
+      left: 1rem
+      background-color: #001B61
+      border-radius: 50%
+      color: white
+      padding: .3rem .7rem
+      font-size: 1.2rem
+    tr
+      border: none !important
+      background: none !important
+
+      &:hover
+        background: none !important
+      th
+        position: relative
+        border-left: 1px solid #000000
+        border-bottom: 1px solid #000000
+        color: #001B61 !important
+        padding: 2.7rem 2.4rem 2.4rem !important
+        text-align: center
+        //display: flex
+        //justify-content: center
+        //align-items: center
+      td
+        border-right: 1px solid #000000
+        border-top: 1px solid #000000
+        border-bottom: 1px solid #000000
+        text-align: center
+        padding: 0 .1rem
+        color: #001B61 !important
+        p
+          color: #FFFFFF
+          padding: .35rem 0
+          border-radius: .1rem
+        .subject
+          background-color: #818CF8
+          &.notActive
+            padding: 1.25rem 0
+        .teacher
+          display: flex
+          justify-content: center
+          gap: .5rem
+          background-color: #22C55E
+          &.notActive
+            padding: 1.25rem 0
+        .room
+          background-color: #EC4899
+          &.notActive
+            padding: 1.25rem 0
+  &__time
+    display: flex
+    justify-content: center
+    gap: 1.5rem

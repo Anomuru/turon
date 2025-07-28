@@ -1,0 +1,58 @@
+@import "app/styles/abstracts/variables"
+
+.mainContainer
+  width: 100%
+  height: 86vh
+  display: flex
+  flex-direction: column
+  gap: 30px
+
+  &_buttonPanelBox
+    width: 100%
+    height: 4rem
+    //background: $color-warning-bg
+    padding: 2rem
+    display: flex
+    justify-content: space-between
+    &_leftCreateButton
+      width: 40rem
+      height: auto
+      display: flex
+      gap: 10px
+      align-items: center
+      .extraCutClass
+        font-size: 12px
+        width: 12rem
+
+      .noneBackground
+        background: none
+        border: none
+        color: $btn-gennis
+        width: 12rem
+  &_filterPanelBox
+    width: 100%
+    height: 4rem
+    padding: 2rem
+    display: flex
+    justify-content: space-between
+    align-items: center
+    .extraCutClassFilter
+      width: 12rem
+    &_rightFilterRadioGroupBox
+      width: 70rem
+      height: auto
+      display: flex
+      justify-content: end
+      padding: 2rem
+      align-items: center
+  &_tablePanelBox
+    width: 100%
+    height: calc(100vh - 31rem)
+    padding: 3rem
+    overflow: auto
+.radioText
+  transition: .6s all
+  color: #0EA5E9
+
+  .radioTextDef
+    color: #7F7F7F

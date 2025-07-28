@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@100;200;300;400;600;700;800;900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Risque&family=Space+Grotesk:wght@300..700&display=swap')
+
+
+
+.leaderShip
+  padding: 3.6rem 0 4rem 0
+  &__header
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    &_span
+      font-size: 1.6rem
+      font-family: "Blinker", sans-serif
+      font-weight: 700
+      color: rgba(40, 40, 40, 1)
+      font-style: normal
+    &_title
+      font-size: 5.4rem
+      font-family: "Blinker", sans-serif
+      font-weight: 600
+      color: rgba(40, 40, 40, 1)
+      font-style: normal
+
+      margin-top: .4rem
+    &_descr
+      color: rgba(95, 105, 128, 1)
+      font-size: 2rem
+      font-family: "Blinker", sans-serif
+      font-weight: 400
+      text-align: center
+      margin-top: 1.6rem
+      width: 76rem
+
+      font-style: normal
+  &__wrapper
+    display: flex
+    justify-content: center
+    align-items: center
+    padding-top: 5rem
+    flex-wrap: wrap
+    gap: 2rem
+    &_box
+      border: 1px solid rgba(234, 236, 240, 1)
+      width: 31rem
+      img
+        width: 100%
+        object-fit: cover
+      &_info
+        padding: 1.6rem
+        display: flex
+        flex-direction: column
+        gap: 2.3rem
+        &_name
+          color: rgba(40, 40, 40, 1)
+          font-size: 1.8rem
+          font-family: "Blinker", sans-serif
+          font-weight: 700
+        &_job , &_descr
+          color: rgba(62, 62, 89, 1)
+          font-family: "Blinker", sans-serif
+          font-weight: 400
+          font-size: 1.5rem
+        &_descr
+          color: rgba(95, 105, 128, 1)
+@media (max-width: 777px)
+  .leaderShip
+    &__header
+      &_title
+        text-align: center
+        font-size: 4rem
+      &_descr
+        font-size: 1.6rem
+        width: fit-content
+        padding: 2rem
