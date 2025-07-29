@@ -1,22 +1,26 @@
-import {Pagination} from "features/pagination";
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
-import {getLoadingStudent, StudentsPayments, getDeletedStudent} from "entities/accounting";
-import {API_URL, headers, useHttp} from "shared/api/base";
-import {onDeleteStudents} from "entities/accounting/model/slice/studetntSlice";
-
-import {getStudentPaymentes} from "entities/accounting";
-import { getStudentPayment} from "entities/accounting/model/thunk/student";
-import {DefaultPageLoader} from "shared/ui/defaultLoader";
-import {
-    DeletedStudentPayment
-} from "entities/accounting/ui/acauntingTables/accountingTableStudent/deletedStudentPayment";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
+import {
+    getLoadingStudent,
+    StudentsPayments,
+    getDeletedStudent,
+    studentReducer,
+    getStudentPaymentes,
+    DeletedStudentPayment
+} from "entities/accounting";
+import {onDeleteStudents} from "entities/accounting/model/slice/studetntSlice";
+import {getStudentPayment} from "entities/accounting/model/thunk/student";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {DefaultPageLoader} from "shared/ui/defaultLoader";
+import {API_URL, headers, useHttp} from "shared/api/base";
+import {ConfirmModal} from "shared/ui/confirmModal";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 
-import {getBranch} from "../../../../features/branchSwitcher";
-import {ConfirmModal} from "../../../../shared/ui/confirmModal";
-
+const reducers = {
+    studentSlice: studentReducer
+}
 
 export const StudentSalary = ({deleted, setDeleted}) => {
     const {request} = useHttp()
@@ -26,20 +30,20 @@ export const StudentSalary = ({deleted, setDeleted}) => {
     const [activeDelete, setActiveDelete] = useState(false)
     const [changingData, setChangingData] = useState({})
     const deletedStudentPayment = useSelector(getDeletedStudent)
-    let branchID = useSelector(getBranch)
+    let branchID = useSelector(getUserBranchId)
 
 
     useEffect(() => {
-        dispatch(getStudentPayment(branchID))
-        // dispatch(getDeletedPayment())
-    }, [])
+        if (branchID)
+            dispatch(getStudentPayment(branchID))
+    }, [branchID])
 
 
     const formatSalary = (payment_sum) => {
         return Number(payment_sum).toLocaleString();
     };
-    const sum2 = deletedStudentPayment.reduce((a, c) => a + parseFloat(c.payment_sum || 0), 0);
-    const sum1 = studentData.reduce((a, c) => a + parseFloat(c.payment_sum || 0), 0);
+    const sum2 = deletedStudentPayment?.reduce((a, c) => a + parseFloat(c.payment_sum || 0), 0);
+    const sum1 = studentData?.reduce((a, c) => a + parseFloat(c.payment_sum || 0), 0);
 
     const onDelete = () => {
 
@@ -59,8 +63,8 @@ export const StudentSalary = ({deleted, setDeleted}) => {
             })
     }
 
-    return loading ? <DefaultPageLoader/> : (
-        <div>
+    return  (
+        <DynamicModuleLoader reducers={reducers}>
             <div style={{display: "flex", gap: "2rem", alignItems: "center", justifyContent: "space-between"}}>
                 <div style={{display: "flex", gap: "2rem"}}>
                 </div>
@@ -94,11 +98,11 @@ export const StudentSalary = ({deleted, setDeleted}) => {
                 />
 
             }
-            <ConfirmModal setActive={setActiveDelete} active={activeDelete} onClick={onDelete} title={`Rostanham ${changingData.name} ni o'chirmoqchimisiz `}   type={"danger"}/>
+            <ConfirmModal setActive={setActiveDelete} active={activeDelete} onClick={onDelete}
+                          title={`Rostanham ${changingData.name} ni o'chirmoqchimisiz `} type={"danger"}/>
             {/*<YesNo activeDelete={activeDelete} setActiveDelete={setActiveDelete} onDelete={onDelete}*/}
             {/*       changingData={changingData}/>*/}
-
-        </div>
+        </DynamicModuleLoader>
     );
 };
 

@@ -1,28 +1,31 @@
-import {TeachersSalary} from "entities/accounting";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
+
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
+import {teacherReducer, TeachersSalary} from "entities/accounting";
 import {getDeletedTeachersSalaryData, getTeacherSalaryData} from "entities/accounting/model/selector/teacher";
 import {onDeleteTeacherSalary, onChangePayment} from "entities/accounting/model/slice/teacher";
-import React, {useEffect, useMemo, useState} from "react";
-import {Button} from "shared/ui/button";
-import cls from "../accountingPageMain.module.sass";
-import {Select} from "shared/ui/select";
-import {Modal} from "shared/ui/modal";
 import {getCapitalTypes} from "entities/capital";
-import {getPaymentType} from "entities/capital/model/thunk/capitalThunk";
 import {
-    getDeletedTeacherSalary,
     getTeacherSalary
 } from "entities/accounting/model/thunk/teacherSalarythunk";
-import {API_URL, headers, useHttp} from "shared/api/base";
 import {
     DeletedTeacherSalary
 } from "entities/accounting/ui/acauntingTables/accountingTableTeacherSalary/deletedTeacherSalary";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
+import {getUserBranchId} from "entities/profile/userProfile";
+import {Select} from "shared/ui/select";
+import {Modal} from "shared/ui/modal";
+import {API_URL, headers, useHttp} from "shared/api/base";
+import {ConfirmModal} from "shared/ui/confirmModal";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 
-import {getBranch} from "../../../../features/branchSwitcher";
-import {ConfirmModal} from "../../../../shared/ui/confirmModal";
+import cls from "../accountingPageMain.module.sass";
 
-export const TeacherSalaryPage = ({deleted , setDeleted}) => {
+const reducers = {
+    teacher: teacherReducer
+}
+
+export const TeacherSalaryPage = ({deleted, setDeleted}) => {
 
     const dispatch = useDispatch()
     const teacherSalary = useSelector(getTeacherSalaryData)
@@ -33,15 +36,16 @@ export const TeacherSalaryPage = ({deleted , setDeleted}) => {
     const getPaymentTypes = useSelector(getCapitalTypes)
 
     const [activeDelete, setActiveDelete] = useState(false)
-    let branchID = useSelector(getBranch)
+    let branchID = useSelector(getUserBranchId)
     const {request} = useHttp()
 
 
     useEffect(() => {
         // dispatch(getPaymentType())
-        dispatch(getTeacherSalary(branchID))
+        if (branchID)
+            dispatch(getTeacherSalary(branchID))
         // dispatch(getDeletedTeacherSalary())
-    }, [])
+    }, [branchID])
 
 
     const onDelete = () => {
@@ -69,9 +73,9 @@ export const TeacherSalaryPage = ({deleted , setDeleted}) => {
         return Number(salary).toLocaleString();
     };
 
-    const sum1 = getDeletedTeachersSalary.reduce((a, c) => a + parseFloat(c.salary || 0), 0);
+    const sum1 = getDeletedTeachersSalary?.reduce((a, c) => a + parseFloat(c.salary || 0), 0);
 
-    const sum2 = teacherSalary.reduce((a, c) => a + parseFloat(c.salary || 0), 0);
+    const sum2 = teacherSalary?.reduce((a, c) => a + parseFloat(c.salary || 0), 0);
 
     const onChangeType = (selectedValue) => {
         dispatch(onChangePayment({
@@ -81,31 +85,40 @@ export const TeacherSalaryPage = ({deleted , setDeleted}) => {
         setChangePayment(false);
     };
     return (
-        <div>
-            <div style={{display: "flex", gap: "2rem" ,alignItems: "center" ,justifyContent: "flex-end"  ,marginBottom: "3rem"}}>
-                <div style={{color: "rgb(34, 197, 94)" , fontSize: "2.2rem" , textAlign: "end" }}>Total : {formatSalary(deleted ? sum1 : sum2)}</div>
+        <DynamicModuleLoader reducers={reducers}>
+            <div style={{
+                display: "flex",
+                gap: "2rem",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                marginBottom: "3rem"
+            }}>
+                <div style={{color: "rgb(34, 197, 94)", fontSize: "2.2rem", textAlign: "end"}}>Total
+                    : {formatSalary(deleted ? sum1 : sum2)}</div>
             </div>
 
             {deleted ?
-                <DeletedTeacherSalary setChangingData={setChangingData} setChangePayment={setChangePayment} deletedTeacher={getDeletedTeachersSalary}/>
+                <DeletedTeacherSalary setChangingData={setChangingData} setChangePayment={setChangePayment}
+                                      deletedTeacher={getDeletedTeachersSalary}/>
                 :
                 <TeachersSalary
-                setChangingData={setChangingData}
-                changePayment={changePayment}
-                setChangePayment={setChangePayment}
-                deleted={deleted}
-                teacherSalary={teacherSalary}
-                changingData={changingData}
-                activeDelete={activeDelete}
-                setActiveDelete={setActiveDelete}
-            />}
+                    setChangingData={setChangingData}
+                    changePayment={changePayment}
+                    setChangePayment={setChangePayment}
+                    deleted={deleted}
+                    teacherSalary={teacherSalary}
+                    changingData={changingData}
+                    activeDelete={activeDelete}
+                    setActiveDelete={setActiveDelete}
+                />}
 
             {/*<Modal active={changePayment} setActive={setChangePayment}>*/}
             {/*    <div className={cls.changeType}>*/}
             {/*        <Select options={getPaymentTypes} onChangeOption={onChangeType} title={changingData.payment_types}/>*/}
             {/*    </div>*/}
             {/*</Modal>*/}
-            <ConfirmModal setActive={setActiveDelete} active={activeDelete} onClick={onDelete} title={`Rostanham ${changingData.name} ni o'chirmoqchimisiz `}   type={"danger"}/>
+            <ConfirmModal setActive={setActiveDelete} active={activeDelete} onClick={onDelete}
+                          title={`Rostanham ${changingData.name} ni o'chirmoqchimisiz `} type={"danger"}/>
             {/*<YesNo activeDelete={activeDelete} setActiveDelete={setActiveDelete} onDelete={onDelete} changingData={changingData}/>*/}
             <Modal active={changePayment} setActive={setChangePayment}>
                 <div className={cls.changeType}>
@@ -117,7 +130,7 @@ export const TeacherSalaryPage = ({deleted , setDeleted}) => {
                     />
                 </div>
             </Modal>
-        </div>
+        </DynamicModuleLoader>
     );
 };
 

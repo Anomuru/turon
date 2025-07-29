@@ -9,4 +9,4 @@ export {getTeacherId} from './model/selector/teacherIdSelector'
 export {getTeacherLoading} from './model/selector/teacherSelector'
 export {getTeachersWithFilter} from './model/selector/teacherSelector'
 export {default as teachers} from "./model/teacherSlice"
-export {default as teacherParseSlice} from './model/teacherParseSlice'
+export {default as teacherParseSlice, teachersReducer} from './model/teacherParseSlice'

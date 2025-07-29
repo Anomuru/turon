@@ -1,49 +1,47 @@
-import {getUserBranchId} from "entities/profile/userProfile";
-import {getCurseLevelData} from "entities/students";
-import {getCurseLevel} from "entities/students/model/studentsSlice";
+import {useEffect, useMemo, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+
 import {FlowAddForm} from "features/flow";
 import {Pagination} from "features/pagination";
 import {getSearchValue} from "features/searchInput";
-import {API_URL, headers, useHttp} from "shared/api/base";
-import cls from "./flowsPage.module.sass"
-import {Select} from "shared/ui/select";
-import {Button} from "shared/ui/button";
-import {Radio} from "shared/ui/radio";
-import {useEffect, useMemo, useState} from "react";
-
-import {Flows} from "entities/flows";
-import {useDispatch, useSelector} from "react-redux";
+import {getCurseLevelData, newStudentsReducer} from "entities/students";
+import {getCurseLevel} from "entities/students/model/studentsSlice";
+import {Flows, flowsReducer} from "entities/flows";
 import {fetchFlows} from "entities/flows";
 import {getFlows} from "entities/flows";
-import {Modal} from "shared/ui/modal";
-import {Input} from "shared/ui/input";
-import {fetchTeachersData, getTeachers} from "entities/teachers";
-import {useForm} from "react-hook-form";
+import {fetchTeachersData, getTeachers, teachersReducer} from "entities/teachers";
 import {getFlowsLoading} from "entities/flows/model/selector/flowsSelector";
-import {getBranch} from "features/branchSwitcher";
-import {MultiPage} from "widgets/multiPage/ui/MultiPage/MultiPage";
+import {getUserBranchId} from "entities/profile/userProfile";
+import {flowsProfileReducer} from "entities/flowsProfile";
+import {API_URL, headers, useHttp} from "shared/api/base";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 
+import cls from "./flowsPage.module.sass"
+
+const reducers = {
+    flowsSlice: flowsReducer,
+    teachers: teachersReducer,
+    newStudents: newStudentsReducer,
+    flowsProfileSlice: flowsProfileReducer
+}
 
 export const FlowsPage = () => {
 
-
-    let PageSize = useMemo(() => 50, [])
-    const [currentTableData, setCurrentTableData] = useState([])
-    const [currentPage, setCurrentPage] = useState(1);
-    const search = useSelector(getSearchValue);
-
-    const branch = localStorage.getItem("selectedBranch")
     const {request} = useHttp()
     const dispatch = useDispatch()
+
+    const search = useSelector(getSearchValue);
     const flows = useSelector(getFlows)
     const flowsLoading = useSelector(getFlowsLoading)
-    const userBranchId = useSelector(getBranch)
+    const userBranchId = useSelector(getUserBranchId)
     const teachers = useSelector(getTeachers)
     const level = useSelector(getCurseLevelData)
 
-
-
+    const [currentTableData, setCurrentTableData] = useState([])
+    const [currentPage, setCurrentPage] = useState(1);
     const [active, setActive] = useState(false)
+
+    let PageSize = useMemo(() => 50, [])
 
     const searchedFlow = useMemo(() => {
         const filteredRooms = flows?.filter(item => !item.deleted) || [];
@@ -56,18 +54,12 @@ export const FlowsPage = () => {
         );
     }, [flows, search]);
 
-
-
-
     useEffect(() => {
-        dispatch(fetchFlows(userBranchId?.id))
+        if (userBranchId) {
+            dispatch(fetchFlows(userBranchId))
+            dispatch(fetchTeachersData({userBranchId: userBranchId}))
+        }
     }, [userBranchId])
-
-
-    useEffect(() => {
-        if (branch)
-            dispatch(fetchTeachersData({userBranchId: branch}))
-    }, [branch])
 
     const getLevelData = (id) => {
         const subjectId = teachers.filter(item => item.id === +id)[0]?.subject[0]?.id
@@ -78,22 +70,8 @@ export const FlowsPage = () => {
             .catch(err => console.log(err))
     }
 
-
-
-    const types = useMemo(() => {
-        // console.log("render types") ||
-        return [
-            {
-                name: "Flows",
-                type: "flows"
-            },
-        ]
-    }, [])
-
-
     return (
-        <MultiPage types={types} page={"students"}>
-
+        <DynamicModuleLoader reducers={reducers}>
             <div className={cls.flow}>
                 <div className={cls.flow__header}>
 
@@ -103,7 +81,7 @@ export const FlowsPage = () => {
 
                 </div>
                 <Flows
-                    branchId={userBranchId?.id}
+                    branchId={userBranchId}
                     currentTableData={currentTableData}
                     loading={flowsLoading}
                     teacherData={teachers}
@@ -122,12 +100,11 @@ export const FlowsPage = () => {
                     }}
                     type={"custom"}/>
                 <FlowAddForm
-                    userBranchId={userBranchId.id}
+                    userBranchId={userBranchId}
                     active={active}
                     setActive={setActive}
                 />
             </div>
-        </MultiPage>
-
+        </DynamicModuleLoader>
     )
 }

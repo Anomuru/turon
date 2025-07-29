@@ -1,3 +1,5 @@
+import {getOverHeadLoading} from "entities/accounting/index.js";
+import {loginReducer} from "pages/loginPage/index.js";
 import {Table} from "shared/ui/table";
 import {Button} from "../../../../../shared/ui/button";
 import React, {useMemo, useState} from "react";
@@ -21,9 +23,10 @@ export const AccountingAdditionalCosts = ({
                                               setChangePayment,
                                               changePayment,
                                               getCapitalType,
-                                              onChange, loading
+                                              onChange
                                           }) => {
     const search = useSelector(getSearchValue)
+    const loading = useSelector(getOverHeadLoading)
     let PageSize = useMemo(() => 50, [])
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
@@ -83,21 +86,25 @@ export const AccountingAdditionalCosts = ({
         <>
 
             <div className={extraclassName}>
-                <Table>
-                    <thead>
-                    <tr>
-                        <th/>
-                        <th>Nomi</th>
-                        <th>Narxi</th>
-                        <th>Sana</th>
-                        <th>To'lov turi</th>
-                        <th>O'chirish</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    { render}
-                    </tbody>
-                </Table>
+                {
+                    loading
+                        ? <DefaultPageLoader/>
+                        : <Table>
+                            <thead style={{position: "sticky", top: "0"}}>
+                            <tr>
+                                <th/>
+                                <th>Nomi</th>
+                                <th>Narxi</th>
+                                <th>Sana</th>
+                                <th>To'lov turi</th>
+                                <th>O'chirish</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {render}
+                            </tbody>
+                        </Table>
+                }
             </div>
 
             <Modal active={changePayment} setActive={setChangePayment}>

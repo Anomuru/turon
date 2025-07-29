@@ -26,7 +26,6 @@ import {API_URL, headers, headersImg, useHttp} from "shared/api/base";
 
 
 import {AddCategoryModal, EditModal} from "features/createCapitalModal";
-import {getBranchThunk, getLocations} from "../../../../entities/editCreates";
 import {getLocationThunk} from "../../../../entities/creates/model/createThunk/createBranchThunk";
 import {onAddAlertOptions} from "../../../../features/alert/model/slice/alertSlice";
 import {SubCategory} from "../subCategory/subCategory";
@@ -56,14 +55,14 @@ export const CapitalInside = memo(() => {
         dispatch(getInsideCategory(id))
 
 
-        dispatch(getBranchThunk())
+        // dispatch(getBranchThunk())
     }, [])
 
 
     const getCapitalInsideData = useSelector(getCapitalInsideInfo)
 
     const loading = useSelector(getLoading)
-    const branches = useSelector(getLocations)
+    // const branches = useSelector(getLocations)
 
 
 

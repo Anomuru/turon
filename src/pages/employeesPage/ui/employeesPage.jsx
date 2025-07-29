@@ -1,7 +1,7 @@
 import cls from "./employeesPage.module.sass"
 import {Button} from "shared/ui/button";
 import {Select} from "shared/ui/select";
-import {DeletedEmployers, Employers} from "entities/employer";
+import {DeletedEmployers, Employers, employersReducer} from "entities/employer";
 import React, {useEffect, useMemo, useState} from "react";
 import {useSelector, useDispatch} from "react-redux";
 import {fetchEmployersData} from "entities/employer/model/slice/employersThunk";
@@ -9,15 +9,20 @@ import {getEmployersData} from "entities/employer/model/selector/employersSelect
 import {EmployeesFilter} from "features/filters/employeesFilter";
 import {getSearchValue} from "features/searchInput";
 import {Pagination} from "features/pagination";
-import {MultiPage} from "../../../widgets/multiPage/ui/MultiPage/MultiPage";
 import {useParams} from "react-router-dom";
 import {getBranch} from "features/branchSwitcher";
 import {useNavigate} from "react-router";
 import {EmployerCategoryPage} from "./employerCategory/employerCategoryPage";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
+import {getUserBranchId} from "entities/profile/userProfile";
+
+const reducers = {
+    employers: employersReducer
+}
 
 export const EmployerPage = () => {
 
-    const branch = useSelector(getBranch)
+    const branch = useSelector(getUserBranchId)
     const dispatch = useDispatch()
     const employersData = useSelector(getEmployersData)
     const [activeFilter, setActiveModal] = useState(false)
@@ -31,9 +36,9 @@ export const EmployerPage = () => {
     const userBranchId = id
 
     useEffect(() => {
-        if (branch?.id)
-        dispatch(fetchEmployersData({branch: branch?.id}))
-    }, [branch?.id])
+        if (branch)
+        dispatch(fetchEmployersData({branch}))
+    }, [branch])
 
     const searchedEmployers = useMemo(() => {
         const filteredRooms = employersData?.filter(item => !item.deleted) || [];
@@ -46,14 +51,8 @@ export const EmployerPage = () => {
         );
     }, [employersData, search]);
 
-    const types = [
-        {
-            name: "Ishchilar",
-            type: "worker"
-        }
-    ]
     return (
-        <MultiPage types={types} page={"worker"}>
+        <DynamicModuleLoader reducers={reducers}>
             <div className={cls.employer}>
                 <div className={cls.employer__header}>
                     <Button onClick={() => setActiveModal(!activeFilter)} status={"filter"} type={"filter"}>Filter</Button>
@@ -87,7 +86,7 @@ export const EmployerPage = () => {
                 <EmployeesFilter activeSwitch={activeSwitch} setActiveSwitch={setActiveSwitch} active={activeFilter}
                                  setActive={setActiveModal}/>
             </div>
-        </MultiPage>
+        </DynamicModuleLoader>
 
     )
 }

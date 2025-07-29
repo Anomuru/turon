@@ -1,14 +1,17 @@
-import {Table} from "../../../../../shared/ui/table";
-import {Button} from "../../../../../shared/ui/button";
-import cls from "./empSalary.module.sass"
-import {Modal} from "../../../../../shared/ui/modal";
 import React, {useMemo, useState} from "react";
-
-import {Select} from "shared/ui/select";
-import {useNavigate} from "react-router";
-import {Pagination} from "../../../../../features/pagination";
 import {useSelector} from "react-redux";
-import {getSearchValue} from "../../../../../features/searchInput";
+import {useNavigate} from "react-router";
+
+import {Pagination} from "features/pagination";
+import {getSearchValue} from "features/searchInput";
+import {getEmployerLoading} from "entities/accounting";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {Table} from "shared/ui/table";
+import {Button} from "shared/ui/button";
+import {Modal} from "shared/ui/modal";
+import {Select} from "shared/ui/select";
+
+import cls from "./empSalary.module.sass"
 
 export const EmployeeSalary = ({
                                    changingData,
@@ -26,11 +29,12 @@ export const EmployeeSalary = ({
                                }) => {
     const navigate = useNavigate()
     const search = useSelector(getSearchValue)
+    const loading = useSelector(getEmployerLoading)
     let PageSize = useMemo(() => 50, [])
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
 
-    const[payment , setPayment] = useState(null)
+    const [payment, setPayment] = useState(null)
 
     const searchedUsers = useMemo(() => {
         const filteredHeroes = filteredSalary?.slice()
@@ -40,7 +44,7 @@ export const EmployeeSalary = ({
         if (!search) return filteredHeroes
 
         return filteredHeroes.filter(item =>
-        item?.user?.name.toLowerCase().includes(search.toLowerCase())
+            item?.user?.name.toLowerCase().includes(search.toLowerCase())
         )
     }, [filteredSalary, setCurrentPage, search])
     // const onDeleteModal = (data) => {
@@ -53,9 +57,8 @@ export const EmployeeSalary = ({
     // }
 
 
-
     const renderFilteredSalary = () => {
-        return currentTableData.map((item, i) => (
+        return currentTableData?.map((item, i) => (
             <>
                 <tbody>
                 <tr>
@@ -81,7 +84,7 @@ export const EmployeeSalary = ({
                                 payment_types: item.payment_types,
 
                             })
-                                setChangePayment(true)
+                            setChangePayment(true)
                             // changePaymentType({
                             //     id: item.id,
                             //     name: item.user.name,
@@ -96,7 +99,7 @@ export const EmployeeSalary = ({
                         <div>
                             <Button
                                 onClick={() => {
-                                        setActiveDelete(true)
+                                    setActiveDelete(true)
                                     // onDeleteModal({
                                     //     id: item.id,
                                     //     name: item.user.name,
@@ -130,26 +133,30 @@ export const EmployeeSalary = ({
     return (
         <>
             <div className={cls.empSalary}>
-                <Table>
-                    <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Ism Familiya</th>
-                        <th>Oylik</th>
-                        <th>Sana</th>
-                        <th>Kasb</th>
-                        <th>To'lov turi</th>
-                        <th>O'chirish</th>
-                    </tr>
-                    </thead>
-                    {render2}
-                </Table>
+                {
+                    loading
+                        ? <DefaultPageLoader/>
+                        : <Table>
+                            <thead style={{position: "sticky", top: "0"}}>
+                            <tr>
+                                <th>No</th>
+                                <th>Ism Familiya</th>
+                                <th>Oylik</th>
+                                <th>Sana</th>
+                                <th>Kasb</th>
+                                <th>To'lov turi</th>
+                                <th>O'chirish</th>
+                            </tr>
+                            </thead>
+                            {render2}
+                        </Table>
+                }
 
                 <Modal active={changePayment} setActive={setChangePayment}>
 
                     <h2>To'lov turini uzgartirish</h2>
                     <div className={cls.changeType}>
-                        <Select  options={getCapitalType}
+                        <Select options={getCapitalType}
                                 onChangeOption={onChange}/>
                         {/*<Button onClick={onChange}>Tastiqlash</Button>*/}
                     </div>

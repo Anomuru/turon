@@ -143,3 +143,5 @@ export const flowsSlice = createSlice({
     }
 })
 export default flowsSlice.reducer
+export const {reducer: flowsReducer} = flowsSlice
+

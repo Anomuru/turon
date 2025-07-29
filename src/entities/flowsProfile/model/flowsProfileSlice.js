@@ -89,4 +89,5 @@ const flowsProfileSlice = createSlice({
 })
 
 export default flowsProfileSlice.reducer
+export const {reducer: flowsProfileReducer} = flowsProfileSlice
 

@@ -103,4 +103,6 @@ export const overHeadSlice = createSlice({
 })
 
 export const {onDeleteOverhead, onChangePaymentType , onAddOverhead} = overHeadSlice.actions
+export const {reducer: overHeadReducer} = overHeadSlice
+
 export default overHeadSlice.reducer

@@ -1,3 +1,6 @@
+import {accountingOtchotReducer} from "entities/accounting";
+import {getUserBranchId} from "entities/profile/userProfile";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import cls from "./otchot.module.sass";
 import {Button} from "shared/ui/button";
 import {Select} from "shared/ui/select";
@@ -13,7 +16,10 @@ import {EmpSalary} from "./otchotPages/empSalary";
 import {StudentPayment} from "./otchotPages/studentPayment";
 import {TeacherSalary} from "./otchotPages/teacherSalary";
 import {AllPages} from "./otchotPages/allPages";
-import {getBranch} from "../../../../features/branchSwitcher";
+
+const reducers = {
+    otchotAccountingSlice: accountingOtchotReducer
+}
 
 export const AccountingOtchotPage = () => {
     const formatSalary = (salary) => {
@@ -23,7 +29,7 @@ export const AccountingOtchotPage = () => {
     const [active, setActive] = useState(false)
     const dispatch = useDispatch()
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
 
     const navigate = useNavigate()
     const setPage = useCallback((e) => {
@@ -31,69 +37,71 @@ export const AccountingOtchotPage = () => {
         navigate(`${e}`, {relative: "path"})
     }, [navigate])
     return (
-        <div className={cls.accounting}>
-            <div className={cls.accounting__wrapper}>
-                <div className={cls.wrapper__filter}>
-                    <Button type={"filter"} status={"filter"} onClick={() => setActive(!active)}>Filter</Button>
-                    <Select defaultValue={getAccountingPage[0]?.value} options={getAccountingPage} onChangeOption={setPage}/>
-                </div>
+        <DynamicModuleLoader reducers={reducers}>
+            <div className={cls.accounting}>
+                <div className={cls.accounting__wrapper}>
+                    <div className={cls.wrapper__filter}>
+                        <Button type={"filter"} status={"filter"} onClick={() => setActive(!active)}>Filter</Button>
+                        <Select defaultValue={getAccountingPage && getAccountingPage[0]?.value} options={getAccountingPage} onChangeOption={setPage}/>
+                    </div>
 
 
-                <div className={cls.wrapper__middle}>
-                    <div className={cls.typeExpenses}>
-                        <Link to={`../inkasatsiya/${id}`}>
-                            <Button>
-                                Inkasatsiya
-                            </Button></Link>
-                        <Link to={"../accounting"}>
-                            <Button  type={"filter"}>
-                                buxgalteriya
-                            </Button>
-                        </Link>
+                    <div className={cls.wrapper__middle}>
+                        <div className={cls.typeExpenses}>
+                            <Link to={`../inkasatsiya/${id}`}>
+                                <Button>
+                                    Inkasatsiya
+                                </Button></Link>
+                            <Link to={"../accounting"}>
+                                <Button  type={"filter"}>
+                                    buxgalteriya
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <Routes>
-                <Route
+                <Routes>
+                    <Route
 
-                    path={"all"}
-                    element={
-                        <AllPages
+                        path={"all"}
+                        element={
+                            <AllPages
 
-                        />
-                    }
-                />
-                <Route
-
-                    path={"payment"}
-                    element={
-                        <StudentPayment
-                            formatSalary={formatSalary}
-
-                        />
-                    }
-                />
-                <Route
-                    path={"teacherSalary"}
-                    element={<TeacherSalary
-                        formatSalary={formatSalary}
+                            />
+                        }
                     />
-                    }
-                />
-                <Route
-                    path={"employerSalary"}
-                    element={
-                        <EmpSalary
+                    <Route
+
+                        path={"payment"}
+                        element={
+                            <StudentPayment
+                                formatSalary={formatSalary}
+
+                            />
+                        }
+                    />
+                    <Route
+                        path={"teacherSalary"}
+                        element={<TeacherSalary
                             formatSalary={formatSalary}
-
                         />
-                    }
-                />
+                        }
+                    />
+                    <Route
+                        path={"employerSalary"}
+                        element={
+                            <EmpSalary
+                                formatSalary={formatSalary}
+
+                            />
+                        }
+                    />
 
 
-            </Routes>
-        </div>
+                </Routes>
+            </div>
+        </DynamicModuleLoader>
     );
 };
 

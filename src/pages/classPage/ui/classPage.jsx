@@ -1,10 +1,8 @@
 import {ClassTable} from "entities/class";
 import {ClassFilter} from "entities/class"
-import {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {classItemLoading, classItems} from "entities/class/model/selector/classSelector";
+import {useState} from "react";
+import {useDispatch} from "react-redux";
 import {useHttp} from "shared/api/base";
-import {DefaultPageLoader} from "../../../shared/ui/defaultLoader";
 
 export const ClassPage = ({setEdit, edit, setActiveEdit, activeMenu, setActiveMenu, classes,branch}) => {
 

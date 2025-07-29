@@ -12,7 +12,6 @@ import {useTheme} from "shared/lib/hooks/useTheme";
 import {getTeachersWithFilter} from "entities/teachers";
 import {getTeacherLoading} from "entities/teachers";
 import {fetchTeachersData} from "entities/teachers";
-import {MultiPage} from "widgets/multiPage/ui/MultiPage/MultiPage";
 import {useParams} from "react-router-dom";
 import {API_URL, headers, useHttp} from "shared/api/base";
 
@@ -88,7 +87,7 @@ export const TeachersPage = () => {
         const id = activeDelete.id
         request(`${API_URL}Teachers/teachers/delete/${id}/`, "DELETE", null, headers())
             .then(res => {
-                if(res.status) {
+                if (res.status) {
                     dispatch(onDelete(id))
                 }
                 dispatch(onAddAlertOptions({
@@ -108,7 +107,7 @@ export const TeachersPage = () => {
     }
 
     return (
-        <MultiPage types={types} page={"teachers"}>
+        <>
             <div className={cls.teacher}>
 
                 <div className={cls.teacher__filter}>
@@ -127,7 +126,8 @@ export const TeachersPage = () => {
                                 time table
                             </Button>
                         }
-                        <Button extraClass={cls.category} type={"simple"} onClick={() => setActiveCategory(!activeCategory)}>Toifa</Button>
+                        <Button extraClass={cls.category} type={"simple"}
+                                onClick={() => setActiveCategory(!activeCategory)}>Toifa</Button>
                     </div>
                 </div>
                 <div className={cls.table}>
@@ -179,8 +179,7 @@ export const TeachersPage = () => {
                 />
             </div>
 
-            <ConfirmModal setActive={setActiveModal} active={activeModal} onClick={onClick}   type={"danger"}/>
-        </MultiPage>
-
+            <ConfirmModal setActive={setActiveModal} active={activeModal} onClick={onClick} type={"danger"}/>
+        </>
     )
 }

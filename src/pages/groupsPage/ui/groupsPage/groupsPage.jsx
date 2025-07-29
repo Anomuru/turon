@@ -19,7 +19,6 @@ import {Button} from "shared/ui/button";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 
 import cls from "./groupsPage.module.sass";
-import {MultiPage} from "widgets/multiPage/ui/MultiPage/MultiPage";
 // import {DeletedGroups} from "entities/groups/index";
 
 
@@ -74,7 +73,6 @@ export const GroupsPage = () => {
     ]
 
     return (
-        <MultiPage types={types} page={"groups"}>
             <div className={cls.deletedGroups}>
                 <div className={cls.mainContainer_filterPanelBox}>
                     <Button
@@ -127,7 +125,6 @@ export const GroupsPage = () => {
                     active={active}
                 />
             </div>
-        </MultiPage>
 
     )
 }

@@ -1,4 +1,3 @@
-
 import {useDispatch, useSelector} from "react-redux";
 import {getCapitalList, getDeletedCapitalList} from "entities/accounting/model/selector/capital";
 import React, {useEffect, useState} from "react";
@@ -15,18 +14,24 @@ import {getMonthDays} from "entities/accounting/model/selector/additionalCosts";
 import {getMonthDay} from "entities/accounting/model/thunk/additionalCosts";
 import {useForm} from "react-hook-form";
 import {API_URL, headers, useHttp} from "shared/api/base";
-import {AccountingCapitalCosts} from "entities/accounting";
+import {AccountingCapitalCosts, capitalListReducer} from "entities/accounting";
 import {onAddCapital, onDeleteCapital} from "entities/accounting/model/slice/capital";
 
 import {
     CapitalDeleted
 } from "entities/accounting/ui/acauntingTables/accountingTableCapitalCosts/capitalDeleted";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
 import cls from "../accountingPageMain.module.sass"
 
-import {onAddAlertOptions} from "../../../../features/alert/model/slice/alertSlice";
-import {getBranch} from "../../../../features/branchSwitcher";
-import {ConfirmModal} from "../../../../shared/ui/confirmModal";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
+import {getBranch} from "features/branchSwitcher";
+import {ConfirmModal} from "shared/ui/confirmModal";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+
+const reducers = {
+    capitalSlice: capitalListReducer
+}
 
 export const Capital = ({deleted , setDeleted }) => {
     const capitalList = useSelector(getCapitalList)
@@ -40,7 +45,7 @@ export const Capital = ({deleted , setDeleted }) => {
     const [changingData, setChangingData] = useState({})
     const [activeDelete, setActiveDelete] = useState(false)
     const {register, setValue, handleSubmit} = useForm()
-    let branchID = useSelector(getBranch)
+    let branchID = useSelector(getUserBranchId)
     const monthDay = useSelector(getMonthDays)
 
     const {request} = useHttp()
@@ -56,7 +61,7 @@ export const Capital = ({deleted , setDeleted }) => {
     const onAdd = (data) => {
 
         const res = {
-            branch: branchID.id,
+            branch: branchID,
             payment_type: radio.id,
 
             ...data
@@ -87,8 +92,8 @@ export const Capital = ({deleted , setDeleted }) => {
     const formatSalary = (salary) => {
         return Number(salary).toLocaleString();
     };
-    const sum1 = capitalList.reduce((a, c) => a + parseFloat(c.price || 0), 0);
-    const sum2 = capitalDeletedList.reduce((a, c) => a + parseFloat(c.price || 0), 0);
+    const sum1 = capitalList?.reduce((a, c) => a + parseFloat(c.price || 0), 0);
+    const sum2 = capitalDeletedList?.reduce((a, c) => a + parseFloat(c.price || 0), 0);
     const onDelete = () => {
         const {id} = changingData
 
@@ -108,17 +113,19 @@ export const Capital = ({deleted , setDeleted }) => {
             })
     }
     return (
-        <div className={cls.overhead}>
-            <CapitalHeader deleted={deleted} setDeleted={setDeleted} setActive={setActiveModal} sum1={sum1} sum2={sum2} formatSalary={formatSalary}/>
-            {deleted ? <CapitalDeleted deleted={capitalDeletedList}/> : <AccountingCapitalCosts changingData={changingData} activeDelete={activeDelete}
-                                                                                                setActiveDelete={setActiveDelete}
-                                                                                                setChangingData={setChangingData}
-                                                                                                onDelete={onDelete} capitalData={capitalList}/>}
-            <CapitalModal radioSelect={radio} setRadio={setRadio} register={register} onAdd={onAdd}
-                          handleSubmit={handleSubmit} monthDay={monthDay} setMonth={setMonth} setDay={setDay} day={day}
-                          month={month} setActive={setActiveModal} activeModal={activeModal} radio={paymentType}/>
-            <ConfirmModal setActive={setActiveDelete} active={activeDelete} onClick={onDelete} title={`Rostanham ${changingData.name} ni o'chirmoqchimisiz `}   type={"danger"}/>
-            {/*<YesNo activeDelete={activeDelete} setActiveDelete={setActiveDelete} onDelete={onDelete} changingData={changingData}/>*/}
-        </div>
+        <DynamicModuleLoader reducers={reducers}>
+            <div className={cls.overhead}>
+                <CapitalHeader deleted={deleted} setDeleted={setDeleted} setActive={setActiveModal} sum1={sum1} sum2={sum2} formatSalary={formatSalary}/>
+                {deleted ? <CapitalDeleted deleted={capitalDeletedList}/> : <AccountingCapitalCosts changingData={changingData} activeDelete={activeDelete}
+                                                                                                    setActiveDelete={setActiveDelete}
+                                                                                                    setChangingData={setChangingData}
+                                                                                                    onDelete={onDelete} capitalData={capitalList}/>}
+                <CapitalModal radioSelect={radio} setRadio={setRadio} register={register} onAdd={onAdd}
+                              handleSubmit={handleSubmit} monthDay={monthDay} setMonth={setMonth} setDay={setDay} day={day}
+                              month={month} setActive={setActiveModal} activeModal={activeModal} radio={paymentType}/>
+                <ConfirmModal setActive={setActiveDelete} active={activeDelete} onClick={onDelete} title={`Rostanham ${changingData.name} ni o'chirmoqchimisiz `}   type={"danger"}/>
+                {/*<YesNo activeDelete={activeDelete} setActiveDelete={setActiveDelete} onDelete={onDelete} changingData={changingData}/>*/}
+            </div>
+        </DynamicModuleLoader>
     );
 };

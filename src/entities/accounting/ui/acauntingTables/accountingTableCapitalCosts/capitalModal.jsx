@@ -31,7 +31,7 @@ export const CapitalModal = ({
                     <Input register={register} name={"name"}/>
                     <Input register={register} name={"price"} type={"number"}/>
                     <div style={{display: "flex", gap: "2rem", justifyContent: 'center'}}>
-                        {radio.map(item => (
+                        {radio?.map(item => (
                             <Radio
                                 onChange={() => setRadio({
                                     name: item.name,
@@ -47,7 +47,7 @@ export const CapitalModal = ({
 
 
                     <Select title={"Oy"} options={monthDay} onChangeOption={setMonth}/>
-                    <Select title={"sana"} options={monthDay.filter(item => item?.value === month)[0]?.days}
+                    <Select title={"sana"} options={monthDay?.filter(item => item?.value === month)[0]?.days}
                             onChangeOption={setDay}/>
                 </Form>
             </div>

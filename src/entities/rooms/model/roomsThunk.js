@@ -1,10 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import {API_URL, branchQuery, headers, useHttp} from '../../../shared/api/base';
+import {API_URL, headers, useHttp} from 'shared/api/base';
 
 export const fetchRoomsData = createAsyncThunk(
     'roomsSlice/fetchRoomsData',
-    async ({id}) => {
+    async ({id, selectedSeat, boardCond}) => {
         const { request } = useHttp();
-        return await request(`${API_URL}Rooms/rooms/?branch=${id}&deleted=False`, 'GET', null, headers())
+        return await request(
+            `${API_URL}Rooms/rooms/?deleted=False&branch=${id}${boardCond ? `&electronic_board=${boardCond}` : ""}${selectedSeat ? `&seats_number=${selectedSeat}` : ""}`,
+            "GET", null, headers()
+        )
     }
 );

@@ -5,10 +5,12 @@ export {ClassFilter} from "./ui/classFilter/classFilter"
 
 export {ClassColorAddFilter} from "./ui/classColorAdd/classColorAddFilter/classColorAddFilter"
 
+export {classItemTypeLoading} from "./model/selector/classSelector"
 
 
 
 
 
 
-export {default as classSlice} from "./model/slice/classSlice"
+
+export {default as classSlice, classReducer} from "./model/slice/classSlice"

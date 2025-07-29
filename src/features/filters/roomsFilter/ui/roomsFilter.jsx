@@ -1,47 +1,50 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 
-import { Modal } from "shared/ui/modal";
-import { Input } from "shared/ui/input";
-import { Select } from "shared/ui/select";
-import { Switch } from "shared/ui/switch";
+import {Modal} from "shared/ui/modal";
+import {Input} from "shared/ui/input";
+import {Switch} from "shared/ui/switch";
+import {fetchRoomsData} from "entities/rooms";
+import {getUserBranchId} from "entities/profile/userProfile";
 
 import cls from "../../filters.module.sass";
-import { useDispatch } from "react-redux";
-import { fetchFilteredRooms } from "../model/filterRoomsThunk";
 
-export const RoomsFilter = React.memo(({ active, setActive, activeSwitch, setActiveSwitch }) => {
+export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActiveSwitch}) => {
 
-    const [selectedSeatFrom, setSelectedSeatFrom] = useState();
-    const [selectedSeatTo, setSelectedSeatTo] = useState();
-    const [selectedTeacher, setSelectedTeacher] = useState();
-    const [switchOn, setSwitchOn] = useState(true);
     const dispatch = useDispatch();
+
+    const userBranchId = useSelector(getUserBranchId)
+
+    const [selectedSeatFrom, setSelectedSeatFrom] = useState("");
+    const [selectedSeatTo, setSelectedSeatTo] = useState("");
+    const [selectedSeat, setSelectedSeat] = useState("")
+    const [switchOn, setSwitchOn] = useState(true);
+
+    useEffect(() => {
+        dispatch(fetchRoomsData({
+            boardCond: switchOn ? "True" : "False",
+            selectedSeat: selectedSeat,
+            id: userBranchId
+        }));
+    }, [switchOn, selectedSeat, userBranchId])
+
+    useEffect(() => {
+        if (selectedSeatTo.length && selectedSeatFrom.length)
+            setSelectedSeat(`${selectedSeatFrom}-${selectedSeatTo}`)
+    }, [selectedSeatTo, selectedSeatFrom])
 
     const onChangeSwitch = () => {
         const newSwitchState = !switchOn;
         setSwitchOn(newSwitchState);
-        dispatch(fetchFilteredRooms({
-            boardCond: newSwitchState ? "True" : "False"
-        }));
     };
 
     const handleSeatFromBlur = (e) => {
         setSelectedSeatFrom(e.target.value);
-        dispatch(fetchFilteredRooms({
-            seatFromId: e.target.value,
-            seatUntilId: selectedSeatTo,
-        }));
     };
 
     const handleSeatToBlur = (e) => {
         setSelectedSeatTo(e.target.value);
-        dispatch(fetchFilteredRooms({
-            seatFromId: selectedSeatFrom,
-            seatUntilId: e.target.value,
-        }));
     };
-
-
 
     return (
         <Modal
@@ -51,13 +54,6 @@ export const RoomsFilter = React.memo(({ active, setActive, activeSwitch, setAct
             <div className={cls.filter}>
                 <h1>Filter</h1>
                 <div className={cls.filter__container}>
-
-                    {/*<Select*/}
-                    {/*    title={"Teacher"}*/}
-                    {/*    extraClass={cls.filter__select}*/}
-                    {/*    onChangeOption={setSelectedTeacher}*/}
-                    {/*/>*/}
-
                     <div className={cls.filter__age}>
                         <Input
                             type={"number"}
@@ -76,12 +72,10 @@ export const RoomsFilter = React.memo(({ active, setActive, activeSwitch, setAct
                             onBlur={handleSeatToBlur}
                         />
                     </div>
-
                     <div className={cls.filter__switch}>
                         <p>Doska</p>
-                        <Switch onChangeSwitch={onChangeSwitch} activeSwitch={switchOn} />
+                        <Switch onChangeSwitch={onChangeSwitch} activeSwitch={switchOn}/>
                     </div>
-
                 </div>
             </div>
         </Modal>

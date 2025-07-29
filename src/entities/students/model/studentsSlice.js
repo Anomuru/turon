@@ -200,6 +200,7 @@ export const studentsSlice = createSlice({
 })
 
 export default studentsSlice.reducer
+export const {reducer: newStudentsReducer} = studentsSlice
 
 export const {
     getFilteredStudentsData,

@@ -41,7 +41,6 @@ import {Radio} from "shared/ui/radio";
 import {Input} from "shared/ui/input";
 import {useTheme} from "shared/lib/hooks/useTheme";
 import {getSearchValue} from "features/searchInput";
-import {MultiPage} from "widgets/multiPage/ui/MultiPage/MultiPage";
 import {useParams, useSearchParams} from "react-router-dom";
 
 import {useHttp} from "shared/api/base";
@@ -284,9 +283,8 @@ export const StudentsPage = () => {
 
 
     return (
-        // <>
+        <>
 
-        <MultiPage types={types} page={"students"}>
             <StudentsHeader
                 // selected={selected}
                 // setSelected={setSelected}
@@ -412,8 +410,7 @@ export const StudentsPage = () => {
                 data={data}
                 branch={userBranchId}
             />
-        </MultiPage>
-        // </>
+        </>
 
     )
 }

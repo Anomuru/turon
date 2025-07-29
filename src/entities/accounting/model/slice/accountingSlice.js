@@ -57,6 +57,7 @@ const otchotPages = [
 
 
 ]
+
 const initialState = {
     pages: pages,
     accountingPages: otchotPages,
@@ -95,7 +96,7 @@ const accountingSlice = createSlice({
                 state.error = false
             })
             .addCase(accountingThunk.fulfilled, (state, action) => {
-                state.encashment = action.payload
+                state.encashment = action.payload.payments
                 state.loading = false
                 state.error = false
             })
@@ -107,5 +108,6 @@ const accountingSlice = createSlice({
 })
 
 export const {onChangeAccountingPage , onChangePage} = accountingSlice.actions
+export const {reducer: accountingReducer} = accountingSlice
 export default accountingSlice.reducer
 

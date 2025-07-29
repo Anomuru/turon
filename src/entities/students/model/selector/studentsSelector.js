@@ -1,10 +1,10 @@
 
 
 export const getFilteredLoading = (state) =>
-    state.newStudents.filteredByClass
+    state.newStudents?.filteredByClass
 
 export const getFilteredClassStudents = (state) =>
-    state.newStudents.filteredByClassStudents
+    state.newStudents?.filteredByClassStudents
 
 
 export const getLoadingNewStudents = (state) =>
@@ -20,10 +20,10 @@ export const getNewStudentsData = (state) =>
     state.newStudents?.newStudentes
 
 export const getNewStudentsLoading = (state) =>
-    state.newStudents.newStudentsStatus
+    state.newStudents?.newStudentsStatus
 
 export const getStudyingStudents = (state) =>
-    state.newStudents.studyingStudents
+    state.newStudents?.studyingStudents
 
 export const getFilteredStudents = (state) =>
     state.newStudents?.filteredStudents

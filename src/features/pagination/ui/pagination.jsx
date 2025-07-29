@@ -20,7 +20,7 @@ export const Pagination = React.memo((props) => {
         setCurrentTableData(() => {
             const firstPageIndex = (currentPage - 1) * pageSize;
             const lastPageIndex = firstPageIndex + pageSize;
-            return users.slice(firstPageIndex, lastPageIndex);
+            return users?.slice(firstPageIndex, lastPageIndex);
         })
     }, [pageSize, currentPage, users, setCurrentTableData])
 
@@ -32,7 +32,7 @@ export const Pagination = React.memo((props) => {
     });
 
     const renderPageNumbers = useCallback(() => {
-        return paginationRange.map((pageNumber, index) => {
+        return paginationRange?.map((pageNumber, index) => {
             if (pageNumber === DOTS) {
                 return <li key={index} className={classNames(cls.pagination_item, "dots")}>&#8230;</li>;
             }
@@ -52,7 +52,7 @@ export const Pagination = React.memo((props) => {
         });
     }, [currentPage, onPageChange, paginationRange]);
 
-    if (currentPage === 0 || paginationRange.length < 2) {
+    if (currentPage === 0 || paginationRange?.length < 2) {
         return null;
     }
 
@@ -64,7 +64,7 @@ export const Pagination = React.memo((props) => {
         onPageChange(currentPage - 1);
     };
 
-    let lastPage = paginationRange[paginationRange.length - 1];
+    let lastPage = paginationRange ? paginationRange[paginationRange.length - 1] : 1;
 
     const renderedPages = renderPageNumbers();
 

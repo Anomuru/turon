@@ -6,7 +6,7 @@ export const getStudentPayment = createAsyncThunk(
     "studentSlice/getStudentPayment",
     async (branchID) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/student_payment_list/?branch=${branchID.id}` , 'GET' , null , headers())
+        return await request(`${API_URL}Students/student_payment_list/?branch=${branchID}` , 'GET' , null , headers())
     }
 )
 
@@ -15,6 +15,6 @@ export const getDeletedPayment = createAsyncThunk(
     "studentSlice/getDeletedPayment",
     async (branchId) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/student_payment_deleted_list/?branch=${branchId.id}` , 'GET' , null , headers())
+        return await request(`${API_URL}Students/student_payment_deleted_list/?branch=${branchId}` , 'GET' , null , headers())
     }
 )

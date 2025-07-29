@@ -1,29 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import cls from "./roomsList.module.sass";
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigate} from "react-router";
+
+import {getFilteredRooms} from "features/filters/roomsFilter";
+import {getRoomsLoading} from "entities/rooms";
 import { Switch } from "shared/ui/switch";
 import { SkeletonCard } from "shared/ui/roomsSkeleton/roomsSkeleton";
+
+import cls from "./roomsList.module.sass";
 import Icon from "shared/assets/images/room_image.svg";
-import {Link} from "../../../../shared/ui/link";
-import {DefaultLoader} from "../../../../shared/ui/defaultLoader";
-import {useDispatch, useSelector} from "react-redux";
-import {getFilteredRooms} from "../../../../features/filters/roomsFilter";
-import {useNavigate} from "react-router";
 
 export const RoomsList = ({ currentTableData }) => {
     const navigation = useNavigate()
-    const [loading, setLoading] = useState(true);
-    const [switchStates, setSwitchStates] = useState({});
     const dispatch = useDispatch()
+
     const getFilteredRoom = useSelector(getFilteredRooms)
+    const loading = useSelector(getRoomsLoading)
 
+    const [switchStates, setSwitchStates] = useState({});
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 2000);
-
-        return () => clearTimeout(timer);
-    }, []);
 
     useEffect(() => {
         const initialSwitchStates = currentTableData.reduce((acc, item) => {
@@ -32,7 +27,6 @@ export const RoomsList = ({ currentTableData }) => {
         }, {});
         setSwitchStates(initialSwitchStates);
     }, [currentTableData]);
-
 
     if (loading) {
         return (
@@ -43,16 +37,6 @@ export const RoomsList = ({ currentTableData }) => {
             </div>
         );
     }
-    // else if (currentTableData.length === 0)
-    // {
-    //     return (
-    //         <div className={cls.skeletonContainer}>
-    //             {Array.from({ length: 5 }).map((_, index) => (
-    //                 <SkeletonCard key={index} />
-    //             ))}
-    //         </div>
-    //     );
-    // }
 
     const handleSwitchChange = (id) => {
         setSwitchStates(prevStates => ({
@@ -62,14 +46,6 @@ export const RoomsList = ({ currentTableData }) => {
     };
 
     const roomsToRender = getFilteredRoom && getFilteredRoom.length > 0 ? getFilteredRoom : currentTableData
-
-    // if (!roomsToRender || roomsToRender.length === 0)
-    // {
-    //     return (
-    //         <DefaultLoader/>
-    //     )
-    // }
-
 
     return roomsToRender?.map((item, index) => (
         <>
@@ -87,6 +63,7 @@ export const RoomsList = ({ currentTableData }) => {
                             <div className={cls.mainContainer_tablePanelBox_cardBox_articleBox_boardBox}>
                                 <h2 className={cls.mainContainer_tablePanelBox_cardBox_articleBox_boardBox_isBoard}>Elektron doska</h2>
                                 <Switch
+                                    key={`switch-${index}`}
                                     disabled
                                     activeSwitch={switchStates[item.id]}
                                     onChangeSwitch={() => handleSwitchChange(item.id)}

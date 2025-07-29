@@ -36,4 +36,5 @@ export const searchSlice = createSlice({
 })
 
 export default searchSlice.reducer
+export const {reducer: searchReducer} = searchSlice
 export const {getSearchStr} = searchSlice.actions

@@ -22,6 +22,6 @@ export {CategoryHeader} from "./ui/subCategory/categoryHeader/categoryHeader"
 
 export {getCapitalDataThunk , createInsideCategory , getInsideCategory , changeCapitalInfoThunk , getCapitalInfo , createCapitalCategory} from "./model/thunk/capitalThunk"
 
-export {default as capital} from "./model/slice/capitalSlice"
+export {default as capital, capitalReducer} from "./model/slice/capitalSlice"
 export {getCapitalData , getCapitalInsideInfo, getCapitalPermission, getLoading, getCapitalInside , getCapitalTypes} from "./model/selector/capitalSelector"
 

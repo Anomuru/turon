@@ -58,3 +58,5 @@ export const teacherParseSlice = createSlice({
 });
 
 export default teacherParseSlice.reducer;
+export const {reducer: teachersReducer} = teacherParseSlice
+

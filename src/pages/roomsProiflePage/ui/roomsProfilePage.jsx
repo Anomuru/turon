@@ -19,6 +19,11 @@ import {onAddAlertOptions} from "../../../features/alert/model/slice/alertSlice"
 import {ConfirmModal} from "../../../shared/ui/confirmModal";
 import {useNavigate} from "react-router";
 import {getBranch} from "../../../features/branchSwitcher";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+
+const reducers = {
+    // roomssSlice
+}
 
 export const RoomsProfilePage = () => {
     const [switchStates, setSwitchStates] = useState({});
@@ -94,7 +99,7 @@ export const RoomsProfilePage = () => {
 
 
     return (
-        <>
+        <DynamicModuleLoader reducers={reducers}>
             <div className={cls.container}>
                 {
                     loading ? <DefaultPageLoader/>
@@ -103,7 +108,7 @@ export const RoomsProfilePage = () => {
                             <div className={cls.container_leftBox_buttonPanel}>
                                 {localRoomData.can_delete ?
                                     <Button onClick={() => setModal(true)} extraClass={cls.buttonDelete}
-                                    children={<i className="fa-solid fa-trash"></i>}/> : null
+                                            children={<i className="fa-solid fa-trash"></i>}/> : null
                                 }
 
                             </div>
@@ -164,6 +169,6 @@ export const RoomsProfilePage = () => {
                 <div className={cls.container_rightBox}>
                 </div>
             </div>
-        </>
+        </DynamicModuleLoader>
     );
 };

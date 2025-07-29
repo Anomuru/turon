@@ -1,18 +1,18 @@
 
 export const getFlowsProfileData = (state) =>
-    state.flowsProfileSlice.data
+    state.flowsProfileSlice?.data
 
 export const getFlowsProfileNextLs = (state) =>
-    state.flowsProfileSlice.nextLessonData
+    state.flowsProfileSlice?.nextLessonData
 
 export const getFlowsProfileFilteredStudents = (state) =>
-    state.flowsProfileSlice.filteredStudents
+    state.flowsProfileSlice?.filteredStudents
 
 export const getFlowsProfileFilteredTeachers = (state) =>
-    state.flowsProfileSlice.filteredTeachers
+    state.flowsProfileSlice?.filteredTeachers
 
 export const getFlowsProfileStatus = (state) =>
-    state.flowsProfileSlice.loading
+    state.flowsProfileSlice?.loading
 
 
 

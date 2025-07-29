@@ -4,6 +4,7 @@ import {useHttp} from "shared/api/base";
 import {oftenUsedReducer} from "entities/oftenUsed";
 import {loginReducer} from "pages/loginPage";
 import {userProfileReducer} from "entities/profile/userProfile";
+import {searchReducer} from "features/searchInput";
 
 
 export function createReduxStore(
@@ -15,7 +16,8 @@ export function createReduxStore(
         // user: userReducer,
         oftenUsedSlice: oftenUsedReducer,
         loginSlice: loginReducer,
-        userProfileSlice: userProfileReducer
+        userProfileSlice: userProfileReducer,
+        searchSlice: searchReducer
 
 
     };

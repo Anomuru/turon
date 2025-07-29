@@ -13,7 +13,7 @@ export const getLoading = (state) =>
     state.capital?.loading
 
 export const getCapitalPermission = (state) =>
-    state.capital.capitalPermission
+    state.capital?.capitalPermission
 
 
 export const getCapitalInside = (state) =>

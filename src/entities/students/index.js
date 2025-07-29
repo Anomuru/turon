@@ -6,8 +6,9 @@ export {GroupCreatePage} from "../../pages/groupsPage/ui/groupCreatePage/groupCr
 
 export {
     default as newStudents,
+    newStudentsReducer,
     getFilteredStudentsData,
-    getFilteredStudentsStatus,
+    getFilteredStudentsStatus
 } from "./model/studentsSlice"
 
 export {fetchNewStudentsData,

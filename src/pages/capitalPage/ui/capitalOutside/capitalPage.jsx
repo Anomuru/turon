@@ -1,16 +1,21 @@
 import {useDispatch, useSelector} from "react-redux";
-import {CapitalOutside, CapitalOutsideHeader, createCapitalCategory, getCapitalData} from "entities/capital";
+import {
+    CapitalOutside,
+    CapitalOutsideHeader,
+    capitalReducer,
+    createCapitalCategory,
+    getCapitalData
+} from "entities/capital";
 
 import cls from "./capitalPage.module.sass"
 import React, {memo, useCallback, useEffect, useState} from "react";
-
-
 
 
 import {useForm} from "react-hook-form";
 import {getCapitalDataThunk, getCapitalPermission, getLoading} from "entities/capital";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import {AddCategoryModal, CreateCapitalModal} from "features/createCapitalModal";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
 
 const img = {
@@ -18,6 +23,10 @@ const img = {
     width: "30rem",
     height: '30rem'
 };
+
+const reducers = {
+    capital: capitalReducer
+}
 
 
 export const CapitalPage = memo(() => {
@@ -67,33 +76,38 @@ export const CapitalPage = memo(() => {
 
 
     return (
-        <div className={cls.capitalMain}>
-            <CapitalOutsideHeader
-                caunt={loadingCount()}
-                setActiveModal={setActiveModal}
-                active={activeModal}
-                isCanAdd={capitalPermission[0]?.add_capitalcategory}
-            />
-            {
-                loading ? <DefaultPageLoader/> :
-                    <CapitalOutside
-                        isCanView={capitalPermission[0]?.view_capitalcategory}
-                        capitalData={getCapital}
-                    />
-            }
+        <DynamicModuleLoader reducers={reducers}>
+            <div className={cls.capitalMain}>
+                {capitalPermission && (
+                    <>
+                        <CapitalOutsideHeader
+                            caunt={loadingCount()}
+                            setActiveModal={setActiveModal}
+                            active={activeModal}
+                            isCanAdd={capitalPermission[0]?.add_capitalcategory}
+                        />
+                        {
+                            loading ? <DefaultPageLoader/> :
+                                <CapitalOutside
+                                    isCanView={capitalPermission[0]?.view_capitalcategory}
+                                    capitalData={getCapital}
+                                />
+                        }
+                    </>
+                )}
 
-            <CreateCapitalModal
-                changeItem={changeItem}
-                setChangedImages={setChangedImages}
-                onClick={onClick}
-                register={register}
-                handleSubmit={handleSubmit}
-                setActiveModal={setActiveModal}
-                activeModal={activeModal}/>
+                <CreateCapitalModal
+                    changeItem={changeItem}
+                    setChangedImages={setChangedImages}
+                    onClick={onClick}
+                    register={register}
+                    handleSubmit={handleSubmit}
+                    setActiveModal={setActiveModal}
+                    activeModal={activeModal}/>
 
 
-
-        </div>
+            </div>
+        </DynamicModuleLoader>
     );
 })
 

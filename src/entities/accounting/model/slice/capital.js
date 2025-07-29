@@ -51,4 +51,5 @@ export const capitalList = createSlice({
 })
 
 export const {onDeleteCapital , onAddCapital} = capitalList.actions
+export const {reducer: capitalListReducer} = capitalList
 export default capitalList.reducer

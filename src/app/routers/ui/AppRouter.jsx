@@ -80,10 +80,10 @@ export const AppRouter = () => {
                                         element={
 
                                             // <RequireBranch>
-                                                <Suspense fallback={<div>Loading...</div>}>
-                                                    {item.element}
-                                                </Suspense>
-
+                                            //     <Suspense fallback={<div>Loading...</div>}>
+                                            //         {item.element}
+                                                // </Suspense>
+                                            item.element
                                             // </RequireBranch>
                                         }
                                     />
@@ -154,7 +154,9 @@ export const AppRouter = () => {
 
     return (
         <div className={classNames("app", "app_center_theme")}>
-            <RouterProvider router={router}/>
+            <Suspense>
+                <RouterProvider router={router}/>
+            </Suspense>
         </div>
     );
 };

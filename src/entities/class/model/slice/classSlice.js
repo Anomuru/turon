@@ -14,6 +14,7 @@ import {
 
 const initialState = {
     loading: false,
+    typeLoading: false,
     error: false,
     classData: [],
     classTypeNumber: [],
@@ -65,17 +66,17 @@ const classSlice = createSlice({
     extraReducers: builder =>
         builder
             .addCase(getClassTypes.pending, state => {
-                state.loading = true
+                state.typeLoading = true
                 state.error = false
             })
             .addCase(getClassTypes.fulfilled, (state, action) => {
                 state.classData = action.payload
-                state.loading = false
+                state.typeLoading = false
                 state.error = false
             })
             .addCase(getClassTypes.rejected, state => {
                 state.error = true
-                state.loading = false
+                state.typeLoading = false
             })
 
             .addCase(createClassType.pending, state => {
@@ -255,5 +256,6 @@ const classSlice = createSlice({
 })
 
 export const {onDelete, onDeleteTypes,onChangeClassStatus , onUpdateClass} = classSlice.actions
+export const {reducer: classReducer} = classSlice
 
 export default classSlice.reducer
