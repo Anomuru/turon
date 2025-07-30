@@ -20,6 +20,7 @@ import {teacherParseReducer, teacherParseSlice} from "entities/teachers/model/te
 import {teacherSalaryReducer, teacherSalarySlice} from "entities/teacherSalary/ui/teacherSalarySlice.js";
 import {timeTableReducer} from "pages/timeTableListPage/model/timeTableListSlice/timeTableListSlice.js";
 import {employerCategoryReducer, employerCategorySlice} from "entities/employer/model/slice/employerCategory.js";
+import {searchReducer} from "features/searchInput";
 
 
 export function createReduxStore(
@@ -32,6 +33,8 @@ export function createReduxStore(
         oftenUsedSlice: oftenUsedReducer,
         loginSlice: loginReducer,
         userProfileSlice: userProfileReducer,
+        searchSlice: searchReducer,
+
         newStudents: studentsReducer,
         userSlice: userSliceReducer,
         vacancyPageParseSlice: vacancyPageParseReducer,

@@ -1,7 +1,10 @@
-import {Form} from "shared/ui/form";
-import {Input} from "../../../shared/ui/input";
-import cls from "./contract.module.sass"
 import {useForm} from "react-hook-form";
+
+import {Form} from "shared/ui/form";
+import {Input} from "shared/ui/input";
+
+import cls from "./contract.module.sass"
+
 export const Contract = () => {
 
     const {register , handleSubmit ,setValue} = useForm()

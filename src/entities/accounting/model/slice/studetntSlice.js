@@ -46,5 +46,7 @@ const studentSlice = createSlice({
 })
 
 export const {onDeleteStudents} = studentSlice.actions
+export const {reducer: studentReducer} = studentSlice
+
 
 export default studentSlice.reducer

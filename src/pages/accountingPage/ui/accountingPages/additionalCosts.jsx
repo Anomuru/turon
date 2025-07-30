@@ -1,3 +1,5 @@
+import {getUserBranchId} from "entities/profile/userProfile";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {Button} from "shared/ui/button";
 import React, {useCallback, useEffect, useState} from "react";
 import {Modal} from "shared/ui/modal";
@@ -7,7 +9,12 @@ import {Select} from "shared/ui/select";
 import {Input} from "shared/ui/input";
 import {OverHeadHeader} from "entities/accounting/ui/acauntingTables/accountingTableAdditionalCosts/overHeadHeader";
 import {useDispatch, useSelector} from "react-redux";
-import {AccountingAdditionalCosts, getOverHeadLoading, getOverHeadType} from "../../../../entities/accounting";
+import {
+    AccountingAdditionalCosts,
+    getOverHeadLoading,
+    getOverHeadType,
+    overHeadReducer
+} from "entities/accounting";
 import {
     getMonthDay,
     getOverheadType,
@@ -15,7 +22,7 @@ import {
     overHeadList
 } from "entities/accounting/model/thunk/additionalCosts";
 import {API_URL, headers, useHttp} from "shared/api/base";
-import {getCapitalTypes} from "entities/capital";
+import {capitalReducer, getCapitalTypes} from "entities/capital";
 import {Radio} from "shared/ui/radio";
 
 import {useForm} from "react-hook-form";
@@ -33,6 +40,11 @@ import {onAddAlertOptions} from "../../../../features/alert/model/slice/alertSli
 import {ConfirmModal} from "../../../../shared/ui/confirmModal";
 import {getBranch} from "../../../../features/branchSwitcher";
 import classNames from "classnames";
+
+const reducers = {
+    overHeadSlice: overHeadReducer,
+    capital: capitalReducer
+}
 
 
 export const AdditionalCosts = ({deleted, setDeleted}) => {
@@ -57,11 +69,10 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
     const [activeBtn, setActiveBtn] = useState(null)
 
 
-
     const getCapitalType = useSelector(getCapitalTypes)
 
     const [changePaymentType, setChangePaymentType] = useState(null)
-    let branchID = useSelector(getBranch)
+    let branchID = useSelector(getUserBranchId)
     // const [alerts, setAlerts] = useState([])
     useEffect(() => {
         dispatch(getOverheadType())
@@ -71,12 +82,7 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
     }, [])
 
     useEffect(() => {
-        const res ={
-            branchID: branchID.id,
-            type: activeBtn
-        }
-
-        dispatch(overHeadList({activeBtn: activeBtn , branchId: branchID}))
+        dispatch(overHeadList({activeBtn: activeBtn, branchId: branchID}))
     }, [activeBtn])
     console.log(activeBtn)
     // useEffect(() => {
@@ -107,7 +113,7 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
     const onAdd = (data) => {
         const res = {
             type: select.id,
-            branch: branchID.id,
+            branch: branchID,
             payment: radioSelect.id,
             ...data
         }
@@ -191,81 +197,90 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
         //     });
     }
     const sum1 = overheadList?.reduce((a, c) => a + parseFloat(c.price || 0), 0);
-    const sum2 = overheadDeletedList.reduce((a, c) => a + parseFloat(c.price || 0), 0);
+    const sum2 = overheadDeletedList?.reduce((a, c) => a + parseFloat(c.price || 0), 0);
 
     const formatSalary = (salary) => {
         return Number(salary).toLocaleString();
     };
-    return   (
-        <div className={cls.overhead}>
+    return (
+        <DynamicModuleLoader reducers={reducers}>
+            <div className={cls.overhead}>
 
-            <OverHeadHeader formatSalary={formatSalary} sum={sum1} deleted={deleted} sum2={sum2} onClick={onClick}
-                            setDeleted={setDeleted}/>
+                <OverHeadHeader
+                    formatSalary={formatSalary}
+                    setDeleted={setDeleted}
+                    deleted={deleted}
+                    onClick={onClick}
+                    sum2={sum2}
+                    sum={sum1}
+                />
 
-            {deleted ? <AdditionalCostsDeleted
-                    overheadDeletedList={overheadDeletedList}
-                    extraClassName={cls.table}
-                    paymentStyle={cls.typeItem}
-                /> :
-                <>
-                    <div className={cls.subHeader}>
-
-                        {overHeadType.map(item => (
-                            <Button extraClass={classNames(cls.subHeader__subBtn , {
-                                [cls.active]: activeBtn === item.id
-                            })} onClick={() => setActiveBtn(item.id)}>{item.name}</Button>
-                        ))}
-
-
-                    </div>
-
-
-                    <AccountingAdditionalCosts
-                        formatSalary={formatSalary}
-                        loading={loading}
-                        onDelete={onDelete}
-                        changingData={changingData}
-                        setChangingData={setChangingData}
-                        setActiveDelete={setActiveDelete}
-                        activeDelete={activeDelete} extraclassName={cls.table}
-                        additionalCosts={overheadList}
+                {deleted ? <AdditionalCostsDeleted
+                        overheadDeletedList={overheadDeletedList}
+                        extraClassName={cls.table}
                         paymentStyle={cls.typeItem}
-                        setChangePayment={setChangePayment}
-                        changePayment={changePayment}
-                        getCapitalType={getCapitalType}
-                        onChange={onChangePayment}
-                        setChangePaymentType={setChangePaymentType}
+                    /> :
+                    <>
+                        <div className={cls.subHeader}>
 
-                    />
-                </>
-            }
-            <AddAdditionalCosts
-                showAdditionalFields={showAdditionalFields}
-                setActiveModal={setActiveModal}
-                activeModal={activeModal}
-                option={overHeadType}
-                select={select}
-                setSelected={setSelect}
-                onChange={onChange}
-                paymentType={paymentType}
-                register={register}
-                handleSubmit={handleSubmit}
-                onAdd={onAdd}
-                radioSelect={radioSelect}
-                setRadioSelect={setRadioSelect}
-                onChangeRadio={onChangeRadio}
-                monthDay={monthDays}
-                day={day}
-                setDay={setDay}
-                month={month}
-                setMonth={setMonth}
-                optionDef={activeBtn}
-            />
+                            {overHeadType?.map(item => (
+                                <Button extraClass={classNames(cls.subHeader__subBtn, {
+                                    [cls.active]: activeBtn === item.id
+                                })} onClick={() => setActiveBtn(item.id)}>{item.name}</Button>
+                            ))}
 
-            <ConfirmModal setActive={setActiveDelete} active={activeDelete} onClick={onDelete}
-                          title={`Rostanham ${changingData.name} ni o'chirmoqchimisiz `} type={"danger"}/>
-            {/*<YesNo activeDelete={activeDelete} setActiveDelete={setActiveDelete} onDelete={onDelete} changingData={changingData}/>*/}
-        </div>
+
+                        </div>
+
+
+                        <AccountingAdditionalCosts
+                            formatSalary={formatSalary}
+                            loading={loading}
+                            onDelete={onDelete}
+                            changingData={changingData}
+                            setChangingData={setChangingData}
+                            setActiveDelete={setActiveDelete}
+                            activeDelete={activeDelete}
+                            extraclassName={cls.table}
+                            additionalCosts={overheadList}
+                            paymentStyle={cls.typeItem}
+                            setChangePayment={setChangePayment}
+                            changePayment={changePayment}
+                            getCapitalType={getCapitalType}
+                            onChange={onChangePayment}
+                            setChangePaymentType={setChangePaymentType}
+
+                        />
+                    </>
+                }
+                <AddAdditionalCosts
+                    showAdditionalFields={showAdditionalFields}
+                    setActiveModal={setActiveModal}
+                    activeModal={activeModal}
+                    option={overHeadType}
+                    select={select}
+                    setSelected={setSelect}
+                    onChange={onChange}
+                    paymentType={paymentType}
+                    register={register}
+                    handleSubmit={handleSubmit}
+                    onAdd={onAdd}
+                    radioSelect={radioSelect}
+                    setRadioSelect={setRadioSelect}
+                    onChangeRadio={onChangeRadio}
+                    monthDay={monthDays}
+                    day={day}
+                    setDay={setDay}
+                    month={month}
+                    setMonth={setMonth}
+                    optionDef={activeBtn}
+                />
+
+                <ConfirmModal setActive={setActiveDelete} active={activeDelete} onClick={onDelete}
+                              title={`Rostanham ${changingData.name} ni o'chirmoqchimisiz `} type={"danger"}/>
+                {/*<YesNo activeDelete={activeDelete} setActiveDelete={setActiveDelete} onDelete={onDelete} changingData={changingData}/>*/}
+            </div>
+        </DynamicModuleLoader>
     );
 };
 
@@ -307,7 +322,7 @@ export const AddAdditionalCosts = (props) => {
                 <Input register={register} name={"price"} type={"number"} placeholder={"Narxi"}/>
 
                 <div style={{display: "flex", justifyContent: "center", gap: "2rem"}}>
-                    {paymentType.map(item => (
+                    {paymentType?.map(item => (
                         <Radio
                             onChange={() => onChangeRadio({
                                 name: item.name,

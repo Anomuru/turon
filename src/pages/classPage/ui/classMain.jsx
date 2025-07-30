@@ -1,37 +1,38 @@
-import {DefaultPageLoader} from "shared/ui/defaultLoader";
-import {ClassHeader} from "entities/class";
 import {useEffect, useState} from "react";
-import cls from "./classPage.module.sass";
-import {ClassPage} from "./classPage";
-import {ClassAddColorPage} from "./classAddColorPage";
 import {useDispatch, useSelector} from "react-redux";
+
+import {getBranch} from "features/branchSwitcher";
+import {getUserBranchId} from "entities/profile/userProfile";
+import {ClassHeader, classReducer} from "entities/class";
 import {classData, classItemLoading, colorItem} from "entities/class/model/selector/classSelector";
 import {fetchClassSubjects, getClassTypes, getColor} from "entities/class/model/thunk/classThunk";
-import {getBranch} from "features/branchSwitcher";
-import {useParams} from "react-router";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import {ClassAddColorPage} from "./classAddColorPage";
+import {ClassPage} from "./classPage";
 
+import cls from "./classPage.module.sass";
+
+const reducers = {
+    classSlice: classReducer
+}
 
 export const ClassMain = () => {
 
     const classes = useSelector(classData)
     const color = useSelector(colorItem)
-    const loading = useSelector(classItemLoading)
     const [activeMenu, setActiveMenu] = useState(classes)
     const [edit, setEdit] = useState({})
     const [activeEdit, setActiveEdit] = useState(false)
 
 
-
-    const userBranchId = useSelector(getBranch)
-
-
+    const userBranchId = useSelector(getUserBranchId)
 
 
     const dispatch = useDispatch()
     useEffect(() => {
 
         if (userBranchId) {
-            dispatch(getClassTypes(userBranchId.id))
+            dispatch(getClassTypes(userBranchId))
             dispatch(getColor())
             dispatch(fetchClassSubjects())
         }
@@ -41,36 +42,38 @@ export const ClassMain = () => {
 
 
     return (
-        <div className={cls.class}>
-            <ClassHeader
-                activeMenu={activeMenu}
-                activeEdit={activeEdit}
-                setActiveEdit={setActiveEdit}
-                edit={edit}
-                setEdit={setEdit}
-                activeSwitch={activeSwitch}
-                setActiveSwitch={setActiveSwitch}
-            />
+        <DynamicModuleLoader reducers={reducers}>
+            <div className={cls.class}>
+                <ClassHeader
+                    activeMenu={activeMenu}
+                    activeEdit={activeEdit}
+                    setActiveEdit={setActiveEdit}
+                    edit={edit}
+                    setEdit={setEdit}
+                    activeSwitch={activeSwitch}
+                    setActiveSwitch={setActiveSwitch}
+                />
 
-            {
-                activeSwitch ?
-                    <ClassPage
-                        setActiveEdit={setActiveEdit}
-                        classes={classes}
-                        setActiveMenu={setActiveMenu}
-                        activeMenu={activeMenu}
-                        activeEdit={activeEdit}
-                        edit={edit}
-                        setEdit={setEdit}
-                    />
-                    :
-                    <ClassAddColorPage
-                        color={color}
-                        edit={edit}
-                        setEdit={setEdit}
-                    />
-            }
-        </div>
+                {
+                    activeSwitch ?
+                        <ClassPage
+                            setActiveEdit={setActiveEdit}
+                            classes={classes ?? []}
+                            setActiveMenu={setActiveMenu}
+                            activeMenu={activeMenu}
+                            activeEdit={activeEdit}
+                            edit={edit}
+                            setEdit={setEdit}
+                        />
+                        :
+                        <ClassAddColorPage
+                            color={color}
+                            edit={edit}
+                            setEdit={setEdit}
+                        />
+                }
+            </div>
+        </DynamicModuleLoader>
     );
 };
 

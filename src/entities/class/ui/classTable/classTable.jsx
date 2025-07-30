@@ -7,12 +7,13 @@ import {API_URL, headers, useHttp} from "shared/api/base";
 import {useDispatch, useSelector} from "react-redux";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {fetchClassSubjects} from "../../model/thunk/classThunk";
-import {classNewItems, classSubjects} from "../../model/selector/classSelector";
+import {classItemLoading, classItemTypeLoading, classNewItems, classSubjects} from "../../model/selector/classSelector";
 import {classItem, updateClassItem} from "../../model/thunk/classThunk";
 import {data} from "../../../calendar";
 import {onChangeClassStatus} from "../../model/slice/classSlice";
 import classNames from "classnames";
 import {ClassTableEdit} from "features/classModals/ui";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 
 export const ClassTable = ({edit}) => {
@@ -23,6 +24,7 @@ export const ClassTable = ({edit}) => {
 
     const subjects = useSelector(classSubjects)
     const classItems = useSelector(classNewItems)
+    const loading = useSelector(classItemLoading)
 
     const {request} = useHttp()
     const dispatch = useDispatch()
@@ -70,8 +72,7 @@ export const ClassTable = ({edit}) => {
     // }
 
 
-
-    const onChange = ({id , type}) => {
+    const onChange = ({id, type}) => {
 
         const res = {
             status: !type,
@@ -98,9 +99,8 @@ export const ClassTable = ({edit}) => {
     // };
 
 
-
     const renderTable = () => {
-        return classItems.map((item, i) => {
+        return classItems?.map((item, i) => {
 
             return <tr>
                 <td>{i + 1}</td>
@@ -118,14 +118,14 @@ export const ClassTable = ({edit}) => {
 
                         <div
                             onClick={() => onChange({id: item.id, type: item.status})}
-                            className={classNames(cls.checkbox__minus , {
-                                [cls.active] : item.status
+                            className={classNames(cls.checkbox__minus, {
+                                [cls.active]: item.status
                             })}
                         >
                             {
                                 item.status ?
-                                <i className={`fa fa-check `}/> :
-                                <i className={`fa fa-minus`}/>
+                                    <i className={`fa fa-check `}/> :
+                                    <i className={`fa fa-minus`}/>
 
                             }
                         </div>
@@ -148,21 +148,25 @@ export const ClassTable = ({edit}) => {
     return (
         <div>
 
-                <Table>
-                    <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Sinf Raqami</th>
-                        <th>Fanlari</th>
-                        <th>Narxi</th>
-                        <th/>
+            {
+                loading
+                    ? <DefaultPageLoader/>
+                    : <Table>
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Sinf Raqami</th>
+                            <th>Fanlari</th>
+                            <th>Narxi</th>
+                            <th/>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {render}
-                    </tbody>
-                </Table>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {render}
+                        </tbody>
+                    </Table>
+            }
 
             {/*<ClassModal*/}
             {/*    selectedClass={selectedClass}  // Pass selected class*/}

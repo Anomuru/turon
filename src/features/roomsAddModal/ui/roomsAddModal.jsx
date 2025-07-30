@@ -16,7 +16,6 @@ export const RoomModal = ({isOpen, onClose, branch}) => {
     const [seatCount, setSeatCount] = useState('');
     const [electronicBoard, setElectronicBoard] = useState(false);
     const dispatch = useDispatch();
-    const getBranches = useSelector(getLocations)
     const {"*": id} = useParams()
     const {request} = useHttp()
 
@@ -63,9 +62,6 @@ export const RoomModal = ({isOpen, onClose, branch}) => {
         onClose();
     };
 
-    useEffect(() => {
-        dispatch(getBranchThunk())
-    }, [])
 
     if (!isOpen) return null;
 

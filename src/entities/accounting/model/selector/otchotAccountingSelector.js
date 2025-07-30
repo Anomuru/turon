@@ -12,4 +12,4 @@ export const getEmployerSalary = (state) =>
 
 
 export const getAllSelector = (state) =>
-    state.otchotAccountingSlice.all
+    state.otchotAccountingSlice?.all

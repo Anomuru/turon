@@ -1,5 +1,5 @@
 export const getRoomsData = (state) =>
     state.roomsSlice?.roomsData
 
-export  const getLoading = (state) =>
+export  const getRoomsLoading = (state) =>
     state.roomsSlice?.loading

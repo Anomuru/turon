@@ -8,6 +8,8 @@ import {Pagination} from "../../../../../features/pagination";
 import {useSelector} from "react-redux";
 import {getSearchValue} from "../../../../../features/searchInput";
 import {useNavigate} from "react-router";
+import {getLoadingStudent} from "entities/accounting/index.js";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 
 export const StudentsPayments = ({
@@ -22,6 +24,7 @@ export const StudentsPayments = ({
                                  }) => {
 
     const search = useSelector(getSearchValue)
+    const loading = useSelector(getLoadingStudent)
     let PageSize = useMemo(() => 50, [])
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
@@ -90,22 +93,26 @@ export const StudentsPayments = ({
         <>
             <div className={cls.empSalary}>
 
-                <Table>
-                    <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Ism Familiya</th>
-                        <th>To'lov</th>
-                        <th>Sana</th>
-                        <th>To'lov turi</th>
-                        <th>Ochirich</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {renderStudents()}
-                    {/*{deleted ? renderDeletedStudents() : renderStudents()}*/}
-                    </tbody>
-                </Table>
+                {
+                    loading
+                        ? <DefaultPageLoader/>
+                        : <Table>
+                            <thead style={{top: "0", position: "sticky"}}>
+                            <tr>
+                                <th>No</th>
+                                <th>Ism Familiya</th>
+                                <th>To'lov</th>
+                                <th>Sana</th>
+                                <th>To'lov turi</th>
+                                <th>Ochirich</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {renderStudents()}
+                            {/*{deleted ? renderDeletedStudents() : renderStudents()}*/}
+                            </tbody>
+                        </Table>
+                }
                 {/*<Modal active={changePayment} setActive={setChangePayment}>*/}
                 {/*    <h2>To'lov turini uzgartirish</h2>*/}
                 {/*    <div className={cls.changeType}>*/}

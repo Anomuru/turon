@@ -9,15 +9,15 @@ import {useDispatch, useSelector} from "react-redux";
 
 const RequireHeader = ({header = true, back}) => {
 
-    const selectedLocations = useSelector(getSelectedLocations)
-    const dispatch = useDispatch()
-
-
-    useEffect(() => {
-        if (selectedLocations?.length && selectedLocations[0]?.id && !header) {
-            dispatch(fetchBranchesByLocationsThunk(selectedLocations[0].id))
-        }
-    }, [selectedLocations?.length, header])
+    // const selectedLocations = useSelector(getSelectedLocations)
+    // const dispatch = useDispatch()
+    //
+    //
+    // useEffect(() => {
+    //     if (selectedLocations?.length && selectedLocations[0]?.id && !header) {
+    //         dispatch(fetchBranchesByLocationsThunk(selectedLocations[0].id))
+    //     }
+    // }, [header])
 
 
     return (

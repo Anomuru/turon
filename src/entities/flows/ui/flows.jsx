@@ -1,20 +1,20 @@
+import {useForm} from "react-hook-form";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router";
+import {useEffect, useState} from "react";
 
 import {FlowFilter} from "features/filters/flowFilter";
 import {Table} from "shared/ui/table";
-import cls from "pages/flowsPage/ui/flowsPage.module.sass";
 import {Button} from "shared/ui/button";
-import {useEffect, useState} from "react";
 import {Modal} from "shared/ui/modal";
 import {Input} from "shared/ui/input";
 import {Select} from "shared/ui/select";
 import {Textarea} from "shared/ui/textArea";
-import {useForm} from "react-hook-form";
 import {Form} from "shared/ui/form";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
-import {API_URL, headers, useHttp} from "shared/api/base";
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router";
+import {useHttp} from "shared/api/base";
 
+import cls from "pages/flowsPage/ui/flowsPage.module.sass";
 
 export const Flows = ({currentTableData, teacherData, loading, levelData, getLevelData, setActive, branchId}) => {
 
@@ -28,8 +28,8 @@ export const Flows = ({currentTableData, teacherData, loading, levelData, getLev
     const [activeFlow, setActiveFlow] = useState(false)
     const [addFlow, setAddFlow] = useState(false)
     const [filter, setFilter] = useState(false)
-
     const [selectedSubjects, setSelectedSubjects] = useState([])
+
     const dispatch = useDispatch()
     const {request} = useHttp()
 
@@ -103,22 +103,25 @@ export const Flows = ({currentTableData, teacherData, loading, levelData, getLev
                     </Button>
                 </div>
             </div>
-            <Table>
-                <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nomi</th>
-                    <th>Fan Level</th>
-                    <th>O'quvchi soni</th>
-                    <th>O'qituvchisi</th>
-                </tr>
-                </thead>
-                {loading === "loading" ? <DefaultPageLoader/> :
-                    <tbody>
-                    {renderFlowData()}
-                    </tbody>
-                }
-            </Table>
+            <div className={cls.flowMain__table}>
+                <Table>
+                    <thead style={{top: "0"}}>
+                    <tr>
+                        <th>No</th>
+                        <th>Nomi</th>
+                        <th>Fan Level</th>
+                        <th>O'quvchi soni</th>
+                        <th>O'qituvchisi</th>
+                    </tr>
+                    </thead>
+                    {
+                        loading === "loading" ? <DefaultPageLoader/> :
+                            <tbody>
+                            {renderFlowData()}
+                            </tbody>
+                    }
+                </Table>
+            </div>
 
 
             <Modal

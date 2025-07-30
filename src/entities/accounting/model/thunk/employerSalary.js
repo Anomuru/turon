@@ -5,7 +5,7 @@ export const getEmpSalary  = createAsyncThunk(
     "employerSlice/getEmpSalary",
     async (branchID) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Users/salaries/?branch=${branchID.id}` , "GET" , null , headers())
+        return await request(`${API_URL}Users/salaries/?branch=${branchID}` , "GET" , null , headers())
     }
 )
 
@@ -13,7 +13,7 @@ export const getDeletedEmpSalary  = createAsyncThunk(
     "employerSlice/getDeletedEmpSalary",
     async (branchID) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Users/salaries-deleted/?branch=${branchID.id}` , "GET" , null , headers())
+        return await request(`${API_URL}Users/salaries-deleted/?branch=${branchID}` , "GET" , null , headers())
     }
 )
 

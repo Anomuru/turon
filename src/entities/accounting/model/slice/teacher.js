@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {changePaymentType, getDeletedTeacherSalary, getTeacherSalary} from "../thunk/teacherSalarythunk";
+import { getDeletedTeacherSalary, getTeacherSalary} from "../thunk/teacherSalarythunk";
 
 
 const initialState = {
@@ -69,4 +69,5 @@ const teacherSalary = createSlice({
 })
 
 export const {onDeleteTeacherSalary, onChangePayment} = teacherSalary.actions
+export const {reducer: teacherReducer} = teacherSalary
 export default teacherSalary.reducer

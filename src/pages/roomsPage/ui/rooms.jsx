@@ -1,39 +1,38 @@
-import {getBranch} from "features/branchSwitcher";
 import React, {useMemo, useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Button} from 'shared/ui/button';
-import {Select} from 'shared/ui/select';
-import {Pagination} from 'features/pagination';
-import {RoomsList} from 'entities/rooms/ui/roomList/roomList';
+
 import {RoomsFilter} from 'features/filters/roomsFilter';
 import {RoomModal} from 'features/roomsAddModal';
-import {getLoading, getRoomsData} from 'entities/rooms/model/selectors/roomsSelectors';
-import {fetchRoomsData} from 'entities/rooms/model/roomsThunk';
-import cls from './rooms.module.sass';
 import {getSearchValue} from 'features/searchInput';
-import {MultiPage} from "widgets/multiPage/ui/MultiPage/MultiPage";
-import {useParams} from "react-router-dom";
+import {fetchRoomsData} from 'entities/rooms/model/roomsThunk';
+import {RoomsList} from 'entities/rooms/ui/roomList/roomList';
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
-// import {RequirePermission} from "app/routers";
+import {roomsReducer, getRoomsData} from "entities/rooms";
+import {Button} from 'shared/ui/button';
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+
+import cls from './rooms.module.sass';
+
+const reducers = {
+    roomsSlice: roomsReducer,
+
+}
 
 export const Rooms = () => {
+    const dispatch = useDispatch();
+
+    const search = useSelector(getSearchValue);
+    const roomsData = useSelector(getRoomsData);
+    const userBranchId = useSelector(getUserBranchId)
+
     const [modal, setModal] = useState(false);
     const [active, setActive] = useState(false);
-    const PageSize = useMemo(() => 50, []);
     const [currentPage, setCurrentPage] = useState(1);
-    const search = useSelector(getSearchValue);
-    const [selected, setSelected] = useState('');
-    const dispatch = useDispatch();
-    const roomsData = useSelector(getRoomsData);
-    const loading = useSelector(getLoading);
-    // const {"*": id} = useParams();
-    const id = useSelector(getUserBranchId)
-
-    const userBranchId = id
+    const PageSize = useMemo(() => 50, []);
 
     useEffect(() => {
         if (!userBranchId) return;
-        dispatch(fetchRoomsData({id}));
+        dispatch(fetchRoomsData({id: userBranchId}));
     }, [dispatch, userBranchId]);
 
     const searchedRooms = useMemo(() => {
@@ -48,23 +47,13 @@ export const Rooms = () => {
     }, [roomsData, search]);
 
 
-
-    const types = [
-        {
-            name: "Xonalar",
-            type: "rooms"
-        }
-    ]
     return (
-        // <MultiPage types={types} page={"rooms"}>
+        <DynamicModuleLoader reducers={reducers}>
             <div className={cls.mainContainer}>
                 <div className={cls.mainContainer_buttonPanelBox}>
                     <div className={cls.mainContainer_buttonPanelBox_leftCreateButton}>
-                        {/*<RequirePermission permission={true}>*/}
                         <Button onClick={() => setActive(true)}>Xona qo'shish</Button>
-                        {/*</RequirePermission>*/}
                     </div>
-                    {/*<Select value={selected} onChange={handleChange} />*/}
                 </div>
                 <div className={cls.mainContainer_filterPanelBox}>
                     <Button
@@ -77,12 +66,8 @@ export const Rooms = () => {
                     <div className={cls.mainContainer_filterPanelBox_rightFilterRadioGroupBox}></div>
                 </div>
                 <div className={cls.mainContainer_tablePanelBox}>
-                    {
-                        // loading ? <DefaultPageLoader/> :
-                            <RoomsList
-                            currentTableData={searchedRooms.slice((currentPage - 1) * PageSize, currentPage * PageSize)}/>
-                    }
-                    {/*<RoomsList currentTableData={searchedRooms.slice((currentPage - 1) * PageSize, currentPage * PageSize)} />*/}
+                    <RoomsList
+                        currentTableData={searchedRooms.slice((currentPage - 1) * PageSize, currentPage * PageSize)}/>
                 </div>
                 <RoomsFilter active={modal} setActive={setModal} roomsData={searchedRooms}/>
                 <div className={cls.paginationBox}>
@@ -90,6 +75,7 @@ export const Rooms = () => {
                     {/*    search={search}*/}
                     {/*    users={searchedRooms}*/}
                     {/*    setCurrentPage={setCurrentPage}*/}
+                    {/*    setCurrentTableData={setCurrentData}*/}
                     {/*    currentPage={currentPage}*/}
                     {/*    pageSize={PageSize}*/}
                     {/*    onPageChange={(page) => {*/}
@@ -99,7 +85,6 @@ export const Rooms = () => {
                 </div>
                 <RoomModal branch={userBranchId} isOpen={active} onClose={() => setActive(false)}/>
             </div>
-        // </MultiPage>
-
+        </DynamicModuleLoader>
     );
 };

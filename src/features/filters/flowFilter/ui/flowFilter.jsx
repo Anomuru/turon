@@ -20,7 +20,7 @@ export const FlowFilter = memo(({active, setActive}) => {
 
     const dispatch = useDispatch()
     const subjects = useSelector(getSubjectsData)
-    const teachers = useSelector(getTeachers)
+    const teachers = useSelector(getTeachers) ?? []
 
     useEffect(() => {
         dispatch(fetchSubjectsData())

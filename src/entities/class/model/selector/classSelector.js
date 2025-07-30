@@ -1,6 +1,8 @@
 
 export const classItemLoading = (state) =>
-    state.classSlice.loading
+    state.classSlice?.loading
+export const classItemTypeLoading = (state) =>
+    state.classSlice?.typeLoading
 
 export const classData  = (state) =>
     state.classSlice?.classData

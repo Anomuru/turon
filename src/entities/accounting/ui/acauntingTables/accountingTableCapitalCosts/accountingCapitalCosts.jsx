@@ -42,9 +42,9 @@ export const AccountingCapitalCosts = ({capitalData  ,setChangingData  , setActi
         ))
     }
     return (
-        <div style={{height: "calc(100vh - 47rem)", overflow: "auto"}}>
+        <div style={{height: "calc(100vh - 50rem)", overflow: "auto"}}>
             <Table>
-                <thead>
+                <thead style={{position: "sticky", top: "0"}}>
                 <tr>
                     <th/>
                     <th>Nomi</th>

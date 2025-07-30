@@ -46,5 +46,6 @@ export const employersSlice = createSlice({
 })
 
 export const {onDeleteEmployer} = employersSlice.actions
+export const {reducer: employersReducer} = employersSlice
 
 export default employersSlice.reducer

@@ -1,4 +1,7 @@
-// import cls from "features/FlowProfileStudentsForm/ui/FlowProfileStudentsForm.module.sass";
+import React, {memo, useEffect, useState} from 'react';
+import {useForm} from "react-hook-form";
+import {useDispatch, useSelector} from "react-redux";
+
 import {FlowList} from "entities/flowList";
 import {fetchFlows, getFlows} from "entities/flows";
 import {getFlowsProfileData, getFlowsProfileFilteredStudents} from "entities/flowsProfile/model/flowsProfileSelector";
@@ -7,11 +10,7 @@ import {
     fetchFilteredStudents,
     fetchFlowProfileData
 } from "entities/flowsProfile/model/flowsProfileThunk";
-import {fetchGroupProfile} from "entities/profile/groupProfile";
 import {getUserBranchId} from "entities/profile/userProfile";
-import React, {memo, useEffect, useState} from 'react';
-import {useForm} from "react-hook-form";
-import {useDispatch, useSelector} from "react-redux";
 import {Button} from "shared/ui/button";
 import {Form} from "shared/ui/form";
 import {Modal} from "shared/ui/modal";

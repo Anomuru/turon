@@ -1,11 +1,9 @@
-import cls from "../otchot.module.sass";
-import {Select} from "../../../../../shared/ui/select";
 import {useEffect, useState} from "react";
-import {AllTable} from "../../../../../entities/accounting/ui/accountingOtchot/allTable";
+import {AllTable} from "entities/accounting/ui/accountingOtchot/allTable";
 import {useDispatch, useSelector} from "react-redux";
-import {getAll} from "../../../../../entities/accounting/model/thunk/otchotAccountingThunk";
-import {getBranch} from "../../../../../features/branchSwitcher";
-import {getAllSelector} from "../../../../../entities/accounting/model/selector/otchotAccountingSelector";
+import {getAll} from "entities/accounting/model/thunk/otchotAccountingThunk";
+import {getBranch} from "features/branchSwitcher";
+import {getAllSelector} from "entities/accounting/model/selector/otchotAccountingSelector";
 
 export const AllPages = () => {
 
@@ -13,7 +11,7 @@ export const AllPages = () => {
     const branchId = useSelector(getBranch)
     const all = useSelector(getAllSelector)
     useEffect(() => {
-        dispatch(getAll({branchId : branchId.id}))
+        dispatch(getAll({branchId: branchId.id}))
     }, [])
 
     const [month, setMonths] = useState(null)
@@ -22,7 +20,7 @@ export const AllPages = () => {
 
 
     return (
-        <div>
+        <>
             {/*<div className={cls.paymentType}>*/}
             {/*    <Select extraClass={cls.select} options={all?.dates?.map(item => item.year)}*/}
             {/*            onChangeOption={setYear}/>*/}
@@ -37,7 +35,7 @@ export const AllPages = () => {
             {/*</div>*/}
 
             <AllTable allTable={all}/>
-        </div>
+        </>
     );
 };
 

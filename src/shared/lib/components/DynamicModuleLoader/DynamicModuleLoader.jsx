@@ -13,7 +13,6 @@ export const DynamicModuleLoader = (props) => {
 
         Object?.entries(reducers)?.forEach(([name, reducer]) => {
             const mounted = mountedReducers[name ];
-            // Добавляем новый редюсер только если его нет
             if (!mounted) {
                 store?.reducerManager?.add(name, reducer);
                 dispatch({ type: `@INIT ${name} reducer` });
@@ -28,11 +27,9 @@ export const DynamicModuleLoader = (props) => {
                 });
             }
         };
-        // eslint-disable-next-line
     }, []);
 
     return (
-        // eslint-disable-next-line react/jsx-no-useless-fragment
         <>{children}</>
     );
 };

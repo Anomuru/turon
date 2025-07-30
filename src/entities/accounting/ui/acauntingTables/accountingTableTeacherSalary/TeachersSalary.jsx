@@ -1,13 +1,13 @@
+import {getTeachersLoading} from "entities/accounting/index.js";
 import React, {useMemo, useState} from 'react';
-import {Table} from "../../../../../shared/ui/table";
-import {Button} from "../../../../../shared/ui/button";
-// import {color} from "framer-motion";
-import cls from "../accountingTableWorkerSalary/empSalary.module.sass";
-import {Modal} from "../../../../../shared/ui/modal";
-import {Pagination} from "../../../../../features/pagination";
 import {useSelector} from "react-redux";
-import {getSearchValue} from "../../../../../features/searchInput";
 import {useNavigate} from "react-router";
+
+import {Pagination} from "features/pagination";
+import {getSearchValue} from "features/searchInput";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {Table} from "shared/ui/table";
+import {Button} from "shared/ui/button";
 
 export const TeachersSalary = ({
                                    teacherSalary,
@@ -20,8 +20,9 @@ export const TeachersSalary = ({
                                    changingData,
                                    activeDelete
                                }) => {
-    const filteredTeachers = teacherSalary.filter(item => !item.deleted);
+    const filteredTeachers = teacherSalary?.filter(item => !item.deleted);
     const search = useSelector(getSearchValue)
+    const loading = useSelector(getTeachersLoading)
     let PageSize = useMemo(() => 50, [])
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
@@ -147,7 +148,7 @@ export const TeachersSalary = ({
                                     surname: item?.teacher?.user?.surname
                                 })
                             }
-                        }
+                            }
                             type={"delete"}
                             children={
                                 <i className={"fa fa-times"} style={{color: "white"}}
@@ -166,22 +167,26 @@ export const TeachersSalary = ({
     return (
         <>
 
-            <div style={{height: "calc(100vh - 43rem)", overflow: "auto"}}>
+            <div style={{height: "calc(100vh - 50rem)", overflow: "auto"}}>
 
-                <Table>
-                    <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Ism Familiya</th>
-                        <th>Oylik</th>
-                        <th>Sabab</th>
-                        <th>Sana</th>
-                        <th>To'lov turi</th>
-                        <th>O'chirish</th>
-                    </tr>
-                    </thead>
-                    {render}
-                </Table>
+                {
+                    loading
+                        ? <DefaultPageLoader/>
+                        : <Table>
+                            <thead style={{position: "sticky", top: "0"}}>
+                            <tr>
+                                <th>No</th>
+                                <th>Ism Familiya</th>
+                                <th>Oylik</th>
+                                <th>Sabab</th>
+                                <th>Sana</th>
+                                <th>To'lov turi</th>
+                                <th>O'chirish</th>
+                            </tr>
+                            </thead>
+                            {render}
+                        </Table>
+                }
             </div>
             <Pagination
                 setCurrentTableData={setCurrentTableData}

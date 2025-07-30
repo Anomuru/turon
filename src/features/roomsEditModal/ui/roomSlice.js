@@ -38,4 +38,5 @@ export const roomssSlice = createSlice({
 });
 
 export default roomssSlice.reducer;
+export const {reducer: roomssReducer} = roomssSlice
 
