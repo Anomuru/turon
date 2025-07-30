@@ -5,17 +5,17 @@ import {API_URL, branchQuery, headers, useHttp} from "shared/api/base";
 
 export const fetchGroupsData = createAsyncThunk(
     "groupsSlice/fetchGroupsData",
-    async({userBranchId})  =>{
+    async({userBranchId , deleted})  =>{
         const {request} = useHttp()
-        return await request(`${API_URL}Group/classes/?branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Group/classes/?branch=${userBranchId}&deleted=${deleted ? "True" : "False"}`, "GET", null, headers())
     }
 )
 
 export const fetchGroupsDataWithFilter = createAsyncThunk(
     "groupsSlice/fetchGroupsDataWithFilter",
-    async({userBranchId, teacherId, subjId, typeId, fromId, untilId})  =>{
+    async({userBranchId, teacherId, subjId, typeId, fromId, untilId , deleted})  =>{
         const {request} = useHttp()
-        return await request(`${API_URL}Group/groups/create/?branch=${userBranchId}&teacher=${teacherId}&subject=${subjId}&course_types=${typeId}&created_date=${fromId}-${untilId}`, "GET", null, headers())
+        return await request(`${API_URL}Group/classes/?branch=${userBranchId}&teacher=${teacherId}&subject=${subjId}&course_types=${typeId}&created_date=${fromId}-${untilId}&deleted=${deleted ? "True" : "False"}`, "GET", null, headers())
     }
 )
 
@@ -27,3 +27,5 @@ export const fetchGroupTypeThunk = createAsyncThunk(
         return await  request(`${API_URL}Group/course_types/`, "GET", null, headers())
     }
 )
+
+

@@ -101,11 +101,9 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
             dispatch(getGroupStudyYears({id: data?.id}))
         }
     }, [data, branch])
-
     const [active, setActive] = useState(false)
     const [activeModal, setActiveModal] = useState("")
     const [select, setSelect] = useState([])
-    console.log(select)
     const [selectDeleteId, setSelectDeleteId] = useState(null)
     const [selectOpt, setSelectOpt] = useState(null)
     const [selectOptId, setSelectOptId] = useState(null)
@@ -250,6 +248,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
     }, [selectedYearId])
 
     const changeYearId = useCallback((id) => {
+        console.log(id)
         setSelectedYearId(id)
         setSelectedMonthId(null)
         dispatch(getGroupStudyMonth({id: data?.id, res: id}))

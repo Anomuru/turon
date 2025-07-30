@@ -25,6 +25,11 @@ import {
 
 import cls from "./timeTableListPage.module.sass";
 import {API_URL, headers, useHttp} from "shared/api/base";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+
+const reducers ={
+
+}
 
 export const TimeTableListPage = () => {
 
@@ -88,6 +93,7 @@ export const TimeTableListPage = () => {
         request(`${API_URL}SchoolTimeTable/hours-list-update/${isChange.id}`, "DELETE", null, headers())
             .then(res => {
                 dispatch(onDelete(isChange.id))
+                setIsDeleted(false)
                 dispatch(onAddAlertOptions({
                     status: true,
                     type: "success",
@@ -107,51 +113,55 @@ export const TimeTableListPage = () => {
     }
 
     return (
-        <div className={cls.timeTable}>
-            <TimeTableHeader
-                isCreate={isCreate}
-                setIsCreate={setIsCreate}
-                setIsFilter={setIsFilter}
-                setStatus={setCurrentStatus}
-            />
-            <div className={cls.timeTable__table}>
-                <TimeTableList
-                    data={currentTableData}
-                    setIsChange={setIsChange}
-                    loading={loading}
+        <DynamicModuleLoader reducers={reducers}>
+            <div className={cls.timeTable}>
+                <TimeTableHeader
+                    isCreate={isCreate}
+                    setIsCreate={setIsCreate}
+                    setIsFilter={setIsFilter}
                     setStatus={setCurrentStatus}
                 />
-                <Pagination
-                    setCurrentTableData={setCurrentTableData}
-                    users={searchedUsers}
-                    currentPage={currentPage}
-                    pageSize={PageSize}
-                    onPageChange={page => {
-                        setCurrentPage(page)
-                    }}
+                <div className={cls.timeTable__table}>
+                    <TimeTableList
+                        data={currentTableData}
+                        setIsChange={setIsChange}
+                        loading={loading}
+                        setStatus={setCurrentStatus}
+                    />
+                    <Pagination
+                        setCurrentTableData={setCurrentTableData}
+                        users={searchedUsers}
+                        currentPage={currentPage}
+                        pageSize={PageSize}
+                        onPageChange={page => {
+                            setCurrentPage(page)
+                        }}
+                    />
+                </div>
+                <TimeTableCreate
+                    classInput={classInput}
+                    active={currentStatus ? false : isCreate}
+                    setActive={setIsCreate}
+                    onSubmit={onSubmitCreate}
+                    loading={loading}
+                />
+                <TimeTableChange
+                    classInput={classInput}
+                    active={currentStatus ? false : isChange}
+                    setActive={setIsChange}
+                    onSubmit={onSubmitChange}
+                    loading={loading}
+                    onDelete={onDeleteStatus}
+                />
+                <ConfirmModal
+                    type={"danger"}
+                    active={isDeleted}
+                    setActive={setIsDeleted}
+                    onClick={onDeleteTimeTable}
                 />
             </div>
-            <TimeTableCreate
-                classInput={classInput}
-                active={currentStatus ? false : isCreate}
-                setActive={setIsCreate}
-                onSubmit={onSubmitCreate}
-                loading={loading}
-            />
-            <TimeTableChange
-                classInput={classInput}
-                active={currentStatus ? false : isChange}
-                setActive={setIsChange}
-                onSubmit={onSubmitChange}
-                loading={loading}
-                onDelete={onDeleteStatus}
-            />
-            <ConfirmModal
-                type={"danger"}
-                active={isDeleted}
-                setActive={setIsDeleted}
-                onClick={onDeleteTimeTable}
-            />
-        </div>
+        </DynamicModuleLoader>
     )
 }
+
+

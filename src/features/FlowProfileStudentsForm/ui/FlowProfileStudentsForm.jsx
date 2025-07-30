@@ -36,7 +36,8 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
 
     const {request} = useHttp()
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
+
     const dispatch = useDispatch()
     const {
         register,

@@ -15,6 +15,7 @@ import {
 import cls from "../../filters.module.sass";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchDeletedTeachersData, fetchTeachersDataWithFilter} from "entities/teachers/model/teacherThunk";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setActiveSwitch , activeSwitch}) => {
 
@@ -26,13 +27,15 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
     const [selectedSubject, setSelectedSubject] = useState("all")
     const [selectedLanguage, setSelectedLanguage] = useState("all")
     const {"*": id} = useParams()
+    const branchId = useSelector(getUserBranchId)
 
     function fetchTeachers(sub, lang, from, to) {
         dispatch(fetchTeachersDataWithFilter({
             subjId: sub,
             langId: lang,
             untilAge: to,
-            fromAge: from
+            fromAge: from,
+            branchId: branchId
         }))
         setIsFilter(true)
     }
@@ -81,7 +84,7 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
 
     const onGetDelete = (value) => {
         setActiveSwitch(value)
-        dispatch(fetchDeletedTeachersData({userBranchId: id}))
+        dispatch(fetchDeletedTeachersData({userBranchId: branchId}))
     }
 
     // const onChangeSwitch =() =>{
@@ -105,7 +108,7 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
 
                     <Select
                         title={"Fan"}
-                        options={subjects}
+                        options={[{name: "All" , id: "all"} , ...subjects]}
                         extraClass={cls.filter__select}
                         onChangeOption={(value) => onSelectSubject(value)}
                     />

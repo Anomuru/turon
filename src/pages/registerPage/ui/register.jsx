@@ -63,6 +63,7 @@ export const Register = () => {
     })) || [];
 
 
+
     const subjects = useSelector(getSubjectsData)
     const languages = useSelector(getLanguagesData);
     const classNumbers = useSelector(getClassNumberData)
@@ -302,6 +303,7 @@ export const Register = () => {
             });
         }
     };
+
 
 
     const renderFormFields = () => {

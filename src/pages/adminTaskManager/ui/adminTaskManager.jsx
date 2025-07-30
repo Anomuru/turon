@@ -11,12 +11,16 @@ import {AdminTaskManagerList} from "../../../entities/adminTaskManager";
 import {fetchOperatorsData, getOperatorsData} from "../../../entities/oftenUsed";
 import {Button} from "shared/ui/button";
 import {Link} from "react-router-dom";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
+const initialState ={
+
+}
 
 export const AdminTaskManager = () => {
 
     const dispatch = useDispatch()
-    const {id} = useSelector(getBranch)
+    const id = localStorage.getItem("branchId")
     const operators = useSelector(getOperatorsData)
 
     const [selectedDate, setSelectedDate] = useState(new Date())
@@ -36,35 +40,37 @@ export const AdminTaskManager = () => {
 
     useEffect(() => {
         dispatch(fetchBranch())
-        dispatch(fetchOperatorsData())
+        dispatch(fetchOperatorsData(id))
     }, [])
 
     return (
-        <div className={cls.container}>
-            <div className={cls.box}>
-                <div className={cls.box__header}>
-                    <h1 className={cls.box__header_title}>
-                        My Projects
-                    </h1>
-                    <Link to={"../filteredLeadsList"}>
-                        <Button>
-                            New Leads
-                        </Button>
-                    </Link>
-                    <Select
-                        defaultValue={selectedOperator}
-                        onChangeOption={setSelectedOperator}
-                        extraClass={cls.select}
-                        title={"Operators"}
-                        options={[...operators, {name: "Hammasi", id: "all"}]}
-                    />
-                </div>
+        <DynamicModuleLoader reducers={initialState}>
+            <div className={cls.container}>
+                <div className={cls.box}>
+                    <div className={cls.box__header}>
+                        <h1 className={cls.box__header_title}>
+                            My Projects
+                        </h1>
+                        <Link to={"../filteredLeadsList"}>
+                            <Button>
+                                New Leads
+                            </Button>
+                        </Link>
+                        <Select
+                            defaultValue={selectedOperator}
+                            onChangeOption={setSelectedOperator}
+                            extraClass={cls.select}
+                            title={"Operators"}
+                            options={[...operators, {name: "Hammasi", id: "all"}]}
+                        />
+                    </div>
 
-                <div className={cls.box__sides}>
-                    <AdminTaskManagerList setTaskType={setTaskType} taskType={taskType} formatted={formatted}/>
-                    <TaskManagerRight selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+                    <div className={cls.box__sides}>
+                        <AdminTaskManagerList setTaskType={setTaskType} taskType={taskType} formatted={formatted}/>
+                        <TaskManagerRight selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+                    </div>
                 </div>
             </div>
-        </div>
+        </DynamicModuleLoader>
     );
 }

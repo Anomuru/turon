@@ -48,6 +48,7 @@ import {MultiPage} from "widgets/multiPage/ui/MultiPage/MultiPage";
 import {getBranch} from "features/branchSwitcher";
 import {getSelectedLocations} from "features/locations";
 import {getBranchLoading} from "features/branchSwitcher/model/selector/brachSwitcherSelector";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 
 // export const AccountingPageMainIndex = memo(() => {
@@ -88,14 +89,15 @@ export const AccountingPageMain = () => {
     const locations = useSelector(getSelectedLocations)
 
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+
     const location = useLocation()
 
     const [otchot, setOtchot] = useState(false)
     const [oldActivePage, setOldActivePage] = useState(activePage ?? getAccountingPage[0].value)
 
 
-    const branchID = useSelector(getBranch)
+
+    const branchID = useSelector(getUserBranchId)
     useEffect(() => {
         setPage(typePage)
     }, [typePage])

@@ -41,8 +41,8 @@ import {Radio} from "shared/ui/radio";
 import {Input} from "shared/ui/input";
 import {useTheme} from "shared/lib/hooks/useTheme";
 import {getSearchValue} from "features/searchInput";
-import {MultiPage} from "widgets/multiPage/ui/MultiPage/MultiPage";
-import {useParams, useSearchParams} from "react-router-dom";
+
+import {useSearchParams} from "react-router-dom";
 
 import {useHttp} from "shared/api/base";
 import {
@@ -64,6 +64,7 @@ import {getTeachersSelect} from "entities/oftenUsed/model/oftenUsedSelector";
 import {fetchTeachersForSelect} from "entities/oftenUsed/model/oftenUsedThunk";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {studentsReducer} from "entities/students/model/studentsSlice.js";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 const studentsFilter = [
     {name: "new_students", label: "New Students"},
@@ -92,7 +93,7 @@ export const StudentsPage = () => {
     const {register, handleSubmit} = useForm();
     // const {"*": id} = useParams()
 
-    const userBranchId = localStorage.getItem("branchId")
+    const userBranchId = useSelector(getUserBranchId)
 
 
     const search = useSelector(getSearchValue);

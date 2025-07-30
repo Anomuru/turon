@@ -23,7 +23,6 @@ export {
     fetchWeekDays
 } from "./model/groupProfileThunk";
 export {
-    default as groupProfileSlice,
     getNextLesson,
     changeDebtStudent,
     deleteDebtStudent

@@ -1,4 +1,4 @@
-import {getNextLesson} from "entities/profile/groupProfile/model/groupProfileSlice";
+import {getNextLesson, groupProfileReducer} from "entities/profile/groupProfile/model/groupProfileSlice";
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import classNames from "classnames";
@@ -45,33 +45,26 @@ import {
 } from "entities/oftenUsed";
 
 import cls from "./groupProfilePage.module.sass";
-import {getBranch} from "features/branchSwitcher";
-import {Modal} from "../../../../shared/ui/modal";
-import {Select} from "../../../../shared/ui/select";
-import {Button} from "../../../../shared/ui/button";
-import {Table} from "../../../../shared/ui/table";
-import {getAttendance} from "../../model/selector/groupAttendanceSelector";
-import {getAttendanceThunk} from "../../../../entities/groups/model/slice/groupsAttendanceThunk";
+
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+
+const reducers = {
+    groupProfileSlice: groupProfileReducer
+}
 
 export const GroupProfilePage = () => {
 
     const {request} = useHttp()
     const dispatch = useDispatch()
     const {id} = useParams()
-    // const {id} = useSelector(getBranch)
     const data = useSelector(getGroupProfileData)
     const timeTable = useSelector(getTimeTable)
     const loading = useSelector(getGroupProfileLoading)
-    const {id: branch} = useSelector(getBranch)
-    // const groupAttendance  = useSelector(getGroupAttendance)
-
-
-
-
+    const branch = useSelector(getUserBranchId)
+    console.log(branch)
     const [active, setActive] = useState(false)
-
     const [attendance, setAttendance] = useState(false)
-
     useEffect(() => {
         dispatch(fetchGroupProfile({id}))
 
@@ -79,7 +72,7 @@ export const GroupProfilePage = () => {
         dispatch(fetchSubjectsData())
         dispatch(fetchLanguagesData())
         dispatch(fetchClassColorData())
-        dispatch(fetchClassNumberData({branch}))
+
 
         dispatch(fetchReasons())
         dispatch(fetchWeekDays())
@@ -89,6 +82,7 @@ export const GroupProfilePage = () => {
     useEffect(() => {
         if (branch) {
             dispatch(fetchGroupsData({userBranchId: branch}))
+            dispatch(fetchClassNumberData({branch}))
             dispatch(fetchRoomsData({id: branch}))
             dispatch(fetchTeachersData({userBranchId: branch}))
         }
@@ -142,54 +136,40 @@ export const GroupProfilePage = () => {
         }
     }, [data])
 
-    useEffect(() => {
-        if (branch && data && timeTable) {
-            const res = {
-                time_tables: timeTable.map(item => ({
-                    week: item.week.id,
-                    room: item.room.id,
-                    end_time: item.end_time,
-                    start_time: item.start_time
-                })),
-                ignore_students: data?.students.map(item => item.id),
-                ignore_teacher: data?.teacher.map(item => item.id)[0]
+
+    return (
+        <DynamicModuleLoader reducers={reducers}>
+            {loading === true ? <DefaultPageLoader/> :
+
+                <div className={cls.profile}>
+
+                    <GroupProfileInfoForm branch={branch}/>
+                    {/*<GroupProfileInfo/>*/}
+                    <div
+                        className={classNames(cls.profile__mainContent, {
+                            [cls.active]: active
+                        })}
+                    >
+                        <GroupProfileModalTeachers branch={branch}/>
+                        {/*<GroupProfileTeacher setActive={setActiveModal}/>*/}
+                        <GroupProfileDeleteForm branch={branch}/>
+                        {/*<GroupProfileStudents/>*/}
+                        <GroupProfileAttendanceForm data={data?.students} setAttendance={setAttendance}
+                                                    attendance={attendance}/>
+                        {/*<GroupProfileAttendance/>*/}
+
+                    </div>
+                    <div className={classNames(cls.profile__otherContent, {
+                        [cls.active]: active
+                    })}>
+                        <GroupProfileRating/>
+                    </div>
+
+                </div>
             }
-            dispatch(fetchFilteredStudentsAndTeachers({
-                branch_id: branch,
-                subject_id: data?.subject?.id,
-                res
-            }))
-        }
-
-    }, [branch, data, timeTable])
 
 
-    if (loading) {
-        return <DefaultPageLoader/>
-    } else return (
-        <div className={cls.profile}>
-            <GroupProfileInfoForm branch={branch} />
-            {/*<GroupProfileInfo/>*/}
-            <div
-                className={classNames(cls.profile__mainContent, {
-                    [cls.active]: active
-                })}
-            >
-                <GroupProfileModalTeachers branch={branch}/>
-                {/*<GroupProfileTeacher setActive={setActiveModal}/>*/}
-                <GroupProfileDeleteForm branch={branch} />
-                {/*<GroupProfileStudents/>*/}
-                <GroupProfileAttendanceForm  data={data?.students} setAttendance={setAttendance} attendance={attendance}/>
-                {/*<GroupProfileAttendance/>*/}
-
-            </div>
-            <div className={classNames(cls.profile__otherContent, {
-                [cls.active]: active
-            })}>
-                <GroupProfileRating/>
-            </div>
-
-        </div>
+        </DynamicModuleLoader>
     )
 }
 

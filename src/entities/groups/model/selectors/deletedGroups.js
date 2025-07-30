@@ -1,4 +1,4 @@
 
 
 export const getDeletedGroupsData = (state) =>
-    state.deletedGroupsSlice.data;
+    state.deletedGroupsSlice?.data;

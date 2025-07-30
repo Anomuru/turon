@@ -5,20 +5,21 @@ import {useNavigate, useParams} from "react-router";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 
 import {EditableCard} from "shared/ui/editableCard";
-import {groups} from "entities/profile/teacherProfile";
+
 
 import cls from "./schoolTeacherGroups.module.sass";
-import cardBg from 'shared/assets/icons/card-bg.svg';
-import groupImage from 'shared/assets/images/group-img.svg';
+
 import {Table} from "shared/ui/table";
 import {useDispatch, useSelector} from "react-redux";
 import {getTeacherId} from "../../../../teachers";
-import {getBranch} from "../../../../../features/branchSwitcher";
+
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 export const SchoolTeacherGroups = memo(() => {
 
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
+
     const dispatch = useDispatch()
     const navigation = useNavigate()
 
@@ -35,7 +36,7 @@ export const SchoolTeacherGroups = memo(() => {
 
 
     const renderStudents = () => {
-        return students.map((item, index) => {
+        return students?.map((item, index) => {
             return (
                 <tr>
                     <td>{index + 1}</td>

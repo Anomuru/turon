@@ -10,7 +10,15 @@ import {ImageCrop} from "features/imageCrop";
 import {changeStudentProfileImage} from "../../model/thunk/studentProfileThunk";
 
 import cls from "./profileTeacherPage.module.sass"
-export const ContextStuPro = createContext(null)
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import {teacherParseReducer} from "entities/teachers/model/teacherParseSlice.js";
+import {getLoading, getStudentLoading} from "entities/teachers/model/selector/teacherIdSelector.js";
+import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+
+
+const reducers = {
+    teacherParseSlice: teacherParseReducer,
+}
 
 export const ProfileTeacherPage = () => {
 
@@ -23,6 +31,9 @@ export const ProfileTeacherPage = () => {
     const [activeModal, setActiveModal] = useState("")
     const [newImage, setNewImage] = useState("")
     const {theme} = useTheme()
+
+    const loading = useSelector(getLoading)
+    const teacherLoading = useSelector(getStudentLoading)
 
 
     useEffect(() => {
@@ -40,48 +51,54 @@ export const ProfileTeacherPage = () => {
     }
 
 
+    console.log(teacherLoading)
     return (
-        // <ContextStuPro.Provider value={}>
-            <div
-                className={classNames(cls.profile, {
-                    [cls.active]: active
-                })}
-            >
-                <TeacherProfileInfo
-                    setActive={setActive}
-                    active={active}
-                    setActiveModal={setActiveModal}
-                    newImage={newImage}
-                />
 
-                {/*// actives={actives}*/}
-                {/*// setActives={setActives}*/}
+            <DynamicModuleLoader reducers={reducers}>
 
-                {/*<ProfileInfo*/}
-                {/*    setActive={setActive}*/}
-                {/*    active={active}*/}
-                {/*/>*/}
+                {/*{loading && teacherLoading === true ? <DefaultPageLoader/> :*/}
                 <div
-                    className={classNames(cls.profile__mainContent, {
+                    className={classNames(cls.profile, {
                         [cls.active]: active
                     })}
                 >
-                    {
-                        theme === "app_school_theme" ?
-                            <SchoolTeacherGroups/>
-                            :
-                            <TeacherProfileTeachersGroup/>
-                    }
+                    <TeacherProfileInfo
+                        setActive={setActive}
+                        active={active}
+                        setActiveModal={setActiveModal}
+                        newImage={newImage}
+                    />
+
+                    {/*// actives={actives}*/}
+                    {/*// setActives={setActives}*/}
+
+                    {/*<ProfileInfo*/}
+                    {/*    setActive={setActive}*/}
+                    {/*    active={active}*/}
+                    {/*/>*/}
+                    <div
+                        className={classNames(cls.profile__mainContent, {
+                            [cls.active]: active
+                        })}
+                    >
+                        {
+                            theme === "app_school_theme" ?
+                                <SchoolTeacherGroups/>
+                                :
+                                <TeacherProfileTeachersGroup/>
+                        }
+
+                    </div>
+                    <ImageCrop
+                        setActive={setActiveModal}
+                        active={activeModal === "changeImage"}
+                        setNewImage={onSubmitImage}
+                    />
 
                 </div>
-                <ImageCrop
-                    setActive={setActiveModal}
-                    active={activeModal === "changeImage"}
-                    setNewImage={onSubmitImage}
-                />
+            {/*}*/}
+            </DynamicModuleLoader>
 
-            </div>
-        // </ContextStuPro.Provider>
 
     );
 };

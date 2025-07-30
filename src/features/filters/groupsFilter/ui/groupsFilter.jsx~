@@ -35,8 +35,7 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
             teacherId: teacher,
             typeId: type,
             subjId: subject,
-            userBranchId,
-            deleted:activeSwitch
+            userBranchId
         }))
         setIsFilter(true)
     }

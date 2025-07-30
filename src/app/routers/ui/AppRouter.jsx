@@ -7,8 +7,7 @@ import classNames from "classnames";
 import {RequireAuth} from "./RequireAuth";
 import {routersConfigList} from "app/routers/config/routersConfigList";
 
-import {useTheme} from "shared/lib/hooks/useTheme";
-import RequireBranch from "app/routers/ui/RequireBranch";
+
 import RequireHeader from "app/routers/ui/RequireHeader";
 import {routersConfigProfile} from "app/routers/config/routerConfigProfiles";
 
@@ -39,6 +38,7 @@ const StudentsPage = lazyPage(() => import("pages/studentsPage"), "StudentsPage"
 
 import "app/styles/index.sass";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
+import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 
 export const AppRouter = () => {
@@ -80,7 +80,9 @@ export const AppRouter = () => {
                                         element={
 
                                             // <RequireBranch>
-                                                <Suspense fallback={<div>Loading...</div>}>
+                                                <Suspense fallback={<div>
+                                                    <DefaultLoader/>
+                                                </div>}>
                                                     {item.element}
                                                 </Suspense>
 
@@ -95,19 +97,23 @@ export const AppRouter = () => {
                         <Route element={<RequireHeader header={false} back={false}/>}>
 
 
-                            {/*{*/}
-                            {/*    routersConfigProfile.map((item, index) =>*/}
-                            {/*        <Route*/}
-                            {/*            key={index}*/}
-                            {/*            path={item.path}*/}
-                            {/*            element={*/}
-                            {/*                <RequireBranch>*/}
-                            {/*                    {React.createElement(item.Component)}*/}
-                            {/*                </RequireBranch>*/}
-                            {/*            }*/}
-                            {/*        />*/}
-                            {/*    )*/}
-                            {/*}*/}
+                            {
+                                routersConfigProfile.map((item, index) =>
+                                    <Route
+                                        key={index}
+                                        path={item.path}
+                                        element={
+                                            // <RequireBranch>
+                                            <Suspense fallback={<div>
+                                                <DefaultLoader/>
+                                            </div>}>
+                                                {item.element}
+                                             </Suspense>
+                                            // </RequireBranch>
+                                        }
+                                    />
+                                )
+                            }
 
                         </Route>
 

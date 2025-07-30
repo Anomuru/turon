@@ -6,7 +6,9 @@ const initialState = {
     students: [],
     studentsLoading: false,
     loading: false,
-    error: null
+    error: null,
+    fetchTeacherStatus: false
+
 };
 
 export const teacherParseSlice = createSlice({
@@ -15,14 +17,14 @@ export const teacherParseSlice = createSlice({
     reducers: {},
     extraReducers: builder => {
         builder
-            .addCase(fetchTeacherId.pending, state => { state.fetchTeacherStatus = 'loading' })
+            .addCase(fetchTeacherId.pending, state => { state.fetchTeacherStatus = true })
             .addCase(fetchTeacherId.fulfilled, (state, action) => {
-                state.fetchTeacherStatus = 'success';
+                state.fetchTeacherStatus = false;
                 state.teacherId = action.payload;
             })
-            .addCase(fetchTeacherId.rejected, state => { state.fetchTeacherStatus = "error" })
+            .addCase(fetchTeacherId.rejected, state => { state.fetchTeacherStatus = false })
             .addCase(editTeacherThunk.pending, state => {
-                state.loading = true;
+                state.fetchTeacherStatus = false;
                 state.error = null;
             })
             .addCase(editTeacherThunk.fulfilled, (state, action) => {
@@ -57,4 +59,5 @@ export const teacherParseSlice = createSlice({
     }
 });
 
-export default teacherParseSlice.reducer;
+// export default teacherParseSlice.reducer;
+export const {reducer: teacherParseReducer} = teacherParseSlice

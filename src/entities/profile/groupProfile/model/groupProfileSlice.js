@@ -300,4 +300,6 @@ const groupProfileSlice = createSlice({
 })
 
 export const {getNextLesson, changeDebtStudent, deleteDebtStudent, onMoveToGroup} = groupProfileSlice.actions
-export default groupProfileSlice.reducer
+// export default groupProfileSlice.reducer
+
+export const {reducer: groupProfileReducer} = groupProfileSlice

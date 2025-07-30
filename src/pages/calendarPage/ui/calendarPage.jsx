@@ -1,5 +1,5 @@
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import {changeDayType} from "pages/calendarPage/model/calendarSlice";
+import {calendarReducer, changeDayType} from "pages/calendarPage/model/calendarSlice";
 import {useEffect, useState} from 'react';
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
@@ -17,6 +17,11 @@ import {getCalendarData, getCalendarLoading} from "../model/calendarSelector";
 // http://192.168.0.103:8000/Calendar/change-type/
 
 import cls from "./calendarPage.module.sass";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+
+const initialState = {
+    calendarSlice: calendarReducer,
+}
 
 export const CalendarPage = () => {
 
@@ -70,27 +75,29 @@ export const CalendarPage = () => {
     }, [])
 
     return (
-        <div className={cls.calendarPage}>
-            <CalendarHeader/>
-            <CalendarList
-                setActive={setActive}
-                currentData={data}
-                loading={calendarLoading}
-                data={calendarData}
-                onSubmit={setActive}
-                onDelete={(someFunc) => someFunc([{}])}
-                isChanged={isChanged}
-                setIsChanged={setIsChanged}
-                // onSubmitDelete={onSubmitDelete}
-            />
-            <CalendarAdd
-                active={active?.finishValue || active?.length}
-                setActive={setActive}
-                onSubmit={handleSubmit(onSubmitAdd)}
-                register={register}
-                setValue={setValue}
-                success={data}
-            />
-        </div>
+        <DynamicModuleLoader reducers={initialState}>
+            <div className={cls.calendarPage}>
+                <CalendarHeader/>
+                <CalendarList
+                    setActive={setActive}
+                    currentData={data}
+                    loading={calendarLoading}
+                    data={calendarData}
+                    onSubmit={setActive}
+                    onDelete={(someFunc) => someFunc([{}])}
+                    isChanged={isChanged}
+                    setIsChanged={setIsChanged}
+                    // onSubmitDelete={onSubmitDelete}
+                />
+                <CalendarAdd
+                    active={active?.finishValue || active?.length}
+                    setActive={setActive}
+                    onSubmit={handleSubmit(onSubmitAdd)}
+                    register={register}
+                    setValue={setValue}
+                    success={data}
+                />
+            </div>
+        </DynamicModuleLoader>
     )
 }

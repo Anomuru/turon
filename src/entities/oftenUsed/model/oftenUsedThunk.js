@@ -87,7 +87,7 @@ export const fetchOperatorsData = createAsyncThunk(
     "oftenUsedSlice/fetchOperatorsData",
     (id) => {
         const {request} = useHttp()
-        return request(`${API_URL}Lead/operators/`, "GET", null)
+        return request(`${API_URL}Lead/operators/?branch_id=${id}`, "GET", null)
     }
 )
 

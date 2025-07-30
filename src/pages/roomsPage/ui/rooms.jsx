@@ -13,6 +13,7 @@ import cls from './rooms.module.sass';
 import {getSearchValue} from 'features/searchInput';
 import {MultiPage} from "widgets/multiPage/ui/MultiPage/MultiPage";
 import {useParams} from "react-router-dom";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 // import {RequirePermission} from "app/routers";
 
 export const Rooms = () => {
@@ -26,7 +27,8 @@ export const Rooms = () => {
     const roomsData = useSelector(getRoomsData);
     const loading = useSelector(getLoading);
     // const {"*": id} = useParams();
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
+
     const userBranchId = id
 
     useEffect(() => {

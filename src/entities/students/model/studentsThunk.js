@@ -32,7 +32,7 @@ export const fetchOnlyStudyingStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyStudyingStudentsData',
     async ({subjId, fromAge, untilAge, langId,userBranchId}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/active-students/?subject=${subjId}&age=${fromAge}-${untilAge}&language=${langId}&branch=${branchQueryId()}`, "GET", null, headers())
+        return await request(`${API_URL}Students/active-students/?subject=${subjId}&age=${fromAge}-${untilAge}&language=${langId}&branch=${userBranchId}`, "GET", null, headers())
     }
 )
 

@@ -14,6 +14,7 @@ import {StudentPayment} from "./otchotPages/studentPayment";
 import {TeacherSalary} from "./otchotPages/teacherSalary";
 import {AllPages} from "./otchotPages/allPages";
 import {getBranch} from "../../../../features/branchSwitcher";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 export const AccountingOtchotPage = () => {
     const formatSalary = (salary) => {
@@ -23,7 +24,8 @@ export const AccountingOtchotPage = () => {
     const [active, setActive] = useState(false)
     const dispatch = useDispatch()
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
+
 
     const navigate = useNavigate()
     const setPage = useCallback((e) => {

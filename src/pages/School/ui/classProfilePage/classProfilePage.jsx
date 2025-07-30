@@ -18,11 +18,13 @@ import {Button} from "shared/ui/button";
 
 import cls from "./classProfilePage.module.sass";
 import {getBranch} from "../../../../features/branchSwitcher";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 export const ClassProfilePage = () => {
 
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
+
     const dispatch = useDispatch()
     const navigation = useNavigate()
     const {handleSubmit, register} = useForm()

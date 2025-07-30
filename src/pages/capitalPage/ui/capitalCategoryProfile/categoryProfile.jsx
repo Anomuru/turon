@@ -5,6 +5,7 @@ import {getCapitalCategoryInfo} from "../../../../entities/capital/model/selecto
 import {useEffect} from "react";
 import {getCapitalCategory} from "../../../../entities/capital/model/thunk/capitalThunk";
 import {getBranch} from "../../../../features/branchSwitcher";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 export const CategoryProfile = () => {
 
@@ -12,7 +13,8 @@ export const CategoryProfile = () => {
     const dispatch = useDispatch()
     const categoryInfo  = useSelector(getCapitalCategoryInfo)
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
+
 
     useEffect(() => {
         dispatch(getCapitalCategory(id))

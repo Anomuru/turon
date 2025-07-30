@@ -9,7 +9,6 @@ import cls from "./groupsList.module.sass";
 import {DefaultPageLoader} from "../../../../shared/ui/defaultLoader";
 
 export const GroupsList = React.memo(({currentTableData}) => {
-    const getFilteredGroups = useSelector(getGroupListWithFilter)
     const navigate = useNavigate()
 
     const renderGroups = () => {

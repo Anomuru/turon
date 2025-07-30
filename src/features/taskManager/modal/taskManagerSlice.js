@@ -17,7 +17,8 @@ const initialState = {
     loading: false,
     error: false,
 
-    adminTasks: []
+    adminTasks: [],
+    loadingTasks: false
 
 };
 
@@ -44,11 +45,11 @@ const taskManagerSlice = createSlice({
     extraReducers: builder =>
         builder
             .addCase(fetchTaskManager.pending , state => {
-                state.loading = true
+                state.loadingTasks = true
                 state.error = false
             })
             .addCase(fetchTaskManager.fulfilled , ( state, action) => {
-                state.loading = false
+                state.loadingTasks = false
                 state.data = action.payload.data
                 state.percentage = action.payload.accepted_percentage
                 state.completedCount = action.payload.completed
@@ -56,7 +57,7 @@ const taskManagerSlice = createSlice({
                 state.error = false
             })
             .addCase(fetchTaskManager.rejected , state => {
-                state.loading = false
+                state.loadingTasks = false
                 state.error = true
             })
             .addCase(fetchBranch.pending , state => {
@@ -95,4 +96,5 @@ const taskManagerSlice = createSlice({
 
 
 export const {onRemoveTask , onCountCompleted , onAddRegisterItem ,onCountPercentage , onCountProgress} = taskManagerSlice.actions;
-export default taskManagerSlice.reducer
+// export default taskManagerSlice.reducer
+export const {reducer: taskManagerReducer} = taskManagerSlice

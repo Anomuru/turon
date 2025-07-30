@@ -31,7 +31,6 @@ import {getLocationThunk} from "../../../../entities/creates/model/createThunk/c
 import {onAddAlertOptions} from "../../../../features/alert/model/slice/alertSlice";
 import {SubCategory} from "../subCategory/subCategory";
 import {getBranch} from "../../../../features/branchSwitcher";
-import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 const capitalType = [
     {name: "category", label: "Category"},
@@ -44,7 +43,7 @@ export const CapitalInside = memo(() => {
     const dispatch = useDispatch()
     const {register, setValue, handleSubmit} = useForm()
     // const {id} = useParams()
-    const id = useSelector(getUserBranchId)
+    const {id} = useSelector(getBranch)
     const {request} = useHttp()
     const navigation = useNavigate()
     const capitalInside = useSelector(getCapitalInside)

@@ -18,8 +18,8 @@ import {Button} from "shared/ui/button";
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    getTaskManager, getTaskManagerBranchs,
-    getTaskManagerCompletedCount, getTaskManagerLoading,
+    getTaskManager,
+    getTaskManagerCompletedCount, getTaskManagerLoadingTasks,
     getTaskManagerProgressCount
 } from "features/taskManager/modal/taskManagerSelector";
 import {API_URL, headers, useHttp} from "shared/api/base";
@@ -64,7 +64,7 @@ export const TaskManagerLeft = ({formatted, setTaskType, taskType}) => {
     const [selectedStatus, setSelectedStatus] = useState(null)
     const [agreeStatus, setAgreeStatus] = useState(false)
 
-    const loading = useSelector(getTaskManagerLoading)
+    const loading = useSelector(getTaskManagerLoadingTasks)
 
     const [resComment, setResComment] = useState(null)
 
