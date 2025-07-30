@@ -6,10 +6,10 @@ import {RoomModal} from 'features/roomsAddModal';
 import {getSearchValue} from 'features/searchInput';
 import {fetchRoomsData} from 'entities/rooms/model/roomsThunk';
 import {RoomsList} from 'entities/rooms/ui/roomList/roomList';
-import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {getUserBranchId} from "entities/profile/userProfile";
 import {roomsReducer, getRoomsData} from "entities/rooms";
 import {Button} from 'shared/ui/button';
-import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 
 import cls from './rooms.module.sass';
 
@@ -30,10 +30,10 @@ export const Rooms = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const PageSize = useMemo(() => 50, []);
 
-    useEffect(() => {
-        if (!userBranchId) return;
-        dispatch(fetchRoomsData({id: userBranchId}));
-    }, [dispatch, userBranchId]);
+    // useEffect(() => {
+    //     if (!userBranchId) return;
+    //     dispatch(fetchRoomsData({id: userBranchId}));
+    // }, [dispatch, userBranchId]);
 
     const searchedRooms = useMemo(() => {
         const filteredRooms = roomsData?.filter(item => !item.deleted) || [];
