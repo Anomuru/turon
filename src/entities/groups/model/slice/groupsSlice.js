@@ -7,6 +7,7 @@ const initialState = {
     dataWithFilter: [],
     typeData: [],
     loading: false,
+    loadingClasses: false,
     error: null
 }
 
@@ -37,16 +38,16 @@ export const groupsSlice = createSlice({
 
 
             .addCase(fetchGroupsDataWithFilter.pending, state => {
-                state.loading = true
+                state.loadingClasses = true
                 state.error = null
             })
             .addCase(fetchGroupsDataWithFilter.fulfilled, (state, action) => {
                 state.dataWithFilter = action.payload
-                state.loading = false
+                state.loadingClasses = false
                 state.error = null
             })
             .addCase(fetchGroupsDataWithFilter.rejected, (state, action) => {
-                state.loading = false
+                state.loadingClasses = false
                 state.error = action.payload ?? null
             })
 

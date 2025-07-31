@@ -479,7 +479,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
                 >
                     <Select
                         extraClass={cls.deleteForm__select}
-                        options={flows.filter(item => item.id !== +id)}
+                        options={flows?.filter(item => item.id !== +id)}
                         title={"Patok"}
                         // onChangeOption={onFilterGroups}
                         register={register}

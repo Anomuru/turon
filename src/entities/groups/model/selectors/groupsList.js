@@ -7,6 +7,7 @@ export const getGroupsLoading = (state) =>
 
 export const getGroupListWithFilter = (state) =>
     state.groupsSlice?.dataWithFilter
-
+export const getGroupListWithFilterLoading = (state) =>
+    state.groupsSlice?.loadingClasses
 export const getGroupTypes = (state) =>
     state.groupsSlice?.typeData

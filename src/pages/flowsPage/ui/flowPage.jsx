@@ -4,12 +4,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {FlowAddForm} from "features/flow";
 import {Pagination} from "features/pagination";
 import {getSearchValue} from "features/searchInput";
-import {getCurseLevelData, newStudentsReducer} from "entities/students";
-import {getCurseLevel} from "entities/students/model/studentsSlice";
+import {getCurseLevelData} from "entities/students";
+import {getCurseLevel, studentsReducer} from "entities/students/model/studentsSlice";
 import {Flows, flowsReducer} from "entities/flows";
 import {fetchFlows} from "entities/flows";
 import {getFlows} from "entities/flows";
-import {fetchTeachersData, getTeachers, teachersReducer} from "entities/teachers";
+import {fetchTeachersData, getTeachers} from "entities/teachers";
 import {getFlowsLoading} from "entities/flows/model/selector/flowsSelector";
 import {getUserBranchId} from "entities/profile/userProfile";
 import {flowsProfileReducer} from "entities/flowsProfile";
@@ -17,11 +17,12 @@ import {API_URL, headers, useHttp} from "shared/api/base";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 
 import cls from "./flowsPage.module.sass"
+import {teacherReducer} from "entities/teachers/model/teacherSlice.js";
 
 const reducers = {
     flowsSlice: flowsReducer,
-    teachers: teachersReducer,
-    newStudents: newStudentsReducer,
+    teachersSlice: teacherReducer,
+    newStudents: studentsReducer,
     flowsProfileSlice: flowsProfileReducer
 }
 

@@ -289,7 +289,7 @@ export const FlowProfileNavigators = memo(() => {
                         required
                     />
                     {
-                        level.length ?
+                        level?.length ?
                             <Select
                                 extraClass={cls.form__input}
                                 options={level}

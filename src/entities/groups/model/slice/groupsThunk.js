@@ -7,7 +7,7 @@ export const fetchGroupsData = createAsyncThunk(
     "groupsSlice/fetchGroupsData",
     async({userBranchId , deleted})  =>{
         const {request} = useHttp()
-        return await request(`${API_URL}Group/classes/?branch=${userBranchId}&deleted=${deleted ? "True" : "False"}`, "GET", null, headers())
+        return await request(`${API_URL}Group/classes/?branch=${userBranchId}`, "GET", null, headers())
     }
 )
 
