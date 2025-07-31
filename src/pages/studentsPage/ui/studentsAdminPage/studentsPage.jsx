@@ -1,7 +1,7 @@
-import {getBranch, getBranches} from "features/branchSwitcher";
+
 import {ClassAddForm} from "features/classProfile";
 import {StudentCreateClass} from "features/studentCreateClass";
-import React, {memo, useCallback, useEffect, useMemo, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useState} from "react";
 
 import {useDispatch, useSelector} from "react-redux";
 
@@ -9,10 +9,6 @@ import {
     DeletedStudents,
     NewStudents,
     Students,
-    fetchClassColors,
-    fetchClassNumberList,
-    getSchoolClassNumbers,
-    getSchoolClassColors,
     fetchOnlyStudyingStudentsData,
     fetchOnlyDeletedStudentsData,
     getNewStudentsData,
@@ -85,14 +81,9 @@ const initialReducers = {
 
 export const StudentsPage = () => {
 
-    // let newStudents
-
-    const {theme} = useTheme()
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams();
     const {register, handleSubmit} = useForm();
-    // const {"*": id} = useParams()
-
     const userBranchId = useSelector(getUserBranchId)
 
 
@@ -196,25 +187,25 @@ export const StudentsPage = () => {
     }
 
 
-    console.log(selectedRadio , userBranchId)
-    useEffect(() => {
-        // console.log("render fetch") ||
-        if (!userBranchId) return;
 
-        switch (selectedRadio) {
-            case "new_students":
-                dispatch(fetchOnlyNewStudentsData({userBranchId: userBranchId}));
-                break;
-            case "studying_students":
-                dispatch(fetchOnlyStudyingStudentsData({userBranchId: userBranchId}));
-                break;
-            case "deleted_students":
-                dispatch(fetchOnlyDeletedStudentsData({id: userBranchId}));
-                break;
-            default:
-                break;
-        }
-    }, [dispatch, selectedRadio, userBranchId]);
+    // useEffect(() => {
+    //     // console.log("render fetch") ||
+    //     if (!userBranchId) return;
+    //
+    //     switch (selectedRadio) {
+    //         case "new_students":
+    //             dispatch(fetchOnlyNewStudentsData({userBranchId: userBranchId}));
+    //             break;
+    //         case "studying_students":
+    //             dispatch(fetchOnlyStudyingStudentsData({userBranchId: userBranchId}));
+    //             break;
+    //         case "deleted_students":
+    //             dispatch(fetchOnlyDeletedStudentsData({id: userBranchId}));
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // }, [dispatch, selectedRadio, userBranchId]);
 
     useEffect(() => {
 
@@ -235,14 +226,9 @@ export const StudentsPage = () => {
         setSelectedRadio(value);
     };
 
-    // console.log(searchedUsers, "searchedUsers")
+
 
     const renderStudents = useCallback(() => {
-        // console.log(loadingNewStudents, "loadingNewStudents render renderStudents") //
-        // console.log(loadingDeletedStudents,"loadingDeletedStudents render renderStudents") //
-        // console.log(loadingStudyingStudents,"loadingStudyingStudents render renderStudents") //
-        // console.log(selectedRadio, "selectedRadio render renderStudents") //
-        // console.log(currentTableData, "currentTableData render renderStudents") //
         switch (selectedRadio) {
             case "new_students":
                 if (loadingNewStudents === "loading") return <DefaultPageLoader/>

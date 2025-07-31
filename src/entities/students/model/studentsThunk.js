@@ -2,6 +2,10 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {API_URL, branchQuery, branchQueryId, headers, useHttp} from "shared/api/base";
 
 
+const renderItem = ({langId , untilAge , fromAge , subjId}) => {
+    return `${subjId ? `&subject=${subjId}` : ""}${fromAge ? `&age=${fromAge}-${untilAge}` : ""}${langId !== "all" ? `&language=${langId}` : ""}`
+}
+
 
 
 export const fetchNewStudentsData = createAsyncThunk(
@@ -16,7 +20,7 @@ export const fetchOnlyNewStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyNewStudentsData',
     async ({subjId, fromAge, untilAge, langId, userBranchId}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/new-registered-students/?subject=${subjId}&age=${fromAge}-${untilAge}&language=${langId}&branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Students/new-registered-students/?${renderItem({subjId , fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
     }
 )
 
@@ -32,15 +36,15 @@ export const fetchOnlyStudyingStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyStudyingStudentsData',
     async ({subjId, fromAge, untilAge, langId,userBranchId}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/active-students/?subject=${subjId}&age=${fromAge}-${untilAge}&language=${langId}&branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Students/active-students/?subject=${subjId}&age=${fromAge}-${untilAge}${langId === "all" ? "" : `&language=${langId}`}&branch=${userBranchId}`, "GET", null, headers())
     }
 )
 
 export const fetchOnlyDeletedStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyDeletedStudentsData',
-    async ({id}) => {
+    async ({subjId, fromAge, untilAge, langId,userBranchId }) => {
         const {request} = useHttp();
-        return await request(`${API_URL}Students/deleted-group-students/?branch=${id}`, "GET", null, headers())
+        return await request(`${API_URL}Students/deleted-group-students/?subject=${subjId}&age=${fromAge}-${untilAge}${langId === "all" ? "" : `&language=${langId}`}&branch=${userBranchId}`, "GET", null, headers())
     }
 )
 
