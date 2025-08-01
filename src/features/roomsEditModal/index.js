@@ -1,1 +1,1 @@
-export {default as roomssSlice} from './ui/roomSlice'
+export {default as roomssSlice, roomssReducer} from './ui/roomSlice'

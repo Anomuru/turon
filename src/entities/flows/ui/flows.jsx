@@ -67,12 +67,7 @@ export const Flows = ({currentTableData, teacherData, loading, levelData, getLev
                         }
                     </td>
                     <td>{item?.student_count}</td>
-                    <td>
-
-                        {item?.teacher_name}
-                        {item?.teacher_surname}
-
-                    </td>
+                    <td>{`${item?.teacher_name} ${item?.teacher_surname}`}</td>
                 </tr>
             )
         })

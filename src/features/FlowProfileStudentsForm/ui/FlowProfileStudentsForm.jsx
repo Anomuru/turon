@@ -36,7 +36,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
 
     const {request} = useHttp()
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
     const dispatch = useDispatch()
     const {
         register,
@@ -478,7 +478,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
                 >
                     <Select
                         extraClass={cls.deleteForm__select}
-                        options={flows.filter(item => item.id !== +id)}
+                        options={flows?.filter(item => item.id !== +id)}
                         title={"Patok"}
                         // onChangeOption={onFilterGroups}
                         register={register}

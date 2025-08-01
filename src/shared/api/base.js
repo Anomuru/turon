@@ -79,7 +79,7 @@ export const ParamUrl = (params) => {
         const key = paramsList[i];
         const value = params[key];
 
-        if (value !== undefined && value !== null) {
+        if (value !== undefined && value !== null && value !== "all") {
             res += `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}&`;
         }
     }

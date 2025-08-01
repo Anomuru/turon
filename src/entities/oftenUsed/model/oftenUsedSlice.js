@@ -10,7 +10,7 @@ import {
     fetchClassInput,
     fetchGroupsForSelect,
     fetchTeachersForSelect,
-    fetchBranchesForSelect, fetchOperatorsData
+    fetchBranchesForSelect, fetchOperatorsData, fetchVacancyData, fetchTeachersData
 } from "./oftenUsedThunk";
 
 const initialState = {
@@ -46,7 +46,15 @@ const initialState = {
 
     operators: [],
     operatorsLoading: false,
-    operatorsError: null
+    operatorsError: null,
+
+    vacancy: [],
+    vacancyLoading: false,
+    vacancyError: null,
+
+    teacher: [],
+    teacherLoading: false,
+    teacherError: null,
 
 
 }
@@ -209,6 +217,34 @@ const oftenUsedSlice = createSlice({
             .addCase(fetchOperatorsData.rejected, (state) => {
                 state.operatorsLoading = false
                 state.operatorsError = "error"
+            })
+
+            .addCase(fetchVacancyData.pending, (state) => {
+                state.vacancyLoading = true
+                state.vacancyError = null
+            })
+            .addCase(fetchVacancyData.fulfilled, (state, action) => {
+                state.vacancy = action.payload?.jobs
+                state.vacancyLoading = false
+                state.vacancyError = null
+            })
+            .addCase(fetchVacancyData.rejected, (state) => {
+                state.vacancyLoading = false
+                state.vacancyError = "error"
+            })
+
+            .addCase(fetchTeachersData.pending, (state) => {
+                state.teacherLoading = true
+                state.teacherError = null
+            })
+            .addCase(fetchTeachersData.fulfilled, (state, action) => {
+                state.teacher = action.payload
+                state.teacherLoading = false
+                state.teacherError = null
+            })
+            .addCase(fetchTeachersData.rejected, (state) => {
+                state.teacherLoading = false
+                state.teacherError = "error"
             })
 })
 

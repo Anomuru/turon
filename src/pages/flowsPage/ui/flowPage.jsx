@@ -9,10 +9,10 @@ import {getCurseLevel} from "entities/students/model/studentsSlice";
 import {Flows, flowsReducer} from "entities/flows";
 import {fetchFlows} from "entities/flows";
 import {getFlows} from "entities/flows";
-import {fetchTeachersData, getTeachers, teachersReducer} from "entities/teachers";
 import {getFlowsLoading} from "entities/flows/model/selector/flowsSelector";
 import {getUserBranchId} from "entities/profile/userProfile";
-import {flowsProfileReducer} from "entities/flowsProfile";
+// import {flowsProfileReducer} from "entities/flowsProfile";
+import {fetchTeachersData, getTeacherData} from "entities/oftenUsed"
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 
@@ -20,9 +20,9 @@ import cls from "./flowsPage.module.sass"
 
 const reducers = {
     flowsSlice: flowsReducer,
-    teachers: teachersReducer,
+    // teachers: teachersReducer,
     newStudents: newStudentsReducer,
-    flowsProfileSlice: flowsProfileReducer
+    // flowsProfileSlice: flowsProfileReducer
 }
 
 export const FlowsPage = () => {
@@ -34,8 +34,10 @@ export const FlowsPage = () => {
     const flows = useSelector(getFlows)
     const flowsLoading = useSelector(getFlowsLoading)
     const userBranchId = useSelector(getUserBranchId)
-    const teachers = useSelector(getTeachers)
+    const teachers = useSelector(getTeacherData)
     const level = useSelector(getCurseLevelData)
+
+    console.log(teachers, "teachers")
 
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
@@ -56,8 +58,8 @@ export const FlowsPage = () => {
 
     useEffect(() => {
         if (userBranchId) {
-            dispatch(fetchFlows(userBranchId))
-            dispatch(fetchTeachersData({userBranchId: userBranchId}))
+            // dispatch(fetchFlows(userBranchId))
+            dispatch(fetchTeachersData(userBranchId))
         }
     }, [userBranchId])
 

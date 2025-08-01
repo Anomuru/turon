@@ -1,9 +1,10 @@
-import {useState} from "react";
-import {useDispatch} from "react-redux";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import { useEffect, useState } from "react";
+import {useDispatch, useSelector} from "react-redux";
 
-import {Modal} from "shared/ui/modal";
-import {Select} from "shared/ui/select";
-import {Switch} from "shared/ui/switch";
+import { Modal } from "shared/ui/modal";
+import { Switch } from "shared/ui/switch";
+
 import {
     overHeadDeletedList,
     capitalDeletedListThunk,
@@ -11,69 +12,97 @@ import {
     getDeletedEmpSalary,
     getDeletedPayment
 } from "entities/accounting";
-import {
-    fetchIsArchive,
-    fetchIsDelete
-} from "../model/accountingFilterSlice";
 
-import cls from "../../filters.module.sass"
+import { saveFilter, getSavedFilters, removeFilter } from "shared/lib/components/filterStorage/filterStorage";
 
-export const AccountingFilter = ({setActive, active, setActiveDel, activeDel, activePage}) => {
+import cls from "../../filters.module.sass";
+import { Button } from "shared/ui/button"; // если нужна кнопка очистки
 
-    const dispatch = useDispatch()
-    const [isDelete, setIsDelete] = useState(false)
-    const [isArchive, setIsArchive] = useState(false)
+export const AccountingFilter = ({ setActive, active, setActiveDel, activeDel, activePage }) => {
+    const dispatch = useDispatch();
 
-    const onDelete = (value) => {
-        setIsDelete(value)
-        dispatch(fetchIsDelete(value))
-    }
+    const branch = useSelector(getUserBranchId)
 
-    const onArchive = (value) => {
-        setIsArchive(value)
-        dispatch(fetchIsArchive(value))
-    }
+    const [isArchive, setIsArchive] = useState(false);
+    const [initialApplied, setInitialApplied] = useState(false);
 
-    const onActive = (value) => {
-        if (activePage === "studentsPayments") {
-            dispatch(getDeletedPayment())
-        } else if (activePage === "teachersSalary") {
-            dispatch(getDeletedTeacherSalary())
-        } else if (activePage === "employeesSalary") {
-            dispatch(getDeletedEmpSalary())
-        } else if (activePage === "overhead") {
-            dispatch(overHeadDeletedList())
-        } else {
-            dispatch(capitalDeletedListThunk())
+    // При монтировании: восстанавливаем фильтры
+    useEffect(() => {
+        const saved = getSavedFilters()["accountingFilter"];
+        if (branch) {
+            if (saved && !initialApplied) {
+                setIsArchive(saved.isArchive);
+                setActiveDel(saved.activeDel);
+
+                if (saved.activeDel) {
+                    triggerDeletedDispatch();
+                }
+
+                setInitialApplied(true);
+            }
         }
-        setActiveDel(value)
-    }
+    }, [initialApplied, activePage, branch]);
+
+    const triggerDeletedDispatch = () => {
+        if (activePage === "studentsPayments") {
+            dispatch(getDeletedPayment(branch));
+        } else if (activePage === "teachersSalary") {
+            dispatch(getDeletedTeacherSalary(branch));
+        } else if (activePage === "employeesSalary") {
+            dispatch(getDeletedEmpSalary(branch));
+        } else if (activePage === "overhead") {
+            dispatch(overHeadDeletedList(branch));
+        } else {
+            dispatch(capitalDeletedListThunk(branch));
+        }
+    };
+
+    const onDeletedToggle = (value) => {
+        setActiveDel(value);
+        if (value) {
+            triggerDeletedDispatch();
+        }
+
+        saveFilter("accountingFilter", {
+            isArchive,
+            activeDel: value
+        });
+    };
+
+    const onArchiveToggle = (value) => {
+        setIsArchive(value);
+
+        saveFilter("accountingFilter", {
+            isArchive: value,
+            activeDel
+        });
+    };
+
+    const onDeleteFilter = () => {
+        setIsArchive(false);
+        setActiveDel(false);
+
+        removeFilter("accountingFilter");
+    };
 
     return (
-        <div>
-            <Modal setActive={setActive} active={active}>
-                <div className={cls.filter}>
-                    <h1>
-                        Filter
-                    </h1>
-                    <div className={cls.filter__container}>
-                        <div className={cls.filter__switch}>
-                            <p>
-                                O'chirilganlar
-                            </p>
-                            <Switch onChangeSwitch={onActive} activeSwitch={activeDel}/>
-                        </div>
-                        <div className={cls.filter__switch}>
-                            <p>
-                                Arxiv
-                            </p>
-                            <Switch/>
-                        </div>
-
+        <Modal setActive={setActive} active={active}>
+            <div className={cls.filter}>
+                <h1>Filter</h1>
+                <div className={cls.filter__container}>
+                    <div className={cls.filter__switch}>
+                        <p>O'chirilganlar</p>
+                        <Switch onChangeSwitch={onDeletedToggle} activeSwitch={activeDel} />
+                    </div>
+                    <div className={cls.filter__switch}>
+                        <p>Arxiv</p>
+                        <Switch onChangeSwitch={onArchiveToggle} activeSwitch={isArchive} />
+                    </div>
+                    <div className={cls.filter__switch} style={{justifyContent: "flex-end"}}>
+                        <Button onClick={onDeleteFilter} type="danger">Tozalash</Button>
                     </div>
                 </div>
-            </Modal>
-        </div>
+            </div>
+        </Modal>
     );
 };
-

@@ -95,19 +95,20 @@ export const AppRouter = () => {
                         <Route element={<RequireHeader header={false} back={false}/>}>
 
 
-                            {/*{*/}
-                            {/*    routersConfigProfile.map((item, index) =>*/}
-                            {/*        <Route*/}
-                            {/*            key={index}*/}
-                            {/*            path={item.path}*/}
-                            {/*            element={*/}
-                            {/*                <RequireBranch>*/}
-                            {/*                    {React.createElement(item.Component)}*/}
-                            {/*                </RequireBranch>*/}
-                            {/*            }*/}
-                            {/*        />*/}
-                            {/*    )*/}
-                            {/*}*/}
+                            {
+                                routersConfigProfile.map((item, index) =>
+                                    <Route
+                                        key={index}
+                                        path={item.path}
+                                        element={
+                                            // <RequireBranch>
+                                            //     {React.createElement(item.Component)}
+                                            item.element
+                                            // </RequireBranch>
+                                        }
+                                    />
+                                )
+                            }
 
                         </Route>
 

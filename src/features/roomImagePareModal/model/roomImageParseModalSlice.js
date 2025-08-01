@@ -31,3 +31,4 @@ export const roomImageSlice = createSlice({
 });
 
 export default roomImageSlice.reducer;
+export const {reducer: roomImageReducer} = roomImageSlice
