@@ -146,7 +146,7 @@ export const TeachersPage = () => {
                             :
                             activeSwitch === true ?
                                 <DeletedTeachers
-                                    data={searchedUsersDel.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+                                    data={searchedUsersDel?.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                                     // data={teachersData}
                                     // data={searchedUsers}
                                 />
@@ -159,7 +159,7 @@ export const TeachersPage = () => {
                                     // onClick={onClick}
                                     theme={theme === "app_school_theme"}
                                     loading={getTeacherLoading}
-                                    data={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+                                    data={searchedUsers?.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                                     // data={currentTableData}
                                 />
                         }

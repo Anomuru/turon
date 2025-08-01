@@ -16,7 +16,7 @@ import cls from "../../filters.module.sass"
 
 export const FlowFilter = memo(({active, setActive}) => {
 
-    const {"*": id} = useParams()
+    const userBranchId = localStorage.getItem("branchId")
 
     const dispatch = useDispatch()
     const subjects = useSelector(getSubjectsData)
@@ -24,8 +24,8 @@ export const FlowFilter = memo(({active, setActive}) => {
 
     useEffect(() => {
         dispatch(fetchSubjectsData())
-        dispatch(fetchTeachersData({userBranchId: id}))
-    }, [id])
+        dispatch(fetchTeachersData({userBranchId}))
+    }, [userBranchId])
 
     const [selectedCoinFrom, setSelectedCoinFrom] = useState()
     const [selectedCoinTo, setSelectedCoinTo] = useState()
