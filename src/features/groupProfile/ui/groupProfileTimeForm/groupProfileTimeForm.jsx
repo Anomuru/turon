@@ -57,7 +57,8 @@ export const GroupProfileTimeForm = memo(() => {
     const weekData = useSelector(getWeekDays)
     const userBranchId = useSelector(getUserBranchId)
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
+
 
     const [active, setActive] = useState("")
     const [counter, setCounter] = useState([])

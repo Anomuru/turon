@@ -18,24 +18,30 @@ export const DeletedGroups = ({currentTableData}) => {
                         <th>No</th>
                         <th>Guruh Nomi</th>
                         <th>Full name</th>
-                        <th>Fan</th>
                         <th>Kurs Turi</th>
                         <th>Guruh narxi</th>
-                        <th>O'chirilgan sana</th>
+
                     </tr>
                     </thead>
                     <tbody>
                     {currentTableData.map((item, i) => {
                         return (
 
-                            <tr>
+                            <tr onClick={() => navigate(`groupInfo/${item?.id}`)}>
                                 <td>{i + 1}</td>
-                                <td>{item.groupName}</td>
-                                <td>{item.name} {item.surname}</td>
-                                <td><div>{item.subject}</div></td>
-                                <td>{item.typeCourse}</td>
-                                <td><div>{item.groupPrice}</div></td>
-                                <td>{item.deletedDate}</td>
+                                <td>{item?.name}</td>
+                                <td>{item?.teacher}</td>
+                                <td>{item?.students?.length}</td>
+                                <td>{item?.price ? item.price : "Sinfga hali narx belgilanmagan"}</td>
+                                {/*<td>{`${item?.class_number?.number}-${item?.color?.name}`}</td>*/}
+
+                                {/*<td>{item?.status ? <div><div/></div> : null }</td>*/}
+
+                                {/*<td>{item?.status ?<div><div/></div> : <div className={cls.red}><div className={cls.red__inner}/></div> }</td>*/}
+
+
+
+
                             </tr>
 
                         )

@@ -17,33 +17,39 @@ import {fetchTeachersDataWithFilter} from "entities/teachers/model/teacherThunk"
 
 import cls from "../../filters.module.sass";
 
-export const GroupsFilter = React.memo(({active, setActive, setIsFilter}) => {
+export const GroupsFilter = React.memo(({active, setActive, setIsFilter , activeSwitch , setActiveSwitch}) => {
 
-    const branch = localStorage.getItem("selectedBranch")
+
+    const teacher = localStorage.getItem("selectedTeacher")
+
     const subjects = useSelector(getSubjectsData)
     const getTeacher = useSelector(getTeachers)
-    const [selectedSubject, setSelectedSubject] = useState("all")
-    const [selectedTeacher, setSelectedTeacher] = useState("all")
-    const [selectedType, setSelectedType] = useState("all")
-    const [activeSwitch, setActiveSwitch] = useState(false)
+
+    const [selectedTeacher, setSelectedTeacher] = useState(teacher)
+
     const dispatch = useDispatch()
-    const userBranchId = useSelector(getUserBranchId)
+    const userBranchId = localStorage.getItem("branchId")
     const types = useSelector(getGroupTypes)
 
-    function fetchGroups(teacher, type, subject) {
-        dispatch(fetchGroupsDataWithFilter({
-            teacherId: teacher,
-            typeId: type,
-            subjId: subject,
-            userBranchId: branch
-        }))
-        setIsFilter(true)
-    }
+    localStorage.setItem("selectedTeacher" , selectedTeacher)
 
     useEffect(() => {
-        if (branch)
-            dispatch(fetchTeachersData({userBranchId: branch}))
-    }, [branch])
+        dispatch(fetchGroupsDataWithFilter({
+            teacherId: selectedTeacher,
+            userBranchId,
+            deleted:activeSwitch
+        }))
+        setIsFilter(true)
+    } , [selectedTeacher , activeSwitch])
+
+    // function fetchGroups(teacher, type, subject) {
+    //
+    // }
+
+    useEffect(() => {
+        if (userBranchId)
+            dispatch(fetchTeachersData({userBranchId}))
+    }, [userBranchId])
 
     useEffect(() => {
         // dispatch(fetchSubjects());
@@ -51,37 +57,9 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter}) => {
         dispatch(fetchGroupTypeThunk())
     }, []);
 
-    const onSelectTeacher = (value) => {
-        if (value !== selectedTeacher) {
-            setSelectedTeacher(value)
-            fetchGroups(value, selectedType, selectedSubject)
-        }
-        // dispatch(fetchGroupsDataWithFilter({teacherId: value}))
 
-    }
 
-    const onSelectType = (value) => {
-        if (value !== selectedType) {
 
-            setSelectedType(value)
-
-            fetchGroups(selectedTeacher, value, selectedSubject)
-        }
-        // dispatch(fetchGroupsDataWithFilter({typeId: value}))
-    }
-
-    const onSelectSubject = (value) => {
-        if (value !== selectedSubject) {
-
-            setSelectedSubject(value);
-            fetchGroups(selectedTeacher, selectedType, value)
-        }
-        // const selectedSubjectData = subjects.find(subj => subj.id === Number(value));
-        // const subjectId = selectedSubjectData.id;
-        // dispatch(fetchGroupsDataWithFilter({
-        //     subjId: subjectId
-        // }))
-    }
     return (
         <Modal
             active={active}
@@ -95,25 +73,9 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter}) => {
                         title={"Teacher"}
                         options={[{name: "Hamma", id: "all"}, ...getTeacher]}
                         extraClass={cls.filter__select}
-                        onChangeOption={onSelectTeacher}
-                        defaultValue={selectedTeacher}
+                        onChangeOption={setSelectedTeacher}
+                        defaultValue={teacher}
                     />
-                    <Select
-                        title={"Fan"}
-                        options={[{name: "Hamma", id: "all"}, ...subjects]}
-                        extraClass={cls.filter__select}
-                        onChangeOption={(value) => onSelectSubject(value)}
-                        defaultValue={selectedSubject}
-                    />
-                    <Select
-                        title={"Kurs turi"}
-                        options={[{name: "Hamma", id: "all"}, ...types]}
-                        extraClass={cls.filter__select}
-                        onChangeOption={onSelectType}
-                        defaultValue={selectedType}
-                    />
-
-
                     <div className={cls.filter__switch}>
                         <p>O’chirilgan</p>
                         <Switch activeSwitch={activeSwitch} onChangeSwitch={setActiveSwitch}/>

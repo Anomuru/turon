@@ -1,9 +1,9 @@
 
 export const getLanguagesData = (state) =>
-    state.registerUser.languages
+    state.userSlice?.languages
 
 export const getSubjectsData = (state) =>
-    state.registerUser.subjects
+    state.userSlice?.subjects
 
 export const getCategories = (state) =>
-    state.registerUser.categories
+    state.userSlice?.categories

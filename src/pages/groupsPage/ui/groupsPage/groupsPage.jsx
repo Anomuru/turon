@@ -7,10 +7,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {GroupsList} from "entities/groups/groups/ui/groupsList";
 import {
     getGroupsListData,
-    fetchGroupsData,
+
     getDeletedGroupsData,
     DeletedGroups,
-    getGroupsLoading, getGroupListWithFilter
+    getGroupsLoading, getGroupListWithFilter, fetchGroupsDataWithFilter
 } from "entities/groups";
 import {getSearchValue} from "features/searchInput";
 import {GroupsFilter} from "features/filters/groupsFilter";
@@ -19,9 +19,16 @@ import {Button} from "shared/ui/button";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 
 import cls from "./groupsPage.module.sass";
-// import {DeletedGroups} from "entities/groups/index";
+
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import {groupsReducer} from "entities/groups/model/slice/groupsSlice.js";
+import {getGroupListWithFilterLoading} from "entities/groups/model/selectors/groupsList.js";
 
 
+const reducers = {
+    groupsSlice: groupsReducer
+
+}
 export const GroupsPage = () => {
 
     const dispatch = useDispatch()
@@ -29,9 +36,10 @@ export const GroupsPage = () => {
     const getFilteredGroups = useSelector(getGroupListWithFilter)
     const deletedGroupsData = useSelector(getDeletedGroupsData)
     const loading = useSelector(getGroupsLoading)
+    const loadingWithFilter = useSelector(getGroupListWithFilterLoading)
     // const {"*": id} = useParams()
-    const {id} = useSelector(getBranch)
-    const userBranchId = id
+
+    const userBranchId = useSelector(getUserBranchId)
     const [deletedGroups, setDeletedGroups] = useState([])
     const [active, setActive] = useState(false);
     const [activeSwitch, setActiveSwitch] = useState(false)
@@ -44,7 +52,7 @@ export const GroupsPage = () => {
 
 
     const searchedUsers = useMemo(() => {
-        const filteredHeroes = isFilter ? getFilteredGroups?.slice() : data?.slice()
+        const filteredHeroes = getFilteredGroups?.slice()
         setCurrentPage(1)
 
 
@@ -59,11 +67,11 @@ export const GroupsPage = () => {
         setDeletedGroups(deletedGroupsData)
     }, [deletedGroupsData])
 
-    useEffect(() => {
-        if (userBranchId) {
-            dispatch(fetchGroupsData({userBranchId}))
-        }
-    }, [userBranchId])
+    // useEffect(() => {
+    //     if (userBranchId) {
+    //         dispatch(fetchGroupsDataWithFilter({userBranchId, deleted: activeSwitch}))
+    //     }
+    // }, [userBranchId, activeSwitch])
 
     const types = [
         {
@@ -73,58 +81,60 @@ export const GroupsPage = () => {
     ]
 
     return (
-            <div className={cls.deletedGroups}>
-                <div className={cls.mainContainer_filterPanelBox}>
-                    <Button
-                        status={"filter"}
-                        extraClass={cls.extraCutClassFilter}
-                        onClick={() => setActive(!active)}
-                        type={"filter"}
-                    >
-                        Filter
-                    </Button>
-                    {/*<Link to={"deletedGroups"}>*/}
-                        <Button
-                            type={"login"}
-                            status={"timeTable"}
-                            extraClass={cls.extraCutClassFilter}
-                            onClick={() => setActive(true)}
-                        >
-                            Time Table
-                        </Button>
-                    {/*</Link>*/}
-                </div>
-                {
-                    loading ? <DefaultPageLoader/> :
-                        <>
-                            <div className={cls.table}>
 
-                                <h2>{activeSwitch ? "Deleted Classes" : "Classes"}</h2>
-                                {activeSwitch ? <DeletedGroups currentTableData={currentTableData}/> : <GroupsList
-                                    currentTableData={currentTableData}
-                                />}
-                            </div>
-                            <Pagination
-                                setCurrentTableData={setCurrentTableData}
-                                users={searchedUsers}
-                                setCurrentPage={setCurrentPage}
-                                currentPage={currentPage}
-                                pageSize={PageSize}
-                                onPageChange={page => {
-                                    setCurrentPage(page)
-                                }}
-                                type={"custom"}
-                            />
-                        </>
-                }
-                <GroupsFilter
-                    setIsFilter={setIsFilter}
-                    activeSwitch={activeSwitch}
-                    setActiveSwitch={setActiveSwitch}
-                    setActive={setActive}
-                    active={active}
-                />
+        // <DynamicModuleLoader reducers={reducers}>
+        <div className={cls.deletedGroups}>
+            <div className={cls.mainContainer_filterPanelBox}>
+                <Button
+                    status={"filter"}
+                    extraClass={cls.extraCutClassFilter}
+                    onClick={() => setActive(!active)}
+                    type={"filter"}
+                >
+                    Filter
+                </Button>
+                {/*<Link to={"deletedGroups"}>*/}
+                <Button
+                    type={"login"}
+                    status={"timeTable"}
+                    extraClass={cls.extraCutClassFilter}
+                    onClick={() => setActive(true)}
+                >
+                    Time Table
+                </Button>
+                {/*</Link>*/}
             </div>
+
+            <div className={cls.table}>
+
+                <h2>{activeSwitch ? "Deleted Classes" : "Classes"}</h2>
+                {activeSwitch ? <DeletedGroups loadingWithFilter={loadingWithFilter} currentTableData={currentTableData}/> : <GroupsList
+                    loadingWithFilter={loadingWithFilter} currentTableData={currentTableData}
+                />}
+            </div>
+            <Pagination
+                setCurrentTableData={setCurrentTableData}
+                users={searchedUsers}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+                pageSize={PageSize}
+                onPageChange={page => {
+                    setCurrentPage(page)
+                }}
+                type={"custom"}
+            />
+
+
+            <GroupsFilter
+                setIsFilter={setIsFilter}
+                activeSwitch={activeSwitch}
+                setActiveSwitch={setActiveSwitch}
+                setActive={setActive}
+                active={active}
+            />
+        </div>
+        // {/*</DynamicModuleLoader>*/}
+
 
     )
 }

@@ -8,7 +8,7 @@ const getAuthToken = () => {
 };
 
 export const registerUser = createAsyncThunk(
-    'user/registerUser',
+    'userSlice/registerUser',
     async (userData, thunkAPI) => {
         const token = getAuthToken();
 
@@ -44,7 +44,7 @@ export const registerUser = createAsyncThunk(
 );
 
 export const registerTeacher = createAsyncThunk(
-    'user/registerTeacher',
+    'userSlice/registerTeacher',
     async ({res, file}, thunkAPI) => {
         const token = getAuthToken();
         // const formData = new FormData()
@@ -90,7 +90,7 @@ export const registerTeacher = createAsyncThunk(
 );
 
 export const registerTeacherImage = createAsyncThunk(
-    "user/registerTeacherImage",
+    "userSlice/registerTeacherImage",
     ({id, file}) => {
         const {request} = useHttp()
         const formData = new FormData()
@@ -100,7 +100,7 @@ export const registerTeacherImage = createAsyncThunk(
 )
 
 export const registerEmployer = createAsyncThunk(
-    'user/registerEmployer',
+    'userSlice/registerEmployer',
     async (employerData, thunkAPI) => {
         const token = getAuthToken();
 
@@ -136,7 +136,7 @@ export const registerEmployer = createAsyncThunk(
 );
 
 export const fetchCategories = createAsyncThunk(
-    "user/fetchCategories",
+    "userSlice/fetchCategories",
     (id) => {
         const {request} = useHttp()
 

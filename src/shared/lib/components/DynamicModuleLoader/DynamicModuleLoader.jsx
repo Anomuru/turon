@@ -11,10 +11,10 @@ export const DynamicModuleLoader = (props) => {
     useEffect(() => {
         const mountedReducers = store.reducerManager.getMountedReducers();
 
-        Object.entries(reducers).forEach(([name, reducer]) => {
+        Object?.entries(reducers)?.forEach(([name, reducer]) => {
             const mounted = mountedReducers[name ];
             if (!mounted) {
-                store.reducerManager.add(name, reducer);
+                store?.reducerManager?.add(name, reducer);
                 dispatch({ type: `@INIT ${name} reducer` });
             }
         });

@@ -1,3 +1,3 @@
 
 export const getSearchValue = (state) =>
-    state.searchSlice.search
+    state.searchSlice?.search

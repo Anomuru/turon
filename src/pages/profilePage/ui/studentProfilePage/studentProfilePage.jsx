@@ -30,7 +30,7 @@ import {
 import {
     fetchStudentProfileData,
     changeStudentProfileData,
-    changeStudentProfileImage, fetchClassNumberListStudentProfile, fetchLanguagesStudentProfile, fetchStudentCharity
+    changeStudentProfileImage, fetchStudentCharity
 } from "../../model/thunk/studentProfileThunk";
 import {
     getCharity,
@@ -38,11 +38,11 @@ import {
 } from "../../model/selector/studentProfileSelector";
 
 import cls from "./studentProfilePage.module.sass";
-import {getBranch} from "features/branchSwitcher";
-import {fetchStudentDebtorData, getMonthDataThunk} from "../../../../features/studentPayment/model/studentPaymentThunk";
-import {getMonth} from "../../../../features/studentPayment/model/selectors/selectors";
 
-import {getUserJob} from "entities/profile/userProfile";
+import {fetchStudentDebtorData, getMonthDataThunk} from "features/studentPayment/model/studentPaymentThunk.js";
+import {getMonth} from "features/studentPayment/model/selectors/selectors.js";
+
+import {getUserBranchId, getUserJob} from "entities/profile/userProfile";
 
 export const StudentProfilePage = () => {
 
@@ -52,7 +52,7 @@ export const StudentProfilePage = () => {
     const {id} = useParams()
     // const {id} = useSelector(getBranch)
 
-    const branch = useSelector(getBranch)
+    const branch = useSelector(getUserBranchId)
 
     const month = useSelector(getMonth)
 
@@ -92,14 +92,14 @@ export const StudentProfilePage = () => {
             dispatch(fetchStudentCharity(id))
             dispatch(fetchStudentDebtorData(id))
             // dispatch(fetchClassNumberListStudentProfile({branch: branch?.id}))
-            dispatch(fetchClassNumberData({branch: branch?.id}))
+            dispatch(fetchClassNumberData({branch: branch}))
             // dispatch(fetchLanguagesStudentProfile())
             dispatch(fetchLanguagesData())
             dispatch(getMonthDataThunk(id));
 
         }
 
-    }, [id ,branch?.id])
+    }, [id ,branch])
 
 
     // if (!userData || !userData.user) {

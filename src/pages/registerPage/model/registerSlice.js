@@ -7,7 +7,7 @@ import {
 } from "./registerThunk";
 
 export const userSlice = createSlice({
-    name: 'user',
+    name: 'userSlice',
     initialState: {
         user: null,
         status: 'idle',
@@ -66,4 +66,7 @@ export const userSlice = createSlice({
     },
 });
 
-export default userSlice.reducer;
+
+export const {reducer: userSliceReducer} = userSlice
+
+// export default userSlice.reducer;

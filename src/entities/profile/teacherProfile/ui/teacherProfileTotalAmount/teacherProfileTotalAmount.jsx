@@ -17,6 +17,7 @@ import bank from "shared/assets/images/Bank.png";
 import {fetchTeacherSalaryIdThunk, fetchTeacherSalaryThunk, getTeacherSalaries} from "../../../../teacherSalary";
 import {onAddAlertOptions} from "../../../../../features/alert/model/slice/alertSlice";
 import {getBranch} from "features/branchSwitcher";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 const listPretcent = [-1, 34.8, 70.4]
 
@@ -27,7 +28,7 @@ export const TeacherProfileTotalAmount = memo(({active, setActive, salary_id, us
     const [activePaymentType, setActivePaymentType] = useState(0)
     const [salary, setSalary] = useState(0);
 
-    const branch = useSelector(getBranch)
+    const branch = useSelector(getUserBranchId)
 
     const [payment, setPayment] = useState(1)
     const [comment, setComment] = useState('')
@@ -37,6 +38,7 @@ export const TeacherProfileTotalAmount = memo(({active, setActive, salary_id, us
 
 
     const handleAddSalary = async (data) => {
+        console.log("dasdsa")
         const newSalary = {
             salary: Number(salary),
             comment: comment,
@@ -44,7 +46,7 @@ export const TeacherProfileTotalAmount = memo(({active, setActive, salary_id, us
             payment: payment,
             teacher: user_id,
             date: data.date,
-            branch: branch.id,
+            branch: branch,
         };
         try {
             const action = await dispatch(giveTeacherSalaryThunk(newSalary));

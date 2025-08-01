@@ -44,6 +44,7 @@ export const Teachers = memo(({data, setSelect, select, theme, onClick , setActi
                         <td>{item?.age}</td>
                         <td>
                             <div
+                                key={i}
                                 className={item?.subject?.length ? cls.teacher__language : null}>{item?.subject?.map(item =>
                                 <p>{item?.name}</p>
                             )}</div>

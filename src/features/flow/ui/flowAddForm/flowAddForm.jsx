@@ -32,7 +32,7 @@ export const FlowAddForm = memo((props) => {
     } = useForm()
     const flows = useSelector(getFlows)
     const data = useSelector(getFlowsProfileData)
-    const userBranchId = useSelector(getUserBranchId)
+    const userBranchId = localStorage.getItem("branchId")
     const filteredStudents = useSelector(getFlowsProfileFilteredStudents)
 
     const [currentFilteredData, setCurrentFilteredData] = useState([])

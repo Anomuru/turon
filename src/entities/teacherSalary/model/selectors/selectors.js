@@ -7,4 +7,4 @@ export const getTeacherSalariesList = (state) =>
     state.teacherSalarySlice?.salaryDatas
 
 export const getTeacherSalaryLoading = (state) =>
-    state.teacherSalarySlice.loading
+    state.teacherSalarySlice?.loading

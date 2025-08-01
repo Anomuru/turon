@@ -2,11 +2,11 @@
 export const getTeacherId = (state) =>
     state.teacherParseSlice?.teacherId
 export const getLoading = (state) =>
-    state.teacherParseSlice?.loading
+    state.teacherParseSlice?.fetchTeacherStatus
 
 export const getTeacherStudent = (state) =>
-    state.teacherParseSlice.students
+    state.teacherParseSlice?.students
 
 export const getStudentLoading = (state) =>
-    state.teacherParseSlice.studentsLoading
+    state.teacherParseSlice?.studentsLoading
 

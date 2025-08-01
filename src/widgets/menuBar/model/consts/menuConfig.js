@@ -17,14 +17,14 @@ export const menuConfig = [
         to: "taskManager",
         name: "Task Manager",
         icon: "fa-tasks",
-        roles: [ROLES.operator ],
+        roles: [ROLES.operator , ROLES.admin],
     },
-    {
-        to: "adminTaskManager",
-        name: "Task Manager",
-        icon: "fa-tasks",
-        roles: [ROLES.admin]
-    },
+    // {
+    //     to: "adminTaskManager",
+    //     name: "Task Manager",
+    //     icon: "fa-tasks",
+    //     roles: [ROLES.admin]
+    // },
     {
         to: "calendar",
         name: "Kalendar",
@@ -39,15 +39,15 @@ export const menuConfig = [
         roles: [ROLES.admin,ROLES.director,ROLES.programmer],
         branches: true
     },
-    {
-        to: "groups",
-        name: "Guruhlar",
-        icon: "fa-users",
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
-        branches: true
-
-
-    },
+    // {
+    //     to: "groups",
+    //     name: "Guruhlar",
+    //     icon: "fa-users",
+    //     roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+    //     branches: true
+    //
+    //
+    // },
     {
         to: "groups",
         name: "Sinflar",

@@ -34,6 +34,7 @@ import cls from "./register.module.sass";
 import bg__img from 'shared/assets/images/reg__bg.svg';
 import {getBranch} from "../../../features/branchSwitcher";
 import {getUserProfileData} from "../../../entities/profile/userProfile";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
 const userstype = {
     types: [
@@ -49,12 +50,18 @@ const shift = [
     {id: 3, name: "hamma vaqt"}
 ]
 
+const initialState = {
+
+}
+
+
 export const Register = () => {
     const jobsData = useSelector(getVacancyJobs)
     const jobOptions = jobsData?.map(job => ({
         id: job.group.id,
         name: job.group.name
     })) || [];
+
 
 
     const subjects = useSelector(getSubjectsData)
@@ -93,7 +100,7 @@ export const Register = () => {
     const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
     const safeData = Array.isArray(subjects) ? subjects : [subjects];
     const [isDirector, setIsDirector] = useState("")
-    const branchID = useSelector(getBranch)
+    const branchID = localStorage.getItem("branchId")
     const user = useSelector(getUserProfileData)
     const subjectOptions = safeData?.map(subject => ({
         value: subject?.id,
@@ -124,10 +131,10 @@ export const Register = () => {
             dispatch(fetchSubjectsData())
 
             // dispatch(getClassTypes(id))
-            dispatch(fetchClassTypeData({branch: branchID.id}))
-            dispatch(fetchClassNumberData({branch: branchID.id}))
+            dispatch(fetchClassTypeData({branch: branchID}))
+            dispatch(fetchClassNumberData({branch: branchID}))
 
-            dispatch(fetchCategories(branchID.id))
+            dispatch(fetchCategories(branchID))
         }
 
         setValue("password", 12345678)
@@ -175,7 +182,9 @@ export const Register = () => {
 
 
     const onSubmit = (data) => {
-        // console.log(selectedClass, selectedLang ,data , "data")
+
+
+
         if (!isUsernameAvailable) {
             return;
         }
@@ -189,14 +198,14 @@ export const Register = () => {
                 ...data,
                 observer: true,
                 language: selectedLanguage?.id,
-                branch: branchID.id,
+                branch: branchID,
             },
         };
         let res2 = {
             ...data,
             observer: true,
             language: selectedLanguage?.id || "",
-            branch: branchID.id,
+            branch: branchID,
         };
 
         let registerAction;
@@ -294,6 +303,7 @@ export const Register = () => {
             });
         }
     };
+
 
 
     const renderFormFields = () => {
@@ -423,118 +433,121 @@ export const Register = () => {
     };
 
     return (
-        <div className={cls.login}>
-            <div className={cls.selection}>
-                <Select
-                    defaultValue="student"
-                    options={userstype.types}
-                    onChangeOption={(value) => setValue('registerType', value)}
-                />
-            </div>
-            <div className={cls.login__boxes}>
-                <div className={cls.login__boxes__login__box}>
-                    <h1 className={cls.login__boxes__box__headerTitle}>Registratsiya</h1>
-                    <div className={cls.login__boxes__box__form}>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <Input
-                                title={usernameMessage && <p className={cls.mess}>{usernameMessage}</p>}
-                                register={register}
-                                placeholder="Username"
-                                required
-                                extraClassName={cls.extraClasss}
-                                name={"username"}
-                            />
-                            <Input
-                                register={register}
-                                placeholder="Ism"
-                                required
-                                name={"name"}
-                            />
-                            <Input
-                                register={register}
-                                placeholder="Familiya"
-                                required
-                                name={"surname"}
-                            />
-                            <Input
-                                register={register}
-                                placeholder="Otasi ismi"
-                                required
-                                name={"father_name"}
-                            />
-                            {registerType === "student" ?
-                                <>
-                                    <div className={cls.seriya}>
-                                        <Input register={register}
-                                               name={"student_seria"}
-                                               placeholder={"seriya"}/>
-                                        <Input name={"student_seria_num"} register={register}
-                                               type={"number"} placeholder={"metrka raqami"}/>
-                                    </div>
-                                    <Input register={register} name={"old_school"}
-                                           placeholder={"kelgan maktabi"}/>
-                                    <Input register={register} name={"region"}
-                                           placeholder={"Xudud nomi"}/>
-                                    <Input register={register} name={"district"}
-                                           placeholder={"Tuman shaxar nomi"}/>
-                                </>
-                                :
-                                null
-                            }
-                            <Input
-                                register={register}
-                                placeholder="Parol"
-                                required
-                                type={"password"}
-                                name={"password"}
-                            />
-                            <Input
-                                register={register}
-                                placeholder="Tug'ilgan kun"
-                                type="date"
-                                required
-                                name={"birth_date"}
-                            />
-                            <Input
-                                register={register}
-                                placeholder="Telefon raqami"
-                                type="number"
-                                required
-                                name={"phone"}
-                            />
-
-                            {registerType === 'student' ?
+        <DynamicModuleLoader reducers={initialState}>
+            <div className={cls.login}>
+                <div className={cls.selection}>
+                    <Select
+                        defaultValue="student"
+                        options={userstype.types}
+                        onChangeOption={(value) => setValue('registerType', value)}
+                    />
+                </div>
+                <div className={cls.login__boxes}>
+                    <div className={cls.login__boxes__login__box}>
+                        <h1 className={cls.login__boxes__box__headerTitle}>Registratsiya</h1>
+                        <div className={cls.login__boxes__box__form}>
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <Input
+                                    title={usernameMessage && <p className={cls.mess}>{usernameMessage}</p>}
+                                    register={register}
+                                    placeholder="Username"
+                                    required
+                                    extraClassName={cls.extraClasss}
+                                    name={"username"}
+                                />
                                 <Input
                                     register={register}
-                                    placeholder="Ota-ona telefon raqami"
+                                    placeholder="Ism"
+                                    required
+                                    name={"name"}
+                                />
+                                <Input
+                                    register={register}
+                                    placeholder="Familiya"
+                                    required
+                                    name={"surname"}
+                                />
+                                <Input
+                                    register={register}
+                                    placeholder="Otasi ismi"
+                                    required
+                                    name={"father_name"}
+                                />
+                                {registerType === "student" ?
+                                    <>
+                                        <div className={cls.seriya}>
+                                            <Input register={register}
+                                                   name={"student_seria"}
+                                                   placeholder={"seriya"}/>
+                                            <Input name={"student_seria_num"} register={register}
+                                                   type={"number"} placeholder={"metrka raqami"}/>
+                                        </div>
+                                        <Input register={register} name={"old_school"}
+                                               placeholder={"kelgan maktabi"}/>
+                                        <Input register={register} name={"region"}
+                                               placeholder={"Xudud nomi"}/>
+                                        <Input register={register} name={"district"}
+                                               placeholder={"Tuman shaxar nomi"}/>
+                                    </>
+                                    :
+                                    null
+                                }
+                                <Input
+                                    register={register}
+                                    placeholder="Parol"
+                                    required
+                                    type={"password"}
+                                    name={"password"}
+                                />
+                                <Input
+                                    register={register}
+                                    placeholder="Tug'ilgan kun"
+                                    type="date"
+                                    required
+                                    name={"birth_date"}
+                                />
+                                <Input
+                                    register={register}
+                                    placeholder="Telefon raqami"
                                     type="number"
                                     required
-                                    name={"parents_phone"}
-                                /> : null
-                            }
-                            <Textarea
-                                register={register}
-                                placeholder="Kommentariya"
-                                name={"comment"}
-                            />
+                                    name={"phone"}
+                                />
 
-                            {renderFormFields()}
+                                {registerType === 'student' ?
+                                    <Input
+                                        register={register}
+                                        placeholder="Ota-ona telefon raqami"
+                                        type="number"
+                                        required
+                                        name={"parents_phone"}
+                                    /> : null
+                                }
+                                <Textarea
+                                    register={register}
+                                    placeholder="Kommentariya"
+                                    name={"comment"}
+                                />
 
-                            {loading ?
-                                <MiniLoader/> :
-                                <Button type={!isUsernameAvailable ? "disabled" : "submit"}
-                                        extraClass={cls.registerBtn}>
-                                    Register
-                                </Button>
-                            }
-                        </form>
+                                {renderFormFields()}
+
+                                {loading ?
+                                    <MiniLoader/> :
+                                    <Button type={!isUsernameAvailable ? "disabled" : "submit"}
+                                            extraClass={cls.registerBtn}>
+                                        Register
+                                    </Button>
+                                }
+                            </form>
+                        </div>
+                    </div>
+                    <div className={cls.login__aside}>
+                        <img className={cls.login__aside__img} src={bg__img} alt=""/>
                     </div>
                 </div>
-                <div className={cls.login__aside}>
-                    <img className={cls.login__aside__img} src={bg__img} alt=""/>
-                </div>
             </div>
-        </div>
+
+        </DynamicModuleLoader>
     );
 };
 

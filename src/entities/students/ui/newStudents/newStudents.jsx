@@ -9,7 +9,7 @@ import {ConfirmModal} from "shared/ui/confirmModal";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {onDeleteNewStudents} from "../../model/studentsSlice";
 
-export const NewStudents = memo(({currentTableData, setSelectStudents, theme, branchId}) => {
+export const NewStudents = memo(({currentTableData}) => {
 
     const [studentId, setStudentId] = useState(false)
     const [isDeleted, setIsDeleted] = useState(false)
@@ -22,17 +22,17 @@ export const NewStudents = memo(({currentTableData, setSelectStudents, theme, br
             <tr key={item.id}>
                 <td>{i + 1}</td>
                 <td onClick={() => navigation(`profile/${item.id}`)}>
-                    {
 
-                        `${item.user?.surname} ${item.user?.name}`
-                    }
+
+                    {item.user?.surname} {item.user?.name}
+
                 </td>
                 <td>
                     {item.user?.age}
 
                 </td>
                 <td>
-                    {item.deleted ? item.user?.language.name : item.user?.language}
+                    {item.deleted ? item.user?.language?.name : item?.user?.language}
                 </td>
                 <td>
                     {item?.class_number}-sinf

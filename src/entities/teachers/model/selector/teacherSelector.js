@@ -1,12 +1,14 @@
+
+
 export const getTeachers = (state) =>
-    state.teachers?.teachersData
+    state.teachersSlice?.teachersData
 
 
 
 export const getDeletedTeacher = (state) =>
-    state.teachers?.deletedTeachers
+    state.teachersSlice?.deletedTeachers
 export const getTeacherLoading = (state) =>
-    state.teachers?.loading
+    state.teachersSlice?.loading
 
 export const getTeachersWithFilter = (state) =>
-    state.teachers?.teachersDataWithFilter
+    state.teachersSlice?.teachersDataWithFilter

@@ -7,6 +7,7 @@ import {getEmployerCategoryData} from "entities/employer/model/selector/employer
 import {getEmployerCategory} from "entities/employer/model/slice/employerCategoryThunk";
 import {updateCategory} from "entities/employer/model/slice/employerCategory";
 import {getBranch} from "../../../../features/branchSwitcher";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 
 export const EmployerCategoryPage = ({extraClass}) => {
@@ -14,13 +15,13 @@ export const EmployerCategoryPage = ({extraClass}) => {
     const {register, handleSubmit, setValue} = useForm()
 
 
-    const branch = useSelector(getBranch)
+
     const employerCategory = useSelector(getEmployerCategoryData)
     const dispatch = useDispatch()
     const [edit, setEdit] = useState({})
     const {request} = useHttp()
 
-    const branchId = branch.id
+    const branchId = useSelector(getUserBranchId)
 
 
     useEffect(() => {

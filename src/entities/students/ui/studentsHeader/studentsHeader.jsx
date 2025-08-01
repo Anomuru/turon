@@ -14,7 +14,7 @@ import {getBranch} from "../../../../features/branchSwitcher";
 export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onClick}) => {
 
 
-    const {theme} = useTheme()
+
     const branchID = useSelector(getBranch)
 
     // const onClick = () => {
@@ -22,45 +22,25 @@ export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onC
     // }
     const navigate = useNavigate()
 
-    const renderCreateBtn = useCallback(() => {
-        // console.log("render header renderCreateBtn")
-        return theme === "app_school_theme"
-            ?
-            <>
-                <Button
-                    type={"filter"}
-                    extraClass={cls.extraCutClass}
-                    onClick={() => onClick("create")}
-                >
-                    Create Class
-                </Button>
-            </>
-            :
-            <Link to={":id/createGroup"}>
-                <Button
-                    type={"filter"}
-                    extraClass={cls.extraCutClass}
-                >
-                    Create group
-                </Button>
-            </Link>
-    }, [theme])
 
     return (
         <div className={cls.mainContainer}>
             <div className={cls.mainContainer_buttonPanelBox}>
                 <div className={cls.mainContainer_buttonPanelBox_leftCreateButton}>
-                    {renderCreateBtn()}
-                    {
-                        theme === "app_school_theme" ? <Button
+                    <Button
+                        type={"filter"}
+                        extraClass={cls.extraCutClass}
+                        onClick={() => onClick("create")}
+                    >
+                        Create Class
+                    </Button>
+                    <Button
                             onClick={() => onClick("add")}
                             type={"filter"}
                             extraClass={cls.noneBackground}
                         >
                             Add class
-                        </Button> : null
-                    }
-                    {/*<Link to={"./RGBData/12"}>*/}
+                        </Button>
                     <Button
                         onClick={() => navigate("RGBData")}
                         type={"filter"}
@@ -84,7 +64,7 @@ export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onC
                     Filter
                 </Button>
                 <a style={{color: "white"}}
-                   href={`${API_URL}Students/export-students/?branch=${branchID.id}&format=json`}>
+                   href={`${API_URL}Students/export-students/?branch=${branchID?.id}&format=json`}>
                     <Button type={"simple"}>
 
                         Exel

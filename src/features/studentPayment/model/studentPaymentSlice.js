@@ -447,4 +447,6 @@ const studentPaymentSlice = createSlice({
     }
 });
 export const {onChange, onDeleteDebtorData} = studentPaymentSlice.actions
-export default studentPaymentSlice.reducer
+// export default studentPaymentSlice.reducer
+
+export const {reducer: studentPaymentReducer} = studentPaymentSlice

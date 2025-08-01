@@ -1,9 +1,9 @@
 
 export const getCalendarData = (state) =>
-    state.calendarSlice.data
+    state.calendarSlice?.data
 
 export const getCalendarLoading = (state) =>
-    state.calendarSlice.loading
+    state.calendarSlice?.loading
 
 export const getCalendarInnerLoading = (state) =>
-    state.calendarSlice.innerLoading
+    state.calendarSlice?.innerLoading

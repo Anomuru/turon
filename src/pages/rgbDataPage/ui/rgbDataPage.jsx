@@ -10,11 +10,13 @@ import {getBranch} from "features/branchSwitcher";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 
 import cls from "./rgbDataPage.module.sass";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 export const RgbDataPage = () => {
 
     const dispatch = useDispatch()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
+
     const loading = useSelector(getRgbLoading)
 
     useEffect(() => {

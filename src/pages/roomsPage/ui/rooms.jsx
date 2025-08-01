@@ -30,10 +30,10 @@ export const Rooms = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const PageSize = useMemo(() => 50, []);
 
-    // useEffect(() => {
-    //     if (!userBranchId) return;
-    //     dispatch(fetchRoomsData({id: userBranchId}));
-    // }, [dispatch, userBranchId]);
+    useEffect(() => {
+        if (!userBranchId) return;
+        dispatch(fetchRoomsData({id: userBranchId}));
+    }, [dispatch, userBranchId]);
 
     const searchedRooms = useMemo(() => {
         const filteredRooms = roomsData?.filter(item => !item.deleted) || [];
@@ -46,6 +46,7 @@ export const Rooms = () => {
         );
     }, [roomsData, search]);
 
+    console.log(roomsData)
 
     return (
         <DynamicModuleLoader reducers={reducers}>

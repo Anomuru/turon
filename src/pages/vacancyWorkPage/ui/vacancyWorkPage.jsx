@@ -10,7 +10,7 @@ import {VacancyWorkerList} from "entities/vacancy/ui/vacancyWorkerList";
 import {VacancyWorkerPermission} from "features/vacancyModals/vacancyWorkerPermission";
 import {useSelector, useDispatch} from "react-redux";
 import {getWorkerId} from "features/vacancyModals/vacancyWorkPage/model";
-import {getUserProfileData} from "entities/profile/userProfile/model/userProfileSelector";
+import {getUserBranchId, getUserProfileData} from "entities/profile/userProfile/model/userProfileSelector";
 import {useParams} from "react-router-dom";
 import {getUserPermission} from "entities/profile/userProfile";
 import {vacancyWorkerListThunk} from "features/vacancyWorkerList";
@@ -33,7 +33,8 @@ export const VacancyWorkPage = () => {
     const PageSize = useMemo(() => 20, []);
     const getCurrentUser = useSelector(getUserProfileData)
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
+
 
 
     const user = useSelector(getUserProfileData)

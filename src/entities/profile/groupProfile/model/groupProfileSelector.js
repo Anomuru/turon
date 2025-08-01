@@ -1,37 +1,37 @@
 
 export const getGroupProfileData = (state) =>
-    state.groupProfileSlice.data
+    state.groupProfileSlice?.data
 
 export const getGroupProfileNextLsData = (state) =>
-    state.groupProfileSlice.nextLessonData
+    state.groupProfileSlice?.nextLessonData
 
 export const getGroupProfileLoading = (state) =>
-    state.groupProfileSlice.loading
+    state.groupProfileSlice?.loading
 
 export const getGroupProfileFilteredTeachers = (state) =>
-    state.groupProfileSlice.filteredTeachers
+    state.groupProfileSlice?.filteredTeachers
 
 export const getGroupProfileFilteredStudents = (state) =>
-    state.groupProfileSlice.filteredStudents
+    state.groupProfileSlice?.filteredStudents
 
 export const getReasons = (state) =>
-    state.groupProfileSlice.reasons
+    state.groupProfileSlice?.reasons
 
 export const getTimeTable = (state) =>
-    state.groupProfileSlice.timeTable
+    state.groupProfileSlice?.timeTable
 
 export const getFilteredGroups = (state) =>
-    state.groupProfileSlice.filteredGroups
+    state.groupProfileSlice?.filteredGroups
 
 export const getWeekDays = (state) =>
-    state.groupProfileSlice.weekDays
+    state.groupProfileSlice?.weekDays
 
 export const getStudyYears = (state) =>
-    state.groupProfileSlice.studyYears
+    state.groupProfileSlice?.studyYears
 export const getStudyMonths = (state) =>
-    state.groupProfileSlice.studyMonths
+    state.groupProfileSlice?.studyMonths
 export const getDebtStudents = (state) =>
-    state.groupProfileSlice.debtStudents
+    state.groupProfileSlice?.debtStudents
 
 
 // export const getGroupAttendance = (state) =>

@@ -1,4 +1,5 @@
-
+export const getTeacherLoading = (state) =>
+    state.flowFilterSlice.loading
 export const getTeacherId = (state) =>
     state.flowFilterSlice.teacherId
 

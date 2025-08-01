@@ -4,7 +4,7 @@ import Calendar from "react-calendar";
 import {useSelector} from "react-redux";
 import {getTaskManagerPercentage} from "features/taskManager/modal/taskManagerSelector";
 
-
+import 'react-calendar/dist/Calendar.css';
 
 export const TaskManagerRight = ({setSelectedDate , selectedDate}) => {
 
@@ -80,7 +80,7 @@ const CalendarItem = ({setSelectedDate , selectedDate}) => {
         <div style={{width: "100%" , justifyContent: "center" , display: "flex"}}>
             <Calendar
                 tileDisabled={({ date }) => date >= new Date()}
-                      onChange={setSelectedDate}
+                onChange={setSelectedDate}
                 value={selectedDate} maxDate={maxSelectableDate}
             />
         </div>

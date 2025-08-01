@@ -1,3 +1,3 @@
 
 export const getBooksData = (state) =>
-    state.studentProfileBooks.data
+    state.studentProfileBooks?.data

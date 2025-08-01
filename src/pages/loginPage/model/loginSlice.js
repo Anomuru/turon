@@ -21,6 +21,7 @@ export const loginSlice =createSlice({
             console.log(action.payload, "action.payload")
             sessionStorage.setItem('token', action.payload.access);
             sessionStorage.setItem('refresh_token', action.payload.refresh);
+
             if (action.payload.access) {
                 const decodedToken = jwtDecode(action.payload.access);
                 state.userId = decodedToken.user_id; // Bu yerda user_id ni olasiz
@@ -36,6 +37,7 @@ export const loginSlice =createSlice({
 
 
                 localStorage.setItem('user_id', decodedToken.user_id);
+
 
             }
 
@@ -92,6 +94,7 @@ export const loginSlice =createSlice({
                 }
                 state.loading = false
                 state.error = null
+
             })
             .addCase(userRefreshData.rejected, (state, action) => {
                 state.loading = false

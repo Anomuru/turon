@@ -1,4 +1,4 @@
 
 
 export const getEmployerCategoryData = (state) =>
-    state.employerCategorySlice.employerCategoryData
+    state.employerCategorySlice?.employerCategoryData

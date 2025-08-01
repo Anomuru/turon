@@ -64,9 +64,12 @@ export const Pagination = React.memo((props) => {
         onPageChange(currentPage - 1);
     };
 
-    let lastPage = paginationRange ? paginationRange[paginationRange.length - 1] : 1;
+    // let lastPage = paginationRange[paginationRange?.length - 1] ? paginationRange[paginationRange?.length - 1] : 1;
+
+
 
     const renderedPages = renderPageNumbers();
+
 
     return (
         <ul className={classNames(cls.pagination_container, { [className]: className })}>
@@ -86,7 +89,7 @@ export const Pagination = React.memo((props) => {
             <li
                 key={100001}
                 className={classNames(cls.pagination_item, cls.arrow, {
-                    [cls.disabled]: currentPage === lastPage
+                    // [cls.disabled]: currentPage === lastPage
                 })}
                 onClick={onNext}
             >

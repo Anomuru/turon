@@ -26,13 +26,13 @@ const initialState = {
     filteredByClassStudents: [],
     filteredByClass: "idle",
     newStudentsStatus: "idle",
-    studyingStudentsStatus: "idle",
+    studyingStudentsStatus: false,
     loading: false,
     error: null
 }
 
-export const studentsSlice = createSlice({
-    name: "newStudentsSlice",
+export const newStudents = createSlice({
+    name: "newStudents",
     initialState,
     reducers: {
         getFilteredStudentsStatus: (state) => {
@@ -68,15 +68,15 @@ export const studentsSlice = createSlice({
     extraReducers: builder =>
         builder
             .addCase(fetchOnlyNewStudentsData.pending, state => {
-                state.newStudentsStatus = "loading"
+                state.studyingStudentsStatus = true
             })
             .addCase(fetchOnlyNewStudentsData.fulfilled, (state, action) => {
                 state.newStudentes = action.payload
-                state.newStudentsStatus = "success"
+                state.studyingStudentsStatus = false
                 state.loading = false
             })
             .addCase(fetchOnlyNewStudentsData.rejected, (state, action) => {
-                state.newStudentsStatus = "error"
+                state.studyingStudentsStatus = false
             })
 
 
@@ -109,29 +109,29 @@ export const studentsSlice = createSlice({
 
 
             .addCase(fetchOnlyStudyingStudentsData.pending, state => {
-                state.studyingStudentsStatus = "loading"
+                state.studyingStudentsStatus = true
             })
             .addCase(fetchOnlyStudyingStudentsData.fulfilled, (state, action) => {
                 state.studyingStudents = action.payload
-                state.studyingStudentsStatus = "success"
+                state.studyingStudentsStatus = false
             })
             .addCase(fetchOnlyStudyingStudentsData.rejected, (state, action) => {
-                state.studyingStudentsStatus = "error"
+                state.studyingStudentsStatus = false
             })
 
 
 
             .addCase(fetchOnlyDeletedStudentsData.pending, state => {
-                state.loading = "loading"
+                state.studyingStudentsStatus = true
                 state.error = null
             })
             .addCase(fetchOnlyDeletedStudentsData.fulfilled, (state, action) => {
                 state.deletedStudents = action.payload
-                state.loading = false
+                state.studyingStudentsStatus = false
             })
             .addCase(fetchOnlyDeletedStudentsData.rejected, (state, action) => {
                 state.error = action.error.message
-                state.loading = false
+                state.studyingStudentsStatus = false
             })
 
 
@@ -199,9 +199,8 @@ export const studentsSlice = createSlice({
             })
 })
 
-export default studentsSlice.reducer
-export const {reducer: newStudentsReducer} = studentsSlice
-
+// export default studentsSlice.reducer
+export const {reducer: studentsReducer} = newStudents
 export const {
     getFilteredStudentsData,
     getFilteredStudentsStatus,
@@ -210,4 +209,4 @@ export const {
     stopFilteredStudentsLoading,
     onDeleteNewStudents,
     onDeleteGroupStudentBack
-} = studentsSlice.actions
+} = newStudents.actions

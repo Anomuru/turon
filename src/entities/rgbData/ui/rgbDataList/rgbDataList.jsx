@@ -11,7 +11,7 @@ export const RgbDataList = memo(() => {
     const data = useSelector(getRgbData)
 
     const renderRgbData = () => {
-        return data.map((item, index) => {
+        return data?.map((item, index) => {
             return (
                 <tr>
                     <td>{index+1}</td>

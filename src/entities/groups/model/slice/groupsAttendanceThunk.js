@@ -22,7 +22,7 @@ export const getAttendanceThunk  =createAsyncThunk(
 
 export const fetchGroupAttendend = createAsyncThunk(
     "groupAttendance/fetchGroupAttendend",
-    (id) => {
+    async (id) => {
         const {request} = useHttp()
         return request(`${API_URL}Attendance/attendance_list_school/${id}/`, "GET" , null , headers())
 

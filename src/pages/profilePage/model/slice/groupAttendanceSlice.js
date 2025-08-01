@@ -43,5 +43,6 @@ const groupAttendance = createSlice({
             })
 })
 
-export default groupAttendance.reducer
+// export default groupAttendance.reducer
 
+export const {reducer: groupAttendanceReducer} = groupAttendance

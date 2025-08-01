@@ -52,19 +52,19 @@ export const getBookPaymentsList = (state) =>
     state.studentPaymentSlice?.booksList
 
 export const getMonthData = (state) =>
-    state.studentPaymentSlice.getMonthData
+    state.studentPaymentSlice?.getMonthData
 
 
 
 export const getMonth = (state) =>
-    state.studentPaymentSlice.debtStudent
+    state.studentPaymentSlice?.debtStudent
 
 export const getCherityMonth = (state) =>
-    state.studentPaymentSlice.month
+    state.studentPaymentSlice?.month
 
 
 export const getCherityYear = (state) =>
-    state.studentPaymentSlice.year
+    state.studentPaymentSlice?.year
 
 export const getCherityYearMonth = (state) =>
-    state.studentPaymentSlice.yearMonth
+    state.studentPaymentSlice?.yearMonth

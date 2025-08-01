@@ -13,11 +13,11 @@ import {Modal} from "shared/ui/modal";
 import {fetchGroupAttendend, getAttendanceThunk} from "entities/groups/model/slice/groupsAttendanceThunk";
 import {useParams} from "react-router";
 import {API_URL, headers, useHttp} from "shared/api/base";
-import {DefaultPageLoader} from "../../../../shared/ui/defaultLoader";
-import {Form} from "../../../../shared/ui/form";
-import {Textarea} from "../../../../shared/ui/textArea";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {Form} from "shared/ui/form/index.js";
+import {Textarea} from "shared/ui/textArea/index.js";
 import {useForm} from "react-hook-form";
-import {getBranch} from "../../../../features/branchSwitcher";
+
 
 
 export const GroupAttendance = () => {
@@ -32,15 +32,15 @@ export const GroupAttendance = () => {
     const attendanceList = useSelector(getAttendanceList)
     const loading = useSelector(getLoading)
 
-    // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const {id} = useParams()
+    // const {id} = useSelector(getBranch)
 
     const dispatch = useDispatch()
     useEffect(() => {
         dispatch(fetchGroupAttendend(id))
     }, [])
 
-
+    console.log( attendanceList , "attendanceList")
     const checkTrueFalse = (data) => {
         if (data) {
             return data?.map(item => {

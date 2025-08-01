@@ -11,7 +11,7 @@ export const DeletedTeachers = ({data}) => {
 
     const renderTeacher = () => {
         return data?.map((item, i) => (
-            <tr>
+            <tr key={i}>
 
                 <td>{i + 1}</td>
                 <td onClick={() => navigation(`teacherProfile/${item.id}`)}>{item.name} {item.surname}</td>

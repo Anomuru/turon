@@ -18,8 +18,8 @@ const initialState = {
     error: null
 }
 
-const StudentProfileSlice = createSlice({
-    name: "studentProfile",
+const studentProfileSlice = createSlice({
+    name: "studentProfileSlice",
     initialState,
     reducers: {
         // onChange: (state, action) => {
@@ -107,4 +107,7 @@ const StudentProfileSlice = createSlice({
 })
 
 
-export default StudentProfileSlice.reducer
+// export default StudentProfileSlice.reducer
+
+
+export const {reducer: studentProfileReducer} = studentProfileSlice

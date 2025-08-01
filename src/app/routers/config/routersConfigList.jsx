@@ -20,6 +20,7 @@ import {
 
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
+import Register from "pages/registerPage/index.js";
 
 
 
@@ -156,10 +157,10 @@ export const routersConfigList = [
     //     element: <CategoryProfile/>
     // },
 
-    // {
-    //     name: "Registratsiya",
-    //     path: getRouteRegister(),
-    //     element: <Register/>,
-    // },
+    {
+        name: "Registratsiya",
+        path: getRouteRegister(),
+        element: <Register/>,
+    },
 
 ]

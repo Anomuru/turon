@@ -29,4 +29,6 @@ const rgbSlice = createSlice({
             })
 })
 
-export default rgbSlice.reducer
+// export default rgbSlice.reducer
+
+export const {reducer: rgbReducer} = rgbSlice

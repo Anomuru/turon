@@ -8,10 +8,10 @@ import {useNavigate} from "react-router";
 import {Table} from "shared/ui/table";
 
 import cls from "./deletedStudents.module.sass";
-import {API_URL, headers, useHttp} from "../../../../shared/api/base";
-import {ConfirmModal} from "../../../../shared/ui/confirmModal";
+import {API_URL, headers, useHttp} from "shared/api/base.js";
+import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 import {onDeleteGroupStudentBack} from "../../model/studentsSlice";
-import {onAddAlertOptions} from "../../../../features/alert/model/slice/alertSlice";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 
 
 export const DeletedStudents = ({currentTableData}) => {

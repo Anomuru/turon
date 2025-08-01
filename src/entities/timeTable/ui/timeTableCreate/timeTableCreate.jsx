@@ -54,7 +54,7 @@ export const TimeTableCreate = memo((props) => {
         >
             <Form
                 onSubmit={handleSubmit((data) => {
-                    onSubmit({...data, types: selectedCI.map(item => item.value)})
+                    onSubmit({...data, types: selectedCI?.map(item => item.value)})
                     reset()
                 })}
                 typeSubmit={""}

@@ -1,4 +1,4 @@
-import {getBranch} from "features/branchSwitcher";
+
 import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {TeacherFilter} from "features/filters/teacherFilter";
@@ -12,7 +12,7 @@ import {useTheme} from "shared/lib/hooks/useTheme";
 import {getTeachersWithFilter} from "entities/teachers";
 import {getTeacherLoading} from "entities/teachers";
 import {fetchTeachersData} from "entities/teachers";
-import {useParams} from "react-router-dom";
+
 import {API_URL, headers, useHttp} from "shared/api/base";
 
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
@@ -21,7 +21,14 @@ import {getDeletedTeacher} from "entities/teachers/model/selector/teacherSelecto
 
 import {EmployerCategoryPage} from "../../employeesPage";
 import {ConfirmModal} from "../../../shared/ui/confirmModal";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
+
+
+const reducers = {
+
+}
 
 export const TeachersPage = () => {
     const {theme} = useTheme()
@@ -31,15 +38,16 @@ export const TeachersPage = () => {
     const deletedTeacher = useSelector(getDeletedTeacher)
     const filteredTeachersData = useSelector(getTeachersWithFilter)
     const dispatch = useDispatch()
-    const {id} = useSelector(getBranch)
-    const userBranchId = id
+    const teacherStatus = localStorage.getItem("teacherStatus")
+    const userBranchId =   useSelector(getUserBranchId)
 
 
-    useEffect(() => {
-        if (!userBranchId) return;
-        dispatch(fetchTeachersData({userBranchId}))
 
-    }, [dispatch, userBranchId])
+    // useEffect(() => {
+    //     if (!userBranchId) return;
+    //     dispatch(fetchTeachersData({userBranchId}))
+    //
+    // }, [dispatch, userBranchId])
 
 
     let PageSize = useMemo(() => 30, [])
@@ -47,7 +55,7 @@ export const TeachersPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selected, setSelected] = useState()
     const [active, setActive] = useState()
-    const [activeSwitch, setActiveSwitch] = useState(false)
+    const [activeSwitch, setActiveSwitch] = useState(teacherStatus === "true" )
     const [activeDelete, setActiveDelete] = useState({})
     const [activeCategory, setActiveCategory] = useState(false)
 
@@ -57,7 +65,7 @@ export const TeachersPage = () => {
     const {request} = useHttp()
 
     const searchedUsers = useMemo(() => {
-        const filteredHeroes = isFilter ? filteredTeachersData.slice() : teachersData.slice()
+        const filteredHeroes =  filteredTeachersData?.slice()
         setCurrentPage(1)
         if (!search) return filteredHeroes
         return filteredHeroes.filter(item =>
@@ -68,7 +76,7 @@ export const TeachersPage = () => {
 
 
     const searchedUsersDel = useMemo(() => {
-        const filteredHeroes = isFilter ? filteredTeachersData.slice() : deletedTeacher.slice()
+        const filteredHeroes = isFilter ? filteredTeachersData?.slice() : deletedTeacher?.slice()
         setCurrentPage(1)
         if (!search) return filteredHeroes
         return filteredHeroes.filter(item =>
@@ -87,7 +95,7 @@ export const TeachersPage = () => {
         const id = activeDelete.id
         request(`${API_URL}Teachers/teachers/delete/${id}/`, "DELETE", null, headers())
             .then(res => {
-                if (res.status) {
+                if(res.status) {
                     dispatch(onDelete(id))
                 }
                 dispatch(onAddAlertOptions({
@@ -107,79 +115,81 @@ export const TeachersPage = () => {
     }
 
     return (
-        <>
-            <div className={cls.teacher}>
 
-                <div className={cls.teacher__filter}>
-                    {activeCategory ? null :
-                        <Button
-                            status={"filter"}
-                            extraClass={cls.extraCutClassFilter}
-                            onClick={() => setActive(!active)}
-                            type={"filter"}
-                        >
-                            Filter
-                        </Button>}
-                    <div className={cls.header_btn}>
+            <DynamicModuleLoader reducers={reducers}>
+                <div className={cls.teacher}>
+
+                    <div className={cls.teacher__filter}>
                         {activeCategory ? null :
-                            <Button type={"login"} status={"timeTable"}>
-                                time table
-                            </Button>
-                        }
-                        <Button extraClass={cls.category} type={"simple"}
-                                onClick={() => setActiveCategory(!activeCategory)}>Toifa</Button>
+                            <Button
+                                status={"filter"}
+                                extraClass={cls.extraCutClassFilter}
+                                onClick={() => setActive(!active)}
+                                type={"filter"}
+                            >
+                                Filter
+                            </Button>}
+                        <div className={cls.header_btn}>
+                            {activeCategory ? null :
+                                <Button type={"login"} status={"timeTable"}>
+                                    time table
+                                </Button>
+                            }
+                            <Button extraClass={cls.category} type={"simple"} onClick={() => setActiveCategory(!activeCategory)}>Toifa</Button>
+                        </div>
                     </div>
-                </div>
-                <div className={cls.table}>
+                    <div className={cls.table}>
 
-                    <h2>{activeCategory ? "Toifa " : activeSwitch ? "Deleted Teachers" : "Teachers"}</h2>
-                    {activeCategory ?
-                        <EmployerCategoryPage extraClass={cls.categoryItem}/>
-                        :
-                        activeSwitch ?
-                            <DeletedTeachers
-                                data={searchedUsersDel.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
-                                // data={teachersData}
-                                // data={searchedUsers}
-                            />
+                        <h2>{activeCategory ? "Toifa " : activeSwitch === true ? "Deleted Teachers" : "Teachers"}</h2>
+                        {activeCategory ?
+                            <EmployerCategoryPage extraClass={cls.categoryItem}/>
                             :
-                            <Teachers
+                            activeSwitch === true ?
+                                <DeletedTeachers
+                                    data={searchedUsersDel?.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+                                    // data={teachersData}
+                                    // data={searchedUsers}
+                                />
+                                :
+                                <Teachers
 
-                                setActiveDelete={setActiveDelete}
-                                setActiveModal={setActiveModal}
+                                    setActiveDelete={setActiveDelete}
+                                    setActiveModal={setActiveModal}
 
-                                // onClick={onClick}
-                                theme={theme === "app_school_theme"}
-                                loading={getTeacherLoading}
-                                data={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
-                                // data={currentTableData}
-                            />
-                    }
+                                    // onClick={onClick}
+                                    theme={theme === "app_school_theme"}
+                                    loading={getTeacherLoading}
+                                    data={searchedUsers?.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+                                    // data={currentTableData}
+                                />
+                        }
+                    </div>
+
+                    <Pagination
+                        setCurrentTableData={setCurrentTableData}
+                        users={activeSwitch ? searchedUsersDel : searchedUsers}
+                        search={search}
+                        setCurrentPage={setCurrentPage}
+                        currentPage={currentPage}
+                        pageSize={PageSize}
+                        onPageChange={page => {
+                            setCurrentPage(page)
+                        }}
+                        type={"custom"}
+                    />
+
+                    <TeacherFilter
+                        setIsFilter={setIsFilter}
+                        activeSwitch={activeSwitch}
+                        setActiveSwitch={setActiveSwitch}
+                        setActive={setActive}
+                        active={active}
+                    />
                 </div>
 
-                <Pagination
-                    setCurrentTableData={setCurrentTableData}
-                    users={activeSwitch ? searchedUsersDel : searchedUsers}
-                    search={search}
-                    setCurrentPage={setCurrentPage}
-                    currentPage={currentPage}
-                    pageSize={PageSize}
-                    onPageChange={page => {
-                        setCurrentPage(page)
-                    }}
-                    type={"custom"}
-                />
+                <ConfirmModal setActive={setActiveModal} active={activeModal} onClick={onClick}   type={"danger"}/>
+            </DynamicModuleLoader>
 
-                <TeacherFilter
-                    setIsFilter={setIsFilter}
-                    activeSwitch={activeSwitch}
-                    setActiveSwitch={setActiveSwitch}
-                    setActive={setActive}
-                    active={active}
-                />
-            </div>
 
-            <ConfirmModal setActive={setActiveModal} active={activeModal} onClick={onClick} type={"danger"}/>
-        </>
     )
 }

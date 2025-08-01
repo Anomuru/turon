@@ -10,12 +10,17 @@ import {Outlet, Route, Routes, useLocation, useNavigate, useParams} from "react-
 import {Leads} from "pages/taskManager/ui/leads/Leads";
 import {AnimatePresence, motion} from "framer-motion";
 import {LeadProfile} from "features/leadProfile";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
+
+const initialState ={
+
+}
 
 export const TaskManager = () => {
 
     const dispatch = useDispatch()
-    const {id} = useSelector(getBranch)
+    const id = localStorage.getItem("branchId")
 
     const [selectedDate, setSelectedDate] = useState(new Date())
 
@@ -29,20 +34,24 @@ export const TaskManager = () => {
 
 
     return (
-        <div className={cls.container}>
-            <div className={cls.box}>
-                <div className={cls.box__header}>
-                    <h1 className={cls.box__header_title}>
-                        My Projects
-                    </h1>
-                </div>
+        <DynamicModuleLoader reducers={initialState}>
 
-                <div className={cls.box__sides}>
-                    <TaskManagerLeft setTaskType={setTaskType} taskType={taskType} formatted={formatted}/>
-                    <TaskManagerRight selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+            <div className={cls.container}>
+                <div className={cls.box}>
+                    <div className={cls.box__header}>
+                        <h1 className={cls.box__header_title}>
+                            My Projects
+                        </h1>
+                    </div>
+
+                    <div className={cls.box__sides}>
+                        <TaskManagerLeft setTaskType={setTaskType} taskType={taskType} formatted={formatted}/>
+                        <TaskManagerRight selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+                    </div>
                 </div>
             </div>
-        </div>
+
+        </DynamicModuleLoader>
     );
 };
 

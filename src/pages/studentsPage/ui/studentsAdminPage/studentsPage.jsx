@@ -1,7 +1,7 @@
-import {getBranch, getBranches} from "features/branchSwitcher";
+
 import {ClassAddForm} from "features/classProfile";
 import {StudentCreateClass} from "features/studentCreateClass";
-import React, {memo, useCallback, useEffect, useMemo, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useState} from "react";
 
 import {useDispatch, useSelector} from "react-redux";
 
@@ -9,10 +9,6 @@ import {
     DeletedStudents,
     NewStudents,
     Students,
-    fetchClassColors,
-    fetchClassNumberList,
-    getSchoolClassNumbers,
-    getSchoolClassColors,
     fetchOnlyStudyingStudentsData,
     fetchOnlyDeletedStudentsData,
     getNewStudentsData,
@@ -31,17 +27,16 @@ import {Select} from "shared/ui/select";
 import {fetchTeachersData, getTeachers} from "entities/teachers";
 import {useForm} from "react-hook-form";
 import {
-    getLoadingDeletedStudents,
-    getLoadingNewStudents,
-    getLoadingStudyingStudents,
 
+    getLoadingStudyingStudents
 } from "entities/students/model/selector/studentsSelector";
 import {fetchStudentsByClass} from "entities/students/model/studentsThunk";
 import {Radio} from "shared/ui/radio";
 import {Input} from "shared/ui/input";
 import {useTheme} from "shared/lib/hooks/useTheme";
 import {getSearchValue} from "features/searchInput";
-import {useParams, useSearchParams} from "react-router-dom";
+
+import {useSearchParams} from "react-router-dom";
 
 import {useHttp} from "shared/api/base";
 import {
@@ -61,6 +56,9 @@ import {
 import cls from "./students.module.sass"
 import {getTeachersSelect} from "entities/oftenUsed/model/oftenUsedSelector";
 import {fetchTeachersForSelect} from "entities/oftenUsed/model/oftenUsedThunk";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import {studentsReducer} from "entities/students/model/studentsSlice.js";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 const studentsFilter = [
     {name: "new_students", label: "New Students"},
@@ -74,17 +72,18 @@ const branches = [
     {name: "xo'jakent"},
 ];
 
+
+const initialReducers = {
+    newStudents: studentsReducer
+};
+
 export const StudentsPage = () => {
 
-    // let newStudents
-
-    const {theme} = useTheme()
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams();
     const {register, handleSubmit} = useForm();
-    // const {"*": id} = useParams()
-    const {id} = useSelector(getBranch)
-    const userBranchId = id
+    const userBranchId = useSelector(getUserBranchId)
+
 
     const search = useSelector(getSearchValue);
     const schoolClassNumbers = useSelector(getClassNumberData);
@@ -94,11 +93,10 @@ export const StudentsPage = () => {
     const studyingStudents = useSelector(getStudyingStudents);
     const newStudents = useSelector(getNewStudentsData);
     const deletedStudents = useSelector(getOnlyDeletedStudents)
-    const loadingNewStudents = useSelector(getLoadingNewStudents);
-    const loadingStudyingStudents = useSelector(getLoadingStudyingStudents);
-    const loadingDeletedStudents = useSelector(getLoadingDeletedStudents);
+    const loadingStudents = useSelector(getLoadingStudyingStudents);
 
-    const [selectedColor , setSelectedColor] = useState(null)
+
+    const [selectedColor, setSelectedColor] = useState(null)
 
 
     const [selectedRadio, setSelectedRadio] = useState(getPageTypeFromLocalStorage("selectedRadio") || studentsFilter[0].name);
@@ -186,24 +184,25 @@ export const StudentsPage = () => {
     }
 
 
-    useEffect(() => {
-        // console.log("render fetch") ||
-        if (!userBranchId) return;
 
-        switch (selectedRadio) {
-            case "new_students":
-                dispatch(fetchOnlyNewStudentsData({userBranchId: userBranchId}));
-                break;
-            case "studying_students":
-                dispatch(fetchOnlyStudyingStudentsData({userBranchId: userBranchId}));
-                break;
-            case "deleted_students":
-                dispatch(fetchOnlyDeletedStudentsData({id: userBranchId}));
-                break;
-            default:
-                break;
-        }
-    }, [dispatch, selectedRadio, userBranchId]);
+    // useEffect(() => {
+    //     // console.log("render fetch") ||
+    //     if (!userBranchId) return;
+    //
+    //     switch (selectedRadio) {
+    //         case "new_students":
+    //             dispatch(fetchOnlyNewStudentsData({userBranchId: userBranchId}));
+    //             break;
+    //         case "studying_students":
+    //             dispatch(fetchOnlyStudyingStudentsData({userBranchId: userBranchId}));
+    //             break;
+    //         case "deleted_students":
+    //             dispatch(fetchOnlyDeletedStudentsData({id: userBranchId}));
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // }, [dispatch, selectedRadio, userBranchId]);
 
     useEffect(() => {
 
@@ -224,33 +223,28 @@ export const StudentsPage = () => {
         setSelectedRadio(value);
     };
 
-    // console.log(searchedUsers, "searchedUsers")
+
 
     const renderStudents = useCallback(() => {
-        // console.log(loadingNewStudents, "loadingNewStudents render renderStudents") //
-        // console.log(loadingDeletedStudents,"loadingDeletedStudents render renderStudents") //
-        // console.log(loadingStudyingStudents,"loadingStudyingStudents render renderStudents") //
-        // console.log(selectedRadio, "selectedRadio render renderStudents") //
-        // console.log(currentTableData, "currentTableData render renderStudents") //
         switch (selectedRadio) {
             case "new_students":
-                if (loadingNewStudents === "loading") return <DefaultPageLoader/>
+                if (loadingStudents === true) return <DefaultPageLoader/>
                 return (
                     <NewStudents
                         branchId={userBranchId}
-                        theme={theme === "app_school_theme"}
+
                         // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                         currentTableData={currentTableData}
                     />
                 );
             case "deleted_students":
-                if (loadingDeletedStudents === "loading") return <DefaultPageLoader/>
+                if (loadingStudents === true) return <DefaultPageLoader/>
                 return <DeletedStudents
                     // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                     currentTableData={currentTableData}
                 />;
             case "studying_students":
-                if (loadingStudyingStudents === "loading") return <DefaultPageLoader/>
+                if (loadingStudents === true) return <DefaultPageLoader/>
                 return <Students
                     // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                     currentTableData={currentTableData}
@@ -258,8 +252,9 @@ export const StudentsPage = () => {
             default:
                 return null;
         }
-    }, [loadingNewStudents, loadingDeletedStudents, loadingStudyingStudents, selectedRadio, currentTableData])
+    }, [loadingStudents, selectedRadio, currentTableData])
 
+    console.log(loadingStudents)
     const renderNewStudents = renderStudents()
 
 
@@ -283,7 +278,9 @@ export const StudentsPage = () => {
 
 
     return (
-        <>
+
+        <DynamicModuleLoader reducers={initialReducers}>
+
 
             <StudentsHeader
                 // selected={selected}
@@ -410,7 +407,8 @@ export const StudentsPage = () => {
                 data={data}
                 branch={userBranchId}
             />
-        </>
 
+
+        </DynamicModuleLoader>
     )
 }

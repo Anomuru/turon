@@ -1,7 +1,7 @@
 export const getAttendance = (state) =>
-    state.groupAttendanceSlice.attendance
+    state.groupAttendance?.attendance
 export const getAttendanceList = (state) =>
-    state.groupAttendanceSlice.attendanceList
+    state.groupAttendance?.attendanceList
 
 export const getLoading = (state) =>
-    state.groupAttendanceSlice.loading
+    state.groupAttendance?.loading

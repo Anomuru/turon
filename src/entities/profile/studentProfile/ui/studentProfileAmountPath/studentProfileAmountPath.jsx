@@ -3,7 +3,7 @@ import classNames from "classnames";
 import {useSelector, useDispatch} from "react-redux";
 import {EditableCard} from "shared/ui/editableCard";
 import {Table} from "shared/ui/table";
-import {getBooksData} from "../../model/selectors/booksSelector";
+
 import cls from "./studentProfileAmountPath.module.sass";
 import inTo from "shared/assets/images/inTo.png";
 import outTo from "shared/assets/images/out.png";
@@ -33,18 +33,18 @@ import {Input} from "shared/ui/input";
 import {useForm} from "react-hook-form";
 import {onChange, onDeleteDebtorData} from "features/studentPayment/model/studentPaymentSlice";
 import {ConfirmModal} from "../../../../../shared/ui/confirmModal";
-import {getBranch} from "../../../../../features/branchSwitcher";
+
+
 
 
 export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
     const pathArray = window.location.pathname.split('/');
     const lastId = pathArray[pathArray.length - 1];
-    const booksList = useSelector(getBooksData);
+    const booksList = useSelector(getBookPaymentsList);
     const bookPaymnetList = booksList.bookorders;
     const getTotalAmountData = useSelector(getPaymentList);
     const getDeletedLists = useSelector(getDeletedList);
     const getPaymentLists = useSelector(getDatasWithPost);
-    const getBookPayments = useSelector(getBookPaymentsList);
     const dispatch = useDispatch();
 
     const [changedData, setChangedData] = useState(null)
