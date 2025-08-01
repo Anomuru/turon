@@ -1,4 +1,4 @@
-import {accountingOtchotReducer} from "entities/accounting";
+import {accountingOtchotReducer, accountingReducer} from "entities/accounting";
 import {getUserBranchId} from "entities/profile/userProfile";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import cls from "./otchot.module.sass";
@@ -18,7 +18,8 @@ import {TeacherSalary} from "./otchotPages/teacherSalary";
 import {AllPages} from "./otchotPages/allPages";
 
 const reducers = {
-    otchotAccountingSlice: accountingOtchotReducer
+    otchotAccountingSlice: accountingOtchotReducer,
+    accountingSlice: accountingReducer,
 }
 
 export const AccountingOtchotPage = () => {
@@ -30,6 +31,8 @@ export const AccountingOtchotPage = () => {
     const dispatch = useDispatch()
     // const {id} = useParams()
     const id = useSelector(getUserBranchId)
+
+    console.log(getAccountingPage, "getAccountingPage")
 
     const navigate = useNavigate()
     const setPage = useCallback((e) => {

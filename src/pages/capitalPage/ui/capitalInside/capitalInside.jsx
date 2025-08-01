@@ -1,12 +1,14 @@
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {useNavigate, useParams} from "react-router";
 import React, {memo, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     CapitalInsideHeader,
     CapitalInsideProduct,
-    CapitalInsideSecond,
+    CapitalInsideSecond, capitalReducer,
     getCapitalInside, getCapitalTypes, getInsideCategory
 } from "entities/capital";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
 import cls from "./capitalInside.module.sass"
 import {getCapitalInsideInfo} from "entities/capital";
@@ -36,13 +38,16 @@ const capitalType = [
     {name: "subCategory", label: "Sub Category"},
 ]
 
+const reducers = {
+    capital: capitalReducer
+}
 
 export const CapitalInside = memo(() => {
 
     const dispatch = useDispatch()
     const {register, setValue, handleSubmit} = useForm()
     // const {id} = useParams()
-    const {id} = useSelector(getBranch)
+    const id = useSelector(getUserBranchId)
     const {request} = useHttp()
     const navigation = useNavigate()
     const capitalInside = useSelector(getCapitalInside)
@@ -50,13 +55,15 @@ export const CapitalInside = memo(() => {
     const paymentType = useSelector(getCapitalTypes)
 
     useEffect(() => {
-        dispatch(getCapitalInfo(id))
-        dispatch(getPaymentType())
-        dispatch(getInsideCategory(id))
+        if (id) {
+            dispatch(getCapitalInfo(id))
+            dispatch(getPaymentType())
+            dispatch(getInsideCategory(id))
+        }
 
 
         // dispatch(getBranchThunk())
-    }, [])
+    }, [id])
 
 
     const getCapitalInsideData = useSelector(getCapitalInsideInfo)
@@ -65,11 +72,10 @@ export const CapitalInside = memo(() => {
     // const branches = useSelector(getLocations)
 
 
-
     const [changeItem, setChangeItem] = useState({})
     const [changedImages, setChangedImages] = useState([])
     const [selectPayment, setSelectPayment] = useState()
-    const [capitalSelect , setSelectedCapital] = useState([])
+    const [capitalSelect, setSelectedCapital] = useState([])
 
 
     const [activeMenu, setActiveMenu] = useState(capitalType[0].name)
@@ -85,7 +91,7 @@ export const CapitalInside = memo(() => {
                 dispatch(onAddAlertOptions({
                     type: "success",
                     status: true,
-                    msg : res.msg
+                    msg: res.msg
                 }))
                 navigation(-2)
             })
@@ -133,36 +139,38 @@ export const CapitalInside = memo(() => {
     const capitalItemRender = capitalItem()
 
     return (
-        <div className={cls.capitalInside}>
-            <CapitalInsideHeader
-                activeMenu={activeMenu}
-                setActiveMenu={setActiveMenu}
-                categoryMenu={capitalType}
+        <DynamicModuleLoader reducers={reducers}>
+            <div className={cls.capitalInside}>
+                <CapitalInsideHeader
+                    activeMenu={activeMenu}
+                    setActiveMenu={setActiveMenu}
+                    categoryMenu={capitalType}
 
-            />
-            {
-                activeMenu === "category" ? capitalItemRender : <SubCategory/>
-            }
-
-
-            <AddCategoryModal
-                setSelectPayment={setSelectPayment}
-                register={register}
-                handleSubmit={handleSubmit}
-                onClick={onClick}
-                activeModal={activeModal}
-                setActiveModal={setActiveModal}
-                setChangedImages={setChangedImages}
-                changeItem={changeItem}
-                options={paymentType}
-                branches={branches}
-                setSelectedBranches={setSelectedBranches}
-            />
-            <EditModal register={register} handleSubmit={handleSubmit} onClick={onChange} editModal={editModal}
-                       setEditModal={setEditModal} setChangedImages={setChangedImages} changeItem={changeItem}/>
+                />
+                {
+                    activeMenu === "category" ? capitalItemRender : <SubCategory/>
+                }
 
 
-        </div>
+                <AddCategoryModal
+                    setSelectPayment={setSelectPayment}
+                    register={register}
+                    handleSubmit={handleSubmit}
+                    onClick={onClick}
+                    activeModal={activeModal}
+                    setActiveModal={setActiveModal}
+                    setChangedImages={setChangedImages}
+                    changeItem={changeItem}
+                    options={paymentType}
+                    // branches={branches}
+                    setSelectedBranches={setSelectedBranches}
+                />
+                <EditModal register={register} handleSubmit={handleSubmit} onClick={onChange} editModal={editModal}
+                           setEditModal={setEditModal} setChangedImages={setChangedImages} changeItem={changeItem}/>
+
+
+            </div>
+        </DynamicModuleLoader>
     );
 })
 

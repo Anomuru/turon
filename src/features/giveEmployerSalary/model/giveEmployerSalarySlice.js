@@ -32,5 +32,6 @@ const giveEmployerSalarySlices = createSlice({
 })
 
 export const {addSalary} = giveEmployerSalarySlices.actions
+export const {reducer: giveEmployerSalarysReducer} = giveEmployerSalarySlices
 
 export default giveEmployerSalarySlices.reducer;

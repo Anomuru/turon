@@ -1,3 +1,4 @@
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {useEffect, useState} from "react";
 import {AllTable} from "entities/accounting/ui/accountingOtchot/allTable";
 import {useDispatch, useSelector} from "react-redux";
@@ -8,11 +9,12 @@ import {getAllSelector} from "entities/accounting/model/selector/otchotAccountin
 export const AllPages = () => {
 
     const dispatch = useDispatch()
-    const branchId = useSelector(getBranch)
+    const branchId = useSelector(getUserBranchId)
     const all = useSelector(getAllSelector)
     useEffect(() => {
-        dispatch(getAll({branchId: branchId.id}))
-    }, [])
+        if (branchId)
+            dispatch(getAll({branchId}))
+    }, [branchId])
 
     const [month, setMonths] = useState(null)
 
