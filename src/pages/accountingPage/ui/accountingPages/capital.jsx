@@ -8,13 +8,13 @@ import {
 import {
     CapitalModal
 } from "entities/accounting/ui/acauntingTables/accountingTableCapitalCosts/capitalModal";
-import {getCapitalTypes} from "entities/capital";
+import {capitalReducer, getCapitalTypes} from "entities/capital";
 
 import {getMonthDays} from "entities/accounting/model/selector/additionalCosts";
 import {getMonthDay} from "entities/accounting/model/thunk/additionalCosts";
 import {useForm} from "react-hook-form";
 import {API_URL, headers, useHttp} from "shared/api/base";
-import {AccountingCapitalCosts, capitalListReducer} from "entities/accounting";
+import {AccountingCapitalCosts, capitalListReducer, overHeadReducer} from "entities/accounting";
 import {onAddCapital, onDeleteCapital} from "entities/accounting/model/slice/capital";
 
 import {
@@ -30,10 +30,12 @@ import {ConfirmModal} from "shared/ui/confirmModal";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 const reducers = {
-    capitalSlice: capitalListReducer
+    capitalSlice: capitalListReducer,
+    capital: capitalReducer,
+    overHeadSlice: overHeadReducer,
 }
 
-export const Capital = ({deleted , setDeleted }) => {
+export const Capital = ({deleted, setDeleted}) => {
     const capitalList = useSelector(getCapitalList)
     const capitalDeletedList = useSelector(getDeletedCapitalList)
     const dispatch = useDispatch()
@@ -50,12 +52,12 @@ export const Capital = ({deleted , setDeleted }) => {
 
     const {request} = useHttp()
     useEffect(() => {
-        dispatch(capitalListThunk(branchID))
-
-        dispatch(getMonthDay())
+        if (branchID) {
+            dispatch(capitalListThunk(branchID))
+            dispatch(getMonthDay())
+        }
         // dispatch(capitalDeletedListThunk())
-    }, [])
-
+    }, [branchID])
 
 
     const onAdd = (data) => {
@@ -82,8 +84,8 @@ export const Capital = ({deleted , setDeleted }) => {
                 }
 
                 dispatch(onAddCapital(data))
-                setValue("name" , "")
-                setValue("price" , "")
+                setValue("name", "")
+                setValue("price", "")
             })
             .catch(err => {
                 console.log(err)
@@ -115,15 +117,19 @@ export const Capital = ({deleted , setDeleted }) => {
     return (
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.overhead}>
-                <CapitalHeader deleted={deleted} setDeleted={setDeleted} setActive={setActiveModal} sum1={sum1} sum2={sum2} formatSalary={formatSalary}/>
-                {deleted ? <CapitalDeleted deleted={capitalDeletedList}/> : <AccountingCapitalCosts changingData={changingData} activeDelete={activeDelete}
-                                                                                                    setActiveDelete={setActiveDelete}
-                                                                                                    setChangingData={setChangingData}
-                                                                                                    onDelete={onDelete} capitalData={capitalList}/>}
+                <CapitalHeader deleted={deleted} setDeleted={setDeleted} setActive={setActiveModal} sum1={sum1}
+                               sum2={sum2} formatSalary={formatSalary}/>
+                {deleted ? <CapitalDeleted deleted={capitalDeletedList}/> :
+                    <AccountingCapitalCosts changingData={changingData} activeDelete={activeDelete}
+                                            setActiveDelete={setActiveDelete}
+                                            setChangingData={setChangingData}
+                                            onDelete={onDelete} capitalData={capitalList}/>}
                 <CapitalModal radioSelect={radio} setRadio={setRadio} register={register} onAdd={onAdd}
-                              handleSubmit={handleSubmit} monthDay={monthDay} setMonth={setMonth} setDay={setDay} day={day}
+                              handleSubmit={handleSubmit} monthDay={monthDay} setMonth={setMonth} setDay={setDay}
+                              day={day}
                               month={month} setActive={setActiveModal} activeModal={activeModal} radio={paymentType}/>
-                <ConfirmModal setActive={setActiveDelete} active={activeDelete} onClick={onDelete} title={`Rostanham ${changingData.name} ni o'chirmoqchimisiz `}   type={"danger"}/>
+                <ConfirmModal setActive={setActiveDelete} active={activeDelete} onClick={onDelete}
+                              title={`Rostanham ${changingData.name} ni o'chirmoqchimisiz `} type={"danger"}/>
                 {/*<YesNo activeDelete={activeDelete} setActiveDelete={setActiveDelete} onDelete={onDelete} changingData={changingData}/>*/}
             </div>
         </DynamicModuleLoader>

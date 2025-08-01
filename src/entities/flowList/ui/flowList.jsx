@@ -22,8 +22,8 @@ export const FlowList = memo(({flowList, number, onChangeSingle, onChangeAll, cu
         return flowList?.students?.map((item, i) => (
             <tr>
                 <td>{i + 1}</td>
-                <td>{item?.name} {item?.surname}</td>
-                <td>{item?.phone}</td>
+                <td>{item?.user?.name} {item?.user?.surname}</td>
+                <td>{item?.user?.phone}</td>
                 <td>
                     <div className={cls.flowList__container}>
                         <Input
@@ -56,7 +56,7 @@ export const FlowList = memo(({flowList, number, onChangeSingle, onChangeAll, cu
                 setBackOpen={setIsAccordion}
                 backOpen={isAccordion}
                 number={number + 1}
-                title={`${flowList?.class_number} ${flowList?.color}`}
+                title={`${flowList?.class_number.number} ${flowList?.color.name}`}
                 subtitle={
                     <Input
                         type={"checkbox"}

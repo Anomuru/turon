@@ -1,3 +1,4 @@
+import {getUserBranchId} from "entities/profile/userProfile";
 import cls from "../otchot.module.sass";
 import {Select} from "../../../../../shared/ui/select";
 import {PaymentTable, TeacherTable} from "../../../../../entities/accounting";
@@ -10,14 +11,13 @@ import {getSalary} from "../../../../../entities/accounting/model/selector/otcho
 export const TeacherSalary = ({formatSalary}) => {
 
     const dispatch = useDispatch()
-    const branchId = useSelector(getBranch)
-
-    const branchID = branchId.id
+    const branchId = useSelector(getUserBranchId)
 
     const teacherSalary = useSelector(getSalary)
     useEffect(() => {
-       dispatch(getTeacherSalary(branchID))
-    }, [])
+        if (branchId)
+       dispatch(getTeacherSalary(branchId))
+    }, [branchId])
 
     const [month, setMonths] = useState(null)
 

@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {FlowAddForm} from "features/flow";
 import {Pagination} from "features/pagination";
 import {getSearchValue} from "features/searchInput";
-import {getCurseLevelData, newStudentsReducer} from "entities/students";
+import {getCurseLevelData} from "entities/students";
 import {getCurseLevel} from "entities/students/model/studentsSlice";
 import {Flows, flowsReducer} from "entities/flows";
 import {fetchFlows} from "entities/flows";
@@ -21,7 +21,7 @@ import cls from "./flowsPage.module.sass"
 const reducers = {
     flowsSlice: flowsReducer,
     // teachers: teachersReducer,
-    newStudents: newStudentsReducer,
+    // newStudents: newStudentsReducer,
     // flowsProfileSlice: flowsProfileReducer
 }
 

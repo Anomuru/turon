@@ -14,7 +14,7 @@ import React, {useEffect, useState} from 'react';
 import classNames from "classnames";
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import defaultUserImg from "shared/assets/images/user_image.png";
 
@@ -35,8 +35,8 @@ import {getBranch} from "../../branchSwitcher";
 export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
 
     const {request} = useHttp()
-    // const {id} = useParams()
-    const id = useSelector(getUserBranchId)
+    const {id} = useParams()
+    // const id = useSelector(getUserBranchId)
     const dispatch = useDispatch()
     const {
         register,

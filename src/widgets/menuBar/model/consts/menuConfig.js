@@ -131,7 +131,7 @@ export const menuConfig = [
 
     },
     {
-        to: "accounting",
+        to: "accounting/studentsPayments",
         name: "Buxgalteriya ",
         icon: "fa-calculator",
         roles: [ROLES.admin,ROLES.director,ROLES.programmer],

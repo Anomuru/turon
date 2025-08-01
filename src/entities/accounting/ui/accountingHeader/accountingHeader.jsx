@@ -15,7 +15,7 @@ export const AccountingHeader = ({paymentType, setSelectedRadio, ot, to, setOt, 
                 <Input type={"date"} name={"do"} onChange={(e) => setTo(e.target.value)} value={to?.to}/>
             </div>
             <div className={cls.accounting__payment}>
-                {paymentType.map(item => (
+                {paymentType?.map(item => (
                     <Radio children={item.name} checked={radio === item.id} onChange={() => setSelectedRadio(item.id)}/>
                 ))}
             </div>

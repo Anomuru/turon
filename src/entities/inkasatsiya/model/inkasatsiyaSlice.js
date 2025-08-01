@@ -29,3 +29,5 @@ const inkasatsiyaSlice = createSlice({
 })
 
 export default inkasatsiyaSlice.reducer
+export const {reducer: inkasatsiyaReducer} = inkasatsiyaSlice
+

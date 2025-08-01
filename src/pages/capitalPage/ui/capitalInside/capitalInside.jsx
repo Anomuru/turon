@@ -1,4 +1,4 @@
-import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {getUserBranchId} from "entities/profile/userProfile";
 import {useNavigate, useParams} from "react-router";
 import React, {memo, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
@@ -32,7 +32,7 @@ import {getLocationThunk} from "../../../../entities/creates/model/createThunk/c
 import {onAddAlertOptions} from "../../../../features/alert/model/slice/alertSlice";
 import {SubCategory} from "../subCategory/subCategory";
 import {getBranch} from "../../../../features/branchSwitcher";
-import {getUserBranchId} from "entities/profile/userProfile/index.js";
+
 
 const capitalType = [
     {name: "category", label: "Category"},

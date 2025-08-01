@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import {FlowList} from "entities/flowList";
-import {fetchGroupsData, getGroupsListData, getGroupsLoading} from "entities/groups";
+import {getGroupsListData, getGroupsLoading} from "entities/groups";
 import {getUserBranchId} from "entities/profile/userProfile";
 import {getBranch} from "features/branchSwitcher";
 import {useDispatch, useSelector} from "react-redux";
