@@ -27,10 +27,8 @@ import {Select} from "shared/ui/select";
 import {fetchTeachersData, getTeachers} from "entities/teachers";
 import {useForm} from "react-hook-form";
 import {
-    getLoadingDeletedStudents,
-    getLoadingNewStudents,
-    getLoadingStudyingStudents,
 
+    getLoadingStudyingStudents
 } from "entities/students/model/selector/studentsSelector";
 import {fetchStudentsByClass} from "entities/students/model/studentsThunk";
 import {Radio} from "shared/ui/radio";
@@ -95,9 +93,8 @@ export const StudentsPage = () => {
     const studyingStudents = useSelector(getStudyingStudents);
     const newStudents = useSelector(getNewStudentsData);
     const deletedStudents = useSelector(getOnlyDeletedStudents)
-    const loadingNewStudents = useSelector(getLoadingNewStudents);
-    const loadingStudyingStudents = useSelector(getLoadingStudyingStudents);
-    const loadingDeletedStudents = useSelector(getLoadingDeletedStudents);
+    const loadingStudents = useSelector(getLoadingStudyingStudents);
+
 
     const [selectedColor, setSelectedColor] = useState(null)
 
@@ -231,7 +228,7 @@ export const StudentsPage = () => {
     const renderStudents = useCallback(() => {
         switch (selectedRadio) {
             case "new_students":
-                if (loadingNewStudents === "loading") return <DefaultPageLoader/>
+                if (loadingStudents === true) return <DefaultPageLoader/>
                 return (
                     <NewStudents
                         branchId={userBranchId}
@@ -241,13 +238,13 @@ export const StudentsPage = () => {
                     />
                 );
             case "deleted_students":
-                if (loadingDeletedStudents === "loading") return <DefaultPageLoader/>
+                if (loadingStudents === true) return <DefaultPageLoader/>
                 return <DeletedStudents
                     // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                     currentTableData={currentTableData}
                 />;
             case "studying_students":
-                if (loadingStudyingStudents === "loading") return <DefaultPageLoader/>
+                if (loadingStudents === true) return <DefaultPageLoader/>
                 return <Students
                     // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                     currentTableData={currentTableData}
@@ -255,8 +252,9 @@ export const StudentsPage = () => {
             default:
                 return null;
         }
-    }, [loadingNewStudents, loadingDeletedStudents, loadingStudyingStudents, selectedRadio, currentTableData])
+    }, [loadingStudents, selectedRadio, currentTableData])
 
+    console.log(loadingStudents)
     const renderNewStudents = renderStudents()
 
 

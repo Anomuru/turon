@@ -38,16 +38,16 @@ export const TeachersPage = () => {
     const deletedTeacher = useSelector(getDeletedTeacher)
     const filteredTeachersData = useSelector(getTeachersWithFilter)
     const dispatch = useDispatch()
-
+    const teacherStatus = localStorage.getItem("teacherStatus")
     const userBranchId =   useSelector(getUserBranchId)
 
 
 
-    useEffect(() => {
-        if (!userBranchId) return;
-        dispatch(fetchTeachersData({userBranchId}))
-
-    }, [dispatch, userBranchId])
+    // useEffect(() => {
+    //     if (!userBranchId) return;
+    //     dispatch(fetchTeachersData({userBranchId}))
+    //
+    // }, [dispatch, userBranchId])
 
 
     let PageSize = useMemo(() => 30, [])
@@ -55,7 +55,7 @@ export const TeachersPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selected, setSelected] = useState()
     const [active, setActive] = useState()
-    const [activeSwitch, setActiveSwitch] = useState(false)
+    const [activeSwitch, setActiveSwitch] = useState(teacherStatus === "true" )
     const [activeDelete, setActiveDelete] = useState({})
     const [activeCategory, setActiveCategory] = useState(false)
 
@@ -65,7 +65,7 @@ export const TeachersPage = () => {
     const {request} = useHttp()
 
     const searchedUsers = useMemo(() => {
-        const filteredHeroes = isFilter ? filteredTeachersData.slice() : teachersData.slice()
+        const filteredHeroes =  filteredTeachersData?.slice()
         setCurrentPage(1)
         if (!search) return filteredHeroes
         return filteredHeroes.filter(item =>
@@ -76,7 +76,7 @@ export const TeachersPage = () => {
 
 
     const searchedUsersDel = useMemo(() => {
-        const filteredHeroes = isFilter ? filteredTeachersData.slice() : deletedTeacher.slice()
+        const filteredHeroes = isFilter ? filteredTeachersData?.slice() : deletedTeacher?.slice()
         setCurrentPage(1)
         if (!search) return filteredHeroes
         return filteredHeroes.filter(item =>
@@ -140,11 +140,11 @@ export const TeachersPage = () => {
                     </div>
                     <div className={cls.table}>
 
-                        <h2>{activeCategory ? "Toifa " : activeSwitch ? "Deleted Teachers" : "Teachers"}</h2>
+                        <h2>{activeCategory ? "Toifa " : activeSwitch === true ? "Deleted Teachers" : "Teachers"}</h2>
                         {activeCategory ?
                             <EmployerCategoryPage extraClass={cls.categoryItem}/>
                             :
-                            activeSwitch ?
+                            activeSwitch === true ?
                                 <DeletedTeachers
                                     data={searchedUsersDel.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                                     // data={teachersData}

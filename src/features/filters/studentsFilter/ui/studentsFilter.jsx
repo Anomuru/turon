@@ -17,13 +17,14 @@ import {
 import cls from "../../filters.module.sass";
 import {fetchDeletedNewStudentsThunk} from "entities/students";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {Button} from "shared/ui/button/index.js";
 
 export const StudentsFilter = React.memo(({active, setActive, activePage, setIsFilter, branchId}) => {
     const lang = localStorage.getItem("selectedLang")
     const ageFrom = localStorage.getItem("ageFrom")
     const ageTo = localStorage.getItem("ageTo")
-    const [selectedAgeFrom, setSelectedAgeFrom] = useState(ageFrom)
-    const [selectedAgeTo, setSelectedAgeTo] = useState(ageTo)
+    const [selectedAgeFrom, setSelectedAgeFrom] = useState(ageFrom !== null ? ageFrom : "" )
+    const [selectedAgeTo, setSelectedAgeTo] = useState(ageTo !== null ? ageTo : "")
     const [selectedSubject, setSelectedSubject] = useState("all")
     const [selectedLang, setSelectedLanguage] = useState(lang)
     const [selectedClass, setSelectedClass] = useState("all")
@@ -37,7 +38,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, setIsF
     const userBranchId = localStorage.getItem("branchId")
 
 
-
+    console.log(ageFrom , ageTo)
 
    useEffect(() => {
 
@@ -158,7 +159,12 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, setIsF
                             onBlur={handleAgeToBlur}
                             defaultValue={selectedAgeTo}
                         />
+
                     </div>
+                    <Button type={"danger"} onClick={() => {
+                        setSelectedAgeTo(null)
+                        setSelectedAgeFrom(null)
+                    }}>Clear (Yoshlarni tozalash)</Button>
                     <Select
                         title={"Til"}
                         options={[{name: "Hamma", id: "all"}, ...languages]}

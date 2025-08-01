@@ -2,6 +2,10 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {API_URL, branchQuery, headers, useHttp} from "shared/api/base";
 
 
+const renderItem = ({subjId , fromAge , untilAge , langId , switchItem}) => {
+    return `${subjId ? `&subject=${subjId}` : ""}${fromAge !== null && untilAge !== null ? `&age=${fromAge}-${untilAge}` : ""}${langId ? `&language=${langId}` : ""}&deleted=${switchItem === true ? "True" : "False"}`
+}
+
 export const fetchTeachersData = createAsyncThunk(
     "teachersSlice/fetchTeachersData",
     async ({userBranchId}) =>{
@@ -21,9 +25,9 @@ export const fetchDeletedTeachersData = createAsyncThunk(
 
 export const fetchTeachersDataWithFilter = createAsyncThunk(
     "teachersSlice/fetchTeachersDataWithFilter",
-    async ({userBranchId, fromAge, untilAge, subjId, langId , branchId}) =>{
+    async ({userBranchId, fromAge, untilAge, subjId, langId , switchItem}) =>{
         const {request} = useHttp()
-        return await request(`${API_URL}Teachers/teachers/?subject=${subjId}&age=${fromAge}-${untilAge}&language=${langId}&branch=${branchId}` , "GET" , null , headers())
+        return await request(`${API_URL}Teachers/teachers/?branch=${userBranchId}${renderItem({untilAge , subjId , fromAge , langId , switchItem})}` , "GET" , null , headers())
     }
 )
 

@@ -16,35 +16,65 @@ import cls from "../../filters.module.sass";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchDeletedTeachersData, fetchTeachersDataWithFilter} from "entities/teachers/model/teacherThunk";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {Button} from "shared/ui/button/index.js";
 
 export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setActiveSwitch , activeSwitch}) => {
+
+    const teacherAgeTo = localStorage.getItem("teacherAgeTo")
+    const teacherAgeFrom = localStorage.getItem("teacherAgeFrom")
+    const teacherLanguage = localStorage.getItem("teacherLanguage")
+    const teacherSubject = localStorage.getItem("teacherSubject")
+
 
     const dispatch = useDispatch()
     const languages = useSelector(getLanguagesData)
     const subjects = useSelector(getSubjectsData)
-    const [selectedAgeFrom, setSelectedAgeFrom] = useState()
-    const [selectedAgeTo, setSelectedAgeTo] = useState()
-    const [selectedSubject, setSelectedSubject] = useState("all")
-    const [selectedLanguage, setSelectedLanguage] = useState("all")
+    const [selectedAgeFrom, setSelectedAgeFrom] = useState(teacherAgeFrom)
+    const [selectedAgeTo, setSelectedAgeTo] = useState(teacherAgeTo)
+    const [selectedSubject, setSelectedSubject] = useState(teacherSubject)
+    const [selectedLanguage, setSelectedLanguage] = useState(teacherLanguage)
     const {"*": id} = useParams()
-    const branchId = useSelector(getUserBranchId)
+    const branchId = localStorage.getItem("branchId")
 
-    function fetchTeachers(sub, lang, from, to) {
+    //
+    // useEffect(() => {
+    //     if (selectedAgeFrom === null) {
+    //         setSelectedAgeFrom("")
+    //
+    //     }
+    //     if (selectedAgeTo === null) {
+    //         setSelectedAgeTo("")
+    //     }
+    // } , [selectedAgeFrom  ,selectedAgeTo])
+
+    localStorage.setItem("teacherAgeTo" , selectedAgeTo)
+    localStorage.setItem("teacherAgeFrom" , selectedAgeFrom)
+    localStorage.setItem("teacherLanguage" , selectedLanguage)
+    localStorage.setItem("teacherSubject" , selectedSubject)
+    localStorage.setItem("teacherStatus" , `${activeSwitch}`)
+
+    // useEffect(() => {
+    //     if (activeSwitch)
+    //         setActiveSwitch(activeSwitch)
+    // }, [activeSwitch])
+
+    useEffect(() => {
         dispatch(fetchTeachersDataWithFilter({
-            subjId: sub,
-            langId: lang,
-            untilAge: to,
-            fromAge: from,
-            branchId: branchId
+            subjId: selectedSubject,
+            langId: selectedLanguage,
+            untilAge: selectedAgeTo,
+            fromAge: selectedAgeFrom,
+            userBranchId: branchId,
+            switchItem: activeSwitch
         }))
         setIsFilter(true)
-    }
+    } , [selectedSubject , selectedAgeFrom , selectedAgeTo , selectedLanguage , activeSwitch])
 
     const onSelectSubject = (value) => {
         if (value !== selectedSubject) {
 
             setSelectedSubject(value);
-            fetchTeachers(value, selectedLanguage, selectedAgeFrom, selectedAgeTo)
+
         }
         // const selectedSubjectData = subjects.find(subj => subj.id === Number(value));
         // const subjectId = selectedSubjectData.id;
@@ -58,7 +88,7 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
         if (value !== selectedLanguage) {
 
             setSelectedLanguage(value);
-            fetchTeachers(selectedSubject, value, selectedAgeFrom, selectedAgeTo)
+
         }
         // const selectedLanguageData = languages.find(lang => lang.id === Number(value));
         // const languageId = selectedLanguageData.id
@@ -67,35 +97,21 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
 
     }
 
-    const handleAgeFromBlur = (e) => {
-        // if (e)
-        setSelectedAgeFrom(e.target.value);
-        fetchTeachers(selectedSubject, selectedLanguage, e.target.value, selectedAgeTo)
-        // dispatch(fetchTeachersDataWithFilter({ fromAge: e.target.value, untilAge: selectedAgeTo }))
 
 
-    }
 
-    const handleAgeToBlur = (e) => {
-        setSelectedAgeTo(e.target.value);
-        fetchTeachers(selectedSubject, selectedLanguage, selectedAgeFrom, e.target.value)
-        // dispatch(fetchTeachersDataWithFilter({ fromAge: selectedAgeFrom, untilAge: e.target.value }))
-    }
 
-    const onGetDelete = (value) => {
-        setActiveSwitch(value)
-        dispatch(fetchDeletedTeachersData({userBranchId: branchId}))
-    }
 
-    // const onChangeSwitch =() =>{
-    //     setActiveSwitch(!activeSwitch)
-    // }
+
+
 
     useEffect(() => {
         // dispatch(fetchSubjects())
         dispatch(fetchSubjectsData())
         dispatch(fetchLanguagesData())
     }, []);
+
+
 
     return (
         <Modal
@@ -110,6 +126,7 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
                         title={"Fan"}
                         options={[{name: "All" , id: "all"} , ...subjects]}
                         extraClass={cls.filter__select}
+                        defaultValue={teacherSubject}
                         onChangeOption={(value) => onSelectSubject(value)}
                     />
 
@@ -119,7 +136,8 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
                             extraClassName={cls.filter__input}
                             placeholder={"Yosh (От)"}
                             onChange={(e) => setSelectedAgeFrom(e.target.value)}
-                            onBlur={handleAgeFromBlur}
+                            // onBlur={handleAgeFromBlur}
+                            value={selectedAgeFrom}
                             defaultValue={selectedAgeFrom}
                         />
                         <Input
@@ -127,15 +145,23 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
                             extraClassName={cls.filter__input}
                             placeholder={"Yosh (До)"}
                             onChange={(e) => setSelectedAgeTo(e.target.value)}
-                            onBlur={handleAgeToBlur}
+                            // onBlur={handleAgeToBlur}
+                            value={selectedAgeTo}
                             defaultValue={selectedAgeTo}
                         />
                     </div>
+                    <Button onClick={() => {
+                        setSelectedAgeTo("")
+                        setSelectedAgeFrom("")
+                    }} type={"danger"}>
+                        Clear (Yoshlarni tozalash (ot do ) )
+                    </Button>
 
                     <Select
                         title={"Til"}
-                        options={languages}
+                        options={[{name: "Hammasi" , id: "all"} ,  ...languages ]}
                         extraClass={cls.filter__select}
+                        defaultValue={teacherLanguage}
                         onChangeOption={(value) => onSelectLanguage(value)}
                     />
 
@@ -143,7 +169,7 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
 
                     <div className={cls.filter__switch}>
                         <p>O’chirilgan</p>
-                        <Switch onChangeSwitch={onGetDelete} activeSwitch={activeSwitch}/>
+                        <Switch onChangeSwitch={setActiveSwitch} activeSwitch={activeSwitch}/>
                     </div>
 
                 </div>

@@ -34,7 +34,7 @@ import {
 import {fetchRoomsData} from "entities/rooms";
 import {fetchClassColors, fetchClassNumberList} from "entities/students";
 import {fetchTeachersData} from "entities/teachers";
-import {fetchGroupsData} from "entities/groups";
+
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import {
@@ -81,7 +81,6 @@ export const GroupProfilePage = () => {
 
     useEffect(() => {
         if (branch) {
-            dispatch(fetchGroupsData({userBranchId: branch}))
             dispatch(fetchClassNumberData({branch}))
             dispatch(fetchRoomsData({id: branch}))
             dispatch(fetchTeachersData({userBranchId: branch}))

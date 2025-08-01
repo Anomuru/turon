@@ -1,16 +1,16 @@
 
 export const getUserData = (state) =>
-    state.studentProfile.data
+    state.studentProfileSlice?.data
 
 
 export const getStudentProfileClasses = (state) =>
-    state.studentProfile.classes
+    state.studentProfileSlice?.classes
 
 
 
 export const getStudentProfileLanguages = (state) =>
-    state.studentProfile.languages
+    state.studentProfileSlice?.languages
 
 
 export const getCharity  = (state) =>
-    state.studentProfile.charity
+    state.studentProfileSlice?.charity

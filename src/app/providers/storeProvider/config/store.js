@@ -23,6 +23,8 @@ import {employerCategoryReducer, employerCategorySlice} from "entities/employer/
 import {searchReducer} from "features/searchInput";
 import {rgbReducer} from "entities/rgbData/model/rgbDataSlice.js";
 import {roomsReducer} from "entities/rooms/index.js";
+import {studentPaymentReducer} from "features/studentPayment/model/studentPaymentSlice.js";
+import {studentProfileReducer} from "pages/profilePage/model/slice/studentProfileSlice.js";
 
 
 export function createReduxStore(
@@ -52,6 +54,8 @@ export function createReduxStore(
         employerCategorySlice: employerCategoryReducer,
         rgbSlice: rgbReducer,
         roomsSlice: roomsReducer,
+        studentPaymentSlice: studentPaymentReducer,
+        studentProfileSlice: studentProfileReducer
 
 
 

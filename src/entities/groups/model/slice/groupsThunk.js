@@ -3,19 +3,17 @@ import {API_URL, branchQuery, headers, useHttp} from "shared/api/base";
 
 
 
-export const fetchGroupsData = createAsyncThunk(
-    "groupsSlice/fetchGroupsData",
-    async({userBranchId , deleted})  =>{
-        const {request} = useHttp()
-        return await request(`${API_URL}Group/classes/?branch=${userBranchId}`, "GET", null, headers())
-    }
-)
+
+
+
+
+
 
 export const fetchGroupsDataWithFilter = createAsyncThunk(
     "groupsSlice/fetchGroupsDataWithFilter",
     async({userBranchId, teacherId, subjId, typeId, fromId, untilId , deleted})  =>{
         const {request} = useHttp()
-        return await request(`${API_URL}Group/classes/?branch=${userBranchId}&teacher=${teacherId}&subject=${subjId}&course_types=${typeId}&created_date=${fromId}-${untilId}&deleted=${deleted ? "True" : "False"}`, "GET", null, headers())
+        return await request(`${API_URL}Group/classes/?branch=${userBranchId}${teacherId ? `&teacher=${teacherId}` : ""}&deleted=${deleted ? "True" : "False"}`, "GET", null, headers())
     }
 )
 

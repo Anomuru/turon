@@ -36,7 +36,7 @@ export const fetchOnlyStudyingStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyStudyingStudentsData',
     async ({subjId, fromAge, untilAge, langId,userBranchId}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/active-students/?subject=${subjId}&age=${fromAge}-${untilAge}${langId === "all" ? "" : `&language=${langId}`}&branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Students/active-students/?${renderItem({subjId , fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
     }
 )
 
@@ -44,7 +44,7 @@ export const fetchOnlyDeletedStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyDeletedStudentsData',
     async ({subjId, fromAge, untilAge, langId,userBranchId }) => {
         const {request} = useHttp();
-        return await request(`${API_URL}Students/deleted-group-students/?subject=${subjId}&age=${fromAge}-${untilAge}${langId === "all" ? "" : `&language=${langId}`}&branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Students/deleted-group-students/?${renderItem({subjId , fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
     }
 )
 

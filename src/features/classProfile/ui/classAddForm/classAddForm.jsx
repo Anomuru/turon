@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import {fetchGroupsData, getGroupsListData} from "entities/groups";
+// import {fetchGroupsData, getGroupsListData} from "entities/groups";
 import {
     changeGroupProfile,
     fetchFilteredStudentsAndTeachers,

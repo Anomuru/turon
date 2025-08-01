@@ -24,13 +24,14 @@ import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 
 
 const ClassProfilePage = lazyPage(() => import("pages/School"), "ClassProfilePage");
-
+// const StudentProfilePage = lazyPage(() => import("pages/profilePage" , "StudentProfilePage"));
 const GroupCreatePage = lazyPage(() => import("pages/groupsPage"), "GroupCreatePage");
+const StudentProfilePage = lazyPage(() => import("pages/profilePage"), "StudentProfilePage");
 const GroupAttendance = lazyPage(() => import("pages/groupsPage"), "GroupAttendance");
 
 const ProfileTeacherPage = lazyPage(() => import("pages/profilePage"), "ProfileTeacherPage");
 const UserProfilePage = lazyPage(() => import("pages/profilePage"), "UserProfilePage");
-const ProfileEmployerPage = lazyPage(() => import("pages/profilePage"), "ProfileEmployerPage");
+const ProfileEmployerPage = lazyPage(() => import("pages/profilePage"), " ProfileEmployerPage");
 const GroupProfilePage = lazyPage(() => import("pages/profilePage"), "GroupProfilePage");
 
 const VacancyWorkPage = lazyPage(() => import("pages/vacancyWorkPage"), "VacancyWorkPage");
@@ -61,7 +62,7 @@ const AdminTaskManager = lazyPage(() => import("pages/adminTaskManager"), "Admin
 
 const FilteredLeadsPage = React.lazy(() => import("pages/filteredLeadsPage/ui/FilteredLeadsPage"));
 
-const StudentProfilePage = lazyPage(() => import("pages/profilePage")); // ⬅️ this is default export
+
 
 
 export const routersConfigProfile = [

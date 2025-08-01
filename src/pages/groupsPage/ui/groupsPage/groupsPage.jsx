@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {GroupsList} from "entities/groups/groups/ui/groupsList";
 import {
     getGroupsListData,
-    fetchGroupsData,
+
     getDeletedGroupsData,
     DeletedGroups,
     getGroupsLoading, getGroupListWithFilter, fetchGroupsDataWithFilter
@@ -67,11 +67,11 @@ export const GroupsPage = () => {
         setDeletedGroups(deletedGroupsData)
     }, [deletedGroupsData])
 
-    useEffect(() => {
-        if (userBranchId) {
-            dispatch(fetchGroupsDataWithFilter({userBranchId, deleted: activeSwitch}))
-        }
-    }, [userBranchId, activeSwitch])
+    // useEffect(() => {
+    //     if (userBranchId) {
+    //         dispatch(fetchGroupsDataWithFilter({userBranchId, deleted: activeSwitch}))
+    //     }
+    // }, [userBranchId, activeSwitch])
 
     const types = [
         {

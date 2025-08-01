@@ -21,10 +21,7 @@ import {
     getFilteredTeachers,
     getNewStudentsData
 } from "entities/students/model/selector/studentsSelector";
-import {
-    fetchFilteredStudents,
-    fetchNewStudentsData
-} from "entities/students/model/studentsThunk";
+
 import {
     getCurseLevel,
     getCurseTypes,
