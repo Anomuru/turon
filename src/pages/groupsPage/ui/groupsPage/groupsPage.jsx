@@ -31,6 +31,8 @@ const reducers = {
 }
 export const GroupsPage = () => {
 
+    const selectedSwitch = localStorage.getItem("selectedSwitch")
+
     const dispatch = useDispatch()
     const data = useSelector(getGroupsListData)
     const getFilteredGroups = useSelector(getGroupListWithFilter)
@@ -42,7 +44,7 @@ export const GroupsPage = () => {
     const userBranchId = useSelector(getUserBranchId)
     const [deletedGroups, setDeletedGroups] = useState([])
     const [active, setActive] = useState(false);
-    const [activeSwitch, setActiveSwitch] = useState(false)
+    const [activeSwitch, setActiveSwitch] = useState(selectedSwitch === "true")
     const [isFilter, setIsFilter] = useState(false)
     const search = useSelector(getSearchValue)
     let PageSize = useMemo(() => 50, [])

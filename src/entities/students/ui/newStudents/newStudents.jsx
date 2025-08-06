@@ -8,6 +8,7 @@ import {useDispatch} from "react-redux";
 import {ConfirmModal} from "shared/ui/confirmModal";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {onDeleteNewStudents} from "../../model/studentsSlice";
+import {Alert} from "features/alert/index.js";
 
 export const NewStudents = memo(({currentTableData}) => {
 
@@ -39,13 +40,13 @@ export const NewStudents = memo(({currentTableData}) => {
                 </td>
                 <td>{item.user?.registered_date}</td>
 
-                <td onClick={() => {
+                {!item.deleted && <td onClick={() => {
                     setStudentId(item.id);
                     setIsOpen(!isOpen);
                     setIsDeleted(item?.deleted)
                 }}>
                     <i style={{color: '#FF3737FF'}} className={`fa-solid fa-xmark ${cls.xmark}`}></i>
-                </td>
+                </td>}
 
 
             </tr>
@@ -66,15 +67,18 @@ export const NewStudents = memo(({currentTableData}) => {
                     status: true,
                     msg: res.msg
                 }))
-            })
-        setIsOpen(false)
+                setIsOpen(false)
 
-        dispatch(onDeleteNewStudents(studentId))
+                dispatch(onDeleteNewStudents(studentId))
+
+            })
+
 
     };
 
     return (
         <div className={cls.mainContainer}>
+            <Alert/>
             <div className={cls.mainContainer_tablePanelBox}>
                 <Table>
                     <thead className={cls.thead}>
@@ -87,7 +91,7 @@ export const NewStudents = memo(({currentTableData}) => {
 
                         <th>Reg. sana</th>
 
-                        <th>O'chirish</th>
+                        {currentTableData.filter(item => !item.deleted)?.length ?  <th>O'chirish</th> : ""}
 
                     </tr>
                     </thead>

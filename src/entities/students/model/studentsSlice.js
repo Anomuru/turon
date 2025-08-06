@@ -82,15 +82,14 @@ export const newStudents = createSlice({
 
 
             .addCase(fetchDeletedNewStudentsThunk.pending, state => {
-                state.newStudentsStatus = "loading"
+                state.studyingStudentsStatus = true
             })
             .addCase(fetchDeletedNewStudentsThunk.fulfilled, (state, action) => {
                 state.newStudentes = action.payload
-                console.log(action.payload, 'efefewfe')
-                state.newStudentsStatus = "success"
+                state.studyingStudentsStatus = false
             })
             .addCase(fetchDeletedNewStudentsThunk.rejected, (state, action) => {
-                state.newStudentsStatus = "error"
+                state.studyingStudentsStatus = false
             })
 
 

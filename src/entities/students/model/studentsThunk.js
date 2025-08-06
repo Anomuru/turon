@@ -2,8 +2,8 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {API_URL, branchQuery, branchQueryId, headers, useHttp} from "shared/api/base";
 
 
-const renderItem = ({langId , untilAge , fromAge , subjId}) => {
-    return `${subjId ? `&subject=${subjId}` : ""}${fromAge ? `&age=${fromAge}-${untilAge}` : ""}${langId !== "all" ? `&language=${langId}` : ""}`
+const renderItem = ({langId , untilAge , fromAge}) => {
+    return `${fromAge ? `&age=${fromAge}-${untilAge}` : ""}${langId !== "all" ? `&language=${langId}` : ""}`
 }
 
 
@@ -18,9 +18,9 @@ export const fetchNewStudentsData = createAsyncThunk(
 
 export const fetchOnlyNewStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyNewStudentsData',
-    async ({subjId, fromAge, untilAge, langId, userBranchId}) => {
+    async ({ fromAge, untilAge, langId, userBranchId}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/new-registered-students/?${renderItem({subjId , fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Students/new-registered-students/?${renderItem({fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
     }
 )
 
@@ -34,17 +34,17 @@ export const fetchStudentsByClass = createAsyncThunk(
 
 export const fetchOnlyStudyingStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyStudyingStudentsData',
-    async ({subjId, fromAge, untilAge, langId,userBranchId}) => {
+    async ({fromAge, untilAge, langId,userBranchId}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/active-students/?${renderItem({subjId , fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Students/active-students/?${renderItem({ fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
     }
 )
 
 export const fetchOnlyDeletedStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyDeletedStudentsData',
-    async ({subjId, fromAge, untilAge, langId,userBranchId }) => {
+    async ({ fromAge, untilAge, langId,userBranchId }) => {
         const {request} = useHttp();
-        return await request(`${API_URL}Students/deleted-group-students/?${renderItem({subjId , fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Students/deleted-group-students/?${renderItem({fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
     }
 )
 
@@ -92,9 +92,9 @@ export const createSchoolClass = createAsyncThunk(
 
 export const fetchDeletedNewStudentsThunk = createAsyncThunk(
     'newStudents/fetchDeletedNewStudents',
-    async (branchId) => {
+    async ({userBranchId , langId , fromAge , untilAge  }) => {
         const {request} = useHttp();
-        return await request(`${API_URL}Students/deleted-from-registered/?branch=${branchId}`, 'GET', null, headers())
+        return await request(`${API_URL}Students/deleted-from-registered/?branch=${userBranchId}${renderItem({langId , fromAge , untilAge})}`, 'GET', null, headers())
     }
 )
 

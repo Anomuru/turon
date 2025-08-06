@@ -364,21 +364,27 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                                         <Switch activeSwitch={swtich} onChangeSwitch={onChangeSwitch}/>
                                     </div>
                                     <p>{activeService} miqdori</p>
-                                    <Input
-                                        register={register}
-                                        name={"discount"}
-                                        placeholder={"Summa"}
-                                        type={"number"}
-                                        value={month?.data[0]?.discount}
-                                        // onChange={(e) => setDiscountCharity(e.target.value)}
-                                    />
-                                    <Input
-                                        register={register}
-                                        name={"reason"}
-                                        placeholder={"Sababi"}
-                                        value={month?.data[0]?.reason}
-                                        // onChange={(e) => setReasonCharity(e.target.value)}
-                                    />
+                                    {month?.data && <>
+                                        <Input
+                                            register={register}
+                                            name={"discount"}
+                                            placeholder={"Summa"}
+                                            type={"number"}
+                                            value={month?.data[0]?.discount}
+                                            // onChange={(e) => setDiscountCharity(e.target.value)}
+                                        />
+
+                                        <Input
+                                            register={register}
+                                            name={"reason"}
+                                            placeholder={"Sababi"}
+                                            value={month?.data[0]?.reason}
+                                            // onChange={(e) => setReasonCharity(e.target.value)}
+                                        />
+
+                                    </>
+                                    }
+
                                 </div>
                             </div>
                         </Form>

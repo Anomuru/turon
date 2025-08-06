@@ -8,7 +8,7 @@ import {getGroupListWithFilter} from "../../model/selectors/groupsList";
 import cls from "./groupsList.module.sass";
 import {DefaultPageLoader} from "../../../../shared/ui/defaultLoader";
 
-export const GroupsList = React.memo(({currentTableData}) => {
+export const GroupsList = React.memo(({currentTableData , loadingClasses}) => {
     const navigate = useNavigate()
 
     const renderGroups = () => {
@@ -54,7 +54,7 @@ export const GroupsList = React.memo(({currentTableData}) => {
 
     return (
         <>
-
+            {loadingClasses ? <DefaultPageLoader/> :
             <Table extraClass={cls.table__head}>
                 <thead>
                 <tr>
@@ -104,7 +104,7 @@ export const GroupsList = React.memo(({currentTableData}) => {
                 {/*    })*/}
                 {/*}*/}
                 </tbody>
-            </Table>
+            </Table>}
         </>
     );
 })

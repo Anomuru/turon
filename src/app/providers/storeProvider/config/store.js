@@ -25,6 +25,7 @@ import {rgbReducer} from "entities/rgbData/model/rgbDataSlice.js";
 import {roomsReducer} from "entities/rooms/index.js";
 import {studentPaymentReducer} from "features/studentPayment/model/studentPaymentSlice.js";
 import {studentProfileReducer} from "pages/profilePage/model/slice/studentProfileSlice.js";
+import {AlertReducer} from "features/alert/model/slice/alertSlice.js";
 
 
 export function createReduxStore(
@@ -33,6 +34,7 @@ export function createReduxStore(
 ) {
     const rootReducers = {
         ...asyncReducers,
+        AlertSlice: AlertReducer,
         // user: userReducer,
         oftenUsedSlice: oftenUsedReducer,
         loginSlice: loginReducer,

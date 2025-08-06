@@ -1,9 +1,10 @@
 import {Table} from "shared/ui/table";
 import cls from "./deletedGroups.module.sass";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 
 
-export const DeletedGroups = ({currentTableData}) => {
+export const DeletedGroups = ({currentTableData , loadingWithFilter}) => {
 
 
 
@@ -11,7 +12,7 @@ export const DeletedGroups = ({currentTableData}) => {
 
     return (
         <div className={cls.deletedGroups}>
-            <div className={cls.table}>
+            {loadingWithFilter ? <DefaultPageLoader/> : <div className={cls.table}>
                 <Table extraClass={cls.table__head}>
                     <thead>
                     <tr>
@@ -48,7 +49,7 @@ export const DeletedGroups = ({currentTableData}) => {
                     })}
                     </tbody>
                 </Table>
-            </div>
+            </div>}
 
 
         </div>

@@ -32,6 +32,7 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
     const types = useSelector(getGroupTypes)
 
     localStorage.setItem("selectedTeacher" , selectedTeacher)
+    localStorage.setItem("selectedSwitch" , `${activeSwitch}`)
 
     useEffect(() => {
         dispatch(fetchGroupsDataWithFilter({

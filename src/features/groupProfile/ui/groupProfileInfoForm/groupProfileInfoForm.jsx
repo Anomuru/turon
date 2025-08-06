@@ -32,6 +32,7 @@ import nextImage from "shared/assets/images/groupImage.png";
 import defaultUserImg from "shared/assets/images/user_image.png";
 import {ConfirmModal} from "../../../../shared/ui/confirmModal";
 import {getBranch} from "../../../branchSwitcher";
+import {API_URL, headers, useHttp} from "shared/api/base.js";
 
 
 export const GroupProfileInfoForm = memo(({}) => {
@@ -78,13 +79,23 @@ export const GroupProfileInfoForm = memo(({}) => {
             msg: `Guruhni malumotlari o'zgardi`
         }))
     }
+    const {request} = useHttp()
+
 
     const onDelete = () => {
-        dispatch(deleteGroupProfile({
-            id,
-        }))
-        dispatch(deleteGroup(id))
-        navigate(-2)
+        console.log(id)
+
+        request(`${API_URL}Group/groups/delete/${id}/`, "POST", null, headers())
+            .then(res => {
+                console.log(res)
+
+                dispatch(deleteGroup(id))
+                navigate(-2)
+            })
+        //
+        // dispatch(deleteGroupProfile({
+        //     id,
+        // }))
     }
 
     useEffect(() => {
@@ -245,10 +256,10 @@ export const GroupProfileInfoForm = memo(({}) => {
                    <div style={{display: "flex" , justifyContent: "space-between"}}>
                        <Button
                            extraClass={cls.infoModal__btn}
-                           onClick={()=> {
+                           onClick={handleSubmit(() => {
                                setIsDeleted(true)
                                setDelete(!deleteID)
-                           }}
+                           })}
                            type={"danger"}
                        >
                            Delete group
@@ -256,15 +267,15 @@ export const GroupProfileInfoForm = memo(({}) => {
                        <Button id={"formChange"} extraClass={cls.infoModal__btn}>Change</Button>
                    </div>
                 </Form>
-                <ConfirmModal setActive={setDelete} active={deleteID} onClick={onDelete} title={`Rostanham o'chirmoqchimisiz`}   type={"danger"}/>
+                <ConfirmModal setActive={setDelete} active={deleteID} onClick={handleSubmit(onDelete)} title={`Rostanham o'chirmoqchimisiz`}   type={"danger"}/>
 
             </Modal>
-            <ConfirmModal
-                type={"danger"}
-                active={isDeleted}
-                setActive={setIsDeleted}
-                onClick={onDelete}
-            />
+            {/*<ConfirmModal*/}
+            {/*    type={"danger"}*/}
+            {/*    active={isDeleted}*/}
+            {/*    setActive={setIsDeleted}*/}
+            {/*    onClick={onDelete}*/}
+            {/*/>*/}
         </>
     )
 })
