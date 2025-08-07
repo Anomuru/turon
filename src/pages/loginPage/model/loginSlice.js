@@ -18,7 +18,6 @@ export const loginSlice =createSlice({
     initialState,
     reducers: {
         getUserData: (state, action) => {
-            console.log(action.payload, "action.payload")
             sessionStorage.setItem('token', action.payload.access);
             sessionStorage.setItem('refresh_token', action.payload.refresh);
 

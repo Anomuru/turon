@@ -1,17 +1,22 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {roomsAddThunk} from 'pages/roomsPage/model/roomsAddThunk';
 import {useParams} from "react-router-dom";
+
+import {onAddAlertOptions} from "../../alert/model/slice/alertSlice";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {fetchRoomsData} from "entities/rooms";
+import {onAddRooms} from "entities/rooms/model/roomsSlice";
 import {Modal} from 'shared/ui/modal';
 import {Input} from 'shared/ui/input';
 import {Button} from 'shared/ui/button';
-import cls from './roomsAddModal.module.sass';
-import {fetchRoomsData} from "entities/rooms";
-import {onAddAlertOptions} from "../../alert/model/slice/alertSlice";
 import {API_URL, branchQueryId, headers, useHttp} from "shared/api/base";
-import {onAddRooms} from "entities/rooms/model/roomsSlice";
 
-export const RoomModal = ({isOpen, onClose, branch}) => {
+import cls from './roomsAddModal.module.sass';
+
+export const RoomModal = ({isOpen, onClose}) => {
+
+    const userBranch = useSelector(getUserBranchId)
+
     const [groupName, setGroupName] = useState('');
     const [seatCount, setSeatCount] = useState('');
     const [electronicBoard, setElectronicBoard] = useState(false);
@@ -25,7 +30,7 @@ export const RoomModal = ({isOpen, onClose, branch}) => {
             seats_number: parseInt(seatCount, 10),
             electronic_board: electronicBoard,
             deleted: false,
-            branch: branchQueryId(),
+            branch: userBranch,
         };
 
         // dispatch(roomsAddThunk(newRoom))
@@ -44,7 +49,6 @@ export const RoomModal = ({isOpen, onClose, branch}) => {
                     status: true,
                     msg: "Xona muvofaqqiyatli qo'shildi"
                 }))
-                console.log(res)
             })
             .catch(err => {
                 dispatch(onAddAlertOptions({
@@ -58,7 +62,7 @@ export const RoomModal = ({isOpen, onClose, branch}) => {
         setGroupName("")
         setSeatCount("")
 
-        dispatch(fetchRoomsData({id}));
+        // dispatch(fetchRoomsData({id}));
         onClose();
     };
 

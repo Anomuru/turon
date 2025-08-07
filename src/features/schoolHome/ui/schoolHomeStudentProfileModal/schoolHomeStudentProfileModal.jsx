@@ -79,7 +79,6 @@ export const SchoolHomeStudentProfileModal = () => {
                 setValue("date", "")
                 setFiles(null)
                 dispatch(onAdd(res))
-                console.log(res)
                 setAdd(false)
             })
             .catch(err => console.log(err))

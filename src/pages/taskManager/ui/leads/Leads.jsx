@@ -325,7 +325,6 @@ const Wrapper = () => {
         ) {
             return;
         }
-        console.log(activeContainer, overContainer)
         if (activeContainer !== overContainer) {
 
             setContainers((items) => {

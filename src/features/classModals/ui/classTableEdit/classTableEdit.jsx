@@ -60,7 +60,6 @@ export const ClassTableEdit = ({
     //             dispatch(onUpdateClass(res))
     //         })
     //         .catch(err => {
-    //             console.log(err)
     //         })
     //
     //     setEditClass(!editClass)
@@ -167,7 +166,6 @@ export const ClassTableEdit = ({
 
 
     const onChangeSubjectPrice = (id, hours) => {
-        // console.log(hours)
         setSelectedSubject(subjects => subjects.map(item => {
             if (item.value === id && hours !== item?.hours) {
                 return {

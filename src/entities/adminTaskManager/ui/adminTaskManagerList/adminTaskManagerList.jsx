@@ -122,7 +122,6 @@ export const AdminTaskManagerList = ({formatted, setTaskType, taskType}) => {
         setActiveModalItem(item)
         request(`${API_URL}Lead/lead_call/${item.id}`, "GET", null, headers())
             .then(res => {
-                console.log(res, "nma gap")
                 setResComment(res.history)
             })
             .catch(err => {
@@ -342,7 +341,6 @@ const TaskCard = ({item, i}) => {
 
         request(`${API_URL}Lead/lead_delete/${item.id}`, "DELETE", null, headers())
             .then(res => {
-                console.log(res)
                 setActiveConfirmModal(false)
                 dispatch(onRemoveTask(item.id))
                 dispatch(onCountPercentage(res.accepted_percentage))

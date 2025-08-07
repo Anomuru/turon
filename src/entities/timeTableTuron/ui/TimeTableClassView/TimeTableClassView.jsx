@@ -99,8 +99,6 @@ export const TimeTableClassView = (props) => {
     }
 
 
-    console.log(lessons, "lessons")
-
     return (
         <div
             className={cls.fullscreen}

@@ -60,7 +60,6 @@ export const newStudents = createSlice({
 
         onDeleteGroupStudentBack: (state,action) => {
             state.deletedStudents = state.deletedStudents.filter(item => item.student.id !== action.payload)
-            console.log(action.payload, typeof action.payload, "log")
         }
 
 
@@ -86,7 +85,6 @@ export const newStudents = createSlice({
             })
             .addCase(fetchDeletedNewStudentsThunk.fulfilled, (state, action) => {
                 state.newStudentes = action.payload
-                console.log(action.payload, 'efefewfe')
                 state.newStudentsStatus = "success"
             })
             .addCase(fetchDeletedNewStudentsThunk.rejected, (state, action) => {

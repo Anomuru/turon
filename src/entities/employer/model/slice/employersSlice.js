@@ -3,7 +3,7 @@ import {fetchEmployersData} from "./employersThunk";
 
 const initialState = {
     employersData: [],
-    deletedEmployers: [],
+    DeletedEmployers: [],
     employerDataWithFilter: [],
     loading: false,
     error: null

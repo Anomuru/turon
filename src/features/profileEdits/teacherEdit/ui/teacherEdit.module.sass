@@ -1,6 +1,6 @@
 @use "app/styles/abstracts/variables" as mixins
 @use "app/styles/abstracts/mixins" as mixin
-@import "app/styles/themes/school"
+@import "app/styles/abstracts/variables"
 
 .filter
   display: flex
@@ -58,7 +58,7 @@
   width: 100% !important
 .submitBtn
   width: 100%
-  background-color: var(--balance-card-bg-color)
+  background-color: $balance-card-bg-color
   &:hover
     background-color: rgba(0, 27, 97, 0.87)
     color: white

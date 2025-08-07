@@ -78,7 +78,6 @@ const studentPaymentSlice = createSlice({
         },
         onDeleteDebtorData: (state, action) => {
 
-            console.log(action.payload)
             state.debtStudent.data = state?.debtStudent?.data?.filter(item => item.id !== action.payload.id)
 
         }
@@ -418,7 +417,6 @@ const studentPaymentSlice = createSlice({
             })
             .addCase(fetchStudentCharityYears.fulfilled, (state, action) => {
                 state.year = action.payload
-                console.log(action.payload, "action payload")
                 state.loading = false
                 state.error = false
             })

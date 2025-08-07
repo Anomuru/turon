@@ -29,9 +29,6 @@ const locationsSlice = createSlice({
                 return item
 
             })
-            console.log(state.locations, "ededed")
-
-
         },
 
         deleteSelectedLocations: (state,action) => {

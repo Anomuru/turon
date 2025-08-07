@@ -101,7 +101,6 @@ export const ClassModal = ({
 
 
     const onChangeSubjectPrice = (id, hours) => {
-        // console.log(hours)
         setSelectedSubject(subjects => subjects.map(item => {
             if (item.value === id && hours !== item?.hours) {
                 return {
@@ -112,8 +111,6 @@ export const ClassModal = ({
             return item
         }))
     }
-
-    console.log(selectedSubject)
 
     return (
         <>

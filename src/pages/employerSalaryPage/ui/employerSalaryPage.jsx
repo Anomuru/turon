@@ -48,7 +48,6 @@ export const EmployerSalaryPage = () => {
     const onChangeSalary = (data) => {
         request(`${API_URL}Users/salaries/update1/${activeItem.id}`, "PATCH", JSON.stringify(data), headers())
             .then(res => {
-                console.log(res)
                 setActive(false)
                 dispatch(onEditSalary({id: activeItem.id, data: res}))
             })

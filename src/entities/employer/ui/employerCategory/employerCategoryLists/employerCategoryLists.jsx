@@ -40,7 +40,6 @@ export const EmployerCategoryLists = ({salaryTypes, setEdit, edit,}) => {
         const id = edit.id
         request(`${API_URL}Teachers/salary-types/${id}/`, "DELETE", null, headers())
             .then(res => {
-                console.log(res)
                 dispatch(deleteEmployerCategory({id: id}))
                 dispatch(onAddAlertOptions({
                     status: true,

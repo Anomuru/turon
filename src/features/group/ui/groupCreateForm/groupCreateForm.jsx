@@ -57,7 +57,6 @@ export const GroupCreateForm = memo((props) => {
         }
         request(`${API_URL}Group/groups/create/`, "POST", JSON.stringify(res), headers())
             .then(res => {
-                // console.log(res, "group create")
                 dispatch(onAddAlertOptions({
                     type: "success",
                     status: true,

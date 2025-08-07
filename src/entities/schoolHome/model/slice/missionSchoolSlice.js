@@ -37,7 +37,6 @@ export const visionSchoolSlice = createSlice({
                 state.loading = false
                 state.error = false
                 state.data = action.payload
-                console.log(action.payload)
             })
             .addCase(getVisionSchool.rejected, state => {
                 state.loading = false

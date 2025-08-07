@@ -162,8 +162,6 @@ export const SchoolVisionMission = memo(() => {
             })
     }
 
-    console.log(list)
-
     return (
         <>
 

@@ -210,10 +210,8 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
     }
 
     const onChangePaymentMonth = (data) => {
-        console.log(data, "data")
         request(`${API_URL}Attendance/attendance_per_month_delete/${selectedChange?.attendance_id}/`, "PUT", JSON.stringify(data), headers())
             .then(res => {
-                console.log(res)
                 dispatch(changeDebtStudent({id: selectedChange.id, res}))
                 dispatch(onAddAlertOptions({
                     type: "success",
@@ -248,13 +246,10 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
     }, [selectedYearId])
 
     const changeYearId = useCallback((id) => {
-        console.log(id)
         setSelectedYearId(id)
         setSelectedMonthId(null)
         dispatch(getGroupStudyMonth({id: data?.id, res: id}))
         // request(`${API_URL}/${id}`, "POST")
-        //     .then(res => console.log(res))
-        //     .catch(err => console.log(err))
     }, [])
 
     const onFilterGroups = (id) => {

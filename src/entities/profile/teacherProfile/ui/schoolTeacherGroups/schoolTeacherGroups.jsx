@@ -53,8 +53,6 @@ export const SchoolTeacherGroups = memo(() => {
         })
     }
 
-    console.log(schoolTeacherGroups)
-
     const render = renderStudents()
 
     return (

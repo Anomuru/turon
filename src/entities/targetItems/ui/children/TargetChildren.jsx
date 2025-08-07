@@ -4,8 +4,6 @@ import {Trans, Translation, useTranslation} from "react-i18next";
 export const TargetChildren = () => {
 
     const { t, i18n } = useTranslation();
-    console.log(i18n)
-
 
     return (
         <div>

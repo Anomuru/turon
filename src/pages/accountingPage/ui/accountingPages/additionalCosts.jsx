@@ -84,7 +84,6 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
     useEffect(() => {
         dispatch(overHeadList({activeBtn: activeBtn, branchId: branchID}))
     }, [activeBtn])
-    console.log(activeBtn)
     // useEffect(() => {
     //
     // }, [deleted])
@@ -181,13 +180,11 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
 
         // request(`${API_URL}Users/salaries/update/${id}/`, "PATCH", JSON.stringify({payment_types: Number(newPaymentType)}), headers())
         //     .then(res => {
-        //         console.log(res)
         //         // window.location.reload()
         //         setChangePayment(false)
         //
         //     })
         //     .catch(err => {
-        //         console.log(err);
         //         // dispatch(onAddAlertOptions({
         //         //     status: "error",
         //         //     type: true,

@@ -1,7 +1,6 @@
 @use "app/styles/abstracts/mixins" as mixins
 @use "app/styles/abstracts/variables" as mixin
-@import "app/styles/themes/center"
-@import "app/styles/themes/school"
+@import "app/styles/abstracts/variables"
 
 .radioLabel
   color: #303030
@@ -32,7 +31,7 @@
     display: inline-block
     position: relative
     &.active
-      border: 2px solid var(--radio-color)
+      border: 2px solid $radio-color
       color: #00C2FF
       &:after
         opacity: 1 !important
@@ -41,7 +40,7 @@
       content: ''
       width: 10px
       height: 10px
-      background: var(--radio-color)
+      background: $radio-color
       position: absolute
       border-radius: 50%
       top: 50%

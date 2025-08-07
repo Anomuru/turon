@@ -20,7 +20,7 @@ import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/f
 
 import cls from "../../filters.module.sass";
 
-export const EmployeesFilter = React.memo(({active, setActive, activeSwitch, setActiveSwitch}) => {
+export const EmployeesFilter = React.memo(({active, setActive}) => {
     const dispatch = useDispatch();
     const languages = useSelector(getLanguagesData);
     const jobsData = useSelector(getVacancyData);
@@ -31,6 +31,7 @@ export const EmployeesFilter = React.memo(({active, setActive, activeSwitch, set
     const [selectedAge, setSelectedAge] = useState('');
     const [selectedJob, setSelectedJob] = useState('all');
     const [selectedLanguage, setSelectedLanguage] = useState('all');
+    const [activeSwitch, setActiveSwitch] = useState(false);
     const [initialApplied, setInitialApplied] = useState(false);
 
     const jobOptions = jobsData?.map(job => ({
@@ -44,6 +45,7 @@ export const EmployeesFilter = React.memo(({active, setActive, activeSwitch, set
             branch,
             language: lang,
             age: ageRange,
+            deleted: isDeleted ? "True" : "False"
         }));
     }
 

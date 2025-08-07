@@ -20,7 +20,6 @@ export const ClassColorEdit = ({
                                    deleteColor,
                                    edit
 }) => {
-    console.log(edit)
     return (
         <Modal active={changeName} setActive={setChangeName}>
             <h2>Rangni oz'gartirish yoki O'chirish</h2>

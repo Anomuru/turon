@@ -74,7 +74,6 @@ const accountingOtchotSlice = createSlice({
             })
             .addCase(getAll.fulfilled , (state, action) => {
                 state.all =action.payload
-                console.log(action.payload , "keldi")
                 state.loading = false
                 state.error= false
             })

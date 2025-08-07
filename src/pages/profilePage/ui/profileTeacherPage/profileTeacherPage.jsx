@@ -51,7 +51,6 @@ export const ProfileTeacherPage = () => {
     }
 
 
-    console.log(teacherLoading)
     return (
 
             <DynamicModuleLoader reducers={reducers}>

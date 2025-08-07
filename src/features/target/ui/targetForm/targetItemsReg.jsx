@@ -45,7 +45,6 @@ export const TargetItemsReg = () => {
 
     const onClickForm = (data) => {
 
-        console.log(data)
         const newErrors = {
             name: !data?.name,
             surname: !data?.surname,
@@ -65,7 +64,6 @@ export const TargetItemsReg = () => {
 
         request(`${API_URL}Lead/lead_create/`, "POST", JSON.stringify(res))
             .then((res)  => {
-                console.log(res);
                 setCheck(true);
             })
             .catch((err) => {
@@ -74,7 +72,6 @@ export const TargetItemsReg = () => {
                 }
                 setErrors(newErrors);
 
-                console.log(err, "errrr");
             });
     };
 

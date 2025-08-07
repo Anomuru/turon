@@ -107,7 +107,6 @@ export const ImageCrop = memo((props) => {
 
     const {getRootProps, getInputProps} = useDropzone({
         onDrop: acceptedFiles => {
-            // console.log(acceptedFiles[0], "res2")
             setImgSrc(acceptedFiles[0])
         }
     })
@@ -165,8 +164,6 @@ export const ImageCrop = memo((props) => {
         const res = new File([blob], "userImg.png", {
             type: "image/png"
         })
-
-        // console.log(res,"res")
 
         // setImgSrc(URL.createObjectURL(res))
         setNewImage(res)

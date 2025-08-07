@@ -38,7 +38,6 @@ export const TeacherProfileTotalAmount = memo(({active, setActive, salary_id, us
 
 
     const handleAddSalary = async (data) => {
-        console.log("dasdsa")
         const newSalary = {
             salary: Number(salary),
             comment: comment,

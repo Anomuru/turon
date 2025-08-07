@@ -49,6 +49,8 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
     const filteredTeachers = useSelector(getFlowsProfileFilteredTeachers)
     const branch = useSelector(getUserBranchId)
 
+    console.log(flows, "flows")
+
     const [active, setActive] = useState(false)
     const [activeModal, setActiveModal] = useState("")
     const [selectedTeacher, setSelectedTeacher] = useState()
@@ -63,8 +65,9 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
     }, [filteredStudents])
 
     useEffect(() => {
-        dispatch(fetchFlows())
-    }, [])
+        if (branch)
+            dispatch(fetchFlows({branch}))
+    }, [branch])
 
     useEffect(() => {
         if (data && id && branch) {
@@ -337,41 +340,43 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
     }
 
     const renderTeachers = () => {
-        return filteredTeachers?.map(item =>
-            <tr>
-                <td>
-                    <img src={defaultUserImg} alt=""/>
-                </td>
-                <td>{item?.user?.name}</td>
-                <td>{item?.user?.surname}</td>
-                <td>
-                    <div className={cls.teachersModal__wrapper}>
-                        {
-                            item?.subject?.map(i =>
-                                <div className={cls.teachersModal__subject}>
-                                    {i?.name?.slice(0, 16)}
-                                </div>
-                            )
-                        }
-                    </div>
-                </td>
-                <td>
-                    <div className={cls.check}>
-                        <Switch
-                            activeSwitch={data?.teacher?.id === item?.id}
-                            onChangeSwitch={() => onChangeTeacher(item?.id)}
-                        />
-                        <div className={classNames(cls.status, {
-                            [cls.active]: item?.extra_info?.status
-                        })}>
-                            <div className={classNames(cls.status__inner, {
-                                [cls.active]: item?.extra_info?.status
-                            })}/>
+        return filteredTeachers?.map(item => {
+            return (
+                <tr>
+                    <td>
+                        <img src={defaultUserImg} alt=""/>
+                    </td>
+                    <td>{item?.user?.name}</td>
+                    <td>{item?.user?.surname}</td>
+                    <td>
+                        <div className={cls.teachersModal__wrapper}>
+                            {
+                                item?.subject?.map(i =>
+                                    <div className={cls.teachersModal__subject}>
+                                        {i?.name?.slice(0, 16)}
+                                    </div>
+                                )
+                            }
                         </div>
-                    </div>
-                </td>
-            </tr>
-        )
+                    </td>
+                    <td>
+                        <div className={cls.check}>
+                            <Switch
+                                activeSwitch={data?.teacher?.id === item?.id}
+                                onChangeSwitch={() => onChangeTeacher(item?.id)}
+                            />
+                            <div className={classNames(cls.status, {
+                                [cls.active]: item?.extra_info?.status
+                            })}>
+                                <div className={classNames(cls.status__inner, {
+                                    [cls.active]: item?.extra_info?.status
+                                })}/>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            )
+        })
     }
 
     const renderFlow = renderFlowList()
@@ -539,7 +544,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
                     />
                 </Form>
             </Modal>
-            <ConfirmModal setActive={setDeleteId} active={deleteId} onClick={onSubmitDelete}   type={"danger"}/>
+            <ConfirmModal setActive={setDeleteId} active={deleteId} onClick={onSubmitDelete} type={"danger"}/>
 
         </>
     )

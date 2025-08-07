@@ -17,10 +17,8 @@ const employerSlice = createSlice({
         },
         changePaymentType: (state, action) => {
 
-            console.log(action.payload, "action")
             state.employerSalary = state.employerSalary.map(item => {
                 if (item.id === +action.payload.id) {
-                    console.log(item.id, action.payload.id, " item")
                     return {
                         id: action.payload.id ,
                         payment_types: action.payload.payment_types,
@@ -41,7 +39,6 @@ const employerSlice = createSlice({
             })
             .addCase(getEmpSalary.fulfilled, (state, action) => {
                 state.employerSalary = action.payload
-                console.log(action.payload, "emp")
                 state.loading = false
                 state.error = false
             })

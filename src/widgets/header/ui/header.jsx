@@ -13,7 +13,7 @@ import {Button} from 'shared/ui/button';
 
 
 import cls from './header.module.sass';
-import logo from 'shared/assets/images/logo.svg';
+import logo from 'shared/assets/logo/turonLogoBlue.svg';
 import {deleteSelectedLocations} from "features/locations";
 import {BranchSwitcher} from "features/branchSwitcher";
 import BackButton from "shared/ui/backButton/backButton";
@@ -60,25 +60,12 @@ export const Header = () => {
 
     useEffect(() => {
         if (valueData) {
-            fetchSearchData();
+            debouncedFetchData();
         } else {
             setSearchParams({});
-            dispatch(getSearchStr(null))
+            dispatch(getSearchStr(null));
         }
     }, [valueData]);
-
-    // const onChangeSearch = (value) => {
-    //     console.log(value, "value")
-    //     if (value) {
-    //         setValueData(value)
-    //         fetchSearchData(value);
-    //     } else {
-    //         setSearchParams({});
-    //         dispatch(getSearchStr(null))
-    //     }
-    // }
-
-
 
     useEffect(() => {
         if (!searchParams.get('search') && !searchParams.get('type') ) {
@@ -88,24 +75,15 @@ export const Header = () => {
         }
     }, [pathname, search]);
 
-
     function fetchSearchData() {
         const checkedValue = typeof valueData === 'string' ? valueData : searchParams.get('search');
-        setSearchParams({
-            search: checkedValue
-        });
+
+        if (searchParams.get('search') !== checkedValue) {
+            setSearchParams({ search: checkedValue });
+        }
+
         dispatch(getSearchStr(checkedValue));
     }
-
-    // const onDelete = (id) => {
-    //     dispatch(deleteSelectedLocations(id))
-    // }
-
-    // useEffect(() => {
-    //     if (selectedLocations.length < 1) {
-    //         dispatch(onDeleteBranch())
-    //     }
-    // },[selectedLocations])
 
 
     return (
@@ -116,18 +94,8 @@ export const Header = () => {
                     defaultSearch={valueData ?? searchParams.get('search')}
                     onSearch={setValueData}
                 />
-                {/*<div className={cls.inner}>*/}
-                {/*    <ThemeSwitcher/>*/}
-                {/*    {*/}
-                {/*        selectedLocations.length  < 2 ?*/}
-                {/*        <BranchSwitcher location={selectedLocations[0]}/> : null*/}
-                {/*    }*/}
-                {/*</div>*/}
             </div>
             <div className={cls.header__bottom}>
-
-
-
                 <BackButton
                     onClick={() => {
                         if (locationHistory.length) {
@@ -139,21 +107,6 @@ export const Header = () => {
                         setValueData(null);
                     }}
                 />
-
-                {/*<div className={cls.header__selected}>*/}
-                {/*    {locations.length > 1 && selectedLocations.map(item => (*/}
-                {/*        <div className={cls.header__item} key={item?.id}>*/}
-                {/*            {*/}
-                {/*                selectedLocations.length >= 2 ? <i*/}
-                {/*                    onClick={() => onDelete(item?.id)}*/}
-                {/*                    className="fa fa-times"*/}
-                {/*                /> : null*/}
-                {/*            }*/}
-
-                {/*            <p>{item?.name}</p>*/}
-                {/*        </div>*/}
-                {/*    ))}*/}
-                {/*</div>*/}
             </div>
         </header>
     );

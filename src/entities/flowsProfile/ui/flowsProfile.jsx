@@ -1,3 +1,4 @@
+import {flowsReducer} from "entities/flows";
 import {
     getFlowsProfileData,
     getFlowsProfileNextLs,
@@ -42,7 +43,8 @@ import {ConfirmModal} from "../../../shared/ui/confirmModal";
 import {getBranch} from "../../../features/branchSwitcher";
 
 const reducers = {
-    flowsProfileSlice: flowsProfileReducer
+    flowsProfileSlice: flowsProfileReducer,
+    flowsSlice: flowsReducer
 }
 
 export const FlowProfileNavigators = memo(() => {
@@ -129,7 +131,6 @@ export const FlowProfileNavigators = memo(() => {
             subject: subject
             // color: selectColor
         }
-        console.log(res, "log")
         dispatch(changeFlowProfile({
             // status: activeSwitch,
             // data: res,

@@ -40,7 +40,6 @@ export const GroupAttendance = () => {
         dispatch(fetchGroupAttendend(id))
     }, [])
 
-    console.log( attendanceList , "attendanceList")
     const checkTrueFalse = (data) => {
         if (data) {
             return data?.map(item => {
@@ -175,7 +174,6 @@ export const Attendance = ({active, setActive}) => {
             date: `${studentAttendance.month_number}-${data}`,
         }
 
-        // console.log(res , groupId)
         request(`${API_URL}Attendance/school-to-attend-days/${groupId}/`, "POST", JSON.stringify(res), headers())
             .then(res => {
 
