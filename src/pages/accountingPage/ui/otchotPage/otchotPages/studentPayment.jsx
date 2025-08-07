@@ -1,3 +1,4 @@
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Select} from "shared/ui/select";
 import cls from "../otchot.module.sass"
 import {useCallback, useEffect, useState} from "react";
@@ -15,39 +16,40 @@ import {onAddAlertOptions} from "../../../../../features/alert/model/slice/alert
 
 export const StudentPayment = ({formatSalary}) => {
 
-    const classes = useSelector(getClasses)
-
-    const [month, setMonths] = useState(null)
-
-    const [year, setYear] = useState(null)
-
+    const {request} = useHttp()
     const dispatch = useDispatch()
     const {register, handleSubmit} = useForm()
 
+    const classes = useSelector(getClasses)
+    const branchID = useSelector(getUserBranchId)
+
+    const [month, setMonths] = useState(null)
+    const [year, setYear] = useState(null)
     const [res, setRes] = useState(null)
 
-    const {request} = useHttp()
-    const branchID = useSelector(getBranch)
+
     useEffect(() => {
-        dispatch(getStudentPayment(branchID.id))
-        if (year && month) {
-            request(`${API_URL}Encashment/student_payments/?branch=${branchID.id}`, "POST", JSON.stringify({
-                year: year,
-                month: month
-            }), headers())
-                .then(res => {
-                    dispatch(getStudentPayment(branchID.id))
-                    setRes(res)
-                })
-                .catch(err => {
-                    dispatch(onAddAlertOptions({
-                        status: "error",
-                        type: true,
-                        msg: "Serverda hatolik"
-                    }))
-                })
+        if (branchID) {
+            dispatch(getStudentPayment(branchID))
+            if (year && month) {
+                request(`${API_URL}Encashment/student_payments/?branch=${branchID}`, "POST", JSON.stringify({
+                    year: year,
+                    month: month
+                }), headers())
+                    .then(res => {
+                        dispatch(getStudentPayment(branchID))
+                        setRes(res)
+                    })
+                    .catch(err => {
+                        dispatch(onAddAlertOptions({
+                            status: "error",
+                            type: true,
+                            msg: "Serverda hatolik"
+                        }))
+                    })
+            }
         }
-    }, [year, month])
+    }, [year, month, branchID])
 
 
     return (

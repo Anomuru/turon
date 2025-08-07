@@ -12,8 +12,6 @@ export const FilteredLeadsPage = () => {
 
     const [date,setDate]  = useState(null)
 
-    console.log(date, "date")
-
     return (
         <div className={cls.fileteredLeads}>
 

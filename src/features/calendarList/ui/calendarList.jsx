@@ -118,9 +118,7 @@ export const CalendarList = (props) => {
     }
 
     const renderMonthList = useCallback(() => {
-        // console.log(data, "data")
         return data && [...data]?.map((item, index) => {
-            // console.log(item, "item")
             return (
                 <CalendarListItem
                     key={index}

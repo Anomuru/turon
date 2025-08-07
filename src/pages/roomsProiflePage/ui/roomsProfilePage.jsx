@@ -1,3 +1,5 @@
+import {roomImageReducer} from "features/roomImagePareModal/model/roomImageParseModalSlice";
+import {roomssReducer} from "features/roomsEditModal";
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
@@ -14,15 +16,15 @@ import {getRoomImage} from 'features/roomImagePareModal/model';
 import {API_URL} from "shared/api/base";
 import {RoomImageParseModal} from "features/roomImagePareModal";
 import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader";
-import {deleteRoomThunk} from "../../../features/roomDeleteModal/model/roomDeleteThunk";
-import {onAddAlertOptions} from "../../../features/alert/model/slice/alertSlice";
+import {deleteRoomThunk} from "features/roomDeleteModal/model/roomDeleteThunk";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {ConfirmModal} from "../../../shared/ui/confirmModal";
 import {useNavigate} from "react-router";
-import {getBranch} from "../../../features/branchSwitcher";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
 const reducers = {
-    // roomssSlice
+    roomssSlice: roomssReducer,
+    roomImageSlice: roomImageReducer
 }
 
 export const RoomsProfilePage = () => {

@@ -31,7 +31,7 @@ const GroupAttendance = lazyPage(() => import("pages/groupsPage"), "GroupAttenda
 
 const ProfileTeacherPage = lazyPage(() => import("pages/profilePage"), "ProfileTeacherPage");
 const UserProfilePage = lazyPage(() => import("pages/profilePage"), "UserProfilePage");
-const ProfileEmployerPage = lazyPage(() => import("pages/profilePage"), " ProfileEmployerPage");
+const ProfileEmployerPage = lazyPage(() => import("pages/profilePage"), "ProfileEmployerPage");
 const GroupProfilePage = lazyPage(() => import("pages/profilePage"), "GroupProfilePage");
 
 const VacancyWorkPage = lazyPage(() => import("pages/vacancyWorkPage"), "VacancyWorkPage");

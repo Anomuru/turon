@@ -30,8 +30,6 @@ export const SchoolHomeAboutUs = memo(() => {
         setWidth(carousel.current?.scrollWidth - carousel.current?.offsetWidth)
     },[list.length])
 
-    console.log(width, "width")
-
     const renderWorkers = () => {
         return list.map(item => {
             return (

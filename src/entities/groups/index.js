@@ -6,6 +6,7 @@ export {DeletedGroups} from "./deletedGroups/ui/deletedGroups";
 export {getGroupsListData, getGroupsLoading,getGroupListWithFilter, getGroupTypes} from "./model/selectors/groupsList"
 export { fetchGroupsDataWithFilter, fetchGroupTypeThunk} from "./model/slice/groupsThunk";
 export {getDeletedGroupsData} from "./model/selectors/deletedGroups";
+export {groupsReducer} from "./model/slice/groupsSlice"
 
 
 

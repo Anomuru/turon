@@ -168,12 +168,10 @@ export const SchoolCurriculumAdd = ({active, setActive}) => {
 
         request(`${API_URL}Ui/fronted-pages/`, "POST", formData, headerImg())
             .then(res => {
-                console.log(res)
                 setValue("name", "")
                 setValue("text", "")
                 setFiles(null)
                 dispatch(onAddCurricular(res))
-                console.log(res)
                 setActive(false)
             })
             .catch(err => console.log(err))
@@ -353,13 +351,11 @@ export const SchoolExtraCurriculumAdd = ({setActive, active}) => {
 
         request(`${API_URL}Ui/fronted-pages/`, "POST", formData, headerImg())
             .then(res => {
-                console.log(res)
                 setValue("name", "")
                 setValue("text", "")
 
                 setFiles(null)
                 dispatch(onExtraAddCurricular(res))
-                console.log(res)
                 setActive(false)
             })
             .catch(err => console.log(err))

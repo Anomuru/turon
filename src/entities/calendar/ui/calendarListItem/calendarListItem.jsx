@@ -53,9 +53,7 @@ export const CalendarListItem = memo((props) => {
     }, [data])
 
     useEffect(() => {
-        // console.log(isChanged, "isChanged out")
         if (isChanged) {
-            // console.log(isChanged, "isChanged")
             setSelectedId([])
             setSingleId([])
             setIsChanged(false)

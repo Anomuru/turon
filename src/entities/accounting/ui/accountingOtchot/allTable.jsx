@@ -1,3 +1,4 @@
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {useCallback, useEffect, useState} from "react";
 
 import {Table} from "shared/ui/table";
@@ -41,7 +42,7 @@ export const AllTable = ({allTable}) => {
 
     const {request} = useHttp()
     const dispatch = useDispatch()
-    const branchId = useSelector(getBranch)
+    const branchId = useSelector(getUserBranchId)
 
     // const option = allTable?.payment_results?.map(item => ({
     //     name: item.payment_type
@@ -66,25 +67,26 @@ export const AllTable = ({allTable}) => {
     const renderTypeData = () => {
 
 
-        console.log(allTable?.payment_results)
         if (!activeType && !allTable?.payment_results) return;
 
         return <TableCash data={allTable?.payment_results?.[activeType]} activeType={activeType}/>
     }
 
     useEffect(() => {
-        if (selectedMonth && selectedYear) {
-            const res = {
-                year: selectedYear,
-                month: selectedMonth
+        if (branchId) {
+            if (selectedMonth && selectedYear) {
+                const res = {
+                    year: selectedYear,
+                    month: selectedMonth
+                }
+                request(`${API_URL}Encashment/encashment_school/`, "POST", JSON.stringify({branch: branchId, ...res}), headers())
+                    .then(res => {
+                        dispatch(getFilteredAll(res))
+                        console.log(res)
+                    })
             }
-            request(`${API_URL}Encashment/encashment_school/`, "POST", JSON.stringify({branch: branchId.id, ...res}), headers())
-                .then(res => {
-                    dispatch(getFilteredAll(res))
-                    console.log(res)
-                })
         }
-    }, [branchId.id, selectedYear, selectedMonth])
+    }, [branchId, selectedYear, selectedMonth])
 
 
     const onChangeYear = (year) => {
@@ -152,7 +154,7 @@ export const AllTable = ({allTable}) => {
 };
 
 
-const TableCash = ({data,activeType}) => {
+const TableCash = ({data, activeType}) => {
 
 
     const [typeData, setTypeData] = useState(null)
@@ -265,7 +267,6 @@ const TableCash = ({data,activeType}) => {
                             </div>
                         </div> : null
             }
-
 
 
             {/*<div className={cls.list}>*/}

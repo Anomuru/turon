@@ -1,4 +1,6 @@
-import {Table} from "../../../../shared/ui/table";
+import {Table} from "shared/ui/table";
+
+import cls from "./allTable.module.sass";
 
 export const TeacherTable = ({teacherSalary , formatSalary}) => {
 
@@ -22,7 +24,7 @@ export const TeacherTable = ({teacherSalary , formatSalary}) => {
 
     const render = renderTable()
     return (
-        <div>
+        <div className={cls.table}>
 
             <Table>
                 <thead>

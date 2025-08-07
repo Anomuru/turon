@@ -1,35 +1,35 @@
 import classNames from "classnames";
 import {FlowList} from "entities/flowList";
-import {fetchGroupsData, getGroupsListData, getGroupsLoading} from "entities/groups";
+import {fetchGroupsDataWithFilter, getGroupsListData, getGroupsLoading, groupsReducer} from "entities/groups";
 import {getUserBranchId} from "entities/profile/userProfile";
-import {getBranch} from "features/branchSwitcher";
 import {useDispatch, useSelector} from "react-redux";
 import {flowListThunk, getFlowList} from "entities/flows";
-import {useParams} from "react-router-dom";
 import {API_URL, headers, useHttp} from "shared/api/base";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {Button} from "shared/ui/button";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import cls from "./FlowListPage.module.sass";
-import {Input} from "shared/ui/input";
 import {Pagination} from "features/pagination";
 import {getSearchValue} from "features/searchInput";
 import {useEffect, useMemo, useState} from "react";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {useNavigate} from "react-router";
 
+const reducers = {
+    groupsSlice: groupsReducer
+}
+
 export const FlowListPage = () => {
 
     const {request} = useHttp()
     const dispatch = useDispatch()
-    const id = useSelector(getBranch)
-    // const {"*": id} = useParams()
-    const userBranchId = id?.id
+    const userBranchId = useSelector(getUserBranchId)
     const navigate = useNavigate()
 
     useEffect(() => {
         if (userBranchId) {
             dispatch(flowListThunk())
-            dispatch(fetchGroupsData({userBranchId}))
+            dispatch(fetchGroupsDataWithFilter({userBranchId}))
         }
     }, [userBranchId])
 
@@ -134,10 +134,9 @@ export const FlowListPage = () => {
     }
 
 
-
     useEffect(() => {
-        setCurrentTableData(prev => prev.map(item => {
-            const filtered = selectedId.filter(i => i?.classId === item.id)[0]
+        setCurrentTableData(prev => prev?.map(item => {
+            const filtered = selectedId?.filter(i => i?.classId === item.id)[0]
             if (filtered) {
                 return {
                     isCheck: filtered?.students?.length === item.students.length,
@@ -190,7 +189,7 @@ export const FlowListPage = () => {
     }
 
     const renderFlowList = () => {
-        return currentTableData.map((item, i) => (
+        return currentTableData?.map((item, i) => (
             <FlowList
                 currentPage={currentPage}
                 key={i}
@@ -207,44 +206,46 @@ export const FlowListPage = () => {
     const render = renderFlowList()
 
     return (
-        <div className={cls.flow}>
-            <div className={cls.flowListHeader}>
-                <div>
-                    <span>No</span>
-                    <span>Sinf Raqami</span>
-                </div>
-            </div>
-            {
-                loading ? <DefaultPageLoader/> :
-                    <div className={cls.table}>
-                        <div>
-                            {render}
-                        </div>
-                        <div
-                            className={classNames(cls.table__footer, {
-                                [cls.active]: PageSize <= searchedUsers.length
-                            })}
-                        >
-                            <Pagination
-                                setCurrentTableData={setCurrentTableData}
-                                users={searchedUsers}
-                                currentPage={currentPage}
-                                pageSize={PageSize}
-                                onPageChange={page => {
-                                    setCurrentPage(page)
-                                }}
-                            />
-                            <Button
-                                extraClass={cls.table__btn}
-                                onClick={onCreateFlow}
-                                type={selectedId.filter(item => item?.students?.length > 0)[0] ? "" : "disabled"}
-                                disabled={selectedId.filter(item => item?.students?.length > 0)[0] ? "" : "disabled"}
-                            >
-                                Create
-                            </Button>
-                        </div>
+        <DynamicModuleLoader reducers={reducers}>
+            <div className={cls.flow}>
+                <div className={cls.flowListHeader}>
+                    <div>
+                        <span>No</span>
+                        <span>Sinf Raqami</span>
                     </div>
-            }
-        </div>
+                </div>
+                {
+                    loading ? <DefaultPageLoader/> :
+                        <div className={cls.table}>
+                            <div>
+                                {render}
+                            </div>
+                            <div
+                                className={classNames(cls.table__footer, {
+                                    [cls.active]: PageSize <= searchedUsers?.length
+                                })}
+                            >
+                                <Pagination
+                                    setCurrentTableData={setCurrentTableData}
+                                    users={searchedUsers}
+                                    currentPage={currentPage}
+                                    pageSize={PageSize}
+                                    onPageChange={page => {
+                                        setCurrentPage(page)
+                                    }}
+                                />
+                                <Button
+                                    extraClass={cls.table__btn}
+                                    onClick={onCreateFlow}
+                                    type={selectedId.filter(item => item?.students?.length > 0)[0] ? "" : "disabled"}
+                                    disabled={selectedId.filter(item => item?.students?.length > 0)[0] ? "" : "disabled"}
+                                >
+                                    Create
+                                </Button>
+                            </div>
+                        </div>
+                }
+            </div>
+        </DynamicModuleLoader>
     )
 }

@@ -23,7 +23,6 @@ export const RequireAuth = ({roles, children}) => {
 
     const dispatch = useDispatch()
 
-    console.log(refreshLoading, "refreshLoading")
 
     useEffect(() => {
         dispatch(userRefreshData({refresh: refresh_token}))

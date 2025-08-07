@@ -56,7 +56,7 @@ export const FlowList = memo(({flowList, number, onChangeSingle, onChangeAll, cu
                 setBackOpen={setIsAccordion}
                 backOpen={isAccordion}
                 number={number + 1}
-                title={`${flowList?.class_number} ${flowList?.color}`}
+                title={flowList?.name}
                 subtitle={
                     <Input
                         type={"checkbox"}

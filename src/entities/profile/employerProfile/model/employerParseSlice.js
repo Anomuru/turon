@@ -50,3 +50,5 @@ export const employerParseSlice = createSlice({
 });
 
 export default employerParseSlice.reducer;
+export const {reducer: employerParseReducer} = employerParseSlice
+

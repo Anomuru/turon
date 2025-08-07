@@ -4,7 +4,6 @@ import {API_URL, header, headerImg, useHttp} from "shared/api/base";
 export const fetchHomeMainData = createAsyncThunk(
     "schoolHomeMainSlice/getHomeMainData",
     ({id}) => {
-        console.log(id, "id")
         const {request} = useHttp()
         return request(`${API_URL}Ui/fronted-pages/${id}/`, "GET", null, header())
     }

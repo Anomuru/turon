@@ -45,7 +45,6 @@ const groupProfileSlice = createSlice({
         changeDebtStudent: (state, action) => {
             state.debtStudents = state.debtStudents.map(item => {
                 if (item.id === action.payload.id) {
-                    console.log(action.payload, "payload")
                     return {
                         remaining_debt: action.payload.res.remaining_debt,
                         total_debt: action.payload.res.total_debt,
@@ -65,7 +64,6 @@ const groupProfileSlice = createSlice({
             state.debtStudents = state.debtStudents.filter(item => item.id !== action.payload)
         },
         onMoveToGroup: (state, action) => {
-            console.log(action.payload, "action");
             state.data.students = state.data.students.filter(item =>
                 !action.payload.includes(item.id)
             );
@@ -197,7 +195,6 @@ const groupProfileSlice = createSlice({
             })
             .addCase(fetchFilteredGroups.fulfilled, (state, action) => {
                 state.filteredGroups = action.payload
-                console.log(action.payload, "active")
                 // state.filteredStudents = action.payload.students
                 // state.loading = false
                 // state.error = null
@@ -289,7 +286,6 @@ const groupProfileSlice = createSlice({
     // })
     // .addCase(getSchoolAttendance.fulfilled, (state, action) => {
     //     state.groupAttendance = action.payload
-    //     console.log(action.payload , "shaxzod kur")
     //     state.loading = false
     //     state.error = null
     // })

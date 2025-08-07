@@ -78,7 +78,6 @@ const schoolHomeMainSlice = createSlice({
                 state.data = state.data.map(
                     item => {
                         if (item?.id === action.payload.id) {
-                            console.log(item)
                             return action.payload
                         } else return item
                     }

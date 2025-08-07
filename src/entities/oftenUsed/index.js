@@ -11,7 +11,9 @@ export {
     fetchBranchesForSelect,
     fetchGroupsForSelect,
     fetchOperatorsData,
-    fetchTeachersForSelect
+    fetchTeachersForSelect,
+    fetchVacancyData,
+    fetchTeachersData
 } from "./model/oftenUsedThunk";
 
 export {
@@ -36,6 +38,12 @@ export {
     getClassInputError,
     getOperatorsData,
     getOperatorsLoading,
-    getOperatorsError
+    getOperatorsError,
+    getVacancyData,
+    getVacancyLoading,
+    getVacancyError,
+    getTeacherData,
+    getTeacherLoading,
+    getTeacherError
 } from "./model/oftenUsedSelector";
 

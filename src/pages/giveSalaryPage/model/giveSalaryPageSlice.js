@@ -28,3 +28,4 @@ export const giveEmployerSalarySlice = createSlice({
 })
 
 export default giveEmployerSalarySlice.reducer
+export const {reducer: giveEmployerSalaryReducer} = giveEmployerSalarySlice

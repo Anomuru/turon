@@ -1,2 +1,2 @@
 export const getInkasatsiya = (state) =>
-    state.inkasatsiyaSlice.inkasatsiya
+    state.inkasatsiyaSlice?.inkasatsiya

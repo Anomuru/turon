@@ -40,5 +40,6 @@ export const employerSalarySlice = createSlice({
     }
 })
 export const {onEditSalary} = employerSalarySlice.actions
+export const {reducer: employerSalaryReducer} = employerSalarySlice
 
 export default employerSalarySlice.reducer

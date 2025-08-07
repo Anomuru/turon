@@ -16,7 +16,6 @@ export const teacherSalarySlice = createSlice({
         onChangeSalary: (state, action) => {
             state.salaryDatas = [...state.salaryDatas=action.payload]
             // state.salaryDatas = action.payload
-            console.log(action.payload)
         }
     },
     extraReducers: builder => {

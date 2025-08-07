@@ -4,12 +4,28 @@ import {Button} from "shared/ui/button/index.js";
 
 import {Modal} from "shared/ui/modal";
 import {Input} from "shared/ui/input";
+import {Select} from "shared/ui/select/index.js";
 import {Switch} from "shared/ui/switch";
 import {fetchRoomsData} from "entities/rooms";
 import {getUserBranchId} from "entities/profile/userProfile";
 import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/filterStorage/filterStorage";
 
 import cls from "../../filters.module.sass";
+
+const list = [
+    {
+        id: "all",
+        name: "Hammasi"
+    },
+    {
+        id: "yes",
+        name: "Bor"
+    },
+    {
+        id: "no",
+        name: "Yo'q"
+    }
+]
 
 export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActiveSwitch}) => {
 
@@ -20,27 +36,34 @@ export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActi
     const [selectedSeatFrom, setSelectedSeatFrom] = useState("");
     const [selectedSeatTo, setSelectedSeatTo] = useState("");
     // const [selectedSeat, setSelectedSeat] = useState("")
-    const [switchOn, setSwitchOn] = useState(true);
+    const [switchOn, setSwitchOn] = useState("all");
     const [initialApplied, setInitialApplied] = useState(false);
 
     useEffect(() => {
         const saved = getSavedFilters()["roomsFilter"];
-        if (saved && !initialApplied && userBranchId) {
-            const [from, to] = saved.selectedSeat?.split("-") || ["", ""];
-            setSelectedSeatFrom(from);
-            setSelectedSeatTo(to);
-            // setSelectedSeat(saved.selectedSeat);
-            setSwitchOn(saved.switchOn);
+        if (userBranchId) {
+            if (saved && !initialApplied) {
+                const [from, to] = saved.selectedSeat?.split("-") || ["", ""];
+                setSelectedSeatFrom(from);
+                setSelectedSeatTo(to);
+                // setSelectedSeat(saved.selectedSeat);
+                setSwitchOn(saved.switchOn);
 
-            dispatch(fetchRoomsData({
-                boardCond: saved.switchOn ? "True" : "False",
-                selectedSeat: saved.selectedSeat,
-                id: userBranchId
-            }));
+                dispatch(fetchRoomsData({
+                    boardCond: saved.switchOn === "yes" ? "True" : saved.switchOn === "no" ? "False" : "all",
+                    selectedSeat: saved.selectedSeat,
+                    id: userBranchId
+                }));
 
-            setInitialApplied(true);
+                setInitialApplied(true);
+                // return null;
+            } else {
+                dispatch(fetchRoomsData({
+                    id: userBranchId
+                }));
+            }
         }
-    }, [dispatch, userBranchId, initialApplied]);
+    }, [userBranchId]);
 
 
     const onFilter = () => {
@@ -48,7 +71,7 @@ export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActi
         // setSelectedSeat(fullSeat);
 
         dispatch(fetchRoomsData({
-            boardCond: switchOn ? "True" : "False",
+            boardCond: switchOn === "yes" ? "True" : switchOn === "no" ? "False" : "all",
             selectedSeat: fullSeat,
             id: userBranchId
         }));
@@ -64,22 +87,11 @@ export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActi
         setSelectedSeatFrom("");
         setSelectedSeatTo("");
         // setSelectedSeat("");
-        setSwitchOn(true);
+        setSwitchOn("all");
 
-        dispatch(fetchRoomsData({ id: userBranchId }));
+        dispatch(fetchRoomsData({id: userBranchId}));
         removeFilter("roomsFilter");
     }
-
-
-    // useEffect(() => {
-    //     if (selectedSeatTo?.length && selectedSeatFrom?.length)
-    //         setSelectedSeat(`${selectedSeatFrom}-${selectedSeatTo}`)
-    // }, [selectedSeatTo, selectedSeatFrom])
-
-    const onChangeSwitch = () => {
-        const newSwitchState = !switchOn;
-        setSwitchOn(newSwitchState);
-    };
 
     const handleSeatFromBlur = (e) => {
         setSelectedSeatFrom(e.target.value);
@@ -116,11 +128,15 @@ export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActi
                         />
                     </div>
                     <div className={cls.filter__switch}>
-                        <p>Doska</p>
-                        <Switch onChangeSwitch={onChangeSwitch} activeSwitch={switchOn}/>
+                        {/*<p>Doska</p>*/}
+                        <Select
+                            title={"Doska"}
+                            options={list}
+                        />
+                        {/*<Switch onChangeSwitch={onChangeSwitch} activeSwitch={switchOn}/>*/}
                     </div>
                     <div className={cls.filter__switch}>
-                        <Button onClick={() => onDeleteFilter()} type={"danger"}>O'chirish</Button>
+                        <Button onClick={() => onDeleteFilter()} type={"danger"}>Tozalash</Button>
                         <Button onClick={() => onFilter()}>Filter</Button>
                     </div>
                 </div>

@@ -64,7 +64,6 @@ export const EditText = ({setActive, active, activeItem, handleSubmit, setValue,
 
         request(`${API_URL}Ui/fronted-pages/${activeItem.id}/`, "PATCH", JSON.stringify(res), header())
             .then(res => {
-                console.log(res)
 
 
                 setActive(false)

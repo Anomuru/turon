@@ -1,140 +1,104 @@
-import {fetchFlows} from "entities/flows";
-import {fetchFilterFlow} from "entities/flows/model/slice/flowsThunk";
 import {memo, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {useParams} from "react-router";
 
 import {Modal} from "shared/ui/modal";
 import {Select} from "shared/ui/select";
-import {Input} from "shared/ui/input";
-import {Switch} from "shared/ui/switch";
-import {fetchSubjectsData, getSubjectsData} from "entities/oftenUsed";
-import {fetchTeachersData, getTeachers} from "entities/teachers";
-import {getSubjectId, getTeacherId} from "../model/flowFilterSlice";
+import {Button} from "shared/ui/button";
 
-import cls from "../../filters.module.sass"
+import {fetchSubjectsData, getSubjectsData, fetchTeachersData, getTeacherData} from "entities/oftenUsed";
+import {fetchFilterFlow, fetchFlows} from "entities/flows/model/slice/flowsThunk";
+import {getUserBranchId} from "entities/profile/userProfile";
+
+import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/filterStorage/filterStorage";
+
+import cls from "../../filters.module.sass";
 
 export const FlowFilter = memo(({active, setActive}) => {
 
-    const userBranchId = localStorage.getItem("branchId")
+    const dispatch = useDispatch();
 
-    const dispatch = useDispatch()
-    const subjects = useSelector(getSubjectsData)
-    const teachers = useSelector(getTeachers) ?? []
+    const subjects = useSelector(getSubjectsData);
+    const teachers = useSelector(getTeacherData) ?? [];
+    const id = useSelector(getUserBranchId)
+
+    const [selectedSubject, setSelectedSubject] = useState("all");
+    const [selectedTeacher, setSelectedTeacher] = useState("all");
+    const [initialApplied, setInitialApplied] = useState(false);
+
+    const fetchFlowsData = (subject, teacher) => {
+        dispatch(fetchFlows({
+            branch: id,
+            subject,
+            teacher
+        }));
+    };
 
     useEffect(() => {
-        dispatch(fetchSubjectsData())
-        dispatch(fetchTeachersData({userBranchId}))
-    }, [userBranchId])
-
-    const [selectedCoinFrom, setSelectedCoinFrom] = useState()
-    const [selectedCoinTo, setSelectedCoinTo] = useState()
-    const [selectedStudentFrom, setSelectedStudentFrom] = useState()
-    const [selectedStudentTo, setSelectedStudentTo] = useState()
-
-    const [selectedSubject, setSelectedSubject] = useState("all")
-    const [selectedTeacher, setSelectedTeacher] = useState("all")
-
-    const [activeRange, setActiveRange] = useState(false)
-    const [activeDeleted, setActiveDeleted] = useState(false)
-
-    function fetchFlowsData(subject, teacher) {
-        dispatch(fetchFilterFlow({subject, teacher}))
-    }
-
-    const onChangeSubject = (value) => {
-        if (value !== selectedSubject) {
-            setSelectedSubject(value)
-            fetchFlowsData(value, selectedTeacher?.id ?? selectedTeacher)
-            dispatch(getSubjectId(value))
+        if (id) {
+            dispatch(fetchSubjectsData());
+            dispatch(fetchTeachersData(id));
         }
-    }
+    }, [id]);
 
-    const onChangeTeacher = (value) => {
-        if (value !== selectedTeacher) {
-            setSelectedTeacher(teachers.filter(item => item.id === +value)[0])
-            fetchFlowsData(selectedSubject, value)
-            dispatch(getTeacherId(value))
+    useEffect(() => {
+        const saved = getSavedFilters()["flowFilter"];
+        if (id) {
+            if (!initialApplied && saved) {
+                const {selectedSubject: subject, selectedTeacher: teacher} = saved;
+
+                setSelectedSubject(subject || "all");
+                setSelectedTeacher(teacher || "all");
+
+                fetchFlowsData(subject, teacher);
+                setInitialApplied(true);
+            } else if (!initialApplied) {
+                fetchFlowsData(selectedSubject, selectedTeacher);
+                setInitialApplied(true);
+            }
         }
-    }
+    }, [initialApplied, id]);
+
+    const onFilter = () => {
+        fetchFlowsData(selectedSubject, selectedTeacher);
+        saveFilter("flowFilter", {
+            selectedSubject,
+            selectedTeacher
+        });
+    };
+
+    const onDeleteFilter = () => {
+        setSelectedSubject("all");
+        setSelectedTeacher("all");
+
+        fetchFlowsData("all", "all");
+        removeFilter("flowFilter");
+    };
 
     return (
-        <Modal
-            active={active}
-            setActive={setActive}
-        >
+        <Modal active={active} setActive={setActive}>
             <div className={cls.filter}>
                 <h1>Filter</h1>
                 <div className={cls.filter__container}>
-
                     <Select
                         title={"Teacher"}
                         extraClass={cls.filter__select}
-                        onChangeOption={onChangeTeacher}
-                        defaultValue={selectedTeacher?.id ?? selectedTeacher}
-                        options={[{name: "Hamma", id: "all"}, ...teachers]}
+                        onChangeOption={(val) => setSelectedTeacher(val)}
+                        defaultValue={selectedTeacher}
+                        options={[{name: "Hamma", id: "all"}, ...teachers.map(item => ({id: item.id, name: `${item.name} ${item.surname}`}))]}
                     />
-
                     <Select
                         title={"Fan"}
                         extraClass={cls.filter__select}
-                        onChangeOption={onChangeSubject}
+                        onChangeOption={(val) => setSelectedSubject(val)}
                         defaultValue={selectedSubject}
-                        options={[{name: "Hamma", id: "all"}, ...selectedTeacher?.subject ?? []]}
+                        options={[{name: "Hamma", id: "all"}, ...subjects]}
                     />
-
-                    {/*<div className={cls.filter__switch}>*/}
-                    {/*    <p>Rang</p>*/}
-                    {/*    <Switch*/}
-                    {/*        activeSwitch={activeRange}*/}
-                    {/*        onChangeSwitch={() => setActiveRange(!activeRange)}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
-
-                    {/*<div className={cls.filter__age}>*/}
-                    {/*    <Input*/}
-                    {/*        type={"number"}*/}
-                    {/*        extraClassName={cls.filter__input}*/}
-                    {/*        placeholder={"Studentlar soni (От)"}*/}
-                    {/*        onChange={setSelectedStudentFrom}*/}
-                    {/*        value={selectedStudentFrom}*/}
-                    {/*    />*/}
-                    {/*    <Input*/}
-                    {/*        type={"number"}*/}
-                    {/*        extraClassName={cls.filter__input}*/}
-                    {/*        placeholder={"Studentlar soni (До)"}*/}
-                    {/*        onChange={setSelectedStudentTo}*/}
-                    {/*        value={selectedStudentTo}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
-
-                    {/*<div className={cls.filter__age}>*/}
-                    {/*    <Input*/}
-                    {/*        type={"number"}*/}
-                    {/*        extraClassName={cls.filter__input}*/}
-                    {/*        placeholder={"Coin (От)"}*/}
-                    {/*        onChange={setSelectedCoinFrom}*/}
-                    {/*        value={selectedCoinFrom}*/}
-                    {/*    />*/}
-                    {/*    <Input*/}
-                    {/*        type={"number"}*/}
-                    {/*        extraClassName={cls.filter__input}*/}
-                    {/*        placeholder={"Coin (До)"}*/}
-                    {/*        onChange={setSelectedCoinTo}*/}
-                    {/*        value={selectedCoinTo}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
-
-                    {/*<div className={cls.filter__switch}>*/}
-                    {/*    <p>O’chirilgan</p>*/}
-                    {/*    <Switch*/}
-                    {/*        activeSwitch={activeDeleted}*/}
-                    {/*        onChangeSwitch={() => setActiveDeleted(!activeDeleted)}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
-
+                    <div className={cls.filter__switch}>
+                        <Button onClick={onDeleteFilter} type={"danger"}>Tozalash</Button>
+                        <Button onClick={onFilter}>Filter</Button>
+                    </div>
                 </div>
             </div>
         </Modal>
-    )
-})
+    );
+});

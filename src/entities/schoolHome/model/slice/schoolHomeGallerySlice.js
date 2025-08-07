@@ -15,7 +15,6 @@ const schoolHomeGallerySlice = createSlice({
             state.data = [...state.data.filter(item => item.id !== action.payload)]
         },
         ChangeGalary: (state , action ) => {
-            console.log(action.payload)
             state.data = [...state.data.filter(item => item.id !== action.payload.id) , action.payload.data]
         }
     },
@@ -55,7 +54,6 @@ const schoolHomeGallerySlice = createSlice({
                 state.data = state.data.map(
                     item => {
                         if (item?.id === action.payload.id) {
-                            console.log(item)
                             return action.payload
                         } else return item
                     }

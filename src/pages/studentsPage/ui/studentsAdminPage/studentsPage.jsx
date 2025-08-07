@@ -115,7 +115,6 @@ export const StudentsPage = () => {
 
 
     const searchedUsers = useMemo(() => {
-        // console.log(search, "search") ||
         let filteredStudents = [];
         switch (selectedRadio) {
             case "new_students":
@@ -144,7 +143,6 @@ export const StudentsPage = () => {
     }, [newStudents, studyingStudents, deletedStudents, search, selectedRadio, isFilter]);
 
     useEffect(() => {
-        // console.log("render userBranchId useEffect") ||
         if (userBranchId) {
             dispatch(fetchTeachersForSelect(userBranchId))
             dispatch(fetchLanguagesData())
@@ -153,7 +151,6 @@ export const StudentsPage = () => {
 
 
     useEffect(() => {
-        // console.log("render fetch useEffect") ||
         if (userBranchId) {
             // dispatch(fetchSchoolStudents({userBranchId}))
             dispatch(fetchClassColorData())
@@ -186,7 +183,6 @@ export const StudentsPage = () => {
 
 
     // useEffect(() => {
-    //     // console.log("render fetch") ||
     //     if (!userBranchId) return;
     //
     //     switch (selectedRadio) {
@@ -254,12 +250,10 @@ export const StudentsPage = () => {
         }
     }, [loadingStudents, selectedRadio, currentTableData])
 
-    console.log(loadingStudents)
     const renderNewStudents = renderStudents()
 
 
     const types = useMemo(() => {
-        // console.log("render types") ||
         return [
             {
                 name: "Yangi o'quvchilar",

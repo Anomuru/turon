@@ -232,9 +232,6 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
     const onChangePaymentMonth = (data) => {
 
 
-        console.log(data)
-
-
         request(`${API_URL}Attendance/attendance_per_month_delete/${changedData.id}/`, "PUT", JSON.stringify(data), headers())
             .then(res => {
                 dispatch(fetchStudentDebtorData(id))
@@ -467,7 +464,6 @@ const AddDebt = ({month, studentId, years}) => {
             year: year
         }), headers())
             .then(res => {
-                console.log(res)
                 dispatch(fetchStudentDebtorData(studentId))
                 dispatch(onAddAlertOptions({
                     status: true,

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import {getGroupsListData} from "entities/groups";
+import {fetchGroupsDataWithFilter, getGroupsListData} from "entities/groups";
 import {
     changeGroupProfile,
     fetchFilteredStudentsAndTeachers,
@@ -92,7 +92,7 @@ export const GroupAddForm = memo((props) => {
 
     useEffect(() => {
         if (branchId)
-            dispatch(fetchGroupsData({userBranchId:branchId}))
+            dispatch(fetchGroupsDataWithFilter({userBranchId:branchId}))
     }, [branchId])
 
     useEffect(() => {

@@ -1,7 +1,5 @@
 @use "app/styles/abstracts/mixins" as mixins
 @import "app/styles/abstracts/variables"
-@import "app/styles/themes/school"
-@import "app/styles/themes/center"
 
 
 .form
@@ -16,7 +14,7 @@
     outline: none
     border: none
     cursor: pointer
-    background-color: var(--form-button-bg-color)
+    background-color: $form-button-bg-color
     color: white
     transition: all .2s
     @include mixins.btn-active

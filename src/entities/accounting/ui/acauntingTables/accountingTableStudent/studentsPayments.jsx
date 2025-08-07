@@ -46,8 +46,6 @@ export const StudentsPayments = ({
         setActiveDelete(true)
     }
 
-    console.log(currentTableData, "currentTableData")
-
     const renderStudents = () => {
         return currentTableData.map((item, i) => (
             <tr>

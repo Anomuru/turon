@@ -1,3 +1,4 @@
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {memo, useCallback, useContext, useState} from 'react';
 import {useForm} from "react-hook-form";
 import classNames from "classnames";
@@ -26,7 +27,7 @@ export const EmployerProfileTotalAmount = memo(({active, setActive, salary_id, u
     const [salary, setSalary] = useState(null);
 
 
-    const branch = useSelector(getBranch)
+    const branch = useSelector(getUserBranchId)
 
     const [payment, setPayment] = useState(1)
     const [comment, setComment] = useState('')
@@ -42,7 +43,7 @@ export const EmployerProfileTotalAmount = memo(({active, setActive, salary_id, u
             permission: permission_id,
             payment_types: payment,
             user: user_id,
-            branch: branch.id,
+            branch: branch,
             ...data
         };
 

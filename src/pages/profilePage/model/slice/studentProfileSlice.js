@@ -23,7 +23,6 @@ const studentProfileSlice = createSlice({
     initialState,
     reducers: {
         // onChange: (state, action) => {
-        //     console.log(action.payload)
         //     state.data = [
         //         ...state.data.filter(item => item.id !== action.payload.id, action.payload),
         //     ]

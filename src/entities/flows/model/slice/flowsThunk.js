@@ -1,12 +1,12 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {API_URL, headers, useHttp} from "shared/api/base";
+import {API_URL, headers, ParamUrl, useHttp} from "shared/api/base";
 
 
 export const fetchFlows = createAsyncThunk(
     "flowsSlice/fetchFlows",
-    async (userBranchId) => {
+    async ({branch, subject, teacher}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Flow/flow-list/?branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Flow/flow-list/?${ParamUrl({branch, subject, teacher})}`, "GET", null, headers())
     }
 )
 

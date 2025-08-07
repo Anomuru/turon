@@ -13,7 +13,7 @@ export const CapitalInsideSecond = memo(({capitalData, editModal, setEditModal, 
         return (
             <div className={cls.capitalBox}>
                 <div className={cls.capitalBox_img}>
-                    {capitalData.img ? <img src={capitalData.img} alt=""/> : <img src={defaultImg} alt=""/>}
+                    {capitalData?.img ? <img src={capitalData?.img} alt=""/> : <img src={defaultImg} alt=""/>}
                 </div>
                 <div className={cls.capitalBoxInfo}>
                     <div>

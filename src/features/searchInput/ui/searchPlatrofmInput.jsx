@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 
 import {SearchInput} from 'shared/ui/searchInput';
 
-export const SearchPlatformInput = ({onSearch, defaultSearch}) => {
+export const SearchPlatformInput = memo(({onSearch, defaultSearch}) => {
     const [search, setSearch] = useState();
 
     useEffect(() => {
@@ -22,5 +22,5 @@ export const SearchPlatformInput = ({onSearch, defaultSearch}) => {
             setSearch={handleSearch}
         />
     );
-};
+})
 

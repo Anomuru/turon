@@ -34,12 +34,9 @@ export const SchoolTeacherCountDayModal = memo(({setEditMode, editMode, teacherD
         }
         request(`${API_URL}Teachers/teachers/salary/update_patch/${teacherData.id}/` , "PATCH" , JSON.stringify(data) , headers())
             .then(res => {
-                console.log(res)
                 dispatch(fetchTeacherSalaryThunk(id))
 
             })
-
-        console.log(data)
 
 
         // dispatch(schoolTeacherDayThunk({id: teacherData.id, data: data}))
@@ -49,13 +46,11 @@ export const SchoolTeacherCountDayModal = memo(({setEditMode, editMode, teacherD
 
 
     useEffect(() => {
-        console.log(teacherData)
         if (teacherData) {
             if (type) {
                 setValue("day", teacherData.worked_hours )
             } else {
                 setValue("class_salary", teacherData.class_salary )
-                console.log("hello")
             }
         }
     },[teacherData,type])

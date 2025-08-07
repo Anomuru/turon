@@ -107,8 +107,6 @@ export const Employers = ({currentTableData, loading}) => {
             })
     }
 
-    console.log(changingUser)
-
     const renderData = renderEmployers()
 
     return (

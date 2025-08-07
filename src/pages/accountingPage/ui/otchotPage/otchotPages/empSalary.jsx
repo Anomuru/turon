@@ -1,3 +1,4 @@
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {getEmployer} from "../../../../../entities/accounting/model/thunk/otchotAccountingThunk";
@@ -9,15 +10,15 @@ import {EmpSalaryTable, TeacherTable} from "../../../../../entities/accounting";
 
 export const EmpSalary = ({formatSalary}) => {
     const dispatch = useDispatch()
-    const branch = useSelector(getBranch)
+    const branch = useSelector(getUserBranchId)
 
     const employerSalary = useSelector(getEmployerSalary)
 
 
-    const branchId = branch.id
     useEffect(() => {
-        dispatch(getEmployer(branchId))
-    }, [])
+        if (branch)
+            dispatch(getEmployer(branch))
+    }, [branch])
     const [month, setMonths] = useState(null)
 
     const [year, setYear] = useState(null)
@@ -26,13 +27,13 @@ export const EmpSalary = ({formatSalary}) => {
         <div>
             <div>
                 <div className={cls.paymentType}>
-                    <Select extraClass={cls.select} options={employerSalary.dates?.map(item => item.year)}
+                    <Select extraClass={cls.select} options={employerSalary?.dates?.map(item => item.year)}
                             onChangeOption={setYear}/>
                     {
                         year ?
                             <Select
                                 extraClass={cls.select}
-                                options={employerSalary.dates.filter(item => item.year === +year)[0].months}
+                                options={employerSalary?.dates?.filter(item => item.year === +year)[0].months}
                                 onChangeOption={setMonths}/>
                             : null
                     }

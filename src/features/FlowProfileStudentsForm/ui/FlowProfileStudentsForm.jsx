@@ -14,7 +14,7 @@ import React, {useEffect, useState} from 'react';
 import classNames from "classnames";
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import defaultUserImg from "shared/assets/images/user_image.png";
 
@@ -35,9 +35,8 @@ import {getBranch} from "../../branchSwitcher";
 export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
 
     const {request} = useHttp()
-    // const {id} = useParams()
-    const id = useSelector(getUserBranchId)
-
+    const {id} = useParams()
+    // const id = useSelector(getUserBranchId)
     const dispatch = useDispatch()
     const {
         register,
@@ -49,6 +48,8 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
     const filteredStudents = useSelector(getFlowsProfileFilteredStudents)
     const filteredTeachers = useSelector(getFlowsProfileFilteredTeachers)
     const branch = useSelector(getUserBranchId)
+
+    console.log(flows, "flows")
 
     const [active, setActive] = useState(false)
     const [activeModal, setActiveModal] = useState("")
@@ -64,8 +65,9 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
     }, [filteredStudents])
 
     useEffect(() => {
-        dispatch(fetchFlows())
-    }, [])
+        if (branch)
+            dispatch(fetchFlows({branch}))
+    }, [branch])
 
     useEffect(() => {
         if (data && id && branch) {
@@ -338,41 +340,43 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
     }
 
     const renderTeachers = () => {
-        return filteredTeachers?.map(item =>
-            <tr>
-                <td>
-                    <img src={defaultUserImg} alt=""/>
-                </td>
-                <td>{item?.user?.name}</td>
-                <td>{item?.user?.surname}</td>
-                <td>
-                    <div className={cls.teachersModal__wrapper}>
-                        {
-                            item?.subject?.map(i =>
-                                <div className={cls.teachersModal__subject}>
-                                    {i?.name?.slice(0, 16)}
-                                </div>
-                            )
-                        }
-                    </div>
-                </td>
-                <td>
-                    <div className={cls.check}>
-                        <Switch
-                            activeSwitch={data?.teacher?.id === item?.id}
-                            onChangeSwitch={() => onChangeTeacher(item?.id)}
-                        />
-                        <div className={classNames(cls.status, {
-                            [cls.active]: item?.extra_info?.status
-                        })}>
-                            <div className={classNames(cls.status__inner, {
-                                [cls.active]: item?.extra_info?.status
-                            })}/>
+        return filteredTeachers?.map(item => {
+            return (
+                <tr>
+                    <td>
+                        <img src={defaultUserImg} alt=""/>
+                    </td>
+                    <td>{item?.user?.name}</td>
+                    <td>{item?.user?.surname}</td>
+                    <td>
+                        <div className={cls.teachersModal__wrapper}>
+                            {
+                                item?.subject?.map(i =>
+                                    <div className={cls.teachersModal__subject}>
+                                        {i?.name?.slice(0, 16)}
+                                    </div>
+                                )
+                            }
                         </div>
-                    </div>
-                </td>
-            </tr>
-        )
+                    </td>
+                    <td>
+                        <div className={cls.check}>
+                            <Switch
+                                activeSwitch={data?.teacher?.id === item?.id}
+                                onChangeSwitch={() => onChangeTeacher(item?.id)}
+                            />
+                            <div className={classNames(cls.status, {
+                                [cls.active]: item?.extra_info?.status
+                            })}>
+                                <div className={classNames(cls.status__inner, {
+                                    [cls.active]: item?.extra_info?.status
+                                })}/>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            )
+        })
     }
 
     const renderFlow = renderFlowList()
@@ -540,7 +544,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
                     />
                 </Form>
             </Modal>
-            <ConfirmModal setActive={setDeleteId} active={deleteId} onClick={onSubmitDelete}   type={"danger"}/>
+            <ConfirmModal setActive={setDeleteId} active={deleteId} onClick={onSubmitDelete} type={"danger"}/>
 
         </>
     )

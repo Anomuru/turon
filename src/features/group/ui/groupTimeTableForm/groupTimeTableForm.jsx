@@ -57,11 +57,8 @@ export const GroupTimeTableForm = memo((props) => {
         dispatch(getFilteredStudentsStatus())
         setSelectTime(res)
 
-        // console.log("hello", res)
-
         request(`${API_URL}Students/api/filter_students_subject/?branch=${userBranchId}`, "POST", JSON.stringify(res), headers())
             .then(res => {
-                // console.log(res, "timeTable")
                 dispatch(getFilteredStudentsData(res))
                 dispatch(onAddAlertOptions({
                     type: "success",
@@ -71,7 +68,6 @@ export const GroupTimeTableForm = memo((props) => {
                 setActive(false)
             })
             .catch(err => {
-                console.log(err)
                 dispatch(onAddAlertOptions({
                     type: "error",
                     status: true,

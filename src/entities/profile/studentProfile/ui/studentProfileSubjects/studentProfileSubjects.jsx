@@ -8,7 +8,6 @@ import time from "shared/assets/images/oclock.png";
 
 export const StudentProfileSubjects = memo(({ setActive, data, onSelectSubject }) => {
 
-    console.log(data , "data")
     const navigation = useNavigate()
     const renderSubjects = useCallback(() => {
         const subjects = Array.isArray(data)
@@ -25,8 +24,6 @@ export const StudentProfileSubjects = memo(({ setActive, data, onSelectSubject }
                 groupId: data.id
             }] : []);
 
-
-        console.log(subjects , " sub")
 
         return subjects?.map(item =>
             <div onClick={() => {

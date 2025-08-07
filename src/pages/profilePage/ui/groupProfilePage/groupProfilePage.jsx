@@ -62,7 +62,6 @@ export const GroupProfilePage = () => {
     const timeTable = useSelector(getTimeTable)
     const loading = useSelector(getGroupProfileLoading)
     const branch = useSelector(getUserBranchId)
-    console.log(branch)
     const [active, setActive] = useState(false)
     const [attendance, setAttendance] = useState(false)
     useEffect(() => {
@@ -97,7 +96,6 @@ export const GroupProfilePage = () => {
         //         .then(res => {
         //             dispatch(getNextLesson(res))
         //         })
-        //         .catch(err => console.log(err))
         //     // dispatch(fetchGroupProfileNextLesson({id, type: "group"}))
         // } else {
         request(

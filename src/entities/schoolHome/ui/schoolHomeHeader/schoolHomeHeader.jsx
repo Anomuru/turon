@@ -215,8 +215,6 @@ export const SchoolHomeHeader = memo(() => {
         <>
             <div
                 // onWheel={(e) => {
-                //     console.log(e, "e.target")
-                //     console.log(ref?.current?.offsetTop, "currentHeight")
                 // }}
                 className={cls.homeHeader}
                 // ref={ref}

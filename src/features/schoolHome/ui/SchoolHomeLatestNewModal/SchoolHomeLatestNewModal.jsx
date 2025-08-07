@@ -40,8 +40,6 @@ export const SchoolHomeLatestNewModal = () => {
     }, [])
 
 
-    console.log(id , "id")
-
     useEffect(() => {
         dispatch(getLatestNew(id))
     }, [id])
@@ -78,13 +76,11 @@ export const SchoolHomeLatestNewModal = () => {
 
         request(`${API_URL}Ui/fronted-pages/`, "POST", formData, headerImg())
             .then(res => {
-                console.log(res)
                 setValue("name", "")
                 setValue("description", "")
                 setValue("date", "")
                 setFiles(null)
                 dispatch(onAdd(res))
-                console.log(res)
                 setAddLatestNew(false)
             })
             .catch(err => console.log(err))

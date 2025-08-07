@@ -1,5 +1,3 @@
-
-
 export const getSubjectsData = (state) =>
     state.oftenUsedSlice.subjects
 
@@ -93,4 +91,18 @@ export const getOperatorsLoading = (state) =>
     state.oftenUsedSlice.operatorsLoading
 export const getOperatorsError = (state) =>
     state.oftenUsedSlice.operatorsError
+
+export const getVacancyData = (state) =>
+    state.oftenUsedSlice.vacancy
+export const getVacancyLoading = (state) =>
+    state.oftenUsedSlice.loading
+export const getVacancyError = (state) =>
+    state.oftenUsedSlice.error
+
+export const getTeacherData = (state) =>
+    state.oftenUsedSlice.teacher
+export const getTeacherLoading = (state) =>
+    state.oftenUsedSlice.loading
+export const getTeacherError = (state) =>
+    state.oftenUsedSlice.error
 

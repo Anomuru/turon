@@ -32,16 +32,18 @@ export const FlowAddForm = memo((props) => {
     } = useForm()
     const flows = useSelector(getFlows)
     const data = useSelector(getFlowsProfileData)
-    const userBranchId = localStorage.getItem("branchId")
+    const userBranchId = useSelector(getUserBranchId)
     const filteredStudents = useSelector(getFlowsProfileFilteredStudents)
+
+    console.log(filteredStudents, "filteredStudents")
 
     const [currentFilteredData, setCurrentFilteredData] = useState([])
     const [activeModal, setActiveModal] = useState(false)
     const [selectedId, setSelectedId] = useState([])
 
-    useEffect(() => {
-        dispatch(fetchFlows(userBranchId))
-    }, [])
+    // useEffect(() => {
+    //     dispatch(fetchFlows(userBranchId))
+    // }, [])
 
 
     useEffect(() => {

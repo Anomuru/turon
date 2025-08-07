@@ -1,3 +1,4 @@
+import {flowsReducer} from "entities/flows";
 import {
     getFlowsProfileData,
     getFlowsProfileNextLs,
@@ -21,6 +22,7 @@ import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, useParams} from "react-router";
 import {API_URL, headers, useHttp} from "shared/api/base";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {Button} from "shared/ui/button";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import {Form} from "shared/ui/form";
@@ -29,6 +31,7 @@ import {Modal} from "shared/ui/modal";
 import {Radio} from "shared/ui/radio";
 import {Select} from "shared/ui/select";
 import {Switch} from "shared/ui/switch";
+import {flowsProfileReducer} from "../model/flowsProfileSlice.js";
 
 import cls from "./flowsProfile.module.sass";
 import teacher from "shared/assets/images/teachingTeacher.png";
@@ -38,6 +41,11 @@ import coin from "shared/assets/images/coin.png";
 import {FlowProfileStudentsList} from "./flowsProfileItem";
 import {ConfirmModal} from "../../../shared/ui/confirmModal";
 import {getBranch} from "../../../features/branchSwitcher";
+
+const reducers = {
+    flowsProfileSlice: flowsProfileReducer,
+    flowsSlice: flowsReducer
+}
 
 export const FlowProfileNavigators = memo(() => {
 
@@ -56,10 +64,10 @@ export const FlowProfileNavigators = memo(() => {
     const loading = useSelector(getFlowsProfileStatus)
     const userBranchId = useSelector(getUserBranchId)
     const level = useSelector(getCurseLevelData)
-    const [deleteId , setDeleteId] = useState(false)
+    const [deleteId, setDeleteId] = useState(false)
 
     const [activeTeacher, setActiveTeacher] = useState("")
-    const [subject  ,setSubject] = useState(null)
+    const [subject, setSubject] = useState(null)
     const [isDeleted, setIsDeleted] = useState(false)
 
     useEffect(() => {
@@ -123,7 +131,6 @@ export const FlowProfileNavigators = memo(() => {
             subject: subject
             // color: selectColor
         }
-        console.log(res, "log")
         dispatch(changeFlowProfile({
             // status: activeSwitch,
             // data: res,
@@ -144,183 +151,186 @@ export const FlowProfileNavigators = memo(() => {
         return <DefaultPageLoader/>
     }
     return (
-        <div className={cls.flowProfile}>
-            <div className={cls.navigators}>
-                <div
-                    className={cls.navigatorsItem}
-                    style={{borderColor: "#3B82F6"}}
-                >
-                    <div className={cls.navigatorsItem__link}>
-                        <p>Next lesson</p>
-                        <i
-                            className={classNames("fas fa-share", cls.navigatorsItem__icon)}
-                        />
+        <DynamicModuleLoader reducers={reducers}>
+            <div className={cls.flowProfile}>
+                <div className={cls.navigators}>
+                    <div
+                        className={cls.navigatorsItem}
+                        style={{borderColor: "#3B82F6"}}
+                    >
+                        <div className={cls.navigatorsItem__link}>
+                            <p>Next lesson</p>
+                            <i
+                                className={classNames("fas fa-share", cls.navigatorsItem__icon)}
+                            />
+                        </div>
+                        <div className={cls.navigatorsItem__border}/>
+                        <div className={cls.navigatorsItem__info}>
+                            <h2>{nextLesson?.day}</h2>
+                            <h2>{nextLesson?.hour}</h2>
+                            <h2>{nextLesson?.room}</h2>
+                        </div>
                     </div>
-                    <div className={cls.navigatorsItem__border}/>
-                    <div className={cls.navigatorsItem__info}>
-                        <h2>{nextLesson?.day}</h2>
-                        <h2>{nextLesson?.hour}</h2>
-                        <h2>{nextLesson?.room}</h2>
+                    <div
+                        className={cls.navigatorsItem}
+                        style={{borderColor: "#5A588E"}}
+                    >
+                        <div className={cls.navigatorsItem__link}>
+                            <p>Teacher</p>
+                            <img src={teacher} alt=""/>
+                        </div>
+                        <div className={cls.navigatorsItem__border}/>
+                        <div className={cls.navigatorsItem__info}>
+                            <img className={cls.navigatorsItem__image} src={defaultUser} alt=""/>
+                            <h2>{`${data?.teacher?.surname} ${data?.teacher?.name}`}</h2>
+                            <h2 className={cls.navigatorsItem__subject}>{data?.subject_name}</h2>
+                            <i
+                                className={classNames("fas fa-edit", cls.navigatorsItem__iconPosition)}
+                                onClick={() => setActiveTeacher("changeTeacher")}
+                            />
+                        </div>
                     </div>
-                </div>
-                <div
-                    className={cls.navigatorsItem}
-                    style={{borderColor: "#5A588E"}}
-                >
-                    <div className={cls.navigatorsItem__link}>
-                        <p>Teacher</p>
-                        <img src={teacher} alt=""/>
-                    </div>
-                    <div className={cls.navigatorsItem__border}/>
-                    <div className={cls.navigatorsItem__info}>
-                        <img className={cls.navigatorsItem__image} src={defaultUser} alt=""/>
-                        <h2>{`${data?.teacher?.surname} ${data?.teacher?.name}`}</h2>
-                        <h2 className={cls.navigatorsItem__subject}>{data?.subject_name}</h2>
-                        <i
-                            className={classNames("fas fa-edit", cls.navigatorsItem__iconPosition)}
-                            onClick={() => setActiveTeacher("changeTeacher")}
-                        />
-                    </div>
-                </div>
-                <div
-                    className={cls.navigatorsItem}
-                    style={{borderColor: "#5A588E"}}
-                >
-                    <div className={cls.navigatorsItem__link}>
-                        <p>Info</p>
-                        <img src={teacher} alt=""/>
-                    </div>
-                    <div className={cls.navigatorsItem__border}/>
-                    <div className={cls.navigatorsItem__info}>
-                        <h2 className={cls.navigatorsItem__inner}>
-                            <span>Name: </span>
-                            {data?.name}
-                        </h2>
-                        {
-                            data?.level_name ? <h2 className={cls.navigatorsItem__inner}>
-                                <span>Level: </span>
-                                {data?.level_name}
-                            </h2> : null
-                        }
-                        <h2 className={cls.navigatorsItem__inner}>
-                            <span>Activity: </span>
-                            <div className={classNames(cls.status, {
-                                [cls.active]: data?.activity
-                            })}>
-                                <div className={classNames(cls.status__inner, {
+                    <div
+                        className={cls.navigatorsItem}
+                        style={{borderColor: "#5A588E"}}
+                    >
+                        <div className={cls.navigatorsItem__link}>
+                            <p>Info</p>
+                            <img src={teacher} alt=""/>
+                        </div>
+                        <div className={cls.navigatorsItem__border}/>
+                        <div className={cls.navigatorsItem__info}>
+                            <h2 className={cls.navigatorsItem__inner}>
+                                <span>Name: </span>
+                                {data?.name}
+                            </h2>
+                            {
+                                data?.level_name ? <h2 className={cls.navigatorsItem__inner}>
+                                    <span>Level: </span>
+                                    {data?.level_name}
+                                </h2> : null
+                            }
+                            <h2 className={cls.navigatorsItem__inner}>
+                                <span>Activity: </span>
+                                <div className={classNames(cls.status, {
                                     [cls.active]: data?.activity
-                                })}/>
-                            </div>
-                        </h2>
-                        <i
-                            className={classNames("fas fa-edit", cls.navigatorsItem__iconPosition)}
-                            onClick={() => setActiveTeacher("changeInfo")}
-                        />
+                                })}>
+                                    <div className={classNames(cls.status__inner, {
+                                        [cls.active]: data?.activity
+                                    })}/>
+                                </div>
+                            </h2>
+                            <i
+                                className={classNames("fas fa-edit", cls.navigatorsItem__iconPosition)}
+                                onClick={() => setActiveTeacher("changeInfo")}
+                            />
+                        </div>
                     </div>
+                    {/*<div*/}
+                    {/*    className={cls.navigatorsItem}*/}
+                    {/*    style={{borderColor: "#22C55E"}}*/}
+                    {/*>*/}
+                    {/*    <div className={cls.navigatorsItem__link}>*/}
+                    {/*        <p>Class</p>*/}
+                    {/*        <h1*/}
+                    {/*            className={cls.navigatorsItem__icon}*/}
+                    {/*            style={{color: "black"}}*/}
+                    {/*        >*/}
+                    {/*            7*/}
+                    {/*        </h1>*/}
+                    {/*        <h2 className={cls.navigatorsItem__subject}>Green</h2>*/}
+                    {/*    </div>*/}
+                    {/*    <div className={cls.navigatorsItem__border}/>*/}
+                    {/*    <div className={cls.navigatorsItem__info}>*/}
+                    {/*        <img className={cls.navigatorsItem__image} src={defaultRoom} alt=""/>*/}
+                    {/*        <h2>1-xona</h2>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </div>
-                {/*<div*/}
-                {/*    className={cls.navigatorsItem}*/}
-                {/*    style={{borderColor: "#22C55E"}}*/}
-                {/*>*/}
-                {/*    <div className={cls.navigatorsItem__link}>*/}
-                {/*        <p>Class</p>*/}
-                {/*        <h1*/}
-                {/*            className={cls.navigatorsItem__icon}*/}
-                {/*            style={{color: "black"}}*/}
-                {/*        >*/}
-                {/*            7*/}
-                {/*        </h1>*/}
-                {/*        <h2 className={cls.navigatorsItem__subject}>Green</h2>*/}
-                {/*    </div>*/}
-                {/*    <div className={cls.navigatorsItem__border}/>*/}
-                {/*    <div className={cls.navigatorsItem__info}>*/}
-                {/*        <img className={cls.navigatorsItem__image} src={defaultRoom} alt=""/>*/}
-                {/*        <h2>1-xona</h2>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-            </div>
-            <FlowProfileStudentsForm
-                activeTeacher={activeTeacher}
-                setActiveTeacher={setActiveTeacher}
-            />
-            <Modal
-                extraClass={cls.infoModal}
-                active={activeTeacher === "changeInfo"}
-                setActive={setActiveTeacher}
-            >
-                <h1>Ma’lumot o’zgartirish</h1>
-                <Button
-                    extraClass={cls.infoModal__btn}
-                    onClick={() => setDeleteId(!deleteId)}
+                <FlowProfileStudentsForm
+                    activeTeacher={activeTeacher}
+                    setActiveTeacher={setActiveTeacher}
+                />
+                <Modal
+                    extraClass={cls.infoModal}
+                    active={activeTeacher === "changeInfo"}
+                    setActive={setActiveTeacher}
+                >
+                    <h1>Ma’lumot o’zgartirish</h1>
+                    <Button
+                        extraClass={cls.infoModal__btn}
+                        onClick={() => setDeleteId(!deleteId)}
+                        type={"danger"}
+                    >
+                        Delete group
+                    </Button>
+                    <Form
+                        id={"formChange"}
+                        extraClassname={cls.form}
+                        typeSubmit={""}
+                        onSubmit={handleSubmit(onSubmitChange)}
+                    >
+                        <Input
+                            extraClassName={cls.form__input}
+                            placeholder={"Patok nomi"}
+                            register={register}
+                            name={"name"}
+                            required
+                        />
+                        {/*<Select*/}
+                        {/*    extraClass={cls.form__input}*/}
+                        {/*    options={data?.teacher?.subject}*/}
+                        {/*    title={"Fan"}*/}
+                        {/*    register={register}*/}
+                        {/*    name={"subject"}*/}
+                        {/*    defaultValue={data?.subject?.id}*/}
+                        {/*    // defaultValue={data?.subject?.id}*/}
+                        {/*    required*/}
+                        {/*/>*/}
+                        <Select
+                            extraClass={cls.form__input}
+                            options={data?.teacher?.subject}
+                            title={"Fan"}
+                            defaultValue={data?.subject?.id}
+                            onChangeOption={setSubject}
+                            // defaultValue={data?.subject?.id}
+                            required
+                        />
+                        {
+                            level?.length ?
+                                <Select
+                                    extraClass={cls.form__input}
+                                    options={level}
+                                    title={"Level"}
+                                    register={register}
+                                    name={"level"}
+                                    defaultValue={data?.level?.id}
+                                    required
+                                /> : null
+                        }
+
+                        {/*<Input*/}
+                        {/*    extraClassName={}*/}
+                        {/*    placeholder={}*/}
+                        {/*    register={register}*/}
+                        {/*    name={"level"}*/}
+                        {/*    type={"number"}*/}
+                        {/*    required*/}
+                        {/*/>*/}
+                        <Button id={"formChange"} extraClass={cls.infoModal__btn}>Change</Button>
+                    </Form>
+                    <ConfirmModal setActive={setDeleteId} active={deleteId} onClick={onDelete}
+                                  title={`Rostanham o'chirmoqchimisiz `} type={"danger"}/>
+
+
+                </Modal>
+                <ConfirmModal
                     type={"danger"}
-                >
-                    Delete group
-                </Button>
-                <Form
-                    id={"formChange"}
-                    extraClassname={cls.form}
-                    typeSubmit={""}
-                    onSubmit={handleSubmit(onSubmitChange)}
-                >
-                    <Input
-                        extraClassName={cls.form__input}
-                        placeholder={"Patok nomi"}
-                        register={register}
-                        name={"name"}
-                        required
-                    />
-                    {/*<Select*/}
-                    {/*    extraClass={cls.form__input}*/}
-                    {/*    options={data?.teacher?.subject}*/}
-                    {/*    title={"Fan"}*/}
-                    {/*    register={register}*/}
-                    {/*    name={"subject"}*/}
-                    {/*    defaultValue={data?.subject?.id}*/}
-                    {/*    // defaultValue={data?.subject?.id}*/}
-                    {/*    required*/}
-                    {/*/>*/}
-                    <Select
-                        extraClass={cls.form__input}
-                        options={data?.teacher?.subject}
-                        title={"Fan"}
-                        defaultValue={data?.subject?.id}
-                        onChangeOption={setSubject}
-                        // defaultValue={data?.subject?.id}
-                        required
-                    />
-                    {
-                        level?.length ?
-                            <Select
-                                extraClass={cls.form__input}
-                                options={level}
-                                title={"Level"}
-                                register={register}
-                                name={"level"}
-                                defaultValue={data?.level?.id}
-                                required
-                            /> : null
-                    }
-
-                    {/*<Input*/}
-                    {/*    extraClassName={}*/}
-                    {/*    placeholder={}*/}
-                    {/*    register={register}*/}
-                    {/*    name={"level"}*/}
-                    {/*    type={"number"}*/}
-                    {/*    required*/}
-                    {/*/>*/}
-                    <Button id={"formChange"} extraClass={cls.infoModal__btn}>Change</Button>
-                </Form>
-                <ConfirmModal setActive={setDeleteId} active={deleteId} onClick={onDelete} title={`Rostanham o'chirmoqchimisiz `}   type={"danger"}/>
-
-
-            </Modal>
-            <ConfirmModal
-                type={"danger"}
-                active={isDeleted}
-                setActive={setIsDeleted}
-                onClick={onSubmitDelete}
-            />
-        </div>
+                    active={isDeleted}
+                    setActive={setIsDeleted}
+                    onClick={onSubmitDelete}
+                />
+            </div>
+        </DynamicModuleLoader>
     )
 })

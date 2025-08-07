@@ -162,7 +162,6 @@ export const TaskManagerLeft = ({formatted, setTaskType, taskType}) => {
 
         request(`${API_URL}Lead/lead_call_ring/`, "POST", JSON.stringify({lead_id: activeModalItem.id}), headers())
             .then(res => {
-                console.log(res)
 
                 // setResComment(res)
             })
@@ -172,7 +171,6 @@ export const TaskManagerLeft = ({formatted, setTaskType, taskType}) => {
     }
 
 
-    console.log(user)
     const onSubmitAdd = (data) => {
 
 
@@ -200,7 +198,6 @@ export const TaskManagerLeft = ({formatted, setTaskType, taskType}) => {
                 const newErrors = {
                     phoneExist: true
                 }
-                console.log(err, "errrr");
             });
     }
 
@@ -451,7 +448,6 @@ const TaskCard = ({item}) => {
 
         request(`${API_URL}Lead/lead_delete/${item.id}`, "DELETE", null, headers())
             .then(res => {
-                console.log(res)
                 setActiveConfirmModal(false)
                 dispatch(onRemoveTask(item.id))
                 dispatch(onCountPercentage(res.accepted_percentage))

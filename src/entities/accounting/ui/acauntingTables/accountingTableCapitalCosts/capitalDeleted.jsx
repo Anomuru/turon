@@ -5,13 +5,13 @@ import {Table} from "../../../../../shared/ui/table";
 export const CapitalDeleted = ({deleted}) => {
 
     const renderCapitalData = () => {
-        return deleted.map((item , i) => (
+        return deleted?.map((item , i) => (
             <tr>
                 <td>{i + 1}</td>
                 <td>{item?.name}</td>
-                <td>{item.price}</td>
+                <td>{item?.price}</td>
                 <td>{item?.added_date}</td>
-                <td>{item.payment_type?.name}</td>
+                <td>{item?.payment_type?.name}</td>
             </tr>
         ))
     }

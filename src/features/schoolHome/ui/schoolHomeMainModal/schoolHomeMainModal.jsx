@@ -75,7 +75,6 @@ export const SchoolHomeMainModal = ({types}) => {
                 dispatch(onDeleteHomeBox(activeEditItem.id))
 
                 setProgramActive(false)
-                console.log(res)
             })
             .catch(err => console.log(err))
     }

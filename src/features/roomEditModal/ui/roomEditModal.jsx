@@ -37,11 +37,9 @@ export const RoomEditModal = ({ isOpen, onClose, roomId, onUpdate }) => {
 
         // request(`${API_URL}Rooms/rooms_update/${roomId}/`, 'PATCH', JSON.stringify(data) , headers())
         //     .then(res => {
-        //         console.log(res)
         //
         //     })
         //     .catch(err => {
-        //         console.log(err)
         //     })
 
         dispatch(editRoomThunk({ id: roomId, updatedRoom }))

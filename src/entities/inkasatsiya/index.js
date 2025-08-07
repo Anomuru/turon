@@ -1,1 +1,1 @@
-export {default as  inkasatsiyaSlice} from "./model/inkasatsiyaSlice"
+export {default as  inkasatsiyaSlice, inkasatsiyaReducer} from "./model/inkasatsiyaSlice"
