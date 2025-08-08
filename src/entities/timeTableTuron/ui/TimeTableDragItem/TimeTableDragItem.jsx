@@ -12,11 +12,11 @@ export const TimeTableDragItem = (props) => {
     const {item,children,color,typeItem , } = props
 
 
-
+    console.log(item , "item")
     return (
         <Draggable
             data={{
-                type: item.type
+                type: item?.type
             }}
             id={item.dndId}
             extraClass={cls.dnd}

@@ -26,6 +26,7 @@ import {roomsReducer} from "entities/rooms/index.js";
 import {studentPaymentReducer} from "features/studentPayment/model/studentPaymentSlice.js";
 import {studentProfileReducer} from "pages/profilePage/model/slice/studentProfileSlice.js";
 import {AlertReducer} from "features/alert/model/slice/alertSlice.js";
+import {timeTableTuronReducer} from "pages/timeTable/model/slice/timeTableTuronSlice.js";
 
 
 export function createReduxStore(
@@ -57,7 +58,8 @@ export function createReduxStore(
         rgbSlice: rgbReducer,
         roomsSlice: roomsReducer,
         studentPaymentSlice: studentPaymentReducer,
-        studentProfileSlice: studentProfileReducer
+        studentProfileSlice: studentProfileReducer,
+        timeTableTuronSlice: timeTableTuronReducer
 
 
 

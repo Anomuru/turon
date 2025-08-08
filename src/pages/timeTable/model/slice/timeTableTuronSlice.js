@@ -30,12 +30,12 @@ const initialState = {
 
     fetchStatusTeachers: "idle",
     fetchStatusGroup: "idle",
-    fetchStatusData: "idle",
+    fetchStatusData: false,
     loading: false,
     error: null
 }
 
-const TimeTableTuronSlice = createSlice({
+const timeTableTuronSlice = createSlice({
     name: "TimeTableTuronSlice",
     initialState,
     reducers: {
@@ -211,7 +211,7 @@ const TimeTableTuronSlice = createSlice({
 
             .addCase(fetchTimeTableData.pending, state => {
                 state.loading = true
-                state.fetchStatusData = "loading"
+                state.fetchStatusData = true
                 state.error = null
             })
 
@@ -270,24 +270,26 @@ const TimeTableTuronSlice = createSlice({
                 })
 
                 state.hours = action.payload.hours_list
-                state.fetchStatusData = "success"
+                state.fetchStatusData = false
 
                 state.loading = false
                 state.error = null
             })
             .addCase(fetchTimeTableData.rejected, (state, action) => {
                 state.loading = false
-                state.fetchStatusData = "error"
+                state.fetchStatusData = false
 
                 state.error = action.payload ?? null
             })
 })
 
-export default TimeTableTuronSlice.reducer
+export const {reducer: timeTableTuronReducer} = timeTableTuronSlice
+
+// export default TimeTableTuronSlice.reducer
 export const {
     onChangeTypeTimeTable,
     onChangeDayTimeTable,
     onChangeColorTimeTable,
     onChangeFilterClassTimeTable,
     onChangeDateTimeTable
-} = TimeTableTuronSlice.actions
+} = timeTableTuronSlice.actions

@@ -25,7 +25,7 @@ export const TimeTableDragItems = (props) => {
 
     const renderItems = useCallback(() => {
         if (!isSelected) {
-            if (!groups.length) {
+            if (!groups?.length) {
                 return <h1 style={{color: 'red'}}>{type} yoq</h1>
             }
             return filteredColors()?.map(item => {
@@ -65,7 +65,7 @@ export const TimeTableDragItems = (props) => {
 
 
 
-    if (status === "loading") {
+    if (status === true) {
         return <MiniLoader/>
     }
     return (

@@ -38,7 +38,7 @@ export const TimeTableDropContainer = (props) => {
             <div className={cls.wrapper}>
                 <div className={cls.header}>
                     {
-                        hours.map(item => {
+                        hours?.map(item => {
                             return (
                                 <div className={cls.item}>
                                     {item.start_time}-{item.end_time}
@@ -49,7 +49,7 @@ export const TimeTableDropContainer = (props) => {
                 </div>
                 <div className={cls.footer}>
                     {
-                        rooms.map(item => {
+                        rooms?.map(item => {
                             return (
                                 <div className={cls.rooms}>
                                     <div className={cls.room}>
@@ -92,7 +92,7 @@ const Container = (props) => {
     return (
         <Droppable
             data={{
-                room: item.room,
+                room: item?.room,
                 type: "container"
             }}
             id={item.dndId}
