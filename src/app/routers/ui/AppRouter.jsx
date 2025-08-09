@@ -47,7 +47,7 @@ export const AppRouter = () => {
     const router = createBrowserRouter(
         createRoutesFromElements(
             <>
-                {/*<Route path="*" element={<Navigate to="login" />} />*/}
+                <Route path="/" element={<Navigate to="login" />} />
 
                 <Route
                     path={"login"}

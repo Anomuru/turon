@@ -154,11 +154,11 @@ export const menuConfig = [
         roles: [ROLES.smm]
     },
 
-    {
-        to: "adminTaskManager",
-        name: "Task Manager",
-        icon: "fa-tasks",
-        roles: [ROLES.admin]
-    }
+    // {
+    //     to: "adminTaskManager",
+    //     name: "Task Manager",
+    //     icon: "fa-tasks",
+    //     roles: [ROLES.admin]
+    // }
 
 ];

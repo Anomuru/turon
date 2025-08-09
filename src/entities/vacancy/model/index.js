@@ -1,1 +1,1 @@
-export {vacancyPageList, vacancyWorkList, vacancyWorkerList} from './constants/constants'
+export {vacancyWorkList, vacancyWorkerList} from './constants/constants'
