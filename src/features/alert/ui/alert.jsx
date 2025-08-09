@@ -2,17 +2,22 @@ import React, {useEffect, useRef, useState} from 'react';
 import cls from './alert.module.sass';
 import {useDispatch, useSelector} from "react-redux";
 import {getAlerts} from "features/alert/model/selectors/alertSelectors";
-import {onDeleteAlert} from "features/alert/model/slice/alertSlice";
+import {AlertReducer, onDeleteAlert} from "features/alert/model/slice/alertSlice";
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import classNames from "classnames";
 
 import "./alert.css"
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
 const alertTypes = {
     error: 'error',
     success: 'success',
     warning: 'warning'
 };
+
+const reducers = {
+    AlertSlice: AlertReducer,
+}
 
 export const Alert = () => {
 
@@ -50,12 +55,14 @@ export const Alert = () => {
 
 
     return (
-        <div className={cls.alerts}>
+        <DynamicModuleLoader reducers={reducers}>
+            <div className={cls.alerts}>
 
-            {alertsData?.map((alert, index) => (
-                <AlertItem  alert={alert} index={index}/>
-            ))}
-        </div>
+                {alertsData?.map((alert, index) => (
+                    <AlertItem  alert={alert} index={index}/>
+                ))}
+            </div>
+        </DynamicModuleLoader>
         //
         // <TransitionGroup
         //     className={cls.alerts}

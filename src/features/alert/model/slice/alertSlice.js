@@ -34,5 +34,8 @@ const AlertSlice = createSlice({
     },
 })
 
-export default AlertSlice.reducer
+
+export const {reducer : AlertReducer} = AlertSlice
+
+// export default AlertSlice.reducer
 export const {onAddAlertOptions,onAddMultipleAlertOptions,onDeleteAlert} = AlertSlice.actions

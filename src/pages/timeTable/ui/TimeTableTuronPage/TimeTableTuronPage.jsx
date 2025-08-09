@@ -50,6 +50,9 @@ import {Modal} from "shared/ui/modal";
 import {TimeTableFullScreen} from "entities/timeTableTuron/ui/TimeTableFullScreen/TimeTableFullScreen";
 import {TimeTableClassView} from "entities/timeTableTuron/ui/TimeTableClassView/TimeTableClassView";
 import {MiniLoader} from "shared/ui/miniLoader";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import {timeTableTuronReducer} from "pages/timeTable/model/slice/timeTableTuronSlice.js";
+
 
 const rooms = [
     "1-xona", "2-xona", "3-xona", "koca", "oshxona"
@@ -73,7 +76,9 @@ const times = [
         from: "11:00"
     }
 ]
-
+const reducer = {
+    timeTableTuronSlice: timeTableTuronReducer
+}
 
 export const TimeTableTuronPage = () => {
 
@@ -112,7 +117,7 @@ export const TimeTableTuronPage = () => {
     const date = useSelector(getTimeTableTuronDate)
 
 
-    const {id: branch} = useSelector(getBranch)
+    const branch = localStorage.getItem("branchId")
 
 
     const dispatch = useDispatch()
@@ -121,6 +126,7 @@ export const TimeTableTuronPage = () => {
         dispatch(fetchTimeTableColors())
     }, [])
 
+    console.log(dataStatus)
 
     useEffect(() => {
         if (date && branch) dispatch(fetchTimeTableData({date, branch}))
@@ -146,7 +152,7 @@ export const TimeTableTuronPage = () => {
 
 
     useEffect(() => {
-        if (!data.length) return;
+        if (!data?.length) return;
         setRooms(data)
     }, [data])
 
@@ -164,7 +170,7 @@ export const TimeTableTuronPage = () => {
 
     useEffect(() => {
         setLoading(false)
-        if (!teachersData.length && teachersStatus === "success") {
+        if (!teachersData?.length && teachersStatus === "success") {
             dispatch(onAddAlertOptions({
                 type: "error",
                 status: true,
@@ -298,6 +304,8 @@ export const TimeTableTuronPage = () => {
         return await res
     }
 
+
+    console.log(rooms , "rooms")
     async function handleDragEnd(event) {
         const {active, over} = event;
 
@@ -757,126 +765,129 @@ export const TimeTableTuronPage = () => {
     const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
     return (
-        <div className={cls.timeTable}>
+        <DynamicModuleLoader reducers={reducer}>
+
+            <div className={cls.timeTable}>
 
 
-            {
-                !isSelected ?
-                    <TimeTableTuronPageFilters
-                        setIsSelected={setIsSelected}
-                        isSelected={isSelected}
-                        setFullScreen={setFullScreen}
-                        setClassView={setClassView}
-                        groups={groups}
-                    /> : null
-            }
-
-
-            {isSelected && <Button type={"danger"} onClick={onFalseSelected}>Remove Selected</Button>}
-
-            {loading && <DefaultLoader/>}
-
-
-            <DndContext
-                sensors={sensors}
-                collisionDetection={rectIntersection}
-                onDragStart={onDragStart}
-                onDragEnd={handleDragEnd}
-                // modifiers={[restrictToFirstScrollableAncestor]}
-            >
-                <TimeTableDragItems
-                    setSelectedSubject={setSelectedSubject}
-                    selectedSubject={selectedSubject}
-                    isSelected={isSelected}
-                    groups={groups}
-                    subjects={subjects}
-                    teachers={teachers}
-                    color={color}
-                    type={type}
-                    status={groupsDataStatus}
-                />
                 {
-                    dataStatus === "loading" ?
-                        <MiniLoader/>
-                        :
-                        <TimeTableDropContainer
-                            onDoubleClickContainer={onDoubleClickContainer}
-                            onDeleteContainer={onDeleteContainer}
-                            rooms={rooms}
-                            times={times}
-                            hours={hours}
-                            canDisabled={canDisabled}
-                            startItem={startItem}
-                            // containers={containers}
-                        />
-
+                    !isSelected ?
+                        <TimeTableTuronPageFilters
+                            setIsSelected={setIsSelected}
+                            isSelected={isSelected}
+                            setFullScreen={setFullScreen}
+                            setClassView={setClassView}
+                            groups={groups}
+                        /> : null
                 }
 
 
-                <DragOverlay>
-                    {
-                        startItem?.room ?
-                            <DraggableContainer type={"overlay"} item={startItem}/> :
-                            startItem?.type === "teacher" ?
-                                <TimeTableDragItem
-                                    item={startItem}
+                {isSelected && <Button type={"danger"} onClick={onFalseSelected}>Remove Selected</Button>}
 
-                                >
-                                    {startItem.name} {startItem.surname}
-                                </TimeTableDragItem>
-                                : startItem?.dndId ?
+                {loading && <DefaultLoader/>}
+
+
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={rectIntersection}
+                    onDragStart={onDragStart}
+                    onDragEnd={handleDragEnd}
+                    // modifiers={[restrictToFirstScrollableAncestor]}
+                >
+                    <TimeTableDragItems
+                        setSelectedSubject={setSelectedSubject}
+                        selectedSubject={selectedSubject}
+                        isSelected={isSelected}
+                        groups={groups}
+                        subjects={subjects}
+                        teachers={teachers}
+                        color={color}
+                        type={type}
+                        status={groupsDataStatus}
+                    />
+                    {
+                        dataStatus === true ?
+                            <MiniLoader/>
+                            :
+                            <TimeTableDropContainer
+                                onDoubleClickContainer={onDoubleClickContainer}
+                                onDeleteContainer={onDeleteContainer}
+                                rooms={rooms}
+                                times={times}
+                                hours={hours}
+                                canDisabled={canDisabled}
+                                startItem={startItem}
+                                // containers={containers}
+                            />
+
+                    }
+
+
+                    <DragOverlay>
+                        {
+                            startItem?.room ?
+                                <DraggableContainer type={"overlay"} item={startItem}/> :
+                                startItem?.type === "teacher" ?
                                     <TimeTableDragItem
                                         item={startItem}
-                                        color={startItem?.color?.value}
+
                                     >
-
-                                        {startItem.class_name || startItem.name}
+                                        {startItem.name} {startItem.surname}
                                     </TimeTableDragItem>
-                                    : null
-                    }
-                </DragOverlay>
+                                    : startItem?.dndId ?
+                                        <TimeTableDragItem
+                                            item={startItem}
+                                            color={startItem?.color?.value}
+                                        >
+
+                                            {startItem.class_name || startItem.name}
+                                        </TimeTableDragItem>
+                                        : null
+                        }
+                    </DragOverlay>
 
 
-            </DndContext>
+                </DndContext>
 
 
 
 
 
-            <Modal active={fullScreen} setActive={setFullScreen} type={"other"}>
+                <Modal active={fullScreen} setActive={setFullScreen} type={"other"}>
 
 
 
 
-                <TimeTableFullScreen
-                    rooms={rooms}
-                    times={times}
-                    hours={hours}
-                />
+                    <TimeTableFullScreen
+                        rooms={rooms}
+                        times={times}
+                        hours={hours}
+                    />
 
 
-            </Modal>
+                </Modal>
 
-            <Modal active={classView} setActive={setClassView} type={"other"}>
-
-
-                <TimeTableClassView
-                    lessons={classViewData}
-                    hours={hours}
-                />
+                <Modal active={classView} setActive={setClassView} type={"other"}>
 
 
-                {/*<TimeTableFullScreen*/}
-                {/*    rooms={rooms}*/}
-                {/*    times={times}*/}
-                {/*    hours={hours}*/}
-                {/*/>*/}
+                    <TimeTableClassView
+                        lessons={classViewData}
+                        hours={hours}
+                    />
 
 
-            </Modal>
+                    {/*<TimeTableFullScreen*/}
+                    {/*    rooms={rooms}*/}
+                    {/*    times={times}*/}
+                    {/*    hours={hours}*/}
+                    {/*/>*/}
 
 
-        </div>
+                </Modal>
+
+
+            </div>
+        </DynamicModuleLoader>
     );
 };
 

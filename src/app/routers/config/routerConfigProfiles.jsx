@@ -21,6 +21,7 @@ import {
     getRouteClassProfile, getOtchot, getRouteRGBData, getRouteTaskManager, getRouteFilteredLeads
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
+import {TimeTableTuronPage} from "pages/timeTable/index.js";
 
 
 const ClassProfilePage = lazyPage(() => import("pages/School"), "ClassProfilePage");
@@ -102,7 +103,11 @@ export const routersConfigProfile = [
         // icon: "fa fa-book",
         element: <ContractPage/>
     },
-
+    {
+        name: "Time Table",
+        path: "time/*",
+        element: <TimeTableTuronPage/>,
+    },
 
     {
         path: getRouteUserProfile(":id"),

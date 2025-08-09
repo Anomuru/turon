@@ -119,7 +119,7 @@ export const TeachersPage = () => {
             <DynamicModuleLoader reducers={reducers}>
                 <div className={cls.teacher}>
 
-                    <div className={cls.teacher__filter}>
+                    <div className={cls.teacher__filter} style={{justifyContent: activeCategory ? "end" : "space-between"}}>
                         {activeCategory ? null :
                             <Button
                                 status={"filter"}
@@ -164,6 +164,7 @@ export const TeachersPage = () => {
                                 />
                         }
                     </div>
+
 
                     <Pagination
                         setCurrentTableData={setCurrentTableData}

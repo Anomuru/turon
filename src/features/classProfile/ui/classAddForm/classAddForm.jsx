@@ -55,6 +55,8 @@ export const ClassAddForm = memo((props) => {
     const [selectedId, setSelectedId] = useState([])
     const [searchValue, setSearchValue] = useState("")
 
+    const [loadingAdd , setLoadingAdd] = useState(false)
+
     const onSubmit = (data) => {
         dispatch(fetchGroupProfile({id: data?.class}))
         setActiveModal(true)
@@ -66,6 +68,7 @@ export const ClassAddForm = memo((props) => {
             update_method: "add_students",
             group_type: "school"
         }
+        setLoadingAdd(true)
         request(`${API_URL}Group/groups/profile/${data?.id}/`, "PATCH", JSON.stringify(res), headers())
             .then(res => {
                 dispatch(onAddAlertOptions({
@@ -75,6 +78,7 @@ export const ClassAddForm = memo((props) => {
                 }))
                 setActiveModal(false)
                 setActive(false)
+                setLoadingAdd(false)
             })
             .catch(err => {
                 dispatch(onAddAlertOptions({
@@ -236,14 +240,14 @@ export const ClassAddForm = memo((props) => {
                         </div>
                 }
 
-                <Button
+                {!loadingAdd ? <Button
                     extraClass={cls.addModal__btn}
                     onClick={onSubmitAddStudents}
                     type={selectedId.length === 0 ? "disabled" : ""}
                     disabled={selectedId.length === 0 ? "disabled" : ""}
                 >
                     Add
-                </Button>
+                </Button> : <MiniLoader/>}
             </Modal>
         </>
     )
