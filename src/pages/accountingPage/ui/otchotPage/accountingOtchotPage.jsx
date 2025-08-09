@@ -32,19 +32,18 @@ export const AccountingOtchotPage = () => {
     // const {id} = useParams()
     const id = useSelector(getUserBranchId)
 
-    console.log(getAccountingPage, "getAccountingPage")
-
     const navigate = useNavigate()
     const setPage = useCallback((e) => {
         dispatch(onChangePage({value: e}))
         navigate(`${e}`, {relative: "path"})
     }, [navigate])
+
     return (
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.accounting}>
                 <div className={cls.accounting__wrapper}>
                     <div className={cls.wrapper__filter}>
-                        <Button type={"filter"} status={"filter"} onClick={() => setActive(!active)}>Filter</Button>
+                        {/*<Button type={"filter"} status={"filter"} onClick={() => setActive(!active)}>Filter</Button>*/}
                         <Select defaultValue={getAccountingPage && getAccountingPage[0]?.value} options={getAccountingPage} onChangeOption={setPage}/>
                     </div>
 

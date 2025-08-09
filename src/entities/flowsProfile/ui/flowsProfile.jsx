@@ -10,6 +10,7 @@ import {
     fetchFlowProfileData, fetchFlowProfileNextLesson
 } from "entities/flowsProfile/model/flowsProfileThunk";
 import {changeGroupProfile, deleteGroupProfile} from "entities/profile/groupProfile";
+import {getGroupProfileNextLsData} from "entities/profile/groupProfile/model/groupProfileSelector.js";
 import {getUserBranchId} from "entities/profile/userProfile";
 import {getCurseLevelData} from "entities/students";
 import {getCurseLevel} from "entities/students/model/studentsSlice";
@@ -64,8 +65,8 @@ export const FlowProfileNavigators = memo(() => {
     const loading = useSelector(getFlowsProfileStatus)
     const userBranchId = useSelector(getUserBranchId)
     const level = useSelector(getCurseLevelData)
-    const [deleteId, setDeleteId] = useState(false)
 
+    const [deleteId, setDeleteId] = useState(false)
     const [activeTeacher, setActiveTeacher] = useState("")
     const [subject, setSubject] = useState(null)
     const [isDeleted, setIsDeleted] = useState(false)
@@ -166,9 +167,13 @@ export const FlowProfileNavigators = memo(() => {
                         </div>
                         <div className={cls.navigatorsItem__border}/>
                         <div className={cls.navigatorsItem__info}>
-                            <h2>{nextLesson?.day}</h2>
-                            <h2>{nextLesson?.hour}</h2>
-                            <h2>{nextLesson?.room}</h2>
+                            {
+                                nextLesson?.msg ? <h2>{nextLesson?.msg}</h2> : <>
+                                    <h2>{nextLesson?.day}</h2>
+                                    <h2>{nextLesson?.hour}</h2>
+                                    <h2>{nextLesson?.room}</h2>
+                                </>
+                            }
                         </div>
                     </div>
                     <div

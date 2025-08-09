@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {Button} from "shared/ui/button/index.js";
 
+import {Button} from "shared/ui/button";
 import {Modal} from "shared/ui/modal";
 import {Input} from "shared/ui/input";
-import {Select} from "shared/ui/select/index.js";
+import {Select} from "shared/ui/select";
 import {Switch} from "shared/ui/switch";
 import {fetchRoomsData} from "entities/rooms";
 import {getUserBranchId} from "entities/profile/userProfile";
@@ -70,6 +70,8 @@ export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActi
         const fullSeat = `${selectedSeatFrom}-${selectedSeatTo}`;
         // setSelectedSeat(fullSeat);
 
+        console.log(switchOn, "switchOn")
+
         dispatch(fetchRoomsData({
             boardCond: switchOn === "yes" ? "True" : switchOn === "no" ? "False" : "all",
             selectedSeat: fullSeat,
@@ -130,6 +132,7 @@ export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActi
                     <div className={cls.filter__switch}>
                         {/*<p>Doska</p>*/}
                         <Select
+                            onChangeOption={setSwitchOn}
                             title={"Doska"}
                             options={list}
                         />

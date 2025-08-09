@@ -1,4 +1,6 @@
+import {getAllSelector} from "entities/accounting/index.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {loginReducer} from "pages/loginPage/index.js";
 import {useCallback, useEffect, useState} from "react";
 
 import {Table} from "shared/ui/table";
@@ -36,18 +38,23 @@ const types = [
     },
 ]
 
+function capitalizeFirstLetter(str) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
-export const AllTable = ({allTable}) => {
+export const AllTable = () => {
 
 
     const {request} = useHttp()
     const dispatch = useDispatch()
     const branchId = useSelector(getUserBranchId)
+    const allTable = useSelector(getAllSelector)
 
     // const option = allTable?.payment_results?.map(item => ({
     //     name: item.payment_type
     // }))
-    const [activeType, setActiveType] = useState("student")
+    const [activeType, setActiveType] = useState("students")
     const [selectedYear, setSelectedYear] = useState(null)
     const [selectedMonth, setSelectedMonth] = useState(null)
     // const renderPayment = () => {
@@ -67,9 +74,13 @@ export const AllTable = ({allTable}) => {
     const renderTypeData = () => {
 
 
-        if (!activeType && !allTable?.payment_results) return;
+        if (!activeType && !allTable?.summary) return;
 
-        return <TableCash data={allTable?.payment_results?.[activeType]} activeType={activeType}/>
+        return <TableCash
+            resultData={allTable?.payment_results}
+            data={allTable?.summary?.[activeType]}
+            activeType={activeType}
+        />
     }
 
     useEffect(() => {
@@ -116,10 +127,10 @@ export const AllTable = ({allTable}) => {
                         id: item?.year,
                     }))}
                     onChangeOption={onChangeYear}
-                    // defaultValue={allTable?.dates?.map(item => ({
-                    //     name: item?.year,
-                    //     id: item?.year,
-                    // }))[0]?.id}
+                    defaultValue={allTable && allTable?.dates?.map(item => ({
+                        name: item?.year,
+                        id: item?.year,
+                    }))[0]?.id}
                 />
                 {selectedYear && <Select
                     options={
@@ -127,24 +138,40 @@ export const AllTable = ({allTable}) => {
                             ?.filter(item => item.year === +selectedYear)[0]?.months
                     }
                     onChangeOption={setSelectedMonth}
-                    defaultValue={allTable?.dates
+                    defaultValue={allTable && allTable?.dates
                         ?.filter(item => item.year === +selectedYear)[0]?.months[0]}
                 />}
             </div>
 
             <div className={cls.header}>
+                {/*{*/}
+                {/*    types.map(item => (*/}
+                {/*        <div*/}
+                {/*            className={classNames(cls.header__item, {*/}
+                {/*                [cls.active]: item.value === activeType*/}
+                {/*            })}*/}
+                {/*            onClick={() => setActiveType(item.value)}*/}
+                {/*            key={item.value}*/}
+                {/*        >*/}
+                {/*            {item.name}*/}
+                {/*        </div>*/}
+                {/*    ))*/}
+                {/*}*/}
                 {
-                    types.map(item => (
-                        <div
-                            className={classNames(cls.header__item, {
-                                [cls.active]: item.value === activeType
-                            })}
-                            onClick={() => setActiveType(item.value)}
-                            key={item.value}
-                        >
-                            {item.name}
-                        </div>
-                    ))
+                    allTable?.payment_results && Object.keys(allTable?.payment_results[0]).map(item => {
+                        if (item === "payment_total" || item === "payment_type") return null
+                        return (
+                            <div
+                                className={classNames(cls.header__item, {
+                                    [cls.active]: item === activeType
+                                })}
+                                onClick={() => setActiveType(item)}
+                                key={item}
+                            >
+                                {item === "user" ? "Worker" : capitalizeFirstLetter(item)}
+                            </div>
+                        )
+                    })
                 }
             </div>
             {renderTypeData()}
@@ -154,7 +181,7 @@ export const AllTable = ({allTable}) => {
 };
 
 
-const TableCash = ({data, activeType}) => {
+const TableCash = ({data, resultData, activeType}) => {
 
 
     const [typeData, setTypeData] = useState(null)
@@ -229,43 +256,97 @@ const TableCash = ({data, activeType}) => {
         <>
 
             <div className={cls.paymentTypes}>
+                {/*{*/}
+                {/*    typeData === "array" ?*/}
+                {/*        renderDataTypes(data)*/}
+                {/*        : null*/}
+                {/*}*/}
+
+                {/*{renderDataTypesObject()}*/}
+                <div className={cls.paymentTypes__header}>
+                    {
+                        resultData?.map((item, index) => {
+                            return (
+                                <div key={index} className={cls.paymentTypes__item}>
+                                    <h3>{item?.payment_type}</h3>
+                                    <p>{item?.payment_total}</p>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+
                 {
-                    typeData === "array" ?
-                        renderDataTypes(data)
-                        : null
+                    resultData && [...resultData]?.map((item, index) => {
+                        return (
+                            <div className={cls.paymentTypes__container}>
+                                <div key={index} className={cls.paymentTypes__item}>
+                                    <h3>{item?.payment_type}</h3>
+                                    {/*<p>{item?.payment_total}</p>*/}
+                                </div>
+                                <div className={cls.list__container}>
+                                    {
+                                        Object.keys(item?.[activeType])?.map(inn => {
+                                            console.log(inn)
+                                            return (
+                                                <div className={cls.otchot}>
+                                                    {capitalizeFirstLetter(inn.replaceAll("_", " "))}
+                                                    <br/>
+                                                    <span className={cls.otchot__inner}>{item?.[activeType]?.[inn]}</span>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </div>
+                        )
+                    })
                 }
 
-                {renderDataTypesObject()}
             </div>
 
-
             {
-                activeType === "student" ?
-                    <div className={cls.list}>
-                        <div className={cls.list__container}>
-
-                            <div className={cls.otchot}>
-                                Qolgan qarz <br/> {data?.remaining_debt}
-                            </div>
-                            <div className={cls.otchot}>
-                                Umumiy qarz <br/> {data?.total_debt}
-                            </div>
-                        </div>
-                    </div>
-                    : activeType === "teacher" ?
-                        <div className={cls.list}>
-                            <div className={cls.list__container}>
-                                <div className={cls.otchot}>
-                                    Umumiy oylik <br/> {data?.total_salary}
-                                </div>
-                                <div className={cls.otchot}>
-                                    Qolgan oylik <br/> {data?.remaining_salary}
-                                </div>
-                                {/*<div className={cls.otchot}>*/}
-                                {/*    To'langan oylik <br/> {allTable[0]?.teachers?.taken}*/}
-                                {/*</div>*/}
-                            </div>
-                        </div> : null
+                // resultData?.map(item => {
+                //     console.log(item, "item")
+                //     return (
+                //         <div className={cls.list}>
+                //             <div className={cls.list__container}>
+                //                 <div className={cls.otchot}>
+                //                     Qolgan qarz <br/> {data?.remaining_debt}
+                //                 </div>
+                //                 <div className={cls.otchot}>
+                //                     Umumiy qarz <br/> {data?.total_debt}
+                //                 </div>
+                //             </div>
+                //         </div>
+                //     )
+                // })
+                // activeType === "student" ?
+                //     <div className={cls.list}>
+                //         <div className={cls.list__container}>
+                //
+                //             <div className={cls.otchot}>
+                //                 Qolgan qarz <br/> {data?.remaining_debt}
+                //             </div>
+                //             <div className={cls.otchot}>
+                //                 Umumiy qarz <br/> {data?.total_debt}
+                //             </div>
+                //         </div>
+                //     </div>
+                //     :
+                //     <div className={cls.list}>
+                //         <div className={cls.list__container}>
+                //             <div className={cls.otchot}>
+                //                 Umumiy oylik <br/> {data?.total_salary}
+                //             </div>
+                //             <div className={cls.otchot}>
+                //                 Qolgan oylik <br/> {data?.remaining_salary}
+                //             </div>
+                //             {/*<div className={cls.otchot}>*/}
+                //             {/*    To'langan oylik <br/> {allTable[0]?.teachers?.taken}*/}
+                //             {/*</div>*/}
+                //         </div>
+                //     </div>
             }
 
 

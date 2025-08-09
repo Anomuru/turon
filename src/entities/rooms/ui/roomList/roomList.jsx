@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router";
 
 import {getFilteredRooms} from "features/filters/roomsFilter";
 import {getRoomsLoading} from "entities/rooms";
-import { Switch } from "shared/ui/switch";
-import { SkeletonCard } from "shared/ui/roomsSkeleton/roomsSkeleton";
+import {Switch} from "shared/ui/switch";
+import {SkeletonCard} from "shared/ui/roomsSkeleton/roomsSkeleton";
 
 import cls from "./roomsList.module.sass";
 import Icon from "shared/assets/images/room_image.svg";
 
-export const RoomsList = ({ currentTableData }) => {
+export const RoomsList = ({currentTableData}) => {
     const navigation = useNavigate()
     const dispatch = useDispatch()
 
@@ -28,15 +28,11 @@ export const RoomsList = ({ currentTableData }) => {
         setSwitchStates(initialSwitchStates);
     }, [currentTableData]);
 
-    if (loading) {
-        return (
-            <div className={cls.skeletonContainer}>
-                {Array.from({ length: 5 }).map((_, index) => (
-                    <SkeletonCard key={index} />
-                ))}
-            </div>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //
+    //     );
+    // }
 
     const handleSwitchChange = (id) => {
         setSwitchStates(prevStates => ({
@@ -47,21 +43,32 @@ export const RoomsList = ({ currentTableData }) => {
 
     const roomsToRender = getFilteredRoom && getFilteredRoom.length > 0 ? getFilteredRoom : currentTableData
 
-    return roomsToRender?.map((item, index) => (
-        <>
-            {!item.deleted && (
-                // <Link extraClass={cls.extraStyle} to={`roomsProfilePage/${item.id}`}>
-                    <div onClick={() => navigation(`roomsProfilePage/${item.id}`)} key={index} className={cls.mainContainer_tablePanelBox_cardBox}>
+    return loading
+        ?
+        <div className={cls.skeletonContainer}>
+            {Array.from({length: 5}).map((_, index) => (
+                <SkeletonCard key={index}/>
+            ))}
+        </div>
+        :
+        roomsToRender?.map((item, index) => (
+            <>
+                {!item.deleted && (
+                    // <Link extraClass={cls.extraStyle} to={`roomsProfilePage/${item.id}`}>
+                    <div onClick={() => navigation(`roomsProfilePage/${item.id}`)} key={index}
+                         className={cls.mainContainer_tablePanelBox_cardBox}>
                         <div className={cls.mainContainer_tablePanelBox_cardBox_imgBox}>
                             <img src={Icon} alt="" className={cls.mainContainer_tablePanelBox_cardBox_imgBox_img}/>
                         </div>
                         <div className={cls.mainContainer_tablePanelBox_cardBox_articleBox}>
                             <div className={cls.mainContainer_tablePanelBox_cardBox_articleBox_sitterBox}>
-                                <h2 className={cls.mainContainer_tablePanelBox_cardBox_articleBox_sitterBox_sitterArticle}>O'rindiqlar soni</h2>
+                                <h2 className={cls.mainContainer_tablePanelBox_cardBox_articleBox_sitterBox_sitterArticle}>O'rindiqlar
+                                    soni</h2>
                                 <h2 className={cls.mainContainer_tablePanelBox_cardBox_articleBox_sitterBox_sitterCounter}>{item?.seats_number}</h2>
                             </div>
                             <div className={cls.mainContainer_tablePanelBox_cardBox_articleBox_boardBox}>
-                                <h2 className={cls.mainContainer_tablePanelBox_cardBox_articleBox_boardBox_isBoard}>Elektron doska</h2>
+                                <h2 className={cls.mainContainer_tablePanelBox_cardBox_articleBox_boardBox_isBoard}>Elektron
+                                    doska</h2>
                                 <Switch
                                     key={`switch-${index}`}
                                     disabled
@@ -74,9 +81,9 @@ export const RoomsList = ({ currentTableData }) => {
                             </div>
                         </div>
                     </div>
-                // </Link>
-            ) }
-        </>
+                    // </Link>
+                )}
+            </>
 
-    ));
+        ));
 };

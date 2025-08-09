@@ -21,6 +21,12 @@ export {
     getTeacherSalaryData,
     getDeletedTeachersSalaryData
 } from "./model/selector/teacher";
+export {
+    getClasses,
+    getClassesLoading,
+    getSalary,
+    getAllSelector
+} from "./model/selector/otchotAccountingSelector"
 
 export {TeacherTable} from "./ui/accountingOtchot/teacherTable"
 export {EmpSalaryTable} from "./ui/accountingOtchot/empSalaryTable"

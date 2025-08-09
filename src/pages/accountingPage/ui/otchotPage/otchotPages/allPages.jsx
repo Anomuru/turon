@@ -36,7 +36,7 @@ export const AllPages = () => {
             {/*    }*/}
             {/*</div>*/}
 
-            <AllTable allTable={all}/>
+            <AllTable />
         </>
     );
 };

@@ -7,7 +7,7 @@
 
     .wrapper__filter
       display: flex
-      justify-content: space-between
+      justify-content: flex-end
 
     .wrapper__middle
       //display: flex
@@ -59,6 +59,10 @@
   padding: 1rem 0
   justify-content: space-between
   align-items: center
+  &__select
+    &.active
+      display: flex
+      flex-direction: column
   .select
     min-width: 15rem
 .tableHeader

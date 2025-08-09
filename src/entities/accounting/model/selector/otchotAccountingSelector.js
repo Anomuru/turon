@@ -1,5 +1,7 @@
 export const getClasses = (state) =>
     state.otchotAccountingSlice?.students
+export const getClassesLoading = (state) =>
+    state.otchotAccountingSlice?.loading
 
 
 export const getSalary = (state) =>
