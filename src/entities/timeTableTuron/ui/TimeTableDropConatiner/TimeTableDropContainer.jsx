@@ -31,6 +31,8 @@ export const TimeTableDropContainer = (props) => {
     }
 
 
+    console.log(rooms)
+
     return (
         <div
             className={cls.tableTuron}
@@ -55,6 +57,7 @@ export const TimeTableDropContainer = (props) => {
                                     <div className={cls.room}>
 
                                         {item.name}
+
 
                                     </div>
                                     <div className={cls.containers}>

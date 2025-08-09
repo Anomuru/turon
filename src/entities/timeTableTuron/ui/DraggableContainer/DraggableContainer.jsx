@@ -53,10 +53,7 @@ export const DraggableContainer = (props) => {
                 <>
                     {
                         !!item?.teacher?.name &&
-                        <Grip
-                            {...listeners}
-                            className={cls.handle}
-                        />
+                        <img src={Grip} alt="grip" {...listeners} className={cls.handle} />
                     }
 
                     <i

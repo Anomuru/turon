@@ -121,11 +121,11 @@ export const routersConfigList = [
         path: "calendar",
         element: <CalendarPage/>,
     },
-    {
-        name: "Time Table",
-        path: "time/*",
-        element: <TimeTableTuronPage/>,
-    },
+    // {
+    //     name: "Time Table",
+    //     path: "time/*",
+    //     element: <TimeTableTuronPage/>,
+    // },
 
     {
         to: "/login",

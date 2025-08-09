@@ -47,8 +47,8 @@ export const CapitalInside = memo(() => {
 
     const dispatch = useDispatch()
     const {register, setValue, handleSubmit} = useForm()
-    // const {id} = useParams()
-    const id = useSelector(getUserBranchId)
+    const {id} = useParams()
+    // const id = useSelector(getUserBranchId)
     const {request} = useHttp()
     const navigation = useNavigate()
     const capitalInside = useSelector(getCapitalInside)
