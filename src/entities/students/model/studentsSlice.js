@@ -28,7 +28,8 @@ const initialState = {
     newStudentsStatus: "idle",
     studyingStudentsStatus: false,
     loading: false,
-    error: null
+    error: null,
+    totalCount: null
 }
 
 export const newStudents = createSlice({
@@ -111,7 +112,8 @@ export const newStudents = createSlice({
                 state.studyingStudentsStatus = true
             })
             .addCase(fetchOnlyStudyingStudentsData.fulfilled, (state, action) => {
-                state.studyingStudents = action.payload
+                state.studyingStudents = action.payload.results
+                state.totalCount = action.payload.count
                 state.studyingStudentsStatus = false
             })
             .addCase(fetchOnlyStudyingStudentsData.rejected, (state, action) => {

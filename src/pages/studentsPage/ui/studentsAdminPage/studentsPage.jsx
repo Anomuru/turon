@@ -28,7 +28,7 @@ import {fetchTeachersData, getTeachers} from "entities/teachers";
 import {useForm} from "react-hook-form";
 import {
 
-    getLoadingStudyingStudents
+    getLoadingStudyingStudents, getTotalCount
 } from "entities/students/model/selector/studentsSelector";
 import {fetchStudentsByClass} from "entities/students/model/studentsThunk";
 import {Radio} from "shared/ui/radio";
@@ -111,6 +111,8 @@ export const StudentsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [activeFormBtn, setActiveFormBtn] = useState(true)
 
+    const totalCount = useSelector(getTotalCount)
+
     let PageSize = useMemo(() => 50, []);
 
 
@@ -130,7 +132,7 @@ export const StudentsPage = () => {
                 filteredStudents = [];
         }
 
-        setCurrentPage(1);
+        // setCurrentPage(1);
 
         if (!search) return filteredStudents;
 
@@ -181,7 +183,7 @@ export const StudentsPage = () => {
     }
 
 
-
+    //
     // useEffect(() => {
     //     if (!userBranchId) return;
     //
@@ -223,27 +225,26 @@ export const StudentsPage = () => {
 
     const renderStudents = useCallback(() => {
         switch (selectedRadio) {
-            case "new_students":
-                if (loadingStudents === true) return <DefaultPageLoader/>
-                return (
-                    <NewStudents
-                        branchId={userBranchId}
-
-                        // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
-                        currentTableData={currentTableData}
-                    />
-                );
-            case "deleted_students":
-                if (loadingStudents === true) return <DefaultPageLoader/>
-                return <DeletedStudents
-                    // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
-                    currentTableData={currentTableData}
-                />;
+            // case "new_students":
+            //
+            //     return (
+            //         <NewStudents
+            //             branchId={userBranchId}
+            //
+            //             // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+            //             currentTableData={currentTableData}
+            //         />
+            //     );
+            // case "deleted_students":
+            //
+            //     return <DeletedStudents
+            //         // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+            //         currentTableData={currentTableData}
+            //     />;
             case "studying_students":
-                if (loadingStudents === true) return <DefaultPageLoader/>
                 return <Students
                     // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
-                    currentTableData={currentTableData}
+                    currentTableData={studyingStudents}
                 />;
             default:
                 return null;
@@ -270,6 +271,7 @@ export const StudentsPage = () => {
         ]
     }, [])
 
+    console.log(studyingStudents, "studyingStudents")
 
     return (
 
@@ -291,12 +293,10 @@ export const StudentsPage = () => {
             />
 
             <div className={cls.tableMain}>
-                {renderNewStudents}
+                {loadingStudents === true ? <DefaultPageLoader/> : renderNewStudents}
             </div>
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
-                setCurrentPage={setCurrentPage}
+                totalCount={totalCount}
                 currentPage={currentPage}
                 pageSize={PageSize}
                 onPageChange={page => {
@@ -307,6 +307,8 @@ export const StudentsPage = () => {
 
 
             <StudentsFilter
+                currentPage={currentPage}
+                pageSize={PageSize}
                 active={active === "filter"}
                 setActive={setActive}
                 activePage={selectedRadio}

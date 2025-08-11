@@ -1,11 +1,9 @@
 import cls from "../accountingTableWorkerSalary/empSalary.module.sass";
-import {Table} from "../../../../../shared/ui/table";
-import {Modal} from "../../../../../shared/ui/modal";
-import {Button} from "../../../../../shared/ui/button";
-import {Pagination} from "../../../../../features/pagination";
+import {Table} from "shared/ui/table/index.js";
+import {Pagination} from "features/pagination/index.js";
 import React, {useMemo, useState} from "react";
 import {useSelector} from "react-redux";
-import {getSearchValue} from "../../../../../features/searchInput";
+import {getSearchValue} from "features/searchInput/index.js";
 
 export const DeletedStudentPayment = ({deletedStudent  , formatSalary }) => {
     const search = useSelector(getSearchValue)
