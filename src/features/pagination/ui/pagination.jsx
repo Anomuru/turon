@@ -7,34 +7,51 @@ import cls from "./pagination.module.sass";
 
 export const Pagination = React.memo((props) => {
     const {
-        users,
         onPageChange,
-        siblingCount = 1,
         currentPage,
         pageSize,
         className,
-        setCurrentTableData,
-        type = "basic"
+        type = "basic",
+        totalCount
     } = props;
 
 
-    useEffect(() => {
-        setCurrentTableData(() => {
-            const firstPageIndex = (currentPage - 1) * pageSize;
-            const lastPageIndex = firstPageIndex + pageSize;
-            return users?.slice(firstPageIndex, lastPageIndex);
-        })
-    }, [pageSize, currentPage, users, setCurrentTableData])
 
-    const paginationRange = usePagination({
-        currentPage,
-        totalCount: users?.length,
-        siblingCount,
-        pageSize
-    });
+    // useEffect(() => {
+    //     setCurrentTableData(() => {
+    //         const firstPageIndex = (currentPage - 1) * pageSize;
+    //         const lastPageIndex = firstPageIndex + pageSize;
+    //         return users?.slice(firstPageIndex, lastPageIndex);
+    //     })
+    // }, [pageSize, currentPage, users, setCurrentTableData])
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+    const maxVisiblePages = 5;
+
+
+    const getPageNumbers = useCallback(() => {
+        let startPage = Math.max(
+            currentPage - Math.floor(maxVisiblePages / 2),
+            1
+        );
+        let endPage = startPage + maxVisiblePages - 1;
+
+        if (endPage > totalPages) {
+            endPage = totalPages;
+            startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+        }
+
+        const pages = [];
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push(i);
+        }
+        return pages;
+    }, [currentPage, maxVisiblePages, totalPages]);
+
+    const pages = getPageNumbers();
 
     const renderPageNumbers = useCallback(() => {
-        return paginationRange?.map((pageNumber, index) => {
+        return pages?.map((pageNumber, index) => {
             if (pageNumber === DOTS) {
                 return <li key={index} className={classNames(cls.pagination_item, "dots")}>&#8230;</li>;
             }
@@ -52,11 +69,9 @@ export const Pagination = React.memo((props) => {
                 </li>
             );
         });
-    }, [currentPage, onPageChange, paginationRange]);
+    }, [currentPage, onPageChange]);
 
-    if (currentPage === 0 || paginationRange?.length < 2) {
-        return null;
-    }
+
 
     const onNext = () => {
         onPageChange(currentPage + 1);

@@ -19,7 +19,7 @@ import {fetchDeletedNewStudentsThunk} from "entities/students";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Button} from "shared/ui/button/index.js";
 
-export const StudentsFilter = React.memo(({active, setActive, activePage, setIsFilter, branchId}) => {
+export const StudentsFilter = React.memo(({active, setActive, activePage, pageSize , currentPage}) => {
     const lang = localStorage.getItem("selectedLang")
     const ageFrom = localStorage.getItem("ageFrom")
     const ageTo = localStorage.getItem("ageTo")
@@ -46,7 +46,10 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, setIsF
                 langId: lang,
                 fromAge: selectedAgeFrom,
                 untilAge: selectedAgeTo,
-                userBranchId
+                userBranchId,
+                currentPage,
+                pageSize
+
             }))
         } else if (activePage === "new_students") {
 
@@ -72,7 +75,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, setIsF
                 userBranchId
             }))
         }
-    }, [selectedLang, selectedAgeTo, selectedAgeFrom, activePage , isSwitch])
+    }, [selectedLang, selectedAgeTo, selectedAgeFrom, activePage , isSwitch , currentPage])
 
 
     const handleAgeFromBlur = (e) => {

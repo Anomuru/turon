@@ -54,3 +54,5 @@ export const getSchoolStudents = (state) =>
 
 export const getOnlyDeletedStudents = (state) =>
     state.newStudents?.deletedStudents
+export const getTotalCount = (state) =>
+    state.newStudents?.totalCount

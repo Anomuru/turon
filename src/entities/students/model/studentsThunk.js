@@ -34,9 +34,9 @@ export const fetchStudentsByClass = createAsyncThunk(
 
 export const fetchOnlyStudyingStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyStudyingStudentsData',
-    async ({fromAge, untilAge, langId,userBranchId}) => {
+    async ({fromAge, untilAge, langId,userBranchId , currentPage , pageSize}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/active-students/?${renderItem({ fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Students/active-students/?branch=${userBranchId}${pageSize ? `&offset=${(currentPage - 1) * 50}&limit=${pageSize}` : ""}${renderItem({ fromAge , untilAge , langId})}`, "GET", null, headers())
     }
 )
 
