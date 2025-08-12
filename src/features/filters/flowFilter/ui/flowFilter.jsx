@@ -13,7 +13,7 @@ import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/f
 
 import cls from "../../filters.module.sass";
 
-export const FlowFilter = memo(({active, setActive}) => {
+export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
 
     const dispatch = useDispatch();
 
@@ -25,13 +25,29 @@ export const FlowFilter = memo(({active, setActive}) => {
     const [selectedTeacher, setSelectedTeacher] = useState("all");
     const [initialApplied, setInitialApplied] = useState(false);
 
-    const fetchFlowsData = (subject, teacher) => {
+    const fetchFlowsData = (subject, teacher, offset, limit) => {
         dispatch(fetchFlows({
             branch: id,
             subject,
-            teacher
+            teacher,
+            limit,
+            offset
         }));
     };
+
+    useEffect(() => {
+        if (currentPage && pageSize && id) {
+            console.log(currentPage, "currentPage")
+            console.log(pageSize, "pageSize")
+            dispatch(fetchFlows({
+                branch: id,
+                subject: selectedSubject,
+                teacher: selectedTeacher,
+                limit: pageSize,
+                offset: (currentPage - 1) * pageSize
+            }));
+        }
+    }, [currentPage, pageSize, id])
 
     useEffect(() => {
         if (id) {
@@ -42,24 +58,24 @@ export const FlowFilter = memo(({active, setActive}) => {
 
     useEffect(() => {
         const saved = getSavedFilters()["flowFilter"];
-        if (id) {
+        if (id && pageSize) {
             if (!initialApplied && saved) {
                 const {selectedSubject: subject, selectedTeacher: teacher} = saved;
 
                 setSelectedSubject(subject || "all");
                 setSelectedTeacher(teacher || "all");
 
-                fetchFlowsData(subject, teacher);
+                fetchFlowsData(subject, teacher, 0, pageSize);
                 setInitialApplied(true);
             } else if (!initialApplied) {
-                fetchFlowsData(selectedSubject, selectedTeacher);
+                fetchFlowsData(selectedSubject, selectedTeacher, 0, pageSize);
                 setInitialApplied(true);
             }
         }
-    }, [initialApplied, id]);
+    }, [initialApplied, id, pageSize]);
 
     const onFilter = () => {
-        fetchFlowsData(selectedSubject, selectedTeacher);
+        fetchFlowsData(selectedSubject, selectedTeacher, 0, pageSize);
         saveFilter("flowFilter", {
             selectedSubject,
             selectedTeacher
@@ -70,7 +86,7 @@ export const FlowFilter = memo(({active, setActive}) => {
         setSelectedSubject("all");
         setSelectedTeacher("all");
 
-        fetchFlowsData("all", "all");
+        fetchFlowsData("all", "all", 0, pageSize);
         removeFilter("flowFilter");
     };
 

@@ -1,6 +1,8 @@
-export const getOverHeadList= (state) =>
+export const getOverHeadList = (state) =>
     state.overHeadSlice?.overHeadList
-export const getOverHeadDeletedList= (state) =>
+export const getOverHeadCount = (state) =>
+    state.overHeadSlice?.overHeadCount
+export const getOverHeadDeletedList = (state) =>
     state.overHeadSlice?.overHeadDeletedLists
 export const getOverHeadType = (state) =>
     state.overHeadSlice?.overHeadType

@@ -1,7 +1,7 @@
 import {getUserBranchId} from "entities/profile/userProfile";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {Button} from "shared/ui/button";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {Modal} from "shared/ui/modal";
 import {Form} from "shared/ui/form";
 import cls from "../accountingPageMain.module.sass"
@@ -67,12 +67,11 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
     const overheadDeletedList = useSelector(getOverHeadDeletedList)
     const [changePayment, setChangePayment] = useState(false)
     const [activeBtn, setActiveBtn] = useState(null)
-
-
     const getCapitalType = useSelector(getCapitalTypes)
-
     const [changePaymentType, setChangePaymentType] = useState(null)
     let branchID = useSelector(getUserBranchId)
+    const [currentPage, setCurrentPage] = useState(1);
+    let PageSize = useMemo(() => 50, [])
     // const [alerts, setAlerts] = useState([])
     useEffect(() => {
         dispatch(getOverheadType())
@@ -82,8 +81,14 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
     }, [])
 
     useEffect(() => {
-        dispatch(overHeadList({activeBtn: activeBtn, branchId: branchID}))
-    }, [activeBtn])
+        if (branchID && currentPage && PageSize)
+            dispatch(overHeadList({
+                type: activeBtn,
+                branch: branchID,
+                limit: PageSize,
+                offset: (currentPage - 1) * PageSize
+            }))
+    }, [activeBtn, branchID, currentPage, PageSize])
     // useEffect(() => {
     //
     // }, [deleted])
@@ -221,9 +226,17 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
                         <div className={cls.subHeader}>
 
                             {overHeadType?.map(item => (
-                                <Button extraClass={classNames(cls.subHeader__subBtn, {
-                                    [cls.active]: activeBtn === item.id
-                                })} onClick={() => setActiveBtn(item.id)}>{item.name}</Button>
+                                <Button
+                                    extraClass={classNames(cls.subHeader__subBtn, {
+                                        [cls.active]: activeBtn === item.id
+                                    })}
+                                    onClick={() => {
+                                        setActiveBtn(item.id)
+                                        setCurrentPage(1)
+                                    }}
+                                >
+                                    {item.name}
+                                </Button>
                             ))}
 
 
@@ -231,6 +244,9 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
 
 
                         <AccountingAdditionalCosts
+                            PageSize={PageSize}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
                             formatSalary={formatSalary}
                             loading={loading}
                             onDelete={onDelete}

@@ -4,6 +4,7 @@ import {fetchFilterFlow, fetchFlows, flowListThunk} from "./flowsThunk";
 
 const initialState = {
     flows: [],
+    flowsCount: 0,
     flowsStatus: "idle",
     flowList: [
         {
@@ -110,7 +111,8 @@ export const flowsSlice = createSlice({
                 state.flowsStatus = "loading"
             })
             .addCase(fetchFlows.fulfilled, (state, action) => {
-                state.flows = action.payload
+                state.flows = action.payload?.results
+                state.flowsCount = action.payload?.count
                 // state.flows = action.payload.results
                 state.flowsStatus = "success"
             })

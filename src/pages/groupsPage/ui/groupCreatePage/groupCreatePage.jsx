@@ -162,7 +162,7 @@ export const GroupCreatePage = () => {
 
     useEffect(() => {
         if (id)
-            dispatch(fetchRoomsData({id}));
+            dispatch(fetchRoomsData({branch: id}));
         // dispatch(fetchFilteredStudents(userBranchId))
         request(`${API_URL}TimeTable/week_days/`, "GET", null, headers())
             .then(res => {

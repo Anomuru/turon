@@ -8,32 +8,30 @@ import {Pagination} from "../../../../../features/pagination";
 import {useSelector} from "react-redux";
 import {getSearchValue} from "../../../../../features/searchInput";
 import {useNavigate} from "react-router";
-import {getLoadingStudent} from "entities/accounting/index.js";
+import {getLoadingStudent, getStudentPaymentsCount} from "entities/accounting/index.js";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 
 export const StudentsPayments = ({
                                      studentData,
-                                     changingData,
                                      setChangingData,
-                                     onDelete,
-                                     deleted,
-                                     activeDelete,
                                      setActiveDelete,
-                                     formatSalary
+                                     formatSalary,
+                                     currentPage,
+                                     setCurrentPage,
+                                     PageSize,
                                  }) => {
 
     const search = useSelector(getSearchValue)
     const loading = useSelector(getLoadingStudent)
-    let PageSize = useMemo(() => 50, [])
-    const [currentTableData, setCurrentTableData] = useState([])
-    const [currentPage, setCurrentPage] = useState(1);
+    const totalCount = useSelector(getStudentPaymentsCount)
+
     const searchedUsers = useMemo(() => {
         const filteredHeroes = studentData?.slice()
-        setCurrentPage(1)
 
 
         if (!search) return filteredHeroes
+        setCurrentPage(1)
 
         return filteredHeroes.filter(item =>
             item?.student_name?.toLowerCase().includes(search.toLowerCase())
@@ -47,7 +45,7 @@ export const StudentsPayments = ({
     }
 
     const renderStudents = () => {
-        return currentTableData.map((item, i) => (
+        return searchedUsers?.map((item, i) => (
             <tr>
                 <td>{i + 1}</td>
                 <td onClick={() => navigation(`../../students/profile/${item.id}`)}>{item?.student_name} {item?.student_surname}</td>
@@ -124,8 +122,6 @@ export const StudentsPayments = ({
             </div>
 
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
                 setCurrentPage={setCurrentPage}
                 currentPage={currentPage}
                 pageSize={PageSize}
@@ -133,6 +129,7 @@ export const StudentsPayments = ({
                     setCurrentPage(page)
                 }}
                 type={"custom"}
+                totalCount={totalCount}
             />
         </>
     );

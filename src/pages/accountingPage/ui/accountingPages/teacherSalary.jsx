@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
@@ -28,24 +28,33 @@ const reducers = {
 export const TeacherSalaryPage = ({deleted, setDeleted}) => {
 
     const dispatch = useDispatch()
+    const {request} = useHttp()
+
     const teacherSalary = useSelector(getTeacherSalaryData)
     const getDeletedTeachersSalary = useSelector(getDeletedTeachersSalaryData)
+    const getPaymentTypes = useSelector(getCapitalTypes)
+    const branchID = useSelector(getUserBranchId)
+
+    console.log(teacherSalary, "teacherSalary")
+
     const [changingData, setChangingData] = useState({})
     const [changePayment, setChangePayment] = useState(false)
-
-    const getPaymentTypes = useSelector(getCapitalTypes)
-
     const [activeDelete, setActiveDelete] = useState(false)
-    let branchID = useSelector(getUserBranchId)
-    const {request} = useHttp()
+    const [currentPage, setCurrentPage] = useState(1);
+
+    let PageSize = useMemo(() => 10, [])
 
 
     useEffect(() => {
         // dispatch(getPaymentType())
-        if (branchID)
-            dispatch(getTeacherSalary(branchID))
+        if (branchID && currentPage && PageSize)
+            dispatch(getTeacherSalary({
+                branch: branchID,
+                limit: PageSize,
+                offset: (currentPage - 1) * PageSize
+            }))
         // dispatch(getDeletedTeacherSalary())
-    }, [branchID])
+    }, [branchID, PageSize, currentPage])
 
 
     const onDelete = () => {
@@ -102,6 +111,9 @@ export const TeacherSalaryPage = ({deleted, setDeleted}) => {
                                       deletedTeacher={getDeletedTeachersSalary}/>
                 :
                 <TeachersSalary
+                    PageSize={PageSize}
+                    setCurrentPage={setCurrentPage}
+                    currentPage={currentPage}
                     setChangingData={setChangingData}
                     changePayment={changePayment}
                     setChangePayment={setChangePayment}

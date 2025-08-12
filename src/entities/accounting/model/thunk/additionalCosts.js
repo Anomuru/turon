@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {API_URL, headers, useHttp} from "../../../../shared/api/base";
+import {API_URL, headers, ParamUrl, useHttp} from "../../../../shared/api/base";
 
 export const getOverheadType = createAsyncThunk(
     "overHeadSlice/getOverheadType",
@@ -20,9 +20,15 @@ export const getMonthDay = createAsyncThunk(
 
 export const overHeadList = createAsyncThunk(
     "overHeadSlice/overHeadList",
-    async ({branchId, activeBtn}) => {
+    async ({branch, type, limit, offset}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Overhead/overheads/?status=False&branch=${branchId}&type=${activeBtn}` , "GET" , null , headers())
+        return await request(`${API_URL}Overhead/overheads/?${ParamUrl({
+            status: "False",
+            branch,
+            type,
+            limit,
+            offset
+        })}`, "GET", null, headers())
     }
 )
 
@@ -30,6 +36,6 @@ export const overHeadDeletedList = createAsyncThunk(
     "overHeadSlice/overHeadDeletedList",
     async (branchId) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Overhead/overheads/?status=True&branch=${branchId}` , "GET" , null , headers())
+        return await request(`${API_URL}Overhead/overheads/?status=True&branch=${branchId}`, "GET", null, headers())
     }
 )

@@ -4,7 +4,7 @@ import {useNavigate} from "react-router";
 
 import {Pagination} from "features/pagination";
 import {getSearchValue} from "features/searchInput";
-import {getEmployerLoading} from "entities/accounting";
+import {getEmployerLoading, getEmployerSalaryCount} from "entities/accounting";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 import {Table} from "shared/ui/table";
 import {Button} from "shared/ui/button";
@@ -14,34 +14,31 @@ import {Select} from "shared/ui/select";
 import cls from "./empSalary.module.sass"
 
 export const EmployeeSalary = ({
-                                   changingData,
                                    filteredSalary,
-                                   sum2,
-                                   formatSalary,
                                    onChange,
                                    changePayment,
                                    setChangePayment,
                                    setChangingData,
                                    setActiveDelete,
-                                   activeDelete,
                                    getCapitalType,
-
+                                   setCurrentPage,
+                                   PageSize,
+                                   currentPage
                                }) => {
-    const navigate = useNavigate()
-    const search = useSelector(getSearchValue)
-    const loading = useSelector(getEmployerLoading)
-    let PageSize = useMemo(() => 50, [])
-    const [currentTableData, setCurrentTableData] = useState([])
-    const [currentPage, setCurrentPage] = useState(1);
 
+    const navigate = useNavigate()
+
+    const search = useSelector(getSearchValue)
+    const totalCount = useSelector(getEmployerSalaryCount)
+    const loading = useSelector(getEmployerLoading)
     const [payment, setPayment] = useState(null)
 
     const searchedUsers = useMemo(() => {
         const filteredHeroes = filteredSalary?.slice()
-        setCurrentPage(1)
 
 
         if (!search) return filteredHeroes
+        setCurrentPage(1)
 
         return filteredHeroes.filter(item =>
             item?.user?.name.toLowerCase().includes(search.toLowerCase())
@@ -58,7 +55,7 @@ export const EmployeeSalary = ({
 
 
     const renderFilteredSalary = () => {
-        return currentTableData?.map((item, i) => (
+        return searchedUsers?.map((item, i) => (
             <>
                 <tbody>
                 <tr>
@@ -163,8 +160,6 @@ export const EmployeeSalary = ({
                 </Modal>
             </div>
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
                 setCurrentPage={setCurrentPage}
                 currentPage={currentPage}
                 pageSize={PageSize}
@@ -172,6 +167,7 @@ export const EmployeeSalary = ({
                     setCurrentPage(page)
                 }}
                 type={"custom"}
+                totalCount={totalCount}
             />
         </>
     );

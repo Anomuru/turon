@@ -1,4 +1,5 @@
 import {getTeachersLoading} from "entities/accounting/index.js";
+import {getTeacherSalaryCount} from "entities/accounting/model/selector/teacher.js";
 import React, {useMemo, useState} from 'react';
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router";
@@ -11,28 +12,26 @@ import {Button} from "shared/ui/button";
 
 export const TeachersSalary = ({
                                    teacherSalary,
-                                   onDelete,
-                                   deleted,
                                    setChangePayment,
                                    setChangingData,
-                                   changePayment,
                                    setActiveDelete,
-                                   changingData,
-                                   activeDelete
+                                   PageSize,
+                                   currentPage,
+                                   setCurrentPage
                                }) => {
-    const filteredTeachers = teacherSalary?.filter(item => !item.deleted);
+
+    const totalCount = useSelector(getTeacherSalaryCount)
     const search = useSelector(getSearchValue)
     const loading = useSelector(getTeachersLoading)
-    let PageSize = useMemo(() => 50, [])
-    const [currentTableData, setCurrentTableData] = useState([])
-    const [currentPage, setCurrentPage] = useState(1);
+
+    console.log(teacherSalary, "teacherSalary")
 
     const searchedUsers = useMemo(() => {
         const filteredHeroes = teacherSalary?.slice()
-        setCurrentPage(1)
 
 
         if (!search) return filteredHeroes
+        setCurrentPage(1)
 
         return filteredHeroes.filter(item =>
             item?.teacher?.user?.name?.toLowerCase().includes(search.toLowerCase())
@@ -103,7 +102,7 @@ export const TeachersSalary = ({
 
 
     const renderTeacherSalary = () => {
-        return currentTableData?.map((item, index) => (
+        return searchedUsers?.map((item, index) => (
             <tbody>
             <tr key={item.id}>
                 <td>{index + 1}</td>
@@ -189,8 +188,6 @@ export const TeachersSalary = ({
                 }
             </div>
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
                 setCurrentPage={setCurrentPage}
                 currentPage={currentPage}
                 pageSize={PageSize}
@@ -198,6 +195,7 @@ export const TeachersSalary = ({
                     setCurrentPage(page)
                 }}
                 type={"custom"}
+                totalCount={totalCount}
             />
 
 
