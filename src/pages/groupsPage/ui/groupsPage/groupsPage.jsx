@@ -48,22 +48,7 @@ export const GroupsPage = () => {
     const [isFilter, setIsFilter] = useState(false)
     const search = useSelector(getSearchValue)
     let PageSize = useMemo(() => 50, [])
-    const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-
-
-
-    const searchedUsers = useMemo(() => {
-        const filteredHeroes = getFilteredGroups?.slice()
-        setCurrentPage(1)
-
-
-        if (!search) return filteredHeroes
-
-        return filteredHeroes.filter(item =>
-            item.name?.toLowerCase().includes(search.toLowerCase())
-        )
-    }, [data, setCurrentPage, search, isFilter, getFilteredGroups])
 
     useEffect(() => {
         setDeletedGroups(deletedGroupsData)
@@ -81,7 +66,7 @@ export const GroupsPage = () => {
             type: "groups"
         }
     ]
-
+    console.log(getFilteredGroups , "getFilteredGroups")
     return (
 
         // <DynamicModuleLoader reducers={reducers}>
@@ -110,13 +95,12 @@ export const GroupsPage = () => {
             <div className={cls.table}>
 
                 <h2>{activeSwitch ? "Deleted Classes" : "Classes"}</h2>
-                {activeSwitch ? <DeletedGroups loadingWithFilter={loadingWithFilter} currentTableData={currentTableData}/> : <GroupsList
-                    loadingWithFilter={loadingWithFilter} currentTableData={currentTableData}
+                {activeSwitch ? <DeletedGroups loadingWithFilter={loadingWithFilter} currentTableData={getFilteredGroups?.results}/> : <GroupsList
+                    loadingWithFilter={loadingWithFilter} currentTableData={getFilteredGroups?.results}
                 />}
             </div>
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
+                totalCount={getFilteredGroups?.count}
                 setCurrentPage={setCurrentPage}
                 currentPage={currentPage}
                 pageSize={PageSize}
@@ -133,6 +117,8 @@ export const GroupsPage = () => {
                 setActiveSwitch={setActiveSwitch}
                 setActive={setActive}
                 active={active}
+                pageSize={PageSize}
+                currentPage={currentPage}
             />
         </div>
         // {/*</DynamicModuleLoader>*/}

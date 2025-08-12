@@ -30,11 +30,8 @@ export const StudentsPayments = ({
     const [currentPage, setCurrentPage] = useState(1);
     const searchedUsers = useMemo(() => {
         const filteredHeroes = studentData?.slice()
-        setCurrentPage(1)
-
-
+        // setCurrentPage(1)
         if (!search) return filteredHeroes
-
         return filteredHeroes.filter(item =>
             item?.student_name?.toLowerCase().includes(search.toLowerCase())
         )
@@ -45,9 +42,9 @@ export const StudentsPayments = ({
     const onDeleteModal = (data) => {
         setActiveDelete(true)
     }
-
+    console.log(studentData , "currentTableData1")
     const renderStudents = () => {
-        return currentTableData.map((item, i) => (
+        return studentData?.map((item, i) => (
             <tr>
                 <td>{i + 1}</td>
                 <td onClick={() => navigation(`../../students/profile/${item.id}`)}>{item?.student_name} {item?.student_surname}</td>
@@ -125,7 +122,7 @@ export const StudentsPayments = ({
 
             <Pagination
                 setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
+                totalCount={searchedUsers?.length}
                 setCurrentPage={setCurrentPage}
                 currentPage={currentPage}
                 pageSize={PageSize}

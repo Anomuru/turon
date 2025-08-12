@@ -18,9 +18,9 @@ export const fetchNewStudentsData = createAsyncThunk(
 
 export const fetchOnlyNewStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyNewStudentsData',
-    async ({ fromAge, untilAge, langId, userBranchId}) => {
+    async ({ fromAge, untilAge, langId, userBranchId , currentPage , pageSize}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/new-registered-students/?${renderItem({fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Students/new-registered-students/?branch=${userBranchId}${pageSize ? `&offset=${(currentPage - 1) * 50}&limit=${pageSize}` : ""}${renderItem({ fromAge , untilAge , langId})}`, "GET", null, headers())
     }
 )
 
@@ -42,9 +42,9 @@ export const fetchOnlyStudyingStudentsData = createAsyncThunk(
 
 export const fetchOnlyDeletedStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyDeletedStudentsData',
-    async ({ fromAge, untilAge, langId,userBranchId }) => {
+    async ({ fromAge, untilAge, langId,userBranchId  , currentPage , pageSize}) => {
         const {request} = useHttp();
-        return await request(`${API_URL}Students/deleted-group-students/?${renderItem({fromAge , untilAge , langId})}&branch=${userBranchId}`, "GET", null, headers())
+        return await request(`${API_URL}Students/deleted-group-students/?branch=${userBranchId}${pageSize ? `&offset=${(currentPage - 1) * 50}&limit=${pageSize}` : ""}${renderItem({ fromAge , untilAge , langId})}`, "GET", null, headers())
     }
 )
 
@@ -92,9 +92,9 @@ export const createSchoolClass = createAsyncThunk(
 
 export const fetchDeletedNewStudentsThunk = createAsyncThunk(
     'newStudents/fetchDeletedNewStudents',
-    async ({userBranchId , langId , fromAge , untilAge  }) => {
+    async ({userBranchId , langId , fromAge , untilAge , currentPage , pageSize  }) => {
         const {request} = useHttp();
-        return await request(`${API_URL}Students/deleted-from-registered/?branch=${userBranchId}${renderItem({langId , fromAge , untilAge})}`, 'GET', null, headers())
+        return await request(`${API_URL}Students/deleted-from-registered/?branch=${userBranchId}${pageSize ? `&offset=${(currentPage - 1) * 50}&limit=${pageSize}` : ""}${renderItem({ fromAge , untilAge , langId})}`, 'GET', null, headers())
     }
 )
 

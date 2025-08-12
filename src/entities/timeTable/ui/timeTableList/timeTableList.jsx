@@ -2,7 +2,7 @@ import {memo, useCallback} from 'react';
 import classNames from "classnames";
 
 import {Table} from "shared/ui/table";
-import {DefaultLoader} from "shared/ui/defaultLoader";
+import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader";
 
 import cls from "./timeTableList.module.sass";
 
@@ -14,15 +14,16 @@ export const TimeTableList = memo((props) => {
         loading,
         setStatus
     } = props
+    console.log(data , "da")
 
     const renderTimeTableList = useCallback(() => {
-        return data?.sort(compareById).map((item, i) =>
+        return data?.map((item, i) =>
             <tr>
                 <td>{i + 1}</td>
-                <td>{item.order}-dars</td>
-                <td>{item.start_time?.slice(0, 5)}</td>
-                <td>{item.end_time?.slice(0, 5)}</td>
-                <td>{item.name}</td>
+                <td>{item?.order}-dars</td>
+                <td>{item?.start_time?.slice(0, 5)}</td>
+                <td>{item?.end_time?.slice(0, 5)}</td>
+                <td>{item?.name}</td>
                 <td></td>
                 <td>
                     <i
@@ -40,10 +41,10 @@ export const TimeTableList = memo((props) => {
     const render = renderTimeTableList()
 
     function compareById(a, b) {
-        return a.order - b.order;
+        return a?.order - b?.order;
     }
 
-    return loading ? <DefaultLoader/> :
+    return loading ? <DefaultPageLoader/> :
         (
             <div className={cls.timeTableList}>
                 <Table>

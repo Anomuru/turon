@@ -45,7 +45,7 @@ export const DeletedStudents = ({currentTableData}) => {
         dispatch(onDeleteGroupStudentBack(id))
 
     };
-
+    console.log(currentTableData , "currentTableData")
     const renderDeletedStudents = () => {
 
 

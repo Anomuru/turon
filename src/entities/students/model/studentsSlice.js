@@ -72,7 +72,8 @@ export const newStudents = createSlice({
                 state.studyingStudentsStatus = true
             })
             .addCase(fetchOnlyNewStudentsData.fulfilled, (state, action) => {
-                state.newStudentes = action.payload
+                state.newStudentes = action.payload.results
+                state.totalCount = action.payload.count
                 state.studyingStudentsStatus = false
                 state.loading = false
             })
@@ -86,7 +87,8 @@ export const newStudents = createSlice({
                 state.studyingStudentsStatus = true
             })
             .addCase(fetchDeletedNewStudentsThunk.fulfilled, (state, action) => {
-                state.newStudentes = action.payload
+                state.newStudentes = action.payload.results
+                state.totalCount = action.payload.count
                 state.studyingStudentsStatus = false
             })
             .addCase(fetchDeletedNewStudentsThunk.rejected, (state, action) => {
@@ -127,7 +129,8 @@ export const newStudents = createSlice({
                 state.error = null
             })
             .addCase(fetchOnlyDeletedStudentsData.fulfilled, (state, action) => {
-                state.deletedStudents = action.payload
+                state.deletedStudents = action.payload.results
+                state.totalCount = action.payload.count
                 state.studyingStudentsStatus = false
             })
             .addCase(fetchOnlyDeletedStudentsData.rejected, (state, action) => {

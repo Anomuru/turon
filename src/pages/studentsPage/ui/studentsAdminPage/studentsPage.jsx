@@ -1,7 +1,6 @@
-
 import {ClassAddForm} from "features/classProfile";
 import {StudentCreateClass} from "features/studentCreateClass";
-import React, { useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 
 import {useDispatch, useSelector} from "react-redux";
 
@@ -38,7 +37,7 @@ import {getSearchValue} from "features/searchInput";
 
 import {useSearchParams} from "react-router-dom";
 
-import {useHttp} from "shared/api/base";
+import {API_URL, headers, useHttp} from "shared/api/base";
 import {
     savePageTypeToLocalStorage,
     getPageTypeFromLocalStorage,
@@ -59,6 +58,10 @@ import {fetchTeachersForSelect} from "entities/oftenUsed/model/oftenUsedThunk";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {studentsReducer} from "entities/students/model/studentsSlice.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {Table} from "shared/ui/table/index.js";
+import {classTypeNumber} from "entities/class/model/selector/classSelector.js";
+import {Button} from "shared/ui/button/index.js";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 
 const studentsFilter = [
     {name: "new_students", label: "New Students"},
@@ -113,36 +116,12 @@ export const StudentsPage = () => {
 
     const totalCount = useSelector(getTotalCount)
 
+    const [selectClass, setSelectClass] = useState(null)
+
     let PageSize = useMemo(() => 50, []);
+    const [activeClass, setActiveClass] = useState(false)
+    const [activeClassStudent, setActiveClassStudent] = useState([])
 
-
-    const searchedUsers = useMemo(() => {
-        let filteredStudents = [];
-        switch (selectedRadio) {
-            case "new_students":
-                filteredStudents = newStudents?.slice();
-                break;
-            case "studying_students":
-                filteredStudents = studyingStudents?.slice();
-                break;
-            case "deleted_students":
-                filteredStudents = deletedStudents?.slice();
-                break;
-            default:
-                filteredStudents = [];
-        }
-
-        // setCurrentPage(1);
-
-        if (!search) return filteredStudents;
-
-        return filteredStudents.filter(item =>
-            (item.user?.name?.toLowerCase().includes(search.toLowerCase()) ||
-                item.user?.surname?.toLowerCase().includes(search.toLowerCase()) ||
-                item?.student?.user?.name.toLowerCase().includes(search.toLowerCase()) ||
-                item?.student?.user?.surname.toLowerCase().includes(search.toLowerCase()))
-        );
-    }, [newStudents, studyingStudents, deletedStudents, search, selectedRadio, isFilter]);
 
     useEffect(() => {
         if (userBranchId) {
@@ -222,25 +201,24 @@ export const StudentsPage = () => {
     };
 
 
-
     const renderStudents = useCallback(() => {
         switch (selectedRadio) {
-            // case "new_students":
-            //
-            //     return (
-            //         <NewStudents
-            //             branchId={userBranchId}
-            //
-            //             // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
-            //             currentTableData={currentTableData}
-            //         />
-            //     );
-            // case "deleted_students":
-            //
-            //     return <DeletedStudents
-            //         // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
-            //         currentTableData={currentTableData}
-            //     />;
+            case "new_students":
+                return (
+                    <NewStudents
+                        branchId={userBranchId}
+
+                        // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+                        currentTableData={newStudents}
+                    />
+                );
+            case "deleted_students":
+                return (
+                    <DeletedStudents
+                        // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+                        currentTableData={deletedStudents}
+                    />
+                );
             case "studying_students":
                 return <Students
                     // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
@@ -249,7 +227,7 @@ export const StudentsPage = () => {
             default:
                 return null;
         }
-    }, [loadingStudents, selectedRadio, currentTableData])
+    }, [loadingStudents, selectedRadio, studyingStudents])
 
     const renderNewStudents = renderStudents()
 
@@ -271,8 +249,45 @@ export const StudentsPage = () => {
         ]
     }, [])
 
-    console.log(studyingStudents, "studyingStudents")
+    const {request} = useHttp()
 
+    const onClickClass = () => {
+        console.log(selectClass, activeClassStudent)
+        const data = {
+            class_number: selectClass,
+            students: activeClassStudent
+        }
+
+        request(`${API_URL}Students/update_student_class_number/`, "POST", JSON.stringify(data), headers())
+            .then(res => {
+                console.log(res)
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: res.msg
+                }))
+            })
+
+    }
+    const onChangeClass = (id) => {
+        setActiveClassStudent(prev => {
+            if (prev.includes(id)) {
+
+                return prev.filter(item => item !== id);
+            } else {
+
+                return [...prev, id];
+            }
+        });
+    };
+
+
+    useEffect(() => {
+        if (schoolClassNumbers) {
+            setSelectClass(schoolClassNumbers[0]?.id)
+        }
+
+    }, [schoolClassNumbers])
     return (
 
         <DynamicModuleLoader reducers={initialReducers}>
@@ -290,20 +305,13 @@ export const StudentsPage = () => {
                 peoples={studentsFilter}
                 // theme={__THEME__ === "app_school_theme"}
                 onClick={setActiveModal}
+                setActiveClass={setActiveClass}
             />
 
             <div className={cls.tableMain}>
-                {loadingStudents === true ? <DefaultPageLoader/> : renderNewStudents}
+                {/*{loadingStudents === true ? <DefaultPageLoader/> : ""}*/}
+                {renderNewStudents}
             </div>
-            <Pagination
-                totalCount={totalCount}
-                currentPage={currentPage}
-                pageSize={PageSize}
-                onPageChange={page => {
-                    setCurrentPage(page)
-                }}
-                type={"custom"}
-            />
 
 
             <StudentsFilter
@@ -314,6 +322,16 @@ export const StudentsPage = () => {
                 activePage={selectedRadio}
                 setIsFilter={setIsFilter}
                 branchId={userBranchId}
+            />
+
+            <Pagination
+                totalCount={totalCount}
+                currentPage={currentPage}
+                pageSize={PageSize}
+                onPageChange={page => {
+                    setCurrentPage(page)
+                }}
+                type={"custom"}
             />
             <Modal
                 active={activeModal === "create"}
@@ -403,6 +421,79 @@ export const StudentsPage = () => {
                 data={data}
                 branch={userBranchId}
             />
+
+            <Modal type={"simple"} active={activeClass} setActive={setActiveClass}>
+
+
+                <div style={{marginBottom: "1rem"}}>
+                    <Select options={schoolClassNumbers} onChangeOption={setSelectClass} defaultValue={selectClass}/>
+                </div>
+
+             <div style={{height: "50vh" , overflow: "auto"}}>
+                 <Table>
+                     <thead className={cls.thead}>
+                     <tr>
+                         <th>№</th>
+                         <th>Full name</th>
+                         <th>Age</th>
+                         <th>Til</th>
+                         <th>Sinf</th>
+
+                         <th>Reg. sana</th>
+                         <th/>
+
+                         {currentTableData?.filter(item => !item.deleted)?.length ? <th>O'chirish</th> : ""}
+
+                     </tr>
+                     </thead>
+                     <tbody>
+                     {newStudents?.map((item, i) => (
+                         <tr key={item.id}>
+                             <td>{i + 1}</td>
+                             <td onClick={() => navigation(`profile/${item.id}`)}>
+
+
+                                 {item.user?.surname} {item.user?.name}
+
+                             </td>
+                             <td>
+                                 {item.user?.age}
+
+                             </td>
+                             <td>
+                                 {item.deleted ? item.user?.language?.name : item?.user?.language}
+                             </td>
+                             <td>
+                                 {item?.class_number}-sinf
+                             </td>
+                             <td>{item.user?.registered_date}</td>
+                             <td onClick={() => onChangeClass(item.id)}>
+                                 <input style={{width: "20px", height: "20px"}} type="checkbox"/>
+
+                             </td>
+
+
+                         </tr>
+                     ))}
+                     </tbody>
+                 </Table>
+             </div>
+
+
+                <div style={{width: "100%", display: "flex", justifyContent: "space-between" , alignItems: "center",}}>
+                    <Pagination
+                        totalCount={totalCount}
+                        currentPage={currentPage}
+                        pageSize={PageSize}
+                        onPageChange={page => {
+                            setCurrentPage(page)
+                        }}
+                        type={"custom"}
+                    />
+                    <Button onClick={onClickClass}>Submit</Button>
+                </div>
+
+            </Modal>
 
 
         </DynamicModuleLoader>

@@ -7,7 +7,8 @@ const initialState = {
     teacherStatus: "idle",
     deletedTeachers: [],
     teachersDataWithFilter: [],
-    loading: false
+    loading: false,
+    totalCount: null
 }
 
 export const teachersSlice = createSlice({
@@ -25,7 +26,9 @@ export const teachersSlice = createSlice({
                 state.loading = true
             })
             .addCase(fetchTeachersData.fulfilled, (state, action) => {
-                state.teachersData = action.payload
+                state.teachersData = action.payload.results
+                state.totalCount = action.payload.count
+
                 state.loading = false
             })
             .addCase(fetchTeachersData.rejected, (state, action) => {
@@ -39,7 +42,9 @@ export const teachersSlice = createSlice({
             })
             .addCase(fetchDeletedTeachersData.fulfilled , (state, action) => {
                 state.deletedTeachers = action.payload
+                state.totalCount = action.payload.count
                 state.loading = false
+                console.log(action.payload)
                 state.error = false
             })
             .addCase(fetchDeletedTeachersData.rejected , state => {
@@ -52,7 +57,8 @@ export const teachersSlice = createSlice({
                 state.loading = true
             })
             .addCase(fetchTeachersDataWithFilter.fulfilled, (state, action) => {
-                state.teachersDataWithFilter = action.payload
+                state.teachersDataWithFilter = action.payload.results
+                state.totalCount = action.payload.count
                 state.loading = false
             })
             .addCase(fetchTeachersDataWithFilter.rejected, (state, action) => {

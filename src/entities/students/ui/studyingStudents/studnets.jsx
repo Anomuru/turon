@@ -4,6 +4,7 @@ import cls from "./studnets.module.sass";
 
 export const Students = ({ currentTableData }) => {
     const navigation = useNavigate();
+    console.log(currentTableData , "current")
 
     const renderStudents = () => {
 
