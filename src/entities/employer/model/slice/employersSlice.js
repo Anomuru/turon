@@ -3,6 +3,7 @@ import {fetchEmployersData} from "./employersThunk";
 
 const initialState = {
     employersData: [],
+    employersCount: 0,
     DeletedEmployers: [],
     employerDataWithFilter: [],
     loading: false,
@@ -21,8 +22,9 @@ export const employersSlice = createSlice({
         builder
             .addCase(fetchEmployersData.pending, (state) => {state.loading = true})
             .addCase(fetchEmployersData.fulfilled, (state, action) => {
+                state.employersData = action.payload?.results
+                state.employersCount = action.payload?.count
                 state.loading = false
-                state.employersData = action.payload
             })
             .addCase(fetchEmployersData.rejected, (state) => {
             state.loading = false;

@@ -1,6 +1,6 @@
 export {Employers} from "./ui/employers/employers"
 export {DeletedEmployers} from "./ui/deletedEmployers/deletedEmployer"
-export {getEmployerDataWithFilter} from './model/selector/employersSelector'
+export {getEmployerDataWithFilter, getEmployersCount} from './model/selector/employersSelector'
 export {EmployerCategoryHeader} from "./ui/employerCategory/employerCategoryHeader/employerCategoryHeader"
 export {CategoryModal} from "./ui/employerCategory/categoryModal/categoryModal"
 export {CategoryEditModal} from "./ui/employerCategory/categoryModal/categoryModal"

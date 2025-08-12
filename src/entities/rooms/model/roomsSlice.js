@@ -4,6 +4,7 @@ import {fetchRoomsData} from "./roomsThunk";
 
 const initialState = {
     roomsData: [],
+    roomsCount: 0,
     roomsStatus: "idle",
     error: null,
     loading: false
@@ -28,7 +29,8 @@ export const roomsSlice = createSlice(
                 })
                 .addCase(fetchRoomsData.fulfilled,( state, action )=> {
                     state.loading = false;
-                    state.roomsData = action.payload
+                    state.roomsData = action.payload?.results
+                    state.roomsCount = action.payload?.count
                     state.roomsStatus = 'success'
                 })
                 .addCase(fetchRoomsData.rejected, state => {

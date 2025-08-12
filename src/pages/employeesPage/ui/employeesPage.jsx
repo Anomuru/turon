@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 import {EmployeesFilter} from "features/filters/employeesFilter";
 import {getSearchValue} from "features/searchInput";
 import {Pagination} from "features/pagination";
-import {Employers, employersReducer} from "entities/employer";
+import {Employers, employersReducer, getEmployersCount} from "entities/employer";
 import {getEmployersData} from "entities/employer/model/selector/employersSelector";
 import {Button} from "shared/ui/button";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
@@ -17,13 +17,14 @@ const reducers = {
 
 export const EmployerPage = () => {
 
+    const totalCount = useSelector(getEmployersCount)
     const employersData = useSelector(getEmployersData)
     const search = useSelector(getSearchValue);
 
     const [activeFilter, setActiveModal] = useState(false)
-    const [currentPage, setCurrentPage] = useState(1);
     const [activeSwitch, setActiveSwitch] = useState(false)
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentTable, setCurrentTable] = useState([])
     const PageSize = useMemo(() => 30, []);
 
     const searchedEmployers = useMemo(() => {
@@ -52,19 +53,17 @@ export const EmployerPage = () => {
                 </div>
 
                 <Employers
-                    currentTableData={searchedEmployers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+                    currentTableData={searchedEmployers}
                 />
                 <Pagination
-                    setCurrentTableData={() => {
-                    }}
-                    search={search}
-                    users={searchedEmployers}
                     setCurrentPage={setCurrentPage}
                     currentPage={currentPage}
                     pageSize={PageSize}
                     onPageChange={(page) => {
                         setCurrentPage(page);
                     }}
+                    type={"custom"}
+                    totalCount={totalCount}
                 />
 
                 <EmployeesFilter
@@ -72,6 +71,8 @@ export const EmployerPage = () => {
                     activeSwitch={activeSwitch}
                     setActive={setActiveModal}
                     active={activeFilter}
+                    pageSize={PageSize}
+                    currentPage={currentPage}
                 />
             </div>
         </DynamicModuleLoader>

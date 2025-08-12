@@ -1,5 +1,5 @@
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
-import React, {memo, useEffect, useState} from "react";
+import React, {memo, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
@@ -22,19 +22,29 @@ const reducers = {
 
 export const EmployerSalaryPage = memo(({deleted, setDeleted}) => {
     const dispatch = useDispatch()
-    const [changePayment, setChangePayment] = useState(false)
-    const [archive, setArchive] = useState(false)
+    const {request} = useHttp()
+
+    let branchID = useSelector(getUserBranchId)
     const getSalary = useSelector(getEmployerSalary)
     const getDeletedEmployerSalary = useSelector(getDeletedEmployer)
-    const {request} = useHttp()
+
+    const [changePayment, setChangePayment] = useState(false)
+    const [archive, setArchive] = useState(false)
     const [activeDelete, setActiveDelete] = useState(false)
-    let branchID = useSelector(getUserBranchId)
+    const [currentPage, setCurrentPage] = useState(1);
+
+    let PageSize = useMemo(() => 50, [])
+
     useEffect(() => {
-        if (branchID)
-            dispatch(getEmpSalary(branchID))
+        if (branchID && currentPage && PageSize)
+            dispatch(getEmpSalary({
+                branch: branchID,
+                offset: (currentPage - 1) * PageSize,
+                limit: PageSize
+            }))
         // dispatch(getPaymentType())
         // dispatch(getDeletedEmpSalary())
-    }, [branchID])
+    }, [branchID, currentPage, PageSize])
 
 
     const [changingData, setChangingData] = useState({})
@@ -139,6 +149,9 @@ export const EmployerSalaryPage = memo(({deleted, setDeleted}) => {
                         filteredDeletedSalary={getDeletedEmployerSalary}
                         formatSalary={formatSalary}/> :
                     <EmployeeSalary
+                        PageSize={PageSize}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
                         changingData={changingData}
                         formatSalary={formatSalary}
                         filteredSalary={getSalary}

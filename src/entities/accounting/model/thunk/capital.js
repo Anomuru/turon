@@ -1,11 +1,11 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {API_URL, headers, useHttp} from "../../../../shared/api/base";
+import {API_URL, headers, ParamUrl, useHttp} from "../../../../shared/api/base";
 
 export const capitalListThunk = createAsyncThunk(
     "capitalList/capitalListThunk",
-    async (branchId) => {
+    async ({branch, limit, offset}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Capital/old_capital_list/?status=False&branch=${branchId}` , "GET" , null , headers())
+        return await request(`${API_URL}Capital/old_capital_list/?${ParamUrl({branch, limit, offset, status:"False"})}` , "GET" , null , headers())
     }
 )
 

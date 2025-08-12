@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
@@ -23,20 +23,29 @@ const reducers = {
 }
 
 export const StudentSalary = ({deleted, setDeleted}) => {
+
     const {request} = useHttp()
     const dispatch = useDispatch()
+
     const studentData = useSelector(getStudentPaymentes)
     const loading = useSelector(getLoadingStudent)
+    const branchID = useSelector(getUserBranchId)
+    const deletedStudentPayment = useSelector(getDeletedStudent)
+
     const [activeDelete, setActiveDelete] = useState(false)
     const [changingData, setChangingData] = useState({})
-    const deletedStudentPayment = useSelector(getDeletedStudent)
-    let branchID = useSelector(getUserBranchId)
+    const [currentPage, setCurrentPage] = useState(1);
 
+    let PageSize = useMemo(() => 50, [])
 
     useEffect(() => {
-        if (branchID)
-            dispatch(getStudentPayment(branchID))
-    }, [branchID])
+        if (branchID && currentPage)
+            dispatch(getStudentPayment({
+                branch: branchID,
+                limit: PageSize,
+                offset: (currentPage - 1) * PageSize
+            }))
+    }, [branchID, currentPage])
 
 
     const formatSalary = (payment_sum) => {
@@ -63,7 +72,7 @@ export const StudentSalary = ({deleted, setDeleted}) => {
             })
     }
 
-    return  (
+    return (
         <DynamicModuleLoader reducers={reducers}>
             <div style={{display: "flex", gap: "2rem", alignItems: "center", justifyContent: "space-between"}}>
                 <div style={{display: "flex", gap: "2rem"}}>
@@ -88,12 +97,12 @@ export const StudentSalary = ({deleted, setDeleted}) => {
                 />
 
                 : <StudentsPayments
+                    PageSize={PageSize}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
                     formatSalary={formatSalary}
                     studentData={studentData}
-                    deleted={deleted}
                     setActiveDelete={setActiveDelete}
-                    activeDelete={activeDelete}
-                    changingData={changingData}
                     setChangingData={setChangingData}
                 />
 

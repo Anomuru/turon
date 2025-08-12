@@ -1,6 +1,8 @@
 
 export const getEmployerSalary = (state) =>
     state.employerSlice?.employerSalary
+export const getEmployerSalaryCount = (state) =>
+    state.employerSlice?.employerSalaryCount
 
 
 export const getEmployerLoading = (state) =>

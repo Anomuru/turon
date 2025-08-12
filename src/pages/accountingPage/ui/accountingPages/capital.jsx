@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {getCapitalList, getDeletedCapitalList} from "entities/accounting/model/selector/capital";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {capitalDeletedListThunk, capitalListThunk} from "entities/accounting/model/thunk/capital";
 import {
     CapitalHeader
@@ -50,14 +50,21 @@ export const Capital = ({deleted, setDeleted}) => {
     let branchID = useSelector(getUserBranchId)
     const monthDay = useSelector(getMonthDays)
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const PageSize = useMemo(() => 50, [])
+
     const {request} = useHttp()
     useEffect(() => {
-        if (branchID) {
-            dispatch(capitalListThunk(branchID))
+        if (branchID && currentPage && PageSize) {
+            dispatch(capitalListThunk({
+                branch: branchID,
+                limit: PageSize,
+                offset: (currentPage - 1) * PageSize
+            }))
             dispatch(getMonthDay())
         }
         // dispatch(capitalDeletedListThunk())
-    }, [branchID])
+    }, [branchID, currentPage, PageSize])
 
 
     const onAdd = (data) => {
@@ -120,10 +127,17 @@ export const Capital = ({deleted, setDeleted}) => {
                 <CapitalHeader deleted={deleted} setDeleted={setDeleted} setActive={setActiveModal} sum1={sum1}
                                sum2={sum2} formatSalary={formatSalary}/>
                 {deleted ? <CapitalDeleted deleted={capitalDeletedList}/> :
-                    <AccountingCapitalCosts changingData={changingData} activeDelete={activeDelete}
-                                            setActiveDelete={setActiveDelete}
-                                            setChangingData={setChangingData}
-                                            onDelete={onDelete} capitalData={capitalList}/>}
+                    <AccountingCapitalCosts
+                        PageSize={PageSize}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        changingData={changingData} activeDelete={activeDelete}
+                        setActiveDelete={setActiveDelete}
+                        setChangingData={setChangingData}
+                        onDelete={onDelete}
+                        capitalData={capitalList}
+                    />
+                }
                 <CapitalModal radioSelect={radio} setRadio={setRadio} register={register} onAdd={onAdd}
                               handleSubmit={handleSubmit} monthDay={monthDay} setMonth={setMonth} setDay={setDay}
                               day={day}

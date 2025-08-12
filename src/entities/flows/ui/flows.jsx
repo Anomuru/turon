@@ -16,7 +16,7 @@ import {useHttp} from "shared/api/base";
 
 import cls from "pages/flowsPage/ui/flowsPage.module.sass";
 
-export const Flows = ({currentTableData, teacherData, loading, levelData, getLevelData, setActive, branchId}) => {
+export const Flows = ({currentTableData, teacherData, loading, levelData, getLevelData, setActive, branchId, currentPage, pageSize}) => {
 
     const navigate = useNavigate()
 
@@ -200,6 +200,8 @@ export const Flows = ({currentTableData, teacherData, loading, levelData, getLev
             <FlowFilter
                 active={filter}
                 setActive={setFilter}
+                currentPage={currentPage}
+                pageSize={pageSize}
             />
         </div>
     );

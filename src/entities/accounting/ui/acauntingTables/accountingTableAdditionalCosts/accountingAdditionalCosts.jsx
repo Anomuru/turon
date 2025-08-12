@@ -1,4 +1,4 @@
-import {getOverHeadLoading} from "entities/accounting/index.js";
+import {getOverHeadCount, getOverHeadLoading} from "entities/accounting/index.js";
 import {loginReducer} from "pages/loginPage/index.js";
 import {Table} from "shared/ui/table";
 import {Button} from "../../../../../shared/ui/button";
@@ -23,20 +23,22 @@ export const AccountingAdditionalCosts = ({
                                               setChangePayment,
                                               changePayment,
                                               getCapitalType,
-                                              onChange
+                                              onChange,
+                                              setCurrentPage,
+                                              PageSize,
+                                              currentPage
                                           }) => {
+
     const search = useSelector(getSearchValue)
     const loading = useSelector(getOverHeadLoading)
-    let PageSize = useMemo(() => 50, [])
-    const [currentTableData, setCurrentTableData] = useState([])
-    const [currentPage, setCurrentPage] = useState(1);
+    const totalCount = useSelector(getOverHeadCount)
 
     const searchedUsers = useMemo(() => {
         const filteredHeroes = additionalCosts?.slice()
-        setCurrentPage(1)
 
 
         if (!search) return filteredHeroes
+        setCurrentPage(1)
 
         return filteredHeroes.filter(item =>
             item.name?.toLowerCase().includes(search.toLowerCase())
@@ -45,7 +47,7 @@ export const AccountingAdditionalCosts = ({
 
 
     const renderOverHeadList = () => {
-        return currentTableData?.map((item, i) => (
+        return searchedUsers?.map((item, i) => (
             <tr>
                 <td>{i + 1}</td>
                 <td>{item.name}</td>
@@ -116,8 +118,6 @@ export const AccountingAdditionalCosts = ({
                 </div>
             </Modal>
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
                 setCurrentPage={setCurrentPage}
                 currentPage={currentPage}
                 pageSize={PageSize}
@@ -125,6 +125,7 @@ export const AccountingAdditionalCosts = ({
                     setCurrentPage(page)
                 }}
                 type={"custom"}
+                totalCount={totalCount}
             />
         </>
     );

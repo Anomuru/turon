@@ -4,6 +4,7 @@ import { getDeletedTeacherSalary, getTeacherSalary} from "../thunk/teacherSalary
 
 const initialState = {
     teacherSalary: [],
+    teacherSalaryCount: 0,
     loading: false,
     error: false,
     deletedSalary: []
@@ -45,7 +46,8 @@ const teacherSalary = createSlice({
                 state.error = false
             })
             .addCase(getTeacherSalary.fulfilled, (state, action) => {
-                state.teacherSalary = action.payload
+                state.teacherSalary = action.payload?.results
+                state.teacherSalaryCount = action.payload?.count
                 state.loading = false
                 state.error = false
             })

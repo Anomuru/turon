@@ -1,6 +1,8 @@
 
 export const getEmployersData = state =>
     state.employers?.employersData
+export const getEmployersCount = state =>
+    state.employers?.employersCount
 
 export const getDeletedEmployersData = state =>
     state.employers?.deletedEmployers

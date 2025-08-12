@@ -2,6 +2,8 @@
 
 export const getStudentPaymentes = (state) =>
     state.studentSlice?.studentsData
+export const getStudentPaymentsCount = (state) =>
+    state.studentSlice?.studentsCount
 
 export const getLoadingStudent = (state) =>
     state.studentSlice?.loading

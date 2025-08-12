@@ -27,7 +27,7 @@ const list = [
     }
 ]
 
-export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActiveSwitch}) => {
+export const RoomsFilter = React.memo(({active, setActive, currentPage, pageSize}) => {
 
     const dispatch = useDispatch();
 
@@ -41,7 +41,7 @@ export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActi
 
     useEffect(() => {
         const saved = getSavedFilters()["roomsFilter"];
-        if (userBranchId) {
+        if (userBranchId && pageSize) {
             if (saved && !initialApplied) {
                 const [from, to] = saved.selectedSeat?.split("-") || ["", ""];
                 setSelectedSeatFrom(from);
@@ -50,20 +50,36 @@ export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActi
                 setSwitchOn(saved.switchOn);
 
                 dispatch(fetchRoomsData({
-                    boardCond: saved.switchOn === "yes" ? "True" : saved.switchOn === "no" ? "False" : "all",
-                    selectedSeat: saved.selectedSeat,
-                    id: userBranchId
+                    electronic_board: saved.switchOn === "yes" ? "True" : saved.switchOn === "no" ? "False" : "all",
+                    seats_number: saved.selectedSeat,
+                    branch: userBranchId,
+                    limit: pageSize,
+                    offset: 0
                 }));
 
                 setInitialApplied(true);
                 // return null;
             } else {
                 dispatch(fetchRoomsData({
-                    id: userBranchId
+                    branch: userBranchId,
+                    limit: pageSize,
+                    offset: 0
                 }));
             }
         }
-    }, [userBranchId]);
+    }, [userBranchId, pageSize]);
+
+    useEffect(() => {
+        if (pageSize && currentPage && userBranchId) {
+            dispatch(fetchRoomsData({
+                electronic_board: switchOn === "yes" ? "True" : switchOn === "no" ? "False" : "all",
+                seats_number: `${selectedSeatFrom}-${selectedSeatTo}`,
+                branch: userBranchId,
+                limit: pageSize,
+                offset: (currentPage - 1) * pageSize
+            }))
+        }
+    }, [pageSize, currentPage, userBranchId])
 
 
     const onFilter = () => {
@@ -73,9 +89,11 @@ export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActi
         console.log(switchOn, "switchOn")
 
         dispatch(fetchRoomsData({
-            boardCond: switchOn === "yes" ? "True" : switchOn === "no" ? "False" : "all",
-            selectedSeat: fullSeat,
-            id: userBranchId
+            electronic_board: switchOn === "yes" ? "True" : switchOn === "no" ? "False" : "all",
+            seats_number: fullSeat,
+            branch: userBranchId,
+            limit: pageSize,
+            offset: 0
         }));
 
         saveFilter("roomsFilter", {
@@ -91,7 +109,7 @@ export const RoomsFilter = React.memo(({active, setActive, activeSwitch, setActi
         // setSelectedSeat("");
         setSwitchOn("all");
 
-        dispatch(fetchRoomsData({id: userBranchId}));
+        dispatch(fetchRoomsData({branch: userBranchId}));
         removeFilter("roomsFilter");
     }
 

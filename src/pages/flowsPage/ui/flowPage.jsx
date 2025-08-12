@@ -8,7 +8,7 @@ import {getCurseLevelData} from "entities/students";
 import {getCurseLevel} from "entities/students/model/studentsSlice";
 import {Flows, flowsReducer} from "entities/flows";
 import {getFlows} from "entities/flows";
-import {getFlowsLoading} from "entities/flows/model/selector/flowsSelector";
+import {getFlowsCount, getFlowsLoading} from "entities/flows/model/selector/flowsSelector";
 import {getUserBranchId} from "entities/profile/userProfile";
 import {flowsProfileReducer} from "entities/flowsProfile";
 import {fetchTeachersData, getTeacherData} from "entities/oftenUsed"
@@ -31,12 +31,12 @@ export const FlowsPage = () => {
 
     const search = useSelector(getSearchValue);
     const flows = useSelector(getFlows)
+    const flowsCount = useSelector(getFlowsCount)
     const flowsLoading = useSelector(getFlowsLoading)
     const userBranchId = useSelector(getUserBranchId)
     const teachers = useSelector(getTeacherData)
     const level = useSelector(getCurseLevelData)
 
-    const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [active, setActive] = useState(false)
 
@@ -44,9 +44,9 @@ export const FlowsPage = () => {
 
     const searchedFlow = useMemo(() => {
         const filteredRooms = flows?.filter(item => !item.deleted) || [];
-        setCurrentPage(1);
 
         if (!search) return filteredRooms;
+        setCurrentPage(1);
 
         return filteredRooms.filter(item =>
             item?.name?.toLowerCase().includes(search.toLowerCase())
@@ -81,23 +81,25 @@ export const FlowsPage = () => {
                 </div>
                 <Flows
                     branchId={userBranchId}
-                    currentTableData={currentTableData}
+                    currentTableData={searchedFlow}
                     loading={flowsLoading}
                     teacherData={teachers}
                     levelData={level}
                     getLevelData={getLevelData}
                     setActive={setActive}
+                    currentPage={currentPage}
+                    pageSize={PageSize}
                 />
                 <Pagination
-                    setCurrentTableData={setCurrentTableData}
-                    users={searchedFlow}
                     setCurrentPage={setCurrentPage}
                     currentPage={currentPage}
                     pageSize={PageSize}
                     onPageChange={page => {
                         setCurrentPage(page)
                     }}
-                    type={"custom"}/>
+                    type={"custom"}
+                    totalCount={flowsCount}
+                />
                 <FlowAddForm
                     userBranchId={userBranchId}
                     active={active}

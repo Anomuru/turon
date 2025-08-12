@@ -20,7 +20,7 @@ import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/f
 
 import cls from "../../filters.module.sass";
 
-export const EmployeesFilter = React.memo(({active, setActive}) => {
+export const EmployeesFilter = React.memo(({active, setActive, currentPage, pageSize}) => {
     const dispatch = useDispatch();
     const languages = useSelector(getLanguagesData);
     const jobsData = useSelector(getVacancyData);
@@ -39,15 +39,31 @@ export const EmployeesFilter = React.memo(({active, setActive}) => {
         name: job.group.name
     })) || [];
 
-    function fetchEmployees(job, lang, ageRange, isDeleted) {
+    function fetchEmployees(job, lang, ageRange, isDeleted, offset, limit) {
         dispatch(fetchEmployersData({
             job,
             branch,
             language: lang,
             age: ageRange,
-            deleted: isDeleted ? "True" : "False"
+            deleted: isDeleted ? "True" : "False",
+            offset,
+            limit
         }));
     }
+
+    useEffect(() => {
+        if (pageSize && currentPage && branch) {
+            dispatch(fetchEmployersData({
+                job: selectedJob,
+                branch,
+                language: selectedLanguage,
+                age: selectedAge,
+                deleted: activeSwitch ? "True" : "False",
+                offset: (currentPage - 1) * pageSize,
+                limit: pageSize
+            }));
+        }
+    }, [pageSize, currentPage, branch])
 
     useEffect(() => {
         dispatch(fetchVacancyData());
@@ -56,7 +72,7 @@ export const EmployeesFilter = React.memo(({active, setActive}) => {
 
     useEffect(() => {
         const saved = getSavedFilters()["employeesFilter"];
-        if (branch) {
+        if (branch && pageSize) {
             if (!initialApplied && saved) {
                 const {
                     selectedAge,
@@ -74,14 +90,14 @@ export const EmployeesFilter = React.memo(({active, setActive}) => {
                 setSelectedLanguage(lang || 'all');
                 setActiveSwitch(switchOn ?? false);
 
-                fetchEmployees(job, lang, selectedAge, switchOn);
+                fetchEmployees(job, lang, selectedAge, switchOn, 0, pageSize);
                 setInitialApplied(true);
             } else if (!initialApplied) {
-                fetchEmployees(selectedJob, selectedLanguage, selectedAge, activeSwitch);
+                fetchEmployees(selectedJob, selectedLanguage, selectedAge, activeSwitch, 0, pageSize);
                 setInitialApplied(true);
             }
         }
-    }, [initialApplied, branch]);
+    }, [initialApplied, branch, pageSize]);
 
     const onSelectJob = (value) => {
         setSelectedJob(value);
@@ -104,7 +120,7 @@ export const EmployeesFilter = React.memo(({active, setActive}) => {
     };
 
     const onFilter = () => {
-        fetchEmployees(selectedJob, selectedLanguage, selectedAge, activeSwitch);
+        fetchEmployees(selectedJob, selectedLanguage, selectedAge, activeSwitch, 0, pageSize);
         saveFilter("employeesFilter", {
             selectedAge,
             selectedJob,
@@ -121,7 +137,7 @@ export const EmployeesFilter = React.memo(({active, setActive}) => {
         setSelectedAgeTo("");
         setActiveSwitch(false);
 
-        fetchEmployees("all", "all", "", false);
+        fetchEmployees("all", "all", "", false, 0, pageSize);
         removeFilter("employeesFilter");
     };
 

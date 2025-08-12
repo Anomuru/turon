@@ -81,7 +81,7 @@ export const GroupProfilePage = () => {
     useEffect(() => {
         if (branch) {
             dispatch(fetchClassNumberData({branch}))
-            dispatch(fetchRoomsData({id: branch}))
+            dispatch(fetchRoomsData({branch}))
             dispatch(fetchTeachersData({userBranchId: branch}))
         }
     }, [branch])

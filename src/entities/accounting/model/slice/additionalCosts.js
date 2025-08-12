@@ -3,6 +3,7 @@ import {getMonthDay, getOverheadType, overHeadDeletedList, overHeadList} from ".
 
 const initialState = {
     overHeadList: [],
+    overHeadCount: 0,
     overHeadDeletedLists: [],
     overHeadType: [],
     loading: false,
@@ -42,7 +43,8 @@ export const overHeadSlice = createSlice({
                 state.error = false
             })
             .addCase(overHeadList.fulfilled, (state, action) => {
-                state.overHeadList = action.payload
+                state.overHeadList = action.payload?.results
+                state.overHeadCount = action.payload?.count
                 state.loading = false
                 state.error = false
             })

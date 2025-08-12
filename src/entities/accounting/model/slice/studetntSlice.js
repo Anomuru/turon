@@ -3,6 +3,7 @@ import {getDeletedPayment, getStudentPayment} from "../thunk/student";
 
 const initialState = {
     studentsData: [],
+    studentsCount: 0,
     loading: false,
     error: false,
     deletedStudentsPayment: []
@@ -22,7 +23,8 @@ const studentSlice = createSlice({
                 state.error = false
             })
             .addCase(getStudentPayment.fulfilled ,(state, action) =>{
-                state.studentsData = action.payload
+                state.studentsData = action.payload?.results
+                state.studentsCount = action.payload?.count
                 state.loading = false
                 state.error = false
             } )
