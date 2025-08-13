@@ -196,7 +196,7 @@ export const ClassAddForm = memo((props) => {
                     <h2>Add Class</h2>
                     <Select
                         onChangeOption={setOnChangeSelect}
-                        options={groupData}
+                        options={groupData?.results}
                         title={"Classes"}
                         register={register}
                         name={"class"}

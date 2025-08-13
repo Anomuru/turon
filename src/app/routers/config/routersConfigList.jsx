@@ -145,12 +145,7 @@ export const routersConfigList = [
         icon: "fa-book",
         roles: []
     },
-    {
-        name: "accounting",
-        path: getAccounting(":id"),
-        element: <AccountingPageMainIndex/>,
-        isMultiPage: true
-    },
+
     // {
     //     name: "capital category profile",
     //     path: getCapitalCategoryProfile(":id"),

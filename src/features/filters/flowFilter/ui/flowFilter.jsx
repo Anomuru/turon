@@ -87,19 +87,20 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
         fetchFlowsData("all", "all", 0, pageSize);
         removeFilter("flowFilter");
     };
+    console.log(teachers?.results , "teachers")
 
     return (
         <Modal active={active} setActive={setActive}>
             <div className={cls.filter}>
                 <h1>Filter</h1>
                 <div className={cls.filter__container}>
-                    <Select
+                    {teachers &&  <Select
                         title={"Teacher"}
                         extraClass={cls.filter__select}
                         onChangeOption={(val) => setSelectedTeacher(val)}
                         defaultValue={selectedTeacher}
-                        options={[{name: "Hamma", id: "all"}, ...teachers.map(item => ({id: item.id, name: `${item.name} ${item.surname}`}))]}
-                    />
+                        options={[{name: "Hamma", id: "all"}, ...teachers?.map(item => ({id: item?.id, name: `${item?.name}`}))]}
+                    />}
                     <Select
                         title={"Fan"}
                         extraClass={cls.filter__select}

@@ -44,7 +44,7 @@ export const TimeTableListPage = () => {
     const [isDeleted, setIsDeleted] = useState(false)
 
     const search = useSelector(getSearchValue)
-    let PageSize = useMemo(() => 10, [])
+    let PageSize = useMemo(() => 11, [])
     const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {

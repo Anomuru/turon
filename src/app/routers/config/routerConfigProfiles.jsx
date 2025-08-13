@@ -18,10 +18,11 @@ import {
     getEmployerSalary,
     getTeacherSalary, getInkasatsiya,
     getGroupHistory,
-    getRouteClassProfile, getOtchot, getRouteRGBData, getRouteTaskManager, getRouteFilteredLeads
+    getRouteClassProfile, getOtchot, getRouteRGBData, getRouteTaskManager, getRouteFilteredLeads, getAccounting
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
+import {AccountingPageMainIndex} from "pages/accountingPage/index.js";
 
 
 const ClassProfilePage = lazyPage(() => import("pages/School"), "ClassProfilePage");
@@ -201,8 +202,13 @@ export const routersConfigProfile = [
         name: "AdminTaskManager",
         path: "adminTaskManager",
         element: <AdminTaskManager/>
-    }
-
+    },
+    {
+        name: "accounting",
+        path: getAccounting(":id"),
+        element: <AccountingPageMainIndex/>,
+        isMultiPage: true
+    },
 
     // {
     //     name: "capital category profile",
