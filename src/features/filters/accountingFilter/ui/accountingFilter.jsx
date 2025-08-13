@@ -1,9 +1,9 @@
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
-import { Modal } from "shared/ui/modal";
-import { Switch } from "shared/ui/switch";
+import {Modal} from "shared/ui/modal";
+import {Switch} from "shared/ui/switch";
 
 import {
     overHeadDeletedList,
@@ -13,12 +13,12 @@ import {
     getDeletedPayment
 } from "entities/accounting";
 
-import { saveFilter, getSavedFilters, removeFilter } from "shared/lib/components/filterStorage/filterStorage";
+import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/filterStorage/filterStorage";
 
 import cls from "../../filters.module.sass";
-import { Button } from "shared/ui/button"; // если нужна кнопка очистки
+import {Button} from "shared/ui/button";
 
-export const AccountingFilter = ({ setActive, active, setActiveDel, activeDel, activePage }) => {
+export const AccountingFilter = ({setActive, active, setActiveDel, activeDel, activePage, currentPage, pageSize}) => {
     const dispatch = useDispatch();
 
     const branch = useSelector(getUserBranchId)
@@ -45,7 +45,11 @@ export const AccountingFilter = ({ setActive, active, setActiveDel, activeDel, a
 
     const triggerDeletedDispatch = () => {
         if (activePage === "studentsPayments") {
-            dispatch(getDeletedPayment(branch));
+            dispatch(getDeletedPayment({
+                branch,
+                offset: (currentPage - 1) * 50,
+                limit: pageSize
+            }));
         } else if (activePage === "teachersSalary") {
             dispatch(getDeletedTeacherSalary(branch));
         } else if (activePage === "employeesSalary") {
@@ -92,11 +96,11 @@ export const AccountingFilter = ({ setActive, active, setActiveDel, activeDel, a
                 <div className={cls.filter__container}>
                     <div className={cls.filter__switch}>
                         <p>O'chirilganlar</p>
-                        <Switch onChangeSwitch={onDeletedToggle} activeSwitch={activeDel} />
+                        <Switch onChangeSwitch={onDeletedToggle} activeSwitch={activeDel}/>
                     </div>
                     <div className={cls.filter__switch}>
                         <p>Arxiv</p>
-                        <Switch onChangeSwitch={onArchiveToggle} activeSwitch={isArchive} />
+                        <Switch onChangeSwitch={onArchiveToggle} activeSwitch={isArchive}/>
                     </div>
                     <div className={cls.filter__switch} style={{justifyContent: "flex-end"}}>
                         <Button onClick={onDeleteFilter} type="danger">Tozalash</Button>

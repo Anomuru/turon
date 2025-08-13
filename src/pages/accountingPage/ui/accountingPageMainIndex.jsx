@@ -50,6 +50,9 @@ export const AccountingPageMain = () => {
     const activePage = useSelector(getAccountingActivePage)
     // const oldLength = useSelector(getMultiOldLength)
     // const locations = useSelector(getSelectedLocations)
+    const [currentPage, setCurrentPage] = useState(1);
+
+    let PageSize = useMemo(() => 50, [])
 
     // const {id} = useParams()
     // const {id} = useSelector(getBranch)
@@ -250,6 +253,8 @@ export const AccountingPageMain = () => {
                 setActiveDel={setActiveDel}
                 activeDel={activeDel}
                 activePage={activePage}
+                pageSize={PageSize}
+                currentPage={currentPage}
             />
 
         </DynamicModuleLoader>

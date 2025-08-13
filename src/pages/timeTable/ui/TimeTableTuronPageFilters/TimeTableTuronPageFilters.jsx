@@ -51,6 +51,7 @@ const TimeTableTuronPageFilters = React.memo((props) => {
 
 
     const onChangeDate = (date) => {
+        console.log(date)
         dispatch(onChangeDateTimeTable(date))
 
     }

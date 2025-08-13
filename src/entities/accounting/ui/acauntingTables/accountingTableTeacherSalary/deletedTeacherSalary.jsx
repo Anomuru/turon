@@ -28,7 +28,7 @@ export const DeletedTeacherSalary = ({deletedTeacher, setChangePayment, setChang
 
 
     const renderTeacherDeleted = () => {
-        return currentTableData?.map((item, index) => (
+        return searchedUsers?.map((item, index) => (
             <>
 
                 <tbody>

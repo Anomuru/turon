@@ -25,6 +25,8 @@ export const getFilteredGroups = (state) =>
 
 export const getWeekDays = (state) =>
     state.groupProfileSlice?.weekDays
+export const getSelectedWeekDay = (state) =>
+    state.groupProfileSlice?.selectedWeekDay
 
 export const getStudyYears = (state) =>
     state.groupProfileSlice?.studyYears

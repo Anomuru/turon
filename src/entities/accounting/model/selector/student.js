@@ -11,3 +11,5 @@ export const getLoadingStudent = (state) =>
 
 export const getDeletedStudent = (state) =>
     state.studentSlice?.deletedStudentsPayment
+export const getDeletedStudentCount = (state) =>
+    state.studentSlice?.deletedStudentsPaymentCount

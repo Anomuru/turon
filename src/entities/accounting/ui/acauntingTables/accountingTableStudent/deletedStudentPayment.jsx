@@ -1,3 +1,4 @@
+import {getDeletedStudentCount} from "entities/accounting/index.js";
 import cls from "../accountingTableWorkerSalary/empSalary.module.sass";
 import {Table} from "shared/ui/table/index.js";
 import {Pagination} from "features/pagination/index.js";
@@ -7,6 +8,7 @@ import {getSearchValue} from "features/searchInput/index.js";
 
 export const DeletedStudentPayment = ({deletedStudent  , formatSalary }) => {
     const search = useSelector(getSearchValue)
+    const totalCount = useSelector(getDeletedStudentCount)
     let PageSize = useMemo(() => 50, [])
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
@@ -24,7 +26,7 @@ export const DeletedStudentPayment = ({deletedStudent  , formatSalary }) => {
 
 
     const renderDeletedStudents = () => {
-        return currentTableData.map((item, i) => (
+        return searchedUsers?.map((item, i) => (
             <tr>
                 <td>{i + 1}</td>
                 <td>{item?.student?.user?.name} {item?.student?.user?.surname}</td>
@@ -75,8 +77,6 @@ export const DeletedStudentPayment = ({deletedStudent  , formatSalary }) => {
             </div>
 
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
                 setCurrentPage={setCurrentPage}
                 currentPage={currentPage}
                 pageSize={PageSize}
@@ -84,6 +84,7 @@ export const DeletedStudentPayment = ({deletedStudent  , formatSalary }) => {
                     setCurrentPage(page)
                 }}
                 type={"custom"}
+                totalCount={totalCount}
             />
         </>
     );

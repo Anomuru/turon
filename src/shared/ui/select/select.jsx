@@ -22,7 +22,6 @@ export const  Select = React.memo(({
     const [selectOption, setSelectOption] = useState("");
     const [optionsData, setOptionsData] = useState([]);
     const [isChanged, setIsChanged] = useState(false);
-    console.log(options , "log")
 
     useEffect(() => {
         setOptionsData(options);

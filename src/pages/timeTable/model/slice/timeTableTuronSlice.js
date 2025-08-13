@@ -168,7 +168,7 @@ const timeTableTuronSlice = createSlice({
 
 
             .addCase(fetchTimeTableTypesData.fulfilled, (state, action) => {
-                state.group = action.payload.map((item, index) => {
+                state.group = action.payload?.results?.map((item, index) => {
                     return {
                         ...item,
                         dndId: `${item.type}-${item.id}`,
