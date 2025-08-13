@@ -17,7 +17,7 @@ import {API_URL, headers, useHttp} from "shared/api/base";
 
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {onDelete} from "entities/teachers/model/teacherSlice";
-import {getDeletedTeacher} from "entities/teachers/model/selector/teacherSelector";
+import {getDeletedTeacher, getTotalCount} from "entities/teachers/model/selector/teacherSelector";
 
 import {EmployerCategoryPage} from "../../employeesPage";
 import {ConfirmModal} from "../../../shared/ui/confirmModal";
@@ -39,18 +39,13 @@ export const TeachersPage = () => {
     const filteredTeachersData = useSelector(getTeachersWithFilter)
     const dispatch = useDispatch()
     const teacherStatus = localStorage.getItem("teacherStatus")
-    const userBranchId =   useSelector(getUserBranchId)
 
 
+    console.log(deletedTeacher)
 
-    // useEffect(() => {
-    //     if (!userBranchId) return;
-    //     dispatch(fetchTeachersData({userBranchId}))
-    //
-    // }, [dispatch, userBranchId])
+    const totalCount = useSelector(getTotalCount)
 
-
-    let PageSize = useMemo(() => 30, [])
+    let PageSize = useMemo(() => 50, [])
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [selected, setSelected] = useState()
@@ -64,32 +59,8 @@ export const TeachersPage = () => {
 
     const {request} = useHttp()
 
-    const searchedUsers = useMemo(() => {
-        const filteredHeroes =  filteredTeachersData?.slice()
-        setCurrentPage(1)
-        if (!search) return filteredHeroes
-        return filteredHeroes.filter(item =>
-            (item?.name?.toLowerCase().includes(search.toLowerCase()) ||
-                item?.surname?.toLowerCase().includes(search.toLowerCase()))
-        );
-    }, [teachersData, filteredTeachersData, setCurrentPage, search, isFilter])
 
 
-    const searchedUsersDel = useMemo(() => {
-        const filteredHeroes = isFilter ? filteredTeachersData?.slice() : deletedTeacher?.slice()
-        setCurrentPage(1)
-        if (!search) return filteredHeroes
-        return filteredHeroes.filter(item =>
-            (item?.name?.toLowerCase().includes(search.toLowerCase()) ||
-                item?.surname?.toLowerCase().includes(search.toLowerCase()))
-        );
-    }, [deletedTeacher, filteredTeachersData, setCurrentPage, search, isFilter])
-    const types = [
-        {
-            name: "O'qituvchilar",
-            type: "teachers"
-        }
-    ];
 
     const onClick = () => {
         const id = activeDelete.id
@@ -146,7 +117,7 @@ export const TeachersPage = () => {
                             :
                             activeSwitch === true ?
                                 <DeletedTeachers
-                                    data={searchedUsersDel?.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+                                    data={filteredTeachersData}
                                     // data={teachersData}
                                     // data={searchedUsers}
                                 />
@@ -159,7 +130,7 @@ export const TeachersPage = () => {
                                     // onClick={onClick}
                                     theme={theme === "app_school_theme"}
                                     loading={getTeacherLoading}
-                                    data={searchedUsers?.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
+                                    data={filteredTeachersData}
                                     // data={currentTableData}
                                 />
                         }
@@ -167,10 +138,8 @@ export const TeachersPage = () => {
 
 
                     <Pagination
-                        setCurrentTableData={setCurrentTableData}
-                        users={activeSwitch ? searchedUsersDel : searchedUsers}
+                        totalCount={totalCount}
                         search={search}
-                        setCurrentPage={setCurrentPage}
                         currentPage={currentPage}
                         pageSize={PageSize}
                         onPageChange={page => {
@@ -185,6 +154,8 @@ export const TeachersPage = () => {
                         setActiveSwitch={setActiveSwitch}
                         setActive={setActive}
                         active={active}
+                        currentPage={currentPage}
+                        pageSize={PageSize}
                     />
                 </div>
 

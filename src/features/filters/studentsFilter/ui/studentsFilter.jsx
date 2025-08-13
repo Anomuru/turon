@@ -58,13 +58,19 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                     langId: lang,
                     fromAge: selectedAgeFrom,
                     untilAge: selectedAgeTo,
-                    userBranchId}));
+                    userBranchId,
+                    currentPage,
+                    pageSize
+                }));
+
             } else {
                 dispatch(fetchOnlyNewStudentsData({
                     langId: lang,
                     fromAge: selectedAgeFrom,
                     untilAge: selectedAgeTo,
-                    userBranchId
+                    userBranchId,
+                    currentPage,
+                    pageSize
                 }))
             }
         } else {
@@ -72,7 +78,9 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                 langId: lang,
                 fromAge: selectedAgeFrom,
                 untilAge: selectedAgeTo,
-                userBranchId
+                userBranchId,
+                currentPage,
+                pageSize
             }))
         }
     }, [selectedLang, selectedAgeTo, selectedAgeFrom, activePage , isSwitch , currentPage])

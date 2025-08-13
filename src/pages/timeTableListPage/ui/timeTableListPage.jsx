@@ -27,16 +27,10 @@ import cls from "./timeTableListPage.module.sass";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
-const reducers ={
-
-}
+const reducers = {}
 
 export const TimeTableListPage = () => {
 
-    useEffect(() => {
-        dispatch(fetchTimeTableListData())
-        dispatch(fetchClassInput())
-    }, [])
 
     const dispatch = useDispatch()
 
@@ -51,20 +45,12 @@ export const TimeTableListPage = () => {
 
     const search = useSelector(getSearchValue)
     let PageSize = useMemo(() => 10, [])
-    const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
 
-    const searchedUsers = useMemo(() => {
-        const filteredHeroes = data?.slice()
-        setCurrentPage(1)
-
-        if (!search) return filteredHeroes
-
-        return filteredHeroes.filter(item =>
-            item.name?.toLowerCase().includes(search.toLowerCase())
-        )
-    }, [data, setCurrentPage, search])
-
+    useEffect(() => {
+        dispatch(fetchTimeTableListData({currentPage, pageSize: PageSize}))
+        // dispatch(fetchClassInput())
+    }, [currentPage])
     const onSubmitCreate = (data) => {
         dispatch(createTimeTable(data))
         dispatch(onAddAlertOptions({
@@ -107,7 +93,7 @@ export const TimeTableListPage = () => {
 
 
     }
-    
+
     const onDeleteStatus = () => {
         setIsDeleted(true)
     }
@@ -123,14 +109,13 @@ export const TimeTableListPage = () => {
                 />
                 <div className={cls.timeTable__table}>
                     <TimeTableList
-                        data={currentTableData}
+                        data={data?.results}
                         setIsChange={setIsChange}
                         loading={loading}
                         setStatus={setCurrentStatus}
                     />
                     <Pagination
-                        setCurrentTableData={setCurrentTableData}
-                        users={searchedUsers}
+                        totalCount={data?.count}
                         currentPage={currentPage}
                         pageSize={PageSize}
                         onPageChange={page => {

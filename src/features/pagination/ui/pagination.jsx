@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect } from 'react';
+import React, {useCallback, useEffect} from 'react';
 import classNames from "classnames";
 
-import { usePagination, DOTS } from "shared/lib/hooks/usePagination";
+import {usePagination, DOTS} from "shared/lib/hooks/usePagination";
 
 import cls from "./pagination.module.sass";
 
@@ -14,7 +14,6 @@ export const Pagination = React.memo((props) => {
         type = "basic",
         totalCount
     } = props;
-
 
 
     // useEffect(() => {
@@ -72,7 +71,6 @@ export const Pagination = React.memo((props) => {
     }, [currentPage, onPageChange]);
 
 
-
     const onNext = () => {
         onPageChange(currentPage + 1);
     };
@@ -84,34 +82,40 @@ export const Pagination = React.memo((props) => {
     // let lastPage = paginationRange[paginationRange?.length - 1] ? paginationRange[paginationRange?.length - 1] : 1;
 
 
-
     const renderedPages = renderPageNumbers();
 
 
+    console.log(totalCount , "asda")
+    console.log(totalPages)
     return (
-        <ul className={classNames(cls.pagination_container, { [className]: className })}>
-            <li
-                key={10000}
-                className={classNames(cls.pagination_item, cls.arrow, {
-                    [cls.disabled]: currentPage === 1
-                })}
-                onClick={onPrevious}
-            >
-                <i className="fas fa-arrow-left"></i>
-            </li>
-            <div className={cls.numbers}>
-                {renderedPages}
-            </div>
+        <>
 
-            <li
-                key={100001}
-                className={classNames(cls.pagination_item, cls.arrow, {
-                    // [cls.disabled]: currentPage === lastPage
-                })}
-                onClick={onNext}
-            >
-                <i className="fas fa-arrow-right"></i>
-            </li>
-        </ul>
+            {totalPages > 1 && (
+                <ul className={classNames(cls.pagination_container, {[className]: className})}>
+                    <li
+                        key={10000}
+                        className={classNames(cls.pagination_item, cls.arrow, {
+                            [cls.disabled]: currentPage === 1
+                        })}
+                        onClick={onPrevious}
+                    >
+                        <i className="fas fa-arrow-left"></i>
+                    </li>
+                    <div className={cls.numbers}>
+                        {renderedPages}
+                    </div>
+
+                    <li
+                        key={100001}
+                        className={classNames(cls.pagination_item, cls.arrow, {
+                            [cls.disabled]: currentPage === totalPages
+                        })}
+                        onClick={onNext}
+                    >
+                        <i className="fas fa-arrow-right"></i>
+                    </li>
+                </ul>
+            )}
+        </>
     );
 });

@@ -17,6 +17,8 @@ export const NewStudents = memo(({currentTableData}) => {
     const [isOpen, setIsOpen] = useState(false)
     const navigation = useNavigate()
 
+    console.log(currentTableData , "log")
+
 
     const renderStudents = () => {
         return currentTableData?.map((item, i) => (
@@ -91,7 +93,7 @@ export const NewStudents = memo(({currentTableData}) => {
 
                         <th>Reg. sana</th>
 
-                        {currentTableData.filter(item => !item.deleted)?.length ?  <th>O'chirish</th> : ""}
+                        {currentTableData?.filter(item => !item.deleted)?.length ?  <th>O'chirish</th> : ""}
 
                     </tr>
                     </thead>

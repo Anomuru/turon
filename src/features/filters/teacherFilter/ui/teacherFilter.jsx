@@ -18,7 +18,7 @@ import {fetchDeletedTeachersData, fetchTeachersDataWithFilter} from "entities/te
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Button} from "shared/ui/button/index.js";
 
-export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setActiveSwitch , activeSwitch}) => {
+export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setActiveSwitch , activeSwitch , currentPage , pageSize}) => {
 
     const teacherAgeTo = localStorage.getItem("teacherAgeTo")
     const teacherAgeFrom = localStorage.getItem("teacherAgeFrom")
@@ -65,10 +65,12 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
             untilAge: selectedAgeTo,
             fromAge: selectedAgeFrom,
             userBranchId: branchId,
-            switchItem: activeSwitch
+            switchItem: activeSwitch,
+            currentPage ,
+            pageSize
         }))
         setIsFilter(true)
-    } , [selectedSubject , selectedAgeFrom , selectedAgeTo , selectedLanguage , activeSwitch])
+    } , [selectedSubject , selectedAgeFrom , selectedAgeTo , selectedLanguage , activeSwitch , currentPage])
 
     const onSelectSubject = (value) => {
         if (value !== selectedSubject) {

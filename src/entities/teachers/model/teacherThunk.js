@@ -25,9 +25,9 @@ export const fetchDeletedTeachersData = createAsyncThunk(
 
 export const fetchTeachersDataWithFilter = createAsyncThunk(
     "teachersSlice/fetchTeachersDataWithFilter",
-    async ({userBranchId, fromAge, untilAge, subjId, langId , switchItem}) =>{
+    async ({userBranchId, fromAge, untilAge, subjId, langId , switchItem , currentPage , pageSize}) =>{
         const {request} = useHttp()
-        return await request(`${API_URL}Teachers/teachers/?branch=${userBranchId}${renderItem({untilAge , subjId , fromAge , langId , switchItem})}` , "GET" , null , headers())
+        return await request(`${API_URL}Teachers/teachers/?branch=${userBranchId}${renderItem({untilAge , subjId , fromAge , langId , switchItem})}${pageSize ? `&offset=${(currentPage - 1) * pageSize}&limit=${pageSize}` : ""}` , "GET" , null , headers())
     }
 )
 

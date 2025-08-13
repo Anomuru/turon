@@ -11,7 +11,7 @@ import {API_URL, useHttp} from "../../../../shared/api/base";
 import {useSelector} from "react-redux";
 import {getBranch} from "../../../../features/branchSwitcher";
 
-export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onClick}) => {
+export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onClick , setActiveClass}) => {
 
 
 
@@ -55,14 +55,23 @@ export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onC
                 {/*                                defaultValue={branches[0].name}/> : null}*/}
             </div>
             <div className={cls.mainContainer_filterPanelBox}>
-                <Button
-                    status={"filter"}
-                    extraClass={cls.extraCutClassFilter}
-                    onClick={() => setActive("filter")}
-                    type={"filter"}
-                >
-                    Filter
-                </Button>
+               <div style={{display: "flex" , gap: "1rem"}}>
+                   <Button
+                       status={"filter"}
+                       extraClass={cls.extraCutClassFilter}
+                       onClick={() => setActive("filter")}
+                       type={"filter"}
+                   >
+                       Filter
+                   </Button>
+                   <Button
+                       status={"filter"}
+                       onClick={() => setActiveClass(true)}
+                       type={"filter"}
+                   >
+                       Sinfga bulish
+                   </Button>
+               </div>
                 <a style={{color: "white"}}
                    href={`${API_URL}Students/export-students/?branch=${branchID?.id}&format=json`}>
                     <Button type={"simple"}>

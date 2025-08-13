@@ -17,7 +17,7 @@ import {fetchTeachersDataWithFilter} from "entities/teachers/model/teacherThunk"
 
 import cls from "../../filters.module.sass";
 
-export const GroupsFilter = React.memo(({active, setActive, setIsFilter , activeSwitch , setActiveSwitch}) => {
+export const GroupsFilter = React.memo(({active, setActive, setIsFilter , activeSwitch , setActiveSwitch , currentPage , pageSize}) => {
 
 
     const teacher = localStorage.getItem("selectedTeacher")
@@ -38,10 +38,12 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
         dispatch(fetchGroupsDataWithFilter({
             teacherId: selectedTeacher,
             userBranchId,
-            deleted:activeSwitch
+            deleted:activeSwitch,
+            pageSize,
+            currentPage
         }))
         setIsFilter(true)
-    } , [selectedTeacher , activeSwitch])
+    } , [selectedTeacher , activeSwitch, currentPage])
 
     // function fetchGroups(teacher, type, subject) {
     //
@@ -70,13 +72,13 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
                 <h1>Filter</h1>
                 <div className={cls.filter__container}>
 
-                    <Select
+                    {getTeacher && <Select
                         title={"Teacher"}
                         options={[{name: "Hamma", id: "all"}, ...getTeacher]}
                         extraClass={cls.filter__select}
                         onChangeOption={setSelectedTeacher}
                         defaultValue={teacher}
-                    />
+                    />}
                     <div className={cls.filter__switch}>
                         <p>O’chirilgan</p>
                         <Switch activeSwitch={activeSwitch} onChangeSwitch={setActiveSwitch}/>
