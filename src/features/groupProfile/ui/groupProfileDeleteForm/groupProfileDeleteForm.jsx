@@ -525,7 +525,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                         selectOpt === "deleted" ?
                             <Select
                                 extraClass={cls.deleteForm__select}
-                                options={reasons}
+                                options={reasons?.results}
                                 title={"Sabablar"}
                                 onChangeOption={setSelectOptId}
                                 register={register}
@@ -534,7 +534,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                             /> : null
                     }
                     {
-                        reasons?.filter(item =>
+                        reasons?.results?.filter(item =>
                             item?.id === +selectOptId)[0]?.name === "Boshqa" ||
                         selectOpt !== "deleted" ? <Input
                             extraClassName={cls.deleteForm__input}

@@ -216,7 +216,7 @@ export const Register = () => {
                 parent_seria: data.parent_seria,
                 parent_seria_num: data.parent_seria_num,
                 region: data.region,
-                born_date: data.born_date,
+                born_date: data.birth_date,
                 student_seria_num: data.student_seria_num,
                 student_seria: data.student_seria
             }
@@ -299,7 +299,6 @@ export const Register = () => {
         }
     };
 
-
     const renderFormFields = () => {
         switch (registerType) {
             case 'student':
@@ -331,25 +330,7 @@ export const Register = () => {
                             options={classNumbers}
                             defaultValue={classNumbers[0]?.id}
                         />
-                        <Input
-                            register={register}
-                            placeholder="Ota-ona telefon raqami"
-                            type="number"
-                            required
-                            name={"parents_phone"}
-                        />
-                        <Input register={register} name={"parents_fullname"}
-                               placeholder={"ota-ona fio"}/>
-                        <div className={cls.seriya}>
-                            <Input register={register} name={"parent_seria"}
-                                   placeholder={"passport seriya"}/>
-                            <Input register={register} name={"parent_seria_num"}
-                                   placeholder={"seriya raqami"} type={"number"}/>
-                        </div>
-                        <Input register={register} name={"born_date"}
-                               placeholder={"tug'ilgan yili "} type={"date"}/>
-                        <Input register={register} name={"parent_region"}
-                               placeholder={"yashash joyi"}/>
+
                     </>
                 );
             case 'teacher':
@@ -372,7 +353,7 @@ export const Register = () => {
                         <Select
                             extraClass={cls.extraClasses}
                             name={"category"}
-                            options={categories}
+                            options={categories?.results}
                             onChangeOption={setSelectedCategory}
                             title={"Toifa"}
                         />
@@ -498,7 +479,7 @@ export const Register = () => {
                                     placeholder="Tug'ilgan kun"
                                     type="date"
                                     required
-                                    name={"birth_date"}
+                                    name={"born_date"}
                                 />
                                 <Input
                                     register={register}
