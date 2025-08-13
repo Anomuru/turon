@@ -238,7 +238,7 @@ const oftenUsedSlice = createSlice({
                 state.teacherError = null
             })
             .addCase(fetchTeachersData.fulfilled, (state, action) => {
-                state.teacher = action.payload
+                state.teacher = action.payload?.results
                 state.teacherLoading = false
                 state.teacherError = null
             })

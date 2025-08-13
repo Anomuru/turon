@@ -37,8 +37,6 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
 
     useEffect(() => {
         if (currentPage && pageSize && id) {
-            console.log(currentPage, "currentPage")
-            console.log(pageSize, "pageSize")
             dispatch(fetchFlows({
                 branch: id,
                 subject: selectedSubject,
