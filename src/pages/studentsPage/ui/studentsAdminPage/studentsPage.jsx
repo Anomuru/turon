@@ -162,6 +162,10 @@ export const StudentsPage = () => {
     }
 
 
+    useEffect(() => {
+        setCurrentPage(1)
+    } , [selectedRadio])
+
     //
     // useEffect(() => {
     //     if (!userBranchId) return;
@@ -227,7 +231,7 @@ export const StudentsPage = () => {
             default:
                 return null;
         }
-    }, [loadingStudents, selectedRadio, studyingStudents])
+    }, [loadingStudents, selectedRadio , newStudents , deletedStudents , studyingStudents])
 
     const renderNewStudents = renderStudents()
 
@@ -309,8 +313,8 @@ export const StudentsPage = () => {
             />
 
             <div className={cls.tableMain}>
-                {/*{loadingStudents === true ? <DefaultPageLoader/> : ""}*/}
-                {renderNewStudents}
+                {loadingStudents === true ? <DefaultPageLoader/> : renderNewStudents}
+
             </div>
 
 

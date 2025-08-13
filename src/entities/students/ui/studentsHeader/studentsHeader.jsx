@@ -64,13 +64,13 @@ export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onC
                    >
                        Filter
                    </Button>
-                   <Button
+                   {selectedRadio === "new_students" && <Button
                        status={"filter"}
                        onClick={() => setActiveClass(true)}
                        type={"filter"}
                    >
-                       Sinfga bulish
-                   </Button>
+                       Sinfga raqamini o'zgartirish
+                   </Button>}
                </div>
                 <a style={{color: "white"}}
                    href={`${API_URL}Students/export-students/?branch=${branchID?.id}&format=json`}>
