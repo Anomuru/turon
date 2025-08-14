@@ -16,9 +16,14 @@ export const getTeacherSalary = createAsyncThunk(
 
 export const getDeletedTeacherSalary = createAsyncThunk(
     "teacherSalary/getDeletedTeacherSalary",
-    async (branchID) => {
+    async ({branch, limit, offset}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Teachers/teacher-salary-list/?status=True&branch=${branchID}`, "GET", null, headers())
+        return await request(`${API_URL}Teachers/teacher-salary-list/?${ParamUrl({
+            status: "True",
+            branch,
+            limit,
+            offset
+        })}`, "GET", null, headers())
     }
 )
 

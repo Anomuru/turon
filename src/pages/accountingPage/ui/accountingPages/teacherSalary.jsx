@@ -35,8 +35,6 @@ export const TeacherSalaryPage = ({deleted, setDeleted}) => {
     const getPaymentTypes = useSelector(getCapitalTypes)
     const branchID = useSelector(getUserBranchId)
 
-    console.log(teacherSalary, "teacherSalary")
-
     const [changingData, setChangingData] = useState({})
     const [changePayment, setChangePayment] = useState(false)
     const [activeDelete, setActiveDelete] = useState(false)

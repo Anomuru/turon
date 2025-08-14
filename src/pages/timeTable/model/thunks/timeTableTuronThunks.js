@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {API_URL, headers, useHttp} from "shared/api/base";
+import {API_URL, headers, ParamUrl, useHttp} from "shared/api/base";
 
 export const  fetchTimeTableWeekDays = createAsyncThunk(
     "TimeTableTuronSlice/fetchTimeTableWeekDays",
@@ -21,9 +21,9 @@ export const fetchTimeTableTypesData = createAsyncThunk(
 
 export const fetchTimeTableData = createAsyncThunk(
     "TimeTableTuronSlice/fetchTimeTableData",
-    async (data) => {
+    async ({date, branch, week}) => {
         const {request} = useHttp()
-        return await  request(`${API_URL}SchoolTimeTable/timetable-lessons/?date=${data.date}&branch=${data.branch}`, "GET", null, headers())
+        return await  request(`${API_URL}SchoolTimeTable/timetable-lessons/?${ParamUrl({date, branch, week})}`, "GET", null, headers())
     }
 )
 
@@ -55,9 +55,9 @@ export const fetchTimeTableColors = createAsyncThunk(
 
 export const fetchTimeTableClassView  = createAsyncThunk(
     "TimeTableTuronSlice/fetchTimeTableClassView",
-    async (data) => {
+    async ({date, branch, week}) => {
         const {request} = useHttp()
-        return await  request(`${API_URL}SchoolTimeTable/timetable-lessons-class/?date=${data.date}&branch=${data.branch}`, "GET", null, headers())
+        return await  request(`${API_URL}SchoolTimeTable/timetable-lessons-class/?${ParamUrl({date, branch, week})}`, "GET", null, headers())
     }
 )
 

@@ -1,3 +1,4 @@
+import {fetchWeekDays} from "entities/profile/groupProfile/index.js";
 import {getBranch} from "features/branchSwitcher";
 import React, {useEffect, useState} from 'react';
 
@@ -38,7 +39,7 @@ import {
     getTimeTableTuronSubjects,
     getTimeTableTuronTeachers,
     getTimeTableTuronTeachersStatus,
-    getTimeTableTuronType
+    getTimeTableTuronType, getTimeTableTuronWeekDay
 } from "pages/timeTable/model/selectors/timeTableTuronSelectors";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {DefaultLoader} from "shared/ui/defaultLoader";
@@ -115,6 +116,7 @@ export const TimeTableTuronPage = () => {
     const teachersStatus = useSelector(getTimeTableTuronTeachersStatus)
     const filteredClass = useSelector(getTimeTableTuronFilterClass)
     const date = useSelector(getTimeTableTuronDate)
+    const weekDay = useSelector(getTimeTableTuronWeekDay)
 
 
     const branch = localStorage.getItem("branchId")
@@ -124,20 +126,29 @@ export const TimeTableTuronPage = () => {
 
     useEffect(() => {
         dispatch(fetchTimeTableColors())
+        dispatch(fetchWeekDays())
     }, [])
 
-    console.log(dataStatus)
+    useEffect(() => {
+        if (!weekDay && date && branch) dispatch(fetchTimeTableData({date, branch}))
+    }, [date, branch, weekDay])
 
     useEffect(() => {
-        if (date && branch) dispatch(fetchTimeTableData({date, branch}))
-    }, [date, branch])
+        if (weekDay && branch) dispatch(fetchTimeTableData({week: weekDay, branch }))
+    }, [weekDay, branch])
 
 
     useEffect(() => {
-        if (date && branch && classView) {
+        if (!weekDay && date && branch && classView) {
             dispatch(fetchTimeTableClassView({date, branch}))
         }
-    }, [date, branch,classView])
+    }, [date, branch,classView, weekDay])
+
+    useEffect(() => {
+        if (weekDay && branch && classView) {
+            dispatch(fetchTimeTableClassView({week: weekDay, branch}))
+        }
+    }, [weekDay, branch,classView])
 
 
     useEffect(() => {
@@ -305,7 +316,6 @@ export const TimeTableTuronPage = () => {
     }
 
 
-    console.log(rooms , "rooms")
     async function handleDragEnd(event) {
         const {active, over} = event;
 

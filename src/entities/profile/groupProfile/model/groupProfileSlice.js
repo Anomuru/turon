@@ -26,6 +26,7 @@ const initialState = {
     filteredGroups: null,
     timeTable: null,
     weekDays: null,
+    selectedWeekDay: null,
     reasons: null,
     studyYears: [],
     studyMonths: [],
@@ -208,7 +209,9 @@ const groupProfileSlice = createSlice({
                 // state.error = null
             })
             .addCase(fetchWeekDays.fulfilled, (state, action) => {
-                state.weekDays = action.payload?.days?.map(item => ({...item, name: item.name_uz}))
+                console.log(action.payload?.today, "action.payload?.today")
+                state.weekDays = action.payload?.days?.results?.map(item => ({...item, name: item.name_uz}))
+                state.selectedWeekDay = action.payload?.today
                 // state.filteredStudents = action.payload.students
                 // state.loading = false
                 // state.error = null

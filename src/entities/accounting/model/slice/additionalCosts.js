@@ -60,7 +60,7 @@ export const overHeadSlice = createSlice({
                 state.error = false
             })
             .addCase(overHeadDeletedList.fulfilled, (state, action) => {
-                state.overHeadDeletedLists = action.payload
+                state.overHeadDeletedLists = action.payload?.results
                 state.loading = false
                 state.error = false
             })

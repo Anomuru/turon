@@ -24,7 +24,7 @@ export const AdditionalCostsDeleted = ({overheadDeletedList , extraClassName , p
     }, [overheadDeletedList, setCurrentPage, search])
 
     const renderDeleted = () => {
-        return currentTableData.map((item, i) => (
+        return searchedUsers.map((item, i) => (
             <tr>
                 <td>{i + 1}</td>
                 <td>{item.name}</td>

@@ -23,7 +23,7 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
     const teacher = localStorage.getItem("selectedTeacher")
 
     const subjects = useSelector(getSubjectsData)
-    const getTeacher = useSelector(getTeachers)
+    const getTeacher = useSelector(getTeachers) ?? []
 
     const [selectedTeacher, setSelectedTeacher] = useState(teacher)
 

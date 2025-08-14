@@ -33,5 +33,6 @@ export {
     getTimeTable,
     getStudyYears,
     getStudyMonths,
-    getDebtStudents
+    getDebtStudents,
+    getSelectedWeekDay
 } from "./model/groupProfileSelector";

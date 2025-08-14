@@ -1,1 +1,0 @@
-import{j as c,N as r}from"./index-Dts_nlzx.js";const $="_link_1n5b5_1",s={link:$},m=({children:i,to:k,activeClass:o,extraClass:n,onClick:t})=>c.jsx(r,{to:k,className:({isActive:l})=>l?`${s.link} ${o} ${n}`:`${s.link} ${n}`,onClick:t,children:i});export{m as L};

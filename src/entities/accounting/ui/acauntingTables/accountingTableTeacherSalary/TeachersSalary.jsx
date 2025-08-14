@@ -24,7 +24,6 @@ export const TeachersSalary = ({
     const search = useSelector(getSearchValue)
     const loading = useSelector(getTeachersLoading)
 
-    console.log(teacherSalary, "teacherSalary")
 
     const searchedUsers = useMemo(() => {
         const filteredHeroes = teacherSalary?.slice()
@@ -166,7 +165,7 @@ export const TeachersSalary = ({
     return (
         <>
 
-            <div style={{height: "calc(100vh - 50rem)", overflow: "auto"}}>
+            <div style={{height: "calc(100vh - 35rem)", overflow: "auto"}}>
 
                 {
                     loading

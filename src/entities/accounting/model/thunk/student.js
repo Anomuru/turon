@@ -13,8 +13,8 @@ export const getStudentPayment = createAsyncThunk(
 
 export const getDeletedPayment = createAsyncThunk(
     "studentSlice/getDeletedPayment",
-    async (branchId) => {
+    async ({branch, limit, offset}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/student_payment_deleted_list/?branch=${branchId}` , 'GET' , null , headers())
+        return await request(`${API_URL}Students/student_payment_deleted_list/?${ParamUrl({branch, limit, offset})}` , 'GET' , null , headers())
     }
 )

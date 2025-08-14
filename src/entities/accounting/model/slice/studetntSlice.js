@@ -6,7 +6,8 @@ const initialState = {
     studentsCount: 0,
     loading: false,
     error: false,
-    deletedStudentsPayment: []
+    deletedStudentsPayment: [],
+    deletedStudentsPaymentCount: 0
 }
 const studentSlice = createSlice({
     name: "studentSlice",
@@ -37,7 +38,8 @@ const studentSlice = createSlice({
                 state.error = false
             })
             .addCase(getDeletedPayment.fulfilled, (state, action) => {
-                state.deletedStudentsPayment = action.payload
+                state.deletedStudentsPayment = action.payload?.results
+                state.deletedStudentsPaymentCount = action.payload?.count
                 state.loading = false
                 state.error = false
             })

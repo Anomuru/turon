@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 import cls from "./select.module.sass";
 
-export const  Select = React.memo(({
+export const Select = React.memo(({
                                       options,
                                       keyValue,
                                       required,
@@ -14,6 +14,8 @@ export const  Select = React.memo(({
                                       extraClass,
                                       register,
                                       name,
+                                      titleOption,
+                                      value,
                                       all,
                                       setValue // Bu funksiyani props orqali uzatamiz
 
@@ -22,7 +24,8 @@ export const  Select = React.memo(({
     const [selectOption, setSelectOption] = useState("");
     const [optionsData, setOptionsData] = useState([]);
     const [isChanged, setIsChanged] = useState(false);
-    console.log(options , "log")
+
+    console.log(value, "value")
 
     useEffect(() => {
         setOptionsData(options);
@@ -52,7 +55,7 @@ export const  Select = React.memo(({
     const renderOptionsOfSelect = useCallback(() => {
         return optionsData?.map((item, index) => {
             const value = item[keyValue] || item?.id || item?.value || item?.name || item;
-            const key = item?.name  || item?.number || item?.old_id  || item?.days || item.num || item?.user && `${item?.user?.name} ${item.user?.surname}` || item?.branch || item[keyValue] || item;
+            const key = item?.name || item?.number || item?.old_id || item?.days || item.num || item?.user && `${item?.user?.name} ${item.user?.surname}` || item?.branch || item[keyValue] || item;
 
             return (
                 <option
@@ -88,9 +91,9 @@ export const  Select = React.memo(({
                 })}
                 name={name}
                 required={required}
-                value={selectOption}
+                value={value??selectOption}
                 {...register(name, {
-                    value: selectOption,
+                    value: value??selectOption,
                     defaultValue: selectOption,
                     onChange: onChangeOption ? (e) => {
                         setSelectOption(e.target.value)
@@ -122,15 +125,16 @@ export const  Select = React.memo(({
                     [cls.error]: status === "error"
                 })}
                 required={required}
-                value={selectOption}
+                value={value??selectOption}
                 onChange={(e) => {
                     setSelectOption(e.target.value);
                     setIsChanged(true);
                 }}
             >
-                <option value={""} disabled>Tanlang</option>
+                {/*<option value={""} disabled>Tanlang</option>*/}
 
-                {/*{title ? <option value={""}>{title}</option> : <option value={""} disabled>Tanlang</option>}*/}
+                {titleOption ? <option value={""} disabled>{titleOption}</option> :
+                    <option value={""} disabled>Tanlang</option>}
                 {renderedOptions}
             </select>
             {status === "error" ? <span className={cls.label__error}>Error</span> : null}

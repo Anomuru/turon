@@ -42,7 +42,7 @@ export const capitalList = createSlice({
                 state.error = false
             })
             .addCase(capitalDeletedListThunk.fulfilled , (state, action) => {
-                state.capitalDeleted = action.payload
+                state.capitalDeleted = action.payload?.results
                 state.loading = false
                 state.error =  false
             })

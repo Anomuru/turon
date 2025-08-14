@@ -24,7 +24,7 @@ export const DeletedWorkerSalary = ({filteredDeletedSalary, formatSalary, sum2, 
         )
     }, [filteredDeletedSalary, setCurrentPage, search])
     const renderFilteredDeletedSalary = () => {
-        return currentTableData?.map((item, i) => (
+        return searchedUsers?.map((item, i) => (
             <>
                 <tbody>
                 <tr>
