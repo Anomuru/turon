@@ -60,7 +60,7 @@ const teacherSalary = createSlice({
                 state.error = false
             })
             .addCase(getDeletedTeacherSalary.fulfilled, (state, action) => {
-                state.deletedSalary = action.payload
+                state.deletedSalary = action.payload?.results
                 state.loading = false
                 state.error = false
             })
