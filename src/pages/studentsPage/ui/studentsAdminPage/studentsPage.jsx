@@ -372,7 +372,7 @@ export const StudentsPage = () => {
                             required
                             extraClass={cls.modal__select}
                             title={"O'qituvchi"}
-                            options={teachers}
+                            options={teachers?.results}
                             onChangeOption={setSelectTeacher}
                         />
                         <Select
