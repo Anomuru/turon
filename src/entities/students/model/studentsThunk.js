@@ -98,3 +98,13 @@ export const fetchDeletedNewStudentsThunk = createAsyncThunk(
     }
 )
 
+
+
+export const fetchUpdateClassStudent = createAsyncThunk(
+    'newStudents/fetchUpdateClassStudent',
+    async ({branch , currentPage , pageSize}) => {
+        const {request} = useHttp()
+        return await request(`${API_URL}Students/new-registered-students/?branch=${branch}${pageSize ? `&offset=${(currentPage - 1) * 50}&limit=${pageSize}` : ""}`, "GET", null, headers())
+    }
+)
+

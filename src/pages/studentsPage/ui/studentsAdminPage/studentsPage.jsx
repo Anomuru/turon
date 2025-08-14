@@ -27,9 +27,13 @@ import {fetchTeachersData, getTeachers} from "entities/teachers";
 import {useForm} from "react-hook-form";
 import {
 
-    getLoadingStudyingStudents, getTotalCount
+    getLoadingStudyingStudents,
+    getStudentClassUpdate,
+    getStudentClassUpdateCount,
+    getStudentClassUpdateLoading,
+    getTotalCount
 } from "entities/students/model/selector/studentsSelector";
-import {fetchStudentsByClass} from "entities/students/model/studentsThunk";
+import {fetchStudentsByClass, fetchUpdateClassStudent} from "entities/students/model/studentsThunk";
 import {Radio} from "shared/ui/radio";
 import {Input} from "shared/ui/input";
 import {useTheme} from "shared/lib/hooks/useTheme";
@@ -110,7 +114,6 @@ export const StudentsPage = () => {
     const [activeModal, setActiveModal] = useState(false);
     const [active, setActive] = useState("");
     const [isFilter, setIsFilter] = useState("");
-    const [currentTableData, setCurrentTableData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [activeFormBtn, setActiveFormBtn] = useState(true)
 
@@ -121,6 +124,20 @@ export const StudentsPage = () => {
     let PageSize = useMemo(() => 50, []);
     const [activeClass, setActiveClass] = useState(false)
     const [activeClassStudent, setActiveClassStudent] = useState([])
+
+    const studentClassUpdate = useSelector(getStudentClassUpdate)
+    const studentClassUpdateLoading = useSelector(getStudentClassUpdateLoading)
+    const studentClassUpdateCount = useSelector(getStudentClassUpdateCount)
+    const [currentPageClassUpdate, setCurrentPageClassUpdate] = useState(1);
+
+    const branch = localStorage.getItem("branchId")
+
+    useEffect(() => {
+
+        if (branch) {
+            dispatch(fetchUpdateClassStudent({currentPage:currentPageClassUpdate, pageSize: PageSize, branch}))
+        }
+    }, [currentPageClassUpdate])
 
 
     useEffect(() => {
@@ -164,7 +181,7 @@ export const StudentsPage = () => {
 
     useEffect(() => {
         setCurrentPage(1)
-    } , [selectedRadio])
+    }, [selectedRadio])
 
     //
     // useEffect(() => {
@@ -231,7 +248,7 @@ export const StudentsPage = () => {
             default:
                 return null;
         }
-    }, [loadingStudents, selectedRadio , newStudents , deletedStudents , studyingStudents])
+    }, [loadingStudents, selectedRadio, newStudents, deletedStudents, studyingStudents])
 
     const renderNewStudents = renderStudents()
 
@@ -256,21 +273,22 @@ export const StudentsPage = () => {
     const {request} = useHttp()
 
     const onClickClass = () => {
-        console.log(selectClass, activeClassStudent)
         const data = {
             class_number: selectClass,
             students: activeClassStudent
         }
 
-        request(`${API_URL}Students/update_student_class_number/`, "POST", JSON.stringify(data), headers())
-            .then(res => {
-                console.log(res)
-                dispatch(onAddAlertOptions({
-                    type: "success",
-                    status: true,
-                    msg: res.msg
-                }))
-            })
+       if (activeClassStudent.length > 0) {
+           request(`${API_URL}Students/update_student_class_number/`, "POST", JSON.stringify(data), headers())
+               .then(res => {
+                   console.log(res)
+                   dispatch(onAddAlertOptions({
+                       type: "success",
+                       status: true,
+                       msg: res.msg
+                   }))
+               })
+       }
 
     }
     const onChangeClass = (id) => {
@@ -292,6 +310,8 @@ export const StudentsPage = () => {
         }
 
     }, [schoolClassNumbers])
+
+    console.log(activeClassStudent?.length , "activeClassStudent")
     return (
 
         <DynamicModuleLoader reducers={initialReducers}>
@@ -433,68 +453,71 @@ export const StudentsPage = () => {
                     <Select options={schoolClassNumbers} onChangeOption={setSelectClass} defaultValue={selectClass}/>
                 </div>
 
-             <div style={{height: "50vh" , overflow: "auto"}}>
-                 <Table>
-                     <thead className={cls.thead}>
-                     <tr>
-                         <th>№</th>
-                         <th>Full name</th>
-                         <th>Age</th>
-                         <th>Til</th>
-                         <th>Sinf</th>
+                <div style={{height: "50vh", overflow: "auto"}}>
+                    <Table>
+                        <thead className={cls.thead}>
+                        <tr>
+                            <th>№</th>
+                            <th>Full name</th>
+                            <th>Age</th>
+                            <th>Til</th>
+                            <th>Sinf</th>
 
-                         <th>Reg. sana</th>
-                         <th/>
-
-                         {currentTableData?.filter(item => !item.deleted)?.length ? <th>O'chirish</th> : ""}
-
-                     </tr>
-                     </thead>
-                     <tbody>
-                     {newStudents?.map((item, i) => (
-                         <tr key={item.id}>
-                             <td>{i + 1}</td>
-                             <td onClick={() => navigation(`profile/${item.id}`)}>
+                            <th>Reg. sana</th>
+                            <th/>
 
 
-                                 {item.user?.surname} {item.user?.name}
-
-                             </td>
-                             <td>
-                                 {item.user?.age}
-
-                             </td>
-                             <td>
-                                 {item.deleted ? item.user?.language?.name : item?.user?.language}
-                             </td>
-                             <td>
-                                 {item?.class_number}-sinf
-                             </td>
-                             <td>{item.user?.registered_date}</td>
-                             <td onClick={() => onChangeClass(item.id)}>
-                                 <input style={{width: "20px", height: "20px"}} type="checkbox"/>
-
-                             </td>
+                        </tr>
+                        </thead>
+                        <tbody>
 
 
-                         </tr>
-                     ))}
-                     </tbody>
-                 </Table>
-             </div>
+                        {studentClassUpdateLoading ? <DefaultPageLoader/> :
+                            studentClassUpdate?.map((item, i) => (
+                                <tr key={item.id}>
+                                    <td>{i + 1}</td>
+                                    <td onClick={() => navigation(`profile/${item.id}`)}>
 
 
-                <div style={{width: "100%", display: "flex", justifyContent: "space-between" , alignItems: "center",}}>
+                                        {item.user?.surname} {item.user?.name}
+
+                                    </td>
+                                    <td>
+                                        {item.user?.age}
+
+                                    </td>
+                                    <td>
+                                        {item.deleted ? item.user?.language?.name : item?.user?.language}
+                                    </td>
+                                    <td>
+                                        {item?.class_number}-sinf
+                                    </td>
+                                    <td>{item.user?.registered_date}</td>
+                                    <td onClick={() => onChangeClass(item.id)}>
+                                        <input style={{width: "20px", height: "20px"}} type="checkbox"/>
+
+                                    </td>
+
+
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </div>
+
+
+                <div style={{width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center",}}>
                     <Pagination
-                        totalCount={totalCount}
-                        currentPage={currentPage}
+                        totalCount={studentClassUpdateCount}
+                        currentPage={currentPageClassUpdate}
                         pageSize={PageSize}
                         onPageChange={page => {
-                            setCurrentPage(page)
+                            setCurrentPageClassUpdate(page)
                         }}
                         type={"custom"}
                     />
-                    <Button onClick={onClickClass}>Submit</Button>
+
+                      <Button type={activeClassStudent.length > 0 ? "submit" : "disabled"} onClick={onClickClass}>Submit</Button>
                 </div>
 
             </Modal>
