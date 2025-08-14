@@ -38,9 +38,6 @@ const TimeTableTuronPageFilters = React.memo((props) => {
 
     const [activeIdColor, setActiveIdColor] = useState(1)
     const [selectedWeek, setSelectedWeek] = useState(null)
-    const [selectedDay, setSelectedDay] = useState(null)
-    const [selectedDate, setSelectedDate] = useState(null)
-    const [isDate, setIsDate] = useState(true)
 
     const dispatch = useDispatch()
 
@@ -69,6 +66,7 @@ const TimeTableTuronPageFilters = React.memo((props) => {
     }
 
     const onChangeWeekDay = (selectedDay) => {
+        setSelectedWeek(selectedDay)
         const currentDate = new Date(date);
 
         const currentDayOfWeek = currentDate.getDay();
@@ -152,8 +150,7 @@ const TimeTableTuronPageFilters = React.memo((props) => {
 
                     <div className={cls.container}>
                         <Select
-                            value={selectedWeek && weekDays[selectedWeek - 1]?.id}
-                            defaultValue={weekDay}
+                            value={selectedWeek ? weekDays[selectedWeek - 1]?.id : weekDay}
                             options={weekDays}
                             titleOption={"Kunlar"}
                             onChangeOption={onChangeWeekDay}
