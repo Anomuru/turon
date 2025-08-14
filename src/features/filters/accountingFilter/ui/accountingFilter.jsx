@@ -51,13 +51,29 @@ export const AccountingFilter = ({setActive, active, setActiveDel, activeDel, ac
                 limit: pageSize
             }));
         } else if (activePage === "teachersSalary") {
-            dispatch(getDeletedTeacherSalary(branch));
+            dispatch(getDeletedTeacherSalary({
+                branch,
+                offset: (currentPage - 1) * 50,
+                limit: pageSize
+            }));
         } else if (activePage === "employeesSalary") {
-            dispatch(getDeletedEmpSalary(branch));
+            dispatch(getDeletedEmpSalary({
+                branch,
+                offset: (currentPage - 1) * 50,
+                limit: pageSize
+            }));
         } else if (activePage === "overhead") {
-            dispatch(overHeadDeletedList(branch));
+            dispatch(overHeadDeletedList({
+                branch,
+                offset: (currentPage - 1) * 50,
+                limit: pageSize
+            }));
         } else {
-            dispatch(capitalDeletedListThunk(branch));
+            dispatch(capitalDeletedListThunk({
+                branch,
+                offset: (currentPage - 1) * 50,
+                limit: pageSize
+            }));
         }
     };
 

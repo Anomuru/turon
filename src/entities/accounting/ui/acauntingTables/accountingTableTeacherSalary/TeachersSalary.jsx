@@ -165,7 +165,7 @@ export const TeachersSalary = ({
     return (
         <>
 
-            <div style={{height: "calc(100vh - 30rem)", overflow: "auto"}}>
+            <div style={{height: "calc(100vh - 35rem)", overflow: "auto"}}>
 
                 {
                     loading

@@ -53,7 +53,7 @@ const employerSlice = createSlice({
                 state.error = false
             })
             .addCase(getDeletedEmpSalary.fulfilled, (state, action) => {
-                state.deletedEmployerSalary = action.payload
+                state.deletedEmployerSalary = action.payload?.results
                 state.loading = false
                 state.error = false
             })

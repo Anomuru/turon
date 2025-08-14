@@ -11,8 +11,8 @@ export const capitalListThunk = createAsyncThunk(
 
 export const capitalDeletedListThunk = createAsyncThunk(
     "capitalList/capitalDeletedListThunk",
-    async (branchID) => {
+    async ({branch, limit, offset}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Capital/old_capital_list/?status=True&branch=${branchID}` , "GET" , null , headers())
+        return await request(`${API_URL}Capital/old_capital_list/?${ParamUrl({branch, limit, offset, status:"True"})}` , "GET" , null , headers())
     }
 )

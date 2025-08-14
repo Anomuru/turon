@@ -34,8 +34,14 @@ export const overHeadList = createAsyncThunk(
 
 export const overHeadDeletedList = createAsyncThunk(
     "overHeadSlice/overHeadDeletedList",
-    async (branchId) => {
+    async ({branch, type, limit, offset}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Overhead/overheads/?status=True&branch=${branchId}`, "GET", null, headers())
+        return await request(`${API_URL}Overhead/overheads/?${ParamUrl({
+            status: "True",
+            branch,
+            type,
+            limit,
+            offset
+        })}`, "GET", null, headers())
     }
 )
