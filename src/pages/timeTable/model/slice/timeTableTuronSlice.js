@@ -24,6 +24,7 @@ const initialState = {
 
     classViewData: [],
 
+    isDataStatus: "date",
     selectedDay: null,
     weekDay: null,
     day: "",
@@ -59,10 +60,12 @@ const timeTableTuronSlice = createSlice({
 
         onChangeDateTimeTable: (state, action) => {
             state.date = action.payload
-            state.weekDay = null
+            state.isDataStatus = "date"
+            // state.weekDay = null
         },
         onChangeWeekDayTimeTable: (state, action) => {
             state.weekDay = action.payload
+            state.isDataStatus = "week"
         }
     },
     extraReducers: builder =>
@@ -120,7 +123,7 @@ const timeTableTuronSlice = createSlice({
             .addCase(fetchTimeTableTeacher.fulfilled, (state, action) => {
 
 
-                state.teachers = action.payload?.results?.map((item, index) => {
+                state.teachers = action.payload?.map((item, index) => {
                     return {
                         ...item,
                         dndId: `teacher-${item.id}`,
@@ -174,7 +177,7 @@ const timeTableTuronSlice = createSlice({
 
 
             .addCase(fetchTimeTableTypesData.fulfilled, (state, action) => {
-                state.group = action.payload?.results?.map((item, index) => {
+                state.group = action.payload?.map((item, index) => {
                     return {
                         ...item,
                         dndId: `${item.type}-${item.id}`,

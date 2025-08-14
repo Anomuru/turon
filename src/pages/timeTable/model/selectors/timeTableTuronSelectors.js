@@ -7,6 +7,8 @@ export const getTimeTableTuronDate = (state) =>
     state.timeTableTuronSlice?.date
 export const getTimeTableTuronWeekDay = (state) =>
     state.timeTableTuronSlice?.weekDay
+export const getTimeTableTuronIsDataStatus = (state) =>
+    state.timeTableTuronSlice?.isDataStatus
 
 export const getTimeTableTuronColors = (state) =>
     state.timeTableTuronSlice?.colors
