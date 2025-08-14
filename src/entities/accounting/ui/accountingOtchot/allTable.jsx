@@ -93,7 +93,6 @@ export const AllTable = () => {
                 request(`${API_URL}Encashment/encashment_school/`, "POST", JSON.stringify({branch: branchId, ...res}), headers())
                     .then(res => {
                         dispatch(getFilteredAll(res))
-                        console.log(res)
                     })
             }
         }
@@ -287,7 +286,6 @@ const TableCash = ({data, resultData, activeType}) => {
                                 <div className={cls.list__container}>
                                     {
                                         Object.keys(item?.[activeType])?.map(inn => {
-                                            console.log(inn)
                                             return (
                                                 <div className={cls.otchot}>
                                                     {capitalizeFirstLetter(inn.replaceAll("_", " "))}

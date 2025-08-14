@@ -24,6 +24,8 @@ const initialState = {
 
     classViewData: [],
 
+    selectedDay: null,
+    weekDay: null,
     day: "",
     color: "",
     filterClass: "",
@@ -57,7 +59,11 @@ const timeTableTuronSlice = createSlice({
 
         onChangeDateTimeTable: (state, action) => {
             state.date = action.payload
+            state.weekDay = null
         },
+        onChangeWeekDayTimeTable: (state, action) => {
+            state.weekDay = action.payload
+        }
     },
     extraReducers: builder =>
         builder
@@ -291,5 +297,6 @@ export const {
     onChangeDayTimeTable,
     onChangeColorTimeTable,
     onChangeFilterClassTimeTable,
-    onChangeDateTimeTable
+    onChangeDateTimeTable,
+    onChangeWeekDayTimeTable
 } = timeTableTuronSlice.actions

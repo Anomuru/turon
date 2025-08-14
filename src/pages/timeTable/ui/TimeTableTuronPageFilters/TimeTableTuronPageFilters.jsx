@@ -1,4 +1,6 @@
+import {getSelectedWeekDay, getWeekDays} from "entities/profile/groupProfile/model/groupProfileSelector.js";
 import React, {useEffect, useState} from 'react';
+import {useForm} from "react-hook-form";
 
 
 import cls from "./TimeTableTuronPageFilters.module.sass"
@@ -9,13 +11,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     onChangeColorTimeTable, onChangeDateTimeTable,
     onChangeDayTimeTable, onChangeFilterClassTimeTable,
-    onChangeTypeTimeTable
+    onChangeTypeTimeTable, onChangeWeekDayTimeTable
 } from "../../model/slice/timeTableTuronSlice";
 import {
     getTimeTableTuronColor,
     getTimeTableTuronColors, getTimeTableTuronDate,
     getTimeTableTuronDay,
-    getTimeTableTuronType,
+    getTimeTableTuronType, getTimeTableTuronWeekDay,
     getTimeTableTuronWeekDays
 } from "pages/timeTable/model/selectors/timeTableTuronSelectors";
 import {fetchTimeTableColors, fetchTimeTableWeekDays} from "pages/timeTable/model/thunks/timeTableTuronThunks";
@@ -32,7 +34,13 @@ const TimeTableTuronPageFilters = React.memo((props) => {
         groups
     } = props
 
+    const {register} = useForm()
+
     const [activeIdColor, setActiveIdColor] = useState(1)
+    const [selectedWeek, setSelectedWeek] = useState(null)
+    const [selectedDay, setSelectedDay] = useState(null)
+    const [selectedDate, setSelectedDate] = useState(null)
+    const [isDate, setIsDate] = useState(true)
 
     const dispatch = useDispatch()
 
@@ -40,10 +48,8 @@ const TimeTableTuronPageFilters = React.memo((props) => {
     const colors = useSelector(getTimeTableTuronColors)
     const color = useSelector(getTimeTableTuronColor)
     const date = useSelector(getTimeTableTuronDate)
-
-
-
-
+    const weekDays = useSelector(getWeekDays)
+    const weekDay = useSelector(getSelectedWeekDay)
 
     const onChangeColor = (id) => {
         dispatch(onChangeColorTimeTable(id))
@@ -51,11 +57,36 @@ const TimeTableTuronPageFilters = React.memo((props) => {
 
 
     const onChangeDate = (date) => {
-        console.log(date)
-        dispatch(onChangeDateTimeTable(date))
+        const currentDate = new Date(date);
+        const currentDayOfWeek = currentDate.getDay();
 
+        if (currentDayOfWeek === 0) {
+            setSelectedWeek(7)
+        } else {
+            setSelectedWeek(currentDayOfWeek)
+        }
+        dispatch(onChangeDateTimeTable(date))
     }
 
+    const onChangeWeekDay = (selectedDay) => {
+        const currentDate = new Date(date);
+
+        const currentDayOfWeek = currentDate.getDay();
+
+        const targetDayOfWeek = selectedDay % 7;
+
+        const startOfWeek = new Date(currentDate);
+        const diffToMonday = (currentDayOfWeek + 6) % 7;
+        startOfWeek.setDate(currentDate.getDate() - diffToMonday);
+
+        const newDate = new Date(startOfWeek);
+        newDate.setDate(startOfWeek.getDate() + (targetDayOfWeek === 0 ? 6 : targetDayOfWeek - 1));
+
+        const formattedDate = newDate.toISOString().split("T")[0];
+        dispatch(onChangeDateTimeTable(formattedDate));
+
+        dispatch(onChangeWeekDayTimeTable(selectedDay));
+    };
 
     const renderColorTypes = () => {
         return colors?.map(item => {
@@ -84,7 +115,6 @@ const TimeTableTuronPageFilters = React.memo((props) => {
     const renderColor = renderColorTypes()
 
 
-
     const onChangeOptionClassLesson = (item) => {
         dispatch(onChangeFilterClassTimeTable(item))
     }
@@ -93,43 +123,55 @@ const TimeTableTuronPageFilters = React.memo((props) => {
     return (
         <div className={cls.filters}>
             <div className={cls.navigators}>
-                <div
-                    id="unique-id"
-                    className={cls.navigators__inner}
-                >
-                    <Button
-                        onClick={() => onChangeType("group")}
-                        type={type === "group" ? "simple" : "simple-add"}
+                <div className={cls.navigators__btns}>
+                    <div
+                        id="unique-id"
+                        className={cls.navigators__inner}
                     >
-                        Class
-                    </Button>
-                    <Button
-                        onClick={() => onChangeType("flow")}
-                        type={type === "flow" ? "simple" : "simple-add"}
-                    >
-                        Flow
-                    </Button>
+                        <Button
+                            onClick={() => onChangeType("group")}
+                            type={type === "group" ? "simple" : "simple-add"}
+                        >
+                            Class
+                        </Button>
+                        <Button
+                            onClick={() => onChangeType("flow")}
+                            type={type === "flow" ? "simple" : "simple-add"}
+                        >
+                            Flow
+                        </Button>
+                    </div>
+
+                    <div style={{display: "flex"}}>
+                        <Button onClick={() => setFullScreen(true)}>Full screen</Button>
+                        <Button onClick={() => setClassView(true)}>Class view</Button>
+                    </div>
                 </div>
 
-                <div style={{display: "flex"}}>
-                    <Button onClick={() => setFullScreen(true)}>Full screen</Button>
-                    <Button onClick={() => setClassView(true)}>Class view</Button>
+                <div className={cls.navigators__date}>
+
+                    <div className={cls.container}>
+                        <Select
+                            value={selectedWeek && weekDays[selectedWeek - 1]?.id}
+                            defaultValue={weekDay}
+                            options={weekDays}
+                            titleOption={"Kunlar"}
+                            onChangeOption={onChangeWeekDay}
+                        />
+
+                        <Input
+                            type={"date"}
+                            value={date}
+                            onChange={(e) => onChangeDate(e.target.value)}
+                            extraClassName={cls.select}
+                        />
+                    </div>
+                    <Select
+                        onChangeOption={onChangeOptionClassLesson}
+                        options={groups}
+                        titleOption={"filter"}
+                    />
                 </div>
-
-                <Select
-                    onChangeOption={onChangeOptionClassLesson}
-                    options={groups}
-                    title={"filter"}
-                />
-
-
-
-                <Input
-                    type={"date"}
-                    value={date}
-                    onChange={(e) => onChangeDate(e.target.value)}
-
-                />
 
             </div>
             {
@@ -140,6 +182,6 @@ const TimeTableTuronPageFilters = React.memo((props) => {
 
         </div>
     );
-}) ;
+});
 
 export default TimeTableTuronPageFilters;
