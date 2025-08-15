@@ -61,6 +61,7 @@ export const ClassAddForm = memo((props) => {
         dispatch(fetchGroupProfile({id: data?.class}))
         setActiveModal(true)
     }
+    console.log(data , "data")
 
     const onSubmitAddStudents = () => {
         const res = {

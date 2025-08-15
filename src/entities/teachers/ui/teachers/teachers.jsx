@@ -49,6 +49,7 @@ export const Teachers = memo(({data, setSelect, select, theme, onClick , setActi
                                 <p>{item?.name}</p>
                             )}</div>
                         </td>
+                        <td>{item?.face_id}</td>
                         {item.status ?
                             <td>
                                 <i onClick={() => {
@@ -105,7 +106,9 @@ export const Teachers = memo(({data, setSelect, select, theme, onClick , setActi
                             <th>Tel</th>
                             <th>Yosh</th>
                             <th>Fan</th>
+                            <th>Face id</th>
                             <th>Status</th>
+
                         </tr>
                         </thead>
                         <tbody>
