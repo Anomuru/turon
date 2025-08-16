@@ -122,7 +122,7 @@ export const DeletedStudents = ({currentTableData}) => {
                 >
                     Hammasi
                 </li>
-                {reasons && reasons?.results?.map((item, i) => <li
+                {reasons?.results?.map((item, i) => <li
                     key={i}
                     className={classNames(cls.other__item, {
                         [cls.active]: activeMenu === item?.id

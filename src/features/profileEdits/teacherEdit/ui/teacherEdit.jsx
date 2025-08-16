@@ -35,6 +35,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
     const [colorChange, setColorChange] = useState("black")
     const [classTime, setClassTime] = useState()
     const [classSalary, setClassSalary] = useState()
+    const [faceId, setFaceID] = useState()
     const [usernameMessage, setUsernameMessage] = useState('');
     const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
 
@@ -97,6 +98,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
             setClassSalary(teacherID?.class_salary)
             setUsername(teacherID?.user?.username)
             setFatherName(teacherID?.user?.father_name)
+            setFaceID(teacherID?.face_id)
             setSelectedSubjects(
                 teacherID?.subject?.map(subject => ({
                     value: subject?.id,
@@ -115,7 +117,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                 surname,
                 phone,
                 age,
-                username,
+                // username,
                 father_name: fatherName
             },
             teacher_salary_type: teacherSalaryType,
@@ -124,7 +126,8 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
             color: colorChange,
             working_hours: +classTime,
             salary_percentage: +money,
-            class_salary: classSalary
+            class_salary: classSalary,
+            face_id: faceId
         };
 
         dispatch(editTeacherThunk({id: (teacherID.id), updateTeacher}))
@@ -224,7 +227,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                         <Select
                             extraClass={cls.extraClasses}
                             name={"category"}
-                            options={categories}
+                            options={categories.results}
                             defaultValue={teacherSalaryType?.id ?? teacherSalaryType}
                             onChangeOption={setTeacherSalaryType}
                             title={"Toifa"}
@@ -256,7 +259,14 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             value={classSalary}
                             // value={selectedTo}
                         />
-
+                        <Input
+                            type={"number"}
+                            title={"Face Id raqami"}
+                            extraClassName={cls.filter__input}
+                            onChange={(e) => setFaceID(e.target.value)}
+                            value={faceId}
+                            // value={selectedTo}
+                        />
                         <div>
                             <div style={{display: "flex" , gap: "1rem" , alignItems: "center" , marginBottom: "10px"}}><h3>Rang qushish :</h3> <div style={{backgroundColor: colorChange ? colorChange : "black" , width: "30px" , height: "30px" , borderRadius: "5px" , boxShadow: colorChange === "#ffffff" ? "0 0 5px 0" : null}}></div></div>
                             <HexColorPicker style={{width: "30rem", height: "15rem"}} color={colorChange}

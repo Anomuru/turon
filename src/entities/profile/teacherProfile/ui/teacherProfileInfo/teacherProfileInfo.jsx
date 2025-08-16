@@ -23,15 +23,17 @@ export const TeacherProfileInfo = memo(({active, setActive, setActiveModal, newI
 
     const teacherId = useSelector(getTeacherId)
     const [localTeacherData, setLocalTeacherData] = useState({});
-    const id = useSelector(getUserBranchId)
+    const id = localStorage.getItem("branchId")
 
 
 
 
     useEffect(() => {
-        dispatch(fetchClassTypeData({id}))
-        dispatch(fetchClassNumberData({id}))
-        dispatch(fetchCategories(id))
+        if (id){
+            dispatch(fetchClassTypeData({id}))
+            dispatch(fetchClassNumberData({id}))
+            dispatch(fetchCategories(id))
+        }
         if (teacherId) {
             setLocalTeacherData(teacherId);
         }
@@ -84,6 +86,7 @@ export const TeacherProfileInfo = memo(({active, setActive, setActiveModal, newI
                         <p>Yoshi: <span>{teacherId?.user?.age}</span></p>
                         <p>Tug'ilgan sana: <span>{teacherId?.user?.birth_date}</span></p>
                         <p>Darslik soat: <span>{teacherId?.working_hours}</span></p>
+                        <p>Face id : <span>{teacherId?.face_id}</span></p>
                         <div className={cls.info__addInfo}>
                             <i className="fas fa-plus"/>
                         </div>

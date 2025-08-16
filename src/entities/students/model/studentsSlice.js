@@ -7,7 +7,7 @@ import {
     fetchOnlyNewStudentsData,
     fetchOnlyStudyingStudentsData,
     fetchSchoolStudents,
-    fetchOnlyDeletedStudentsData, fetchStudentsByClass, fetchDeletedNewStudentsThunk
+    fetchOnlyDeletedStudentsData, fetchStudentsByClass, fetchDeletedNewStudentsThunk, fetchUpdateClassStudent
 } from "./studentsThunk";
 
 
@@ -29,7 +29,10 @@ const initialState = {
     studyingStudentsStatus: false,
     loading: false,
     error: null,
-    totalCount: null
+    totalCount: null,
+    studentClassUpdate:[],
+    studentClassUpdateLoading: false,
+    studentClassUpdateCount: null
 }
 
 export const newStudents = createSlice({
@@ -199,6 +202,20 @@ export const newStudents = createSlice({
             })
             .addCase(fetchSchoolStudents.rejected, (state, action) => {
                 state.loading = false
+                state.error = action.payload ?? null
+            })
+            .addCase(fetchUpdateClassStudent.pending, state => {
+                state.studentClassUpdateLoading = true
+                state.error = null
+            })
+            .addCase(fetchUpdateClassStudent.fulfilled, (state, action) => {
+                state.studentClassUpdate = action.payload.results
+                state.studentClassUpdateCount = action.payload.count
+                state.studentClassUpdateLoading = false
+                state.error = null
+            })
+            .addCase(fetchUpdateClassStudent.rejected, (state, action) => {
+                state.studentClassUpdateLoading = false
                 state.error = action.payload ?? null
             })
 })

@@ -164,21 +164,24 @@ export const Register = () => {
                     }
                 } catch (error) {
                     console.error('Error checking username:', error);
-                    setUsernameMessage('Error checking username');
+                    setUsernameMessage(<p className={cls.successMess}>
+                        <i className="fa-solid fa-circle-exclamation" style={{color: "#f15c5c"}}></i>
+                        Error checking username
+                    </p>);
                     setIsUsernameAvailable(false);
                 }
             };
 
             checkUsername();
         } else {
-            setUsernameMessage(<p>Username kiriting</p>);
+            setUsernameMessage(<p style={{color: "red"}}>Username kiriting</p>);
             setIsUsernameAvailable(false);
         }
     }, [username]);
 
 
     const onSubmit = (data) => {
-
+        console.log(data , "data")
 
         if (!isUsernameAvailable) {
             return;
@@ -209,12 +212,6 @@ export const Register = () => {
             let result;
             result = {
                 class_number: selectedClass,
-                parents_fullname: data.parents_fullname,
-                old_school: data.old_school,
-                parent_region: data.parent_region,
-                district: data.district,
-                parent_seria: data.parent_seria,
-                parent_seria_num: data.parent_seria_num,
                 region: data.region,
                 born_date: data.born_date,
                 student_seria_num: data.student_seria_num,
@@ -272,19 +269,14 @@ export const Register = () => {
                     setValue("surname", "")
                     setValue("username", "")
                     setValue("parents_fullname", "")
-                    setValue("parent_seria", "")
-                    setValue("parent_seria_num", "")
-                    setValue("parent_region", "")
                     setValue("born_date", "")
                     setValue("father_name", "")
                     setValue("parents_phone", "")
                     setValue("phone", "")
                     setValue("student_seria_num", "")
                     setValue("student_seria", "")
-                    setValue("old_school", "")
                     setValue("region", "")
                     setValue("district", "")
-                    setValue("birth_date", "")
                     setValue("comment", "")
                 } else {
                     dispatch(onAddAlertOptions({
@@ -298,7 +290,6 @@ export const Register = () => {
             });
         }
     };
-
 
     const renderFormFields = () => {
         switch (registerType) {
@@ -331,25 +322,7 @@ export const Register = () => {
                             options={classNumbers}
                             defaultValue={classNumbers[0]?.id}
                         />
-                        <Input
-                            register={register}
-                            placeholder="Ota-ona telefon raqami"
-                            type="number"
-                            required
-                            name={"parents_phone"}
-                        />
-                        <Input register={register} name={"parents_fullname"}
-                               placeholder={"ota-ona fio"}/>
-                        <div className={cls.seriya}>
-                            <Input register={register} name={"parent_seria"}
-                                   placeholder={"passport seriya"}/>
-                            <Input register={register} name={"parent_seria_num"}
-                                   placeholder={"seriya raqami"} type={"number"}/>
-                        </div>
-                        <Input register={register} name={"born_date"}
-                               placeholder={"tug'ilgan yili "} type={"date"}/>
-                        <Input register={register} name={"parent_region"}
-                               placeholder={"yashash joyi"}/>
+
                     </>
                 );
             case 'teacher':
@@ -372,7 +345,7 @@ export const Register = () => {
                         <Select
                             extraClass={cls.extraClasses}
                             name={"category"}
-                            options={categories}
+                            options={categories?.results}
                             onChangeOption={setSelectedCategory}
                             title={"Toifa"}
                         />
@@ -498,7 +471,7 @@ export const Register = () => {
                                     placeholder="Tug'ilgan kun"
                                     type="date"
                                     required
-                                    name={"birth_date"}
+                                    name={"born_date"}
                                 />
                                 <Input
                                     register={register}

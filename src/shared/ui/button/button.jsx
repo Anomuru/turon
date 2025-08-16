@@ -9,6 +9,7 @@ import timeTable from "shared/assets/icons/Clock.png"
 import Filter from "shared/assets/Filtericons/Filter.svg";
 
 export const Button = React.memo(({id,children, onClick, type, disabled, status, extraClass, editPlus,active}) => {
+    console.log(type , "type")
     return (
         <button
 
