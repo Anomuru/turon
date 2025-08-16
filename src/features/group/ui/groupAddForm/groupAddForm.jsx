@@ -63,6 +63,7 @@ export const GroupAddForm = memo((props) => {
         }
         request(`${API_URL}Group/groups/profile/${data?.id}/`, "PATCH", JSON.stringify(res), headers())
             .then(res => {
+                setSelectedId([])
                 dispatch(onAddAlertOptions({
                     type: "success",
                     status: true,

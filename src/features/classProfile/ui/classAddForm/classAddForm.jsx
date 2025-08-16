@@ -77,6 +77,7 @@ export const ClassAddForm = memo((props) => {
                     status: true,
                     msg: `O'quvchilar sinfga qo'shildi`
                 }))
+                setSelectedId([])
                 setActiveModal(false)
                 setActive(false)
                 setLoadingAdd(false)
