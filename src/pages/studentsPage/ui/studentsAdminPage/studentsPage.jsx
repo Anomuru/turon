@@ -291,7 +291,6 @@ export const StudentsPage = () => {
         if (activeClassStudent.length > 0) {
             request(`${API_URL}Students/update_student_class_number/`, "POST", JSON.stringify(data), headers())
                 .then(res => {
-                    console.log(res)
                     dispatch(onAddAlertOptions({
                         type: "success",
                         status: true,
@@ -321,7 +320,6 @@ export const StudentsPage = () => {
 
     }, [schoolClassNumbers])
 
-    console.log(activeClassStudent?.length, "activeClassStudent")
     return (
 
         <DynamicModuleLoader reducers={initialReducers}>

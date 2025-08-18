@@ -64,7 +64,6 @@ export const newStudents = createSlice({
 
         onDeleteGroupStudentBack: (state,action) => {
             state.deletedStudents = state.deletedStudents.filter(item => item.student.id !== action.payload)
-            console.log(action.payload, typeof action.payload, "log")
         }
 
 

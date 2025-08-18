@@ -44,7 +44,6 @@ export const teachersSlice = createSlice({
                 state.deletedTeachers = action.payload
                 state.totalCount = action.payload.count
                 state.loading = false
-                console.log(action.payload)
                 state.error = false
             })
             .addCase(fetchDeletedTeachersData.rejected , state => {

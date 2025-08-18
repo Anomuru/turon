@@ -14,7 +14,6 @@ export const TimeTableList = memo((props) => {
         loading,
         setStatus
     } = props
-    console.log(data , "da")
 
     const renderTimeTableList = useCallback(() => {
         return data?.map((item, i) =>

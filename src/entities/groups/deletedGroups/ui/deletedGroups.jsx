@@ -7,7 +7,6 @@ import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 export const DeletedGroups = ({currentTableData , loadingWithFilter}) => {
 
 
-    console.log(currentTableData , "currentTableData")
 
 
     return (

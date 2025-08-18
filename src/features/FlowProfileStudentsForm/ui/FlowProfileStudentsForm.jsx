@@ -49,7 +49,6 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
     const filteredTeachers = useSelector(getFlowsProfileFilteredTeachers)
     const branch = useSelector(getUserBranchId)
 
-    console.log(flows, "flows")
 
     const [active, setActive] = useState(false)
     const [activeModal, setActiveModal] = useState("")
