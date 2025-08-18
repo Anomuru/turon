@@ -26,7 +26,6 @@ import {Select} from "shared/ui/select";
 import {fetchTeachersData, getTeachers} from "entities/teachers";
 import {useForm} from "react-hook-form";
 import {
-
     getLoadingStudyingStudents,
     getStudentClassUpdate,
     getStudentClassUpdateCount,
@@ -121,6 +120,7 @@ export const StudentsPage = () => {
 
     const [selectClass, setSelectClass] = useState(null)
 
+    const [currentSearch, setCurrentSearch] = useState("")
     let PageSize = useMemo(() => 50, []);
     const [activeClass, setActiveClass] = useState(false)
     const [activeClassStudent, setActiveClassStudent] = useState([])
@@ -130,18 +130,21 @@ export const StudentsPage = () => {
     const studentClassUpdateCount = useSelector(getStudentClassUpdateCount)
     const [currentPageClassUpdate, setCurrentPageClassUpdate] = useState(1);
 
-    const branch = localStorage.getItem("branchId")
+    // useEffect(() => {
+    //     setCurrentSearch(search)
+    //     setCurrentPageClassUpdate(1)
+    // }, [search])
 
     useEffect(() => {
-
-        if (branch) {
+        if (search && userBranchId && currentPageClassUpdate) {
             dispatch(fetchUpdateClassStudent({
                 offset: (currentPageClassUpdate - 1) * PageSize,
                 limit: PageSize,
-                branch
+                branch: userBranchId,
+                search
             }))
         }
-    }, [currentPageClassUpdate])
+    }, [search, currentPageClassUpdate, userBranchId])
 
 
     useEffect(() => {
@@ -231,7 +234,10 @@ export const StudentsPage = () => {
             case "new_students":
                 return (
                     <NewStudents
+                        currentPage={currentPageClassUpdate}
+                        setCurrentPage={setCurrentPageClassUpdate}
                         branchId={userBranchId}
+                        pageSize={PageSize}
 
                         // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                         currentTableData={newStudents}

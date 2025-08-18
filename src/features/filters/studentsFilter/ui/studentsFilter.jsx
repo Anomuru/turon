@@ -18,8 +18,12 @@ import cls from "../../filters.module.sass";
 import {fetchDeletedNewStudentsThunk} from "entities/students";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Button} from "shared/ui/button/index.js";
+import {getSearchValue} from "features/searchInput/index.js";
 
-export const StudentsFilter = React.memo(({active, setActive, activePage, pageSize , currentPage}) => {
+export const StudentsFilter = React.memo(({active, setActive, activePage, pageSize, currentPage}) => {
+
+    const search = useSelector(getSearchValue)
+
     const lang = localStorage.getItem("selectedLang")
     const ageFrom = localStorage.getItem("ageFrom")
     const ageTo = localStorage.getItem("ageTo")
@@ -37,53 +41,51 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
     const userBranchId = localStorage.getItem("branchId")
 
 
-    console.log(ageFrom, ageTo)
-
     useEffect(() => {
 
         if (activePage === "studying_students") {
             dispatch(fetchOnlyStudyingStudentsData({
-                langId: lang,
-                fromAge: selectedAgeFrom,
-                untilAge: selectedAgeTo,
-                userBranchId,
-                currentPage,
-                pageSize
-
+                language: lang,
+                age: `${selectedAgeFrom}-${selectedAgeTo}`,
+                branch: userBranchId,
+                offset: (currentPage -1) * pageSize,
+                limit: pageSize,
+                search
             }))
         } else if (activePage === "new_students") {
 
             if (isSwitch) {
                 dispatch(fetchDeletedNewStudentsThunk({
-                    langId: lang,
-                    fromAge: selectedAgeFrom,
-                    untilAge: selectedAgeTo,
-                    userBranchId,
-                    currentPage,
-                    pageSize
+                    language: lang,
+                    age: `${selectedAgeFrom}-${selectedAgeTo}`,
+                    // untilAge: selectedAgeTo,
+                    branch: userBranchId,
+                    offset: (currentPage -1) * pageSize,
+                    limit: pageSize,
+                    search
                 }));
 
             } else {
                 dispatch(fetchOnlyNewStudentsData({
-                    langId: lang,
-                    fromAge: selectedAgeFrom,
-                    untilAge: selectedAgeTo,
-                    userBranchId,
-                    currentPage,
-                    pageSize
+                    language: lang,
+                    age: `${selectedAgeFrom}-${selectedAgeTo}`,
+                    branch: userBranchId,
+                    offset: (currentPage -1) * pageSize,
+                    limit: pageSize,
+                    search
                 }))
             }
         } else {
             dispatch(fetchOnlyDeletedStudentsData({
-                langId: lang,
-                fromAge: selectedAgeFrom,
-                untilAge: selectedAgeTo,
-                userBranchId,
-                currentPage,
-                pageSize
+                language: lang,
+                age: `${selectedAgeFrom}-${selectedAgeTo}`,
+                branch: userBranchId,
+                offset: (currentPage -1) * pageSize,
+                limit: pageSize,
+                search
             }))
         }
-    }, [selectedLang, selectedAgeTo, selectedAgeFrom, activePage , isSwitch , currentPage])
+    }, [selectedLang, selectedAgeTo, selectedAgeFrom, activePage, isSwitch, currentPage, search])
 
 
     const handleAgeFromBlur = (e) => {

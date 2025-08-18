@@ -49,7 +49,7 @@ export const StudentCreateClass = memo((props) => {
                     status: true,
                     msg: `Sinf yaratildi`
                 }))
-                dispatch(fetchOnlyNewStudentsData({userBranchId: branch}))
+                dispatch(fetchOnlyNewStudentsData({branch}))
                 setActive(false)
                 deactiveModal(false)
                 // setCreateStatus(true)

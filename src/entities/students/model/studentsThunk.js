@@ -2,25 +2,31 @@ import {createAsyncThunk} from "@reduxjs/toolkit";
 import {API_URL, branchQuery, branchQueryId, headers, ParamUrl, useHttp} from "shared/api/base";
 
 
-const renderItem = ({langId , untilAge , fromAge}) => {
+const renderItem = ({langId, untilAge, fromAge}) => {
     return `${fromAge ? `&age=${fromAge}-${untilAge}` : ""}${langId !== "all" ? `&language=${langId}` : ""}`
 }
 
 
-
 export const fetchNewStudentsData = createAsyncThunk(
     "newStudents/fetchNewStudentsData",
-     async () =>{
+    async () => {
         const {request} = useHttp()
-         return await request(`${API_URL}Students/students_list/`, "GET" , null , headers())
-     }
+        return await request(`${API_URL}Students/students_list/`, "GET", null, headers())
+    }
 )
 
 export const fetchOnlyNewStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyNewStudentsData',
-    async ({ fromAge, untilAge, langId, userBranchId , currentPage , pageSize}) => {
+    async ({age, language, branch, offset, limit, search}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/new-registered-students/?branch=${userBranchId}${pageSize ? `&offset=${(currentPage - 1) * 50}&limit=${pageSize}` : ""}${renderItem({ fromAge , untilAge , langId})}`, "GET", null, headers())
+        return await request(`${API_URL}Students/new-registered-students/?${ParamUrl({
+            branch,
+            limit,
+            offset,
+            language,
+            age,
+            search
+        })}`, "GET", null, headers())
     }
 )
 
@@ -34,17 +40,31 @@ export const fetchStudentsByClass = createAsyncThunk(
 
 export const fetchOnlyStudyingStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyStudyingStudentsData',
-    async ({fromAge, untilAge, langId,userBranchId , currentPage , pageSize}) => {
+    async ({age, language, branch, limit, offset, search}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/active-students/?branch=${userBranchId}${pageSize ? `&offset=${(currentPage - 1) * 50}&limit=${pageSize}` : ""}${renderItem({ fromAge , untilAge , langId})}`, "GET", null, headers())
+        return await request(`${API_URL}Students/active-students/?${ParamUrl({
+            branch,
+            limit,
+            offset,
+            language,
+            age,
+            search
+        })}`, "GET", null, headers())
     }
 )
 
 export const fetchOnlyDeletedStudentsData = createAsyncThunk(
     'newStudents/fetchOnlyDeletedStudentsData',
-    async ({ fromAge, untilAge, langId,userBranchId  , currentPage , pageSize}) => {
+    async ({age, language, branch, limit, offset, search}) => {
         const {request} = useHttp();
-        return await request(`${API_URL}Students/deleted-group-students/?branch=${userBranchId}${pageSize ? `&offset=${(currentPage - 1) * 50}&limit=${pageSize}` : ""}${renderItem({ fromAge , untilAge , langId})}`, "GET", null, headers())
+        return await request(`${API_URL}Students/deleted-group-students/?${ParamUrl({
+            branch,
+            limit,
+            offset,
+            language,
+            age,
+            search
+        })}`, "GET", null, headers())
     }
 )
 
@@ -92,19 +112,30 @@ export const createSchoolClass = createAsyncThunk(
 
 export const fetchDeletedNewStudentsThunk = createAsyncThunk(
     'newStudents/fetchDeletedNewStudents',
-    async ({userBranchId , langId , fromAge , untilAge , currentPage , pageSize  }) => {
+    async ({branch, language, age, offset, limit, search}) => {
         const {request} = useHttp();
-        return await request(`${API_URL}Students/deleted-from-registered/?branch=${userBranchId}${pageSize ? `&offset=${(currentPage - 1) * 50}&limit=${pageSize}` : ""}${renderItem({ fromAge , untilAge , langId})}`, 'GET', null, headers())
+        return await request(`${API_URL}Students/deleted-from-registered/?${ParamUrl({
+            branch,
+            language,
+            age,
+            offset,
+            limit,
+            search
+        })}`, 'GET', null, headers())
     }
 )
 
 
-
 export const fetchUpdateClassStudent = createAsyncThunk(
     'newStudents/fetchUpdateClassStudent',
-    async ({branch , limit , offset}) => {
+    async ({branch, limit, offset, search}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/new-registered-students/?${ParamUrl({branch, limit, offset})}`, "GET", null, headers())
+        return await request(`${API_URL}Students/new-registered-students/?${ParamUrl({
+            branch,
+            limit,
+            offset,
+            search
+        })}`, "GET", null, headers())
     }
 )
 

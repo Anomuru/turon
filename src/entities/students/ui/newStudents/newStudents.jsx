@@ -1,24 +1,25 @@
-import React, {memo, useState} from 'react';
+import React, {memo, useEffect, useMemo, useState} from 'react';
 import {useNavigate} from "react-router";
 import cls from "entities/students/ui/newStudents/newStudents.module.sass";
 import {Table} from "shared/ui/table";
 
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {ConfirmModal} from "shared/ui/confirmModal";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {onDeleteNewStudents} from "../../model/studentsSlice";
 import {Alert} from "features/alert/index.js";
+import {getSearchValue} from "features/searchInput/index.js";
+import {fetchUpdateClassStudent} from "entities/students/model/studentsThunk.js";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
-export const NewStudents = memo(({currentTableData}) => {
+export const NewStudents = memo(({currentTableData, pageSize, currentPage, setCurrentPage}) => {
+
 
     const [studentId, setStudentId] = useState(false)
     const [isDeleted, setIsDeleted] = useState(false)
     const [isOpen, setIsOpen] = useState(false)
     const navigation = useNavigate()
-
-    console.log(currentTableData , "log")
-
 
     const renderStudents = () => {
         return currentTableData?.map((item, i) => (
@@ -93,7 +94,7 @@ export const NewStudents = memo(({currentTableData}) => {
 
                         <th>Reg. sana</th>
 
-                        {currentTableData?.filter(item => !item.deleted)?.length ?  <th>O'chirish</th> : ""}
+                        {currentTableData?.filter(item => !item.deleted)?.length ? <th>O'chirish</th> : ""}
 
                     </tr>
                     </thead>
@@ -102,7 +103,6 @@ export const NewStudents = memo(({currentTableData}) => {
                     </tbody>
                 </Table>
             </div>
-
 
 
             <ConfirmModal
