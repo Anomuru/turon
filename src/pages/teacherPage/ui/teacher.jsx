@@ -1,4 +1,3 @@
-
 import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {TeacherFilter} from "features/filters/teacherFilter";
@@ -39,9 +38,6 @@ export const TeachersPage = () => {
     const filteredTeachersData = useSelector(getTeachersWithFilter)
     const dispatch = useDispatch()
     const teacherStatus = localStorage.getItem("teacherStatus")
-
-
-    console.log(deletedTeacher)
 
     const totalCount = useSelector(getTotalCount)
 

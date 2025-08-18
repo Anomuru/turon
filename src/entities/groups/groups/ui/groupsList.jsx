@@ -25,7 +25,7 @@ export const GroupsList = React.memo(({currentTableData , loadingClasses}) => {
                     <td>{i + 1}</td>
                     <td>{item?.name}</td>
                     <td>{item?.teacher}</td>
-                    <td>{item?.students?.length}</td>
+                    <td>{item?.count}</td>
                     <td>{item?.price ? item.price : "Sinfga hali narx belgilanmagan"}</td>
                     {/*<td>{`${item?.class_number?.number}-${item?.color?.name}`}</td>*/}
 

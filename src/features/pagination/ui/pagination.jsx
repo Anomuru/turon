@@ -85,8 +85,6 @@ export const Pagination = React.memo((props) => {
     const renderedPages = renderPageNumbers();
 
 
-    console.log(totalCount , "asda")
-    console.log(totalPages)
     return (
         <>
 
