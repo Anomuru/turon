@@ -135,7 +135,11 @@ export const StudentsPage = () => {
     useEffect(() => {
 
         if (branch) {
-            dispatch(fetchUpdateClassStudent({currentPage:currentPageClassUpdate, pageSize: PageSize, branch}))
+            dispatch(fetchUpdateClassStudent({
+                offset: (currentPageClassUpdate - 1) * PageSize,
+                limit: PageSize,
+                branch
+            }))
         }
     }, [currentPageClassUpdate])
 
@@ -278,17 +282,17 @@ export const StudentsPage = () => {
             students: activeClassStudent
         }
 
-       if (activeClassStudent.length > 0) {
-           request(`${API_URL}Students/update_student_class_number/`, "POST", JSON.stringify(data), headers())
-               .then(res => {
-                   console.log(res)
-                   dispatch(onAddAlertOptions({
-                       type: "success",
-                       status: true,
-                       msg: res.msg
-                   }))
-               })
-       }
+        if (activeClassStudent.length > 0) {
+            request(`${API_URL}Students/update_student_class_number/`, "POST", JSON.stringify(data), headers())
+                .then(res => {
+                    console.log(res)
+                    dispatch(onAddAlertOptions({
+                        type: "success",
+                        status: true,
+                        msg: res.msg
+                    }))
+                })
+        }
 
     }
     const onChangeClass = (id) => {
@@ -311,7 +315,7 @@ export const StudentsPage = () => {
 
     }, [schoolClassNumbers])
 
-    console.log(activeClassStudent?.length , "activeClassStudent")
+    console.log(activeClassStudent?.length, "activeClassStudent")
     return (
 
         <DynamicModuleLoader reducers={initialReducers}>
@@ -517,7 +521,8 @@ export const StudentsPage = () => {
                         type={"custom"}
                     />
 
-                      <Button type={activeClassStudent.length > 0 ? "submit" : "disabled"} onClick={onClickClass}>Submit</Button>
+                    <Button type={activeClassStudent.length > 0 ? "submit" : "disabled"}
+                            onClick={onClickClass}>Submit</Button>
                 </div>
 
             </Modal>

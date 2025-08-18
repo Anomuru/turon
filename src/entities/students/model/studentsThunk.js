@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {API_URL, branchQuery, branchQueryId, headers, useHttp} from "shared/api/base";
+import {API_URL, branchQuery, branchQueryId, headers, ParamUrl, useHttp} from "shared/api/base";
 
 
 const renderItem = ({langId , untilAge , fromAge}) => {
@@ -102,9 +102,9 @@ export const fetchDeletedNewStudentsThunk = createAsyncThunk(
 
 export const fetchUpdateClassStudent = createAsyncThunk(
     'newStudents/fetchUpdateClassStudent',
-    async ({branch , currentPage , pageSize}) => {
+    async ({branch , limit , offset}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Students/new-registered-students/?branch=${branch}${pageSize ? `&offset=${(currentPage - 1) * 50}&limit=${pageSize}` : ""}`, "GET", null, headers())
+        return await request(`${API_URL}Students/new-registered-students/?${ParamUrl({branch, limit, offset})}`, "GET", null, headers())
     }
 )
 
