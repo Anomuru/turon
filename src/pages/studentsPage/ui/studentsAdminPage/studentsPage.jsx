@@ -140,19 +140,9 @@ export const StudentsPage = () => {
     // }, [studentClassUpdateCount])
 
     useEffect(() => {
-        if (search && userBranchId && currentPageClassUpdate && currentPageClassUpdate !== 1) {
-            console.log(true, "change")
-            console.log(currentPageClassUpdate, "currentPageClassUpdate")
-            setCurrentPageClassUpdate(1)
+        if (search && userBranchId && currentPageClassUpdate) {
             dispatch(fetchUpdateClassStudent({
-                offset: 0,
-                limit: PageSize,
-                branch: userBranchId,
-                search
-            }))
-        } else {
-            dispatch(fetchUpdateClassStudent({
-                offset: (currentPageClassUpdate - 1) * PageSize,
+                offset: search ? 0 : (currentPageClassUpdate - 1) * PageSize,
                 limit: PageSize,
                 branch: userBranchId,
                 search
@@ -534,6 +524,7 @@ export const StudentsPage = () => {
                         currentPage={currentPageClassUpdate}
                         pageSize={PageSize}
                         onPageChange={page => {
+                            console.log(page, "page")
                             setCurrentPageClassUpdate(page)
                         }}
                         type={"custom"}

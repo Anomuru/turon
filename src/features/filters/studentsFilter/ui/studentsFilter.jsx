@@ -48,7 +48,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                 language: lang,
                 age: `${selectedAgeFrom}-${selectedAgeTo}`,
                 branch: userBranchId,
-                offset: (currentPage -1) * pageSize,
+                offset: search ? 0 : (currentPage - 1) * pageSize,
                 limit: pageSize,
                 search
             }))
@@ -60,7 +60,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                     age: `${selectedAgeFrom}-${selectedAgeTo}`,
                     // untilAge: selectedAgeTo,
                     branch: userBranchId,
-                    offset: (currentPage -1) * pageSize,
+                    offset: search ? 0 : (currentPage - 1) * pageSize,
                     limit: pageSize,
                     search
                 }));
@@ -70,7 +70,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                     language: lang,
                     age: `${selectedAgeFrom}-${selectedAgeTo}`,
                     branch: userBranchId,
-                    offset: (currentPage -1) * pageSize,
+                    offset: search ? 0 : (currentPage - 1) * pageSize,
                     limit: pageSize,
                     search
                 }))
@@ -80,7 +80,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                 language: lang,
                 age: `${selectedAgeFrom}-${selectedAgeTo}`,
                 branch: userBranchId,
-                offset: (currentPage -1) * pageSize,
+                offset: search ? 0 : (currentPage - 1) * pageSize,
                 limit: pageSize,
                 search
             }))
