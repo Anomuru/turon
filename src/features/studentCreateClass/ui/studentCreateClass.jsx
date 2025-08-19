@@ -86,7 +86,6 @@ export const StudentCreateClass = memo((props) => {
     }
 
     const render = renderStudents()
-    console.log(studentsList , "studentsList")
 
     return (
         <Modal

@@ -32,8 +32,6 @@ export const StudentSalary = ({deleted, setDeleted}) => {
     const branchID = useSelector(getUserBranchId)
     const deletedStudentPayment = useSelector(getDeletedStudent)
 
-    console.log(deletedStudentPayment, "deletedStudentPayment")
-
     const [activeDelete, setActiveDelete] = useState(false)
     const [changingData, setChangingData] = useState({})
     const [currentPage, setCurrentPage] = useState(1);

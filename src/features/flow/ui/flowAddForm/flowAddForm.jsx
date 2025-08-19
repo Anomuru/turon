@@ -35,7 +35,6 @@ export const FlowAddForm = memo((props) => {
     const userBranchId = useSelector(getUserBranchId)
     const filteredStudents = useSelector(getFlowsProfileFilteredStudents)
 
-    console.log(filteredStudents, "filteredStudents")
 
     const [currentFilteredData, setCurrentFilteredData] = useState([])
     const [activeModal, setActiveModal] = useState(false)

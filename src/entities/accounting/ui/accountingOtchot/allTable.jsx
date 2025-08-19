@@ -305,7 +305,6 @@ const TableCash = ({data, resultData, activeType}) => {
 
             {
                 // resultData?.map(item => {
-                //     console.log(item, "item")
                 //     return (
                 //         <div className={cls.list}>
                 //             <div className={cls.list__container}>

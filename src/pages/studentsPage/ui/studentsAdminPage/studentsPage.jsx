@@ -131,14 +131,17 @@ export const StudentsPage = () => {
     const [currentPageClassUpdate, setCurrentPageClassUpdate] = useState(1);
 
     // useEffect(() => {
-    //     setCurrentSearch(search)
-    //     setCurrentPageClassUpdate(1)
-    // }, [search])
+    //     if (studentClassUpdateCount <= 50 && currentPageClassUpdate !== 1) {
+    //             true, "change"
+    //         )
+    //         setCurrentPageClassUpdate(1)
+    //     }
+    // }, [studentClassUpdateCount])
 
     useEffect(() => {
         if (search && userBranchId && currentPageClassUpdate) {
             dispatch(fetchUpdateClassStudent({
-                offset: (currentPageClassUpdate - 1) * PageSize,
+                offset: search ? 0 : (currentPageClassUpdate - 1) * PageSize,
                 limit: PageSize,
                 branch: userBranchId,
                 search
@@ -291,7 +294,6 @@ export const StudentsPage = () => {
         if (activeClassStudent.length > 0) {
             request(`${API_URL}Students/update_student_class_number/`, "POST", JSON.stringify(data), headers())
                 .then(res => {
-                    console.log(res)
                     dispatch(onAddAlertOptions({
                         type: "success",
                         status: true,
@@ -321,7 +323,6 @@ export const StudentsPage = () => {
 
     }, [schoolClassNumbers])
 
-    console.log(activeClassStudent?.length, "activeClassStudent")
     return (
 
         <DynamicModuleLoader reducers={initialReducers}>

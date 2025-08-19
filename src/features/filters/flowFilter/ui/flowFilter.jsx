@@ -87,7 +87,6 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
         fetchFlowsData("all", "all", 0, pageSize);
         removeFilter("flowFilter");
     };
-    console.log(teachers?.results , "teachers")
 
     return (
         <Modal active={active} setActive={setActive}>

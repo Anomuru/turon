@@ -329,7 +329,6 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
         setSelect(prev => prev.filter(id => students.some(student => student.id === id)));
     }, [students]);
 
-    console.log(data, "data")
 
     const renderStudents = () => {
         return data?.students?.map(item =>

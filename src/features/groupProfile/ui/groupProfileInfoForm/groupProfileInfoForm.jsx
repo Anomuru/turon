@@ -85,11 +85,9 @@ export const GroupProfileInfoForm = memo(({}) => {
 
 
     const onDelete = () => {
-        console.log(id)
 
         request(`${API_URL}Group/groups/delete/${id}/`, "POST", null, headers())
             .then(res => {
-                console.log(res)
 
                 dispatch(deleteGroup(id))
                 navigate(-2)
