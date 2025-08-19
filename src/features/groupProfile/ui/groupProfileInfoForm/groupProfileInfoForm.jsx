@@ -60,12 +60,16 @@ export const GroupProfileInfoForm = memo(({}) => {
     const [active, setActive] = useState(false)
     const [selectColor, setSelectColor] = useState()
     const [activeSwitch, setActiveSwitch] = useState(data?.status ?? false)
-    const [deleteID , setDelete] = useState(false)
+    const [deleteID, setDelete] = useState(false)
 
-    const onSubmitChange = (data) => {
+    const onSubmitChange = (formData) => {
+        console.log(formData, "formData")
+        console.log(formData?.class_number, "formData?.class_number")
+        console.log(data?.class_number, "data?.class_number")
         const res = {
-            ...data,
-            color: data?.color ?? selectColor
+            color: formData?.color ?? selectColor ?? data?.color,
+            class_number: Number(formData?.class_number) ?? Number(data?.class_number),
+            ...formData,
         }
         dispatch(changeGroupProfile({
             status: activeSwitch,
@@ -100,8 +104,8 @@ export const GroupProfileInfoForm = memo(({}) => {
         setValue("name", data?.name)
         setValue("price", data?.price)
         setValue("language", data?.language?.id)
-            setValue("color", data?.color?.id)
-            setValue("class_number", data?.class_number?.id)
+        setValue("color", data?.color)
+        setValue("class_number", data?.class_number)
     }, [data])
 
 
@@ -140,8 +144,8 @@ export const GroupProfileInfoForm = memo(({}) => {
                         data?.level?.name ? <p>Level: <span>{data?.level?.name}</span></p> : null
                     }
                     {
-                        data?.class_number?.number ?
-                            <p>Sinf raqami: <span>{data?.class_number?.number}</span></p> : null
+                        data?.class_number ?
+                            <p>Sinf raqami: <span>{data?.class_number}</span></p> : null
                     }
 
                     <p>Guruh narxi: <span>{data?.price}</span></p>
@@ -200,50 +204,51 @@ export const GroupProfileInfoForm = memo(({}) => {
                         defaultValue={data?.language?.id}
                         required
                     />
-                            <>
-                                <Select
-                                    extraClass={cls.form__select}
-                                    options={schoolClassNumbers}
-                                    title={"Sinf raqami"}
-                                    register={register}
-                                    name={"class_number"}
-                                    defaultValue={data?.class_number?.id}
-                                    required
-                                />
-                                <Input title={"Sinf narxi"} type={"number"} placeholder={"Amount"} register={register} name={"price"}/>
-                            </>
-                            {
-                                schoolClassColors.length <= 3 ?
-                                    <div className={cls.form__radios}>
-                                        {
-                                            schoolClassColors.map(item => {
-                                                return (
-                                                    <div className={cls.form__inner}>
-                                                        <Radio
-                                                            extraClasses={cls.form__item}
-                                                            onChange={() => setSelectColor(item.id)}
-                                                            checked={selectColor ? selectColor === item.id : data?.color.id === item.id}
-                                                            name={"color"}
-                                                        />
-                                                        {
-                                                            item.name
-                                                        }
-                                                    </div>
-                                                )
-                                            })
-                                        }
-                                    </div>
-                                    :
-                                    <Select
-                                        keyValue={"id"}
-                                        extraClass={cls.form__select}
-                                        title={"Sinf rangi"}
-                                        name={"color"}
-                                        options={schoolClassColors}
-                                        defaultValue={data?.color?.id}
-                                        register={register}
-                                    />
-                            }
+                    <>
+                        <Select
+                            extraClass={cls.form__select}
+                            options={schoolClassNumbers}
+                            title={"Sinf raqami"}
+                            register={register}
+                            name={"class_number"}
+                            defaultValue={data?.class_number}
+                            required
+                        />
+                        <Input title={"Sinf narxi"} type={"number"} placeholder={"Amount"} register={register}
+                               name={"price"}/>
+                    </>
+                    {
+                        schoolClassColors.length <= 3 ?
+                            <div className={cls.form__radios}>
+                                {
+                                    schoolClassColors.map(item => {
+                                        return (
+                                            <div className={cls.form__inner}>
+                                                <Radio
+                                                    extraClasses={cls.form__item}
+                                                    onChange={() => setSelectColor(item.id)}
+                                                    checked={selectColor ? selectColor === item.id : data?.color === item.id}
+                                                    name={"color"}
+                                                />
+                                                {
+                                                    item.name
+                                                }
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </div>
+                            :
+                            <Select
+                                keyValue={"id"}
+                                extraClass={cls.form__select}
+                                title={"Sinf rangi"}
+                                name={"color"}
+                                options={schoolClassColors}
+                                defaultValue={schoolClassColors.filter(item => item.name === data?.color)[0]?.id}
+                                register={register}
+                            />
+                    }
                     <div className={cls.form__switch}>
                         <p>Guruh statusi: </p>
                         <Switch
@@ -251,21 +256,22 @@ export const GroupProfileInfoForm = memo(({}) => {
                             onChangeSwitch={setActiveSwitch}
                         />
                     </div>
-                   <div style={{display: "flex" , justifyContent: "space-between"}}>
-                       <Button
-                           extraClass={cls.infoModal__btn}
-                           onClick={handleSubmit(() => {
-                               setIsDeleted(true)
-                               setDelete(!deleteID)
-                           })}
-                           type={"danger"}
-                       >
-                           Delete group
-                       </Button>
-                       <Button id={"formChange"} extraClass={cls.infoModal__btn}>Change</Button>
-                   </div>
+                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                        <Button
+                            extraClass={cls.infoModal__btn}
+                            onClick={handleSubmit(() => {
+                                setIsDeleted(true)
+                                setDelete(!deleteID)
+                            })}
+                            type={"danger"}
+                        >
+                            Delete group
+                        </Button>
+                        <Button id={"formChange"} extraClass={cls.infoModal__btn}>Change</Button>
+                    </div>
                 </Form>
-                <ConfirmModal setActive={setDelete} active={deleteID} onClick={handleSubmit(onDelete)} title={`Rostanham o'chirmoqchimisiz`}   type={"danger"}/>
+                <ConfirmModal setActive={setDelete} active={deleteID} onClick={handleSubmit(onDelete)}
+                              title={`Rostanham o'chirmoqchimisiz`} type={"danger"}/>
 
             </Modal>
             {/*<ConfirmModal*/}

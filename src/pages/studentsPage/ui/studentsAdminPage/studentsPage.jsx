@@ -162,7 +162,7 @@ export const StudentsPage = () => {
         if (userBranchId) {
             // dispatch(fetchSchoolStudents({userBranchId}))
             dispatch(fetchClassColorData())
-            dispatch(fetchClassNumberData({branch: 22}))
+            dispatch(fetchClassNumberData({branch: userBranchId}))
         }
     }, [userBranchId])
 
@@ -185,7 +185,7 @@ export const StudentsPage = () => {
 
     const onSubmitFilteredByClass = (data) => {
         setActiveFormBtn(schoolClassNumbers.filter(item => item.id === +data)[0]?.price === 0 || !schoolClassNumbers.filter(item => item.id === +data)[0]?.price)
-        dispatch(fetchStudentsByClass({branch: 22, number: data}))
+        dispatch(fetchStudentsByClass({branch: userBranchId, number: data}))
     }
 
 

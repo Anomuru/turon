@@ -1,6 +1,12 @@
 import classNames from "classnames";
 import {FlowList} from "entities/flowList";
-import {fetchGroupsDataWithFilter, getGroupsListData, getGroupsLoading, groupsReducer} from "entities/groups";
+import {
+    fetchGroupsDataWithFilter,
+    getGroupsListCount,
+    getGroupsListData,
+    getGroupsLoading,
+    groupsReducer
+} from "entities/groups";
 import {getUserBranchId} from "entities/profile/userProfile";
 import {useDispatch, useSelector} from "react-redux";
 import {flowListThunk, getFlowList} from "entities/flows";
@@ -34,6 +40,7 @@ export const FlowListPage = () => {
     }, [userBranchId])
 
     // const flowList = useSelector(getFlowList)
+    const totalCount = useSelector(getGroupsListCount)
     const flowList = useSelector(getGroupsListData)
     const loading = useSelector(getGroupsLoading)
     const search = useSelector(getSearchValue)
@@ -43,8 +50,6 @@ export const FlowListPage = () => {
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedId, setSelectedId] = useState([])
-
-
 
     const searchedUsers = useMemo(() => {
         const filteredHeroes = flowList?.slice()
@@ -56,6 +61,11 @@ export const FlowListPage = () => {
             item.name?.toLowerCase().includes(search.toLowerCase())
         )
     }, [flowList])
+
+    useEffect(() => {
+        if (searchedUsers)
+            setCurrentTableData(searchedUsers)
+    }, [searchedUsers])
 
     const onChangeAll = (classId) => {
         setCurrentTableData(prev => prev.map(item => {
@@ -226,13 +236,13 @@ export const FlowListPage = () => {
                                 })}
                             >
                                 <Pagination
-                                    setCurrentTableData={setCurrentTableData}
-                                    users={searchedUsers}
                                     currentPage={currentPage}
                                     pageSize={PageSize}
                                     onPageChange={page => {
                                         setCurrentPage(page)
                                     }}
+                                    totalCount={totalCount}
+                                    type={"custom"}
                                 />
                                 <Button
                                     extraClass={cls.table__btn}
