@@ -7,7 +7,10 @@ import {
     getGroupProfileData, getGroupProfileLoading,
     getTimeTable
 } from "entities/profile/groupProfile";
-import {getGroupProfileFilteredStudents} from "entities/profile/groupProfile/model/groupProfileSelector";
+import {
+    getGroupProfileFilteredStudents,
+    getLoadingStudent
+} from "entities/profile/groupProfile/model/groupProfileSelector";
 import {filteredStudents} from "entities/profile/groupProfile/model/groupProfileThunk";
 import {fetchTeachersData} from "entities/teachers";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
@@ -29,6 +32,8 @@ import cls from "./classAddForm.module.sass";
 import {fetchGroupsForSelect} from "entities/oftenUsed/model/oftenUsedThunk";
 import {getGroupsSelect} from "entities/oftenUsed/model/oftenUsedSelector";
 
+
+
 export const ClassAddForm = memo((props) => {
 
     const {
@@ -45,7 +50,7 @@ export const ClassAddForm = memo((props) => {
     } = useForm()
 
     const groupData = useSelector(getGroupsSelect)
-    const loading = useSelector(getGroupProfileLoading)
+    const loading = useSelector(getLoadingStudent)
     const students = useSelector(getGroupProfileFilteredStudents)
     const data = useSelector(getGroupProfileData)
     const timeTable = useSelector(getTimeTable)
@@ -184,6 +189,8 @@ export const ClassAddForm = memo((props) => {
 
     const renderStudent = renderStudentsData()
 
+
+    console.log(loading , "loading")
     return (
         <>
             <Modal
@@ -222,7 +229,7 @@ export const ClassAddForm = memo((props) => {
                     defaultValue={searchValue}
                 />
                 {
-                    loading ? <MiniLoader/>
+                    loading === true ? <MiniLoader/>
                         :
                         <div className={cls.addModal__container}>
                             <Table>
