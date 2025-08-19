@@ -10,3 +10,5 @@ export const getEmployerLoading = (state) =>
 
 export const getDeletedEmployer = (state) =>
     state.employerSlice?.deletedEmployerSalary
+export const getDeletedEmployerCount = (state) =>
+    state.employerSlice?.deletedEmployerSalaryCount

@@ -5,6 +5,7 @@ const initialState = {
     overHeadList: [],
     overHeadCount: 0,
     overHeadDeletedLists: [],
+    overHeadDeletedCount: 0,
     overHeadType: [],
     loading: false,
     error: false,
@@ -61,6 +62,7 @@ export const overHeadSlice = createSlice({
             })
             .addCase(overHeadDeletedList.fulfilled, (state, action) => {
                 state.overHeadDeletedLists = action.payload?.results
+                state.overHeadDeletedCount = action.payload?.count
                 state.loading = false
                 state.error = false
             })

@@ -13,9 +13,9 @@ export {EmployeeSalary} from "./ui/acauntingTables/accountingTableWorkerSalary/E
 export {TeachersSalary} from "./ui/acauntingTables/accountingTableTeacherSalary/TeachersSalary"
 
 export {getAccountingSelect, getStudentsData} from "./model/selector/accountingSelector"
-export {getEmployerSalary, getEmployerLoading, getDeletedEmployer, getEmployerSalaryCount} from "./model/selector/employerSalary"
+export {getEmployerSalary, getEmployerLoading, getDeletedEmployerCount, getDeletedEmployer, getEmployerSalaryCount} from "./model/selector/employerSalary"
 export {getStudentPaymentes, getLoadingStudent, getDeletedStudentCount, getDeletedStudent, getStudentPaymentsCount} from "./model/selector/student"
-export {getOverHeadCount, getOverHeadType, getOverHeadLoading} from "./model/selector/additionalCosts"
+export {getOverHeadDeletedCount, getOverHeadCount, getOverHeadType, getOverHeadLoading} from "./model/selector/additionalCosts"
 export {
     getTeachersLoading,
     getTeacherSalaryData,

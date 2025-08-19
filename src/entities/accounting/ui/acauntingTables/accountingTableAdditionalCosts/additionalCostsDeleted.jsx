@@ -3,10 +3,12 @@ import React, {useMemo, useState} from "react";
 import {Pagination} from "../../../../../features/pagination";
 import {useSelector} from "react-redux";
 import {getSearchValue} from "../../../../../features/searchInput";
+import {getOverHeadDeletedCount} from "entities/accounting/index.js";
 
 export const AdditionalCostsDeleted = ({overheadDeletedList , extraClassName , paymentStyle}) => {
 
     const search = useSelector(getSearchValue)
+    const totalCount = useSelector(getOverHeadDeletedCount)
     let PageSize = useMemo(() => 50, [])
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
@@ -53,9 +55,7 @@ export const AdditionalCostsDeleted = ({overheadDeletedList , extraClassName , p
                 </Table>
             </div>
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
-                setCurrentPage={setCurrentPage}
+                totalCount={totalCount}
                 currentPage={currentPage}
                 pageSize={PageSize}
                 onPageChange={page => {

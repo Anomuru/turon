@@ -4,6 +4,7 @@ import { fetchGroupsDataWithFilter, fetchGroupTypeThunk} from "./groupsThunk";
 
 const initialState = {
     data: [],
+    totalCount: 0,
     typeData: [],
     loading: false,
     loadingClasses: false,
@@ -25,7 +26,8 @@ export const groupsSlice = createSlice({
                 state.error = null
             })
             .addCase(fetchGroupsDataWithFilter.fulfilled, (state, action) => {
-                state.data = action.payload
+                state.data = action.payload?.results
+                state.totalCount = action.payload?.count
                 state.loadingClasses = false
                 state.error = null
             })
