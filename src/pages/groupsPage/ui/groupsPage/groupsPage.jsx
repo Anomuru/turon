@@ -66,7 +66,6 @@ export const GroupsPage = () => {
             type: "groups"
         }
     ]
-    console.log(getFilteredGroups , "getFilteredGroups")
     return (
 
         // <DynamicModuleLoader reducers={reducers}>

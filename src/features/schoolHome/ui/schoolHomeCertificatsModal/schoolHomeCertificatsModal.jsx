@@ -101,8 +101,6 @@ export const SchoolHomeCertificatsModal = () => {
 
     useEffect(() => {
         if (activeEditItem) {
-            console.log(activeEditItem)
-            console.log(activeEditItem?.images[0]?.image)
             setValue("name", activeEditItem?.name)
             setValue("description", activeEditItem?.description)
             setCurrentFiles(activeEditItem?.images[0]?.image)
@@ -122,7 +120,6 @@ export const SchoolHomeCertificatsModal = () => {
     }
 
     const onEdit = (data) => {
-        console.log(data , "data")
         formData.append("name", data.name)
         formData.append("description", data.description)
         formData.append("type", types[8]?.id)

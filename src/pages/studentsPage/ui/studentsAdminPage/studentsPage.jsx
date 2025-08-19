@@ -132,7 +132,6 @@ export const StudentsPage = () => {
 
     // useEffect(() => {
     //     if (studentClassUpdateCount <= 50 && currentPageClassUpdate !== 1) {
-    //         console.log(
     //             true, "change"
     //         )
     //         setCurrentPageClassUpdate(1)
@@ -524,7 +523,6 @@ export const StudentsPage = () => {
                         currentPage={currentPageClassUpdate}
                         pageSize={PageSize}
                         onPageChange={page => {
-                            console.log(page, "page")
                             setCurrentPageClassUpdate(page)
                         }}
                         type={"custom"}

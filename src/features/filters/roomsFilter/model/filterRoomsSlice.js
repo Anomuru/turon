@@ -20,7 +20,6 @@ export const filterRoomsSlices = createSlice({
             })
             .addCase(fetchFilteredRooms.fulfilled, (state, action) => {
                 state.rooms = action.payload
-                console.log(rooms , "hello")
                 state.loading = false
                 state.error = null
             })

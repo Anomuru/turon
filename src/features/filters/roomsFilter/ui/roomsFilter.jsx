@@ -86,7 +86,6 @@ export const RoomsFilter = React.memo(({active, setActive, currentPage, pageSize
         const fullSeat = `${selectedSeatFrom}-${selectedSeatTo}`;
         // setSelectedSeat(fullSeat);
 
-        console.log(switchOn, "switchOn")
 
         dispatch(fetchRoomsData({
             electronic_board: switchOn === "yes" ? "True" : switchOn === "no" ? "False" : "all",

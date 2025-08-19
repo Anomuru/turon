@@ -115,9 +115,6 @@ export const AccountingPageMain = () => {
 
     // useEffect(() => {
     //     if (locations.length < 2 && typePage)  {
-    //         console.log(true, 2)
-    //         console.log(locations.length < 2)
-    //         console.log(locations.length)
     //         navigate(typePage, {relative: "path"})
     //     }
     // },[locations.length,navigate])
