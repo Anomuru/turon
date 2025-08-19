@@ -131,12 +131,26 @@ export const StudentsPage = () => {
     const [currentPageClassUpdate, setCurrentPageClassUpdate] = useState(1);
 
     // useEffect(() => {
-    //     setCurrentSearch(search)
-    //     setCurrentPageClassUpdate(1)
-    // }, [search])
+    //     if (studentClassUpdateCount <= 50 && currentPageClassUpdate !== 1) {
+    //         console.log(
+    //             true, "change"
+    //         )
+    //         setCurrentPageClassUpdate(1)
+    //     }
+    // }, [studentClassUpdateCount])
 
     useEffect(() => {
-        if (search && userBranchId && currentPageClassUpdate) {
+        if (search && userBranchId && currentPageClassUpdate && currentPageClassUpdate !== 1) {
+            console.log(true, "change")
+            console.log(currentPageClassUpdate, "currentPageClassUpdate")
+            setCurrentPageClassUpdate(1)
+            dispatch(fetchUpdateClassStudent({
+                offset: 0,
+                limit: PageSize,
+                branch: userBranchId,
+                search
+            }))
+        } else {
             dispatch(fetchUpdateClassStudent({
                 offset: (currentPageClassUpdate - 1) * PageSize,
                 limit: PageSize,
