@@ -114,10 +114,10 @@ export const AccountingFilter = ({setActive, active, setActiveDel, activeDel, ac
                         <p>O'chirilganlar</p>
                         <Switch onChangeSwitch={onDeletedToggle} activeSwitch={activeDel}/>
                     </div>
-                    <div className={cls.filter__switch}>
-                        <p>Arxiv</p>
-                        <Switch onChangeSwitch={onArchiveToggle} activeSwitch={isArchive}/>
-                    </div>
+                    {/*<div className={cls.filter__switch}>*/}
+                    {/*    <p>Arxiv</p>*/}
+                    {/*    <Switch onChangeSwitch={onArchiveToggle} activeSwitch={isArchive}/>*/}
+                    {/*</div>*/}
                     <div className={cls.filter__switch} style={{justifyContent: "flex-end"}}>
                         <Button onClick={onDeleteFilter} type="danger">Tozalash</Button>
                     </div>

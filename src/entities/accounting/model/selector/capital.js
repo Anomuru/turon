@@ -6,3 +6,5 @@ export const getCapitalCount = (state) =>
 
 export const getDeletedCapitalList = (state) =>
     state.capitalSlice?.capitalDeleted
+export const getDeletedCapitalCount = (state) =>
+    state.capitalSlice?.capitalDeletedCount

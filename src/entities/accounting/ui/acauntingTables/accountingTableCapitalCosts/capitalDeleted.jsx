@@ -1,8 +1,12 @@
 import {Button} from "../../../../../shared/ui/button";
 import React from "react";
 import {Table} from "../../../../../shared/ui/table";
+import {useSelector} from "react-redux";
+import {getDeletedCapitalCount} from "entities/accounting/model/selector/capital.js";
 
 export const CapitalDeleted = ({deleted}) => {
+
+    const totalCount = useSelector(getDeletedCapitalCount)
 
     const renderCapitalData = () => {
         return deleted?.map((item , i) => (

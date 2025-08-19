@@ -6,7 +6,8 @@ const initialState = {
     error: null,
     employerSalary: [],
     employerSalaryCount: 0,
-    deletedEmployerSalary: []
+    deletedEmployerSalary: [],
+    deletedEmployerSalaryCount: 0,
 }
 
 const employerSlice = createSlice({
@@ -54,6 +55,7 @@ const employerSlice = createSlice({
             })
             .addCase(getDeletedEmpSalary.fulfilled, (state, action) => {
                 state.deletedEmployerSalary = action.payload?.results
+                state.deletedEmployerSalaryCount = action.payload?.count
                 state.loading = false
                 state.error = false
             })

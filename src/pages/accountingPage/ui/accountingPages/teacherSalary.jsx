@@ -40,7 +40,7 @@ export const TeacherSalaryPage = ({deleted, setDeleted}) => {
     const [activeDelete, setActiveDelete] = useState(false)
     const [currentPage, setCurrentPage] = useState(1);
 
-    let PageSize = useMemo(() => 10, [])
+    let PageSize = useMemo(() => 50, [])
 
 
     useEffect(() => {

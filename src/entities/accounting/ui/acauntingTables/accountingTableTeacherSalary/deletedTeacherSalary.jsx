@@ -4,9 +4,11 @@ import {Pagination} from "../../../../../features/pagination";
 import {useSelector} from "react-redux";
 import {getSearchValue} from "../../../../../features/searchInput";
 import {DeletedTeachers} from "../../../../teachers";
+import {getDeletedTeachersSalaryCount} from "entities/accounting/model/selector/teacher.js";
 
 export const DeletedTeacherSalary = ({deletedTeacher, setChangePayment, setChangingData}) => {
     const search = useSelector(getSearchValue)
+    const totalCount = useSelector(getDeletedTeachersSalaryCount)
     let PageSize = useMemo(() => 50, [])
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
@@ -99,9 +101,7 @@ export const DeletedTeacherSalary = ({deletedTeacher, setChangePayment, setChang
                 </div>
             </div>
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
-                setCurrentPage={setCurrentPage}
+                totalCount={totalCount}
                 currentPage={currentPage}
                 pageSize={PageSize}
                 onPageChange={page => {

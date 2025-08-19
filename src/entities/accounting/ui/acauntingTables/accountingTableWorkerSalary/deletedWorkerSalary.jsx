@@ -4,10 +4,12 @@ import {Table} from "../../../../../shared/ui/table";
 import {useSelector} from "react-redux";
 import {getSearchValue} from "../../../../../features/searchInput";
 import {Pagination} from "../../../../../features/pagination";
+import {getDeletedEmployerCount} from "entities/accounting/index.js";
 
 export const DeletedWorkerSalary = ({filteredDeletedSalary, formatSalary, sum2, onChange}) => {
 
     const search = useSelector(getSearchValue)
+    const totalCount = useSelector(getDeletedEmployerCount)
     let PageSize = useMemo(() => 50, [])
     const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
@@ -59,9 +61,7 @@ export const DeletedWorkerSalary = ({filteredDeletedSalary, formatSalary, sum2, 
                 </Table>
             </div>
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={searchedUsers}
-                setCurrentPage={setCurrentPage}
+                totalCount={totalCount}
                 currentPage={currentPage}
                 pageSize={PageSize}
                 onPageChange={page => {
