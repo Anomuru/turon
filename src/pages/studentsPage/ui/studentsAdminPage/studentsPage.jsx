@@ -130,6 +130,8 @@ export const StudentsPage = () => {
     const studentClassUpdateCount = useSelector(getStudentClassUpdateCount)
     const [currentPageClassUpdate, setCurrentPageClassUpdate] = useState(1);
 
+    console.log(studentClassUpdate , "studentClassUpdate")
+
     // useEffect(() => {
     //     if (studentClassUpdateCount <= 50 && currentPageClassUpdate !== 1) {
     //             true, "change"
@@ -139,7 +141,7 @@ export const StudentsPage = () => {
     // }, [studentClassUpdateCount])
 
     useEffect(() => {
-        if (search && userBranchId && currentPageClassUpdate) {
+        if (currentPageClassUpdate) {
             dispatch(fetchUpdateClassStudent({
                 offset: search ? 0 : (currentPageClassUpdate - 1) * PageSize,
                 limit: PageSize,
@@ -147,7 +149,7 @@ export const StudentsPage = () => {
                 search
             }))
         }
-    }, [search, currentPageClassUpdate, userBranchId])
+    }, [currentPageClassUpdate])
 
 
     useEffect(() => {
@@ -237,10 +239,7 @@ export const StudentsPage = () => {
             case "new_students":
                 return (
                     <NewStudents
-                        currentPage={currentPageClassUpdate}
-                        setCurrentPage={setCurrentPageClassUpdate}
-                        branchId={userBranchId}
-                        pageSize={PageSize}
+
 
                         // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                         currentTableData={newStudents}
@@ -461,6 +460,7 @@ export const StudentsPage = () => {
 
 
                 <div style={{marginBottom: "1rem"}}>
+                    <h2 style={{marginBottom: ".3rem" , color: "#444343"}}>O'zgartiriladigan sinf raqami</h2>
                     <Select options={schoolClassNumbers} onChangeOption={setSelectClass} defaultValue={selectClass}/>
                 </div>
 

@@ -13,7 +13,7 @@ import {getSearchValue} from "features/searchInput/index.js";
 import {fetchUpdateClassStudent} from "entities/students/model/studentsThunk.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
-export const NewStudents = memo(({currentTableData, pageSize, currentPage, setCurrentPage}) => {
+export const NewStudents = memo(({currentTableData}) => {
 
 
     const [studentId, setStudentId] = useState(false)
