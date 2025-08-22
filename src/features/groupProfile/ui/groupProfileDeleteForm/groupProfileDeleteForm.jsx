@@ -123,12 +123,18 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
 
 
     const searched = useMemo(() => {
-        const filteredSlice = students?.slice()
+        if (!students) return []
 
-        return filteredSlice?.filter(item =>
-            item?.user?.name?.toLowerCase().includes(searchValue?.toLowerCase()) ||
-            item?.user?.surname?.toLowerCase().includes(searchValue?.toLowerCase())
-        )
+        const filteredSlice = [...students]
+        console.log(filteredSlice, "students")
+
+        const search = searchValue ? searchValue.toLowerCase() : ""
+
+        return filteredSlice.filter(item => {
+            const name = item?.user?.name?.toLowerCase() || ""
+            const surname = item?.user?.surname?.toLowerCase() || ""
+            return name.includes(search) || surname.includes(search)
+        })
     }, [students, searchValue])
 
 
@@ -458,6 +464,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
     const render = renderStudents()
     const renderStudent = renderStudentsData()
 
+    console.log(renderStudent , "renderStudent")
     return (
         <>
             <EditableCard
@@ -569,7 +576,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                     />
                     <Select
                         extraClass={cls.deleteForm__select}
-                        options={groups}
+                        options={groups?.results}
                         title={"Group"}
                         register={register}
                         name={"to_group_id"}

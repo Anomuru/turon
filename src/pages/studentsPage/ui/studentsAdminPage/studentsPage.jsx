@@ -88,7 +88,7 @@ export const StudentsPage = () => {
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams();
     const {register, handleSubmit} = useForm();
-    const userBranchId = useSelector(getUserBranchId)
+    const userBranchId = localStorage.getItem("branchId")
 
 
     const search = useSelector(getSearchValue);
@@ -130,7 +130,7 @@ export const StudentsPage = () => {
     const studentClassUpdateCount = useSelector(getStudentClassUpdateCount)
     const [currentPageClassUpdate, setCurrentPageClassUpdate] = useState(1);
 
-    console.log(studentClassUpdate , "studentClassUpdate")
+
 
     // useEffect(() => {
     //     if (studentClassUpdateCount <= 50 && currentPageClassUpdate !== 1) {
@@ -382,7 +382,7 @@ export const StudentsPage = () => {
                             required
                             extraClass={cls.modal__select}
                             title={"O'qituvchi"}
-                            options={teachers?.results}
+                            options={teachers}
                             onChangeOption={setSelectTeacher}
                         />
                         <Select

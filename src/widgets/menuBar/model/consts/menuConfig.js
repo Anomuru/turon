@@ -52,7 +52,7 @@ export const menuConfig = [
         to: "groups",
         name: "Sinflar",
         icon: "fa-users",
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+        roles: [ROLES.admin,ROLES.director,ROLES.programmer, ROLES.teacher],
         branches: true
 
     },
@@ -110,7 +110,7 @@ export const menuConfig = [
         name: "Class",
         icon: "fa-user-graduate",
 
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+        roles: [ROLES.admin,ROLES.director,ROLES.programmer ],
         branches: true
     },
     {

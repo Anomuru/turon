@@ -57,10 +57,11 @@ export const StudentCreateClass = memo((props) => {
     }
 
 
+    console.log(studentsList , "studentsList")
     const renderStudents = () => {
         if (loading === "loading" || loading === "idle") return <DefaultPageLoader/>;
 
-        return studentsList?.results?.map((item, i) => {
+        return studentsList?.map((item, i) => {
             return <tr>
                 <td>{i + 1}</td>
                 <td>{item.user?.surname} {item.user?.name}</td>

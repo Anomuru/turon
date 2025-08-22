@@ -152,7 +152,7 @@ export const ClassTableEdit = ({
 
     useEffect(() => {
         if (editClass) {
-            request(`${API_URL}Class/class_subjects?id=${editClass}`, "GET", null, headers())
+            request(`${API_URL}Class/class_subjects/?id=${editClass}`, "GET", null, headers())
                 .then(res => {
 
                     setSelectedSubject(res.hours.map(item => ({
@@ -177,10 +177,11 @@ export const ClassTableEdit = ({
         }))
     }
 
+    console.log(selectedSubject , "selectedSubject")
     return (
         <>
             <Modal active={editClass} setActive={setEditClass}>
-                <h2>Ma’lumotlarni o’zgartirish </h2>
+                <h2>Ma’lumotlarni o’zgartirish</h2>
                 <Form extraClassname={cls.extraClassForm} typeSubmit={""} onSubmit={handleSubmit(changeInfo)}>
                     <div className={cls.container}>
                         <div>
@@ -188,7 +189,7 @@ export const ClassTableEdit = ({
                             <Input
                                 name={"price"}
                                 register={register}
-                                value={selectedSubject.price}
+                                value={changedItem.price}
                                 type={"number"}
                                 placeholder={"narxi"}
                             />

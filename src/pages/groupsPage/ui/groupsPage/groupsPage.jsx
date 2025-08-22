@@ -102,8 +102,8 @@ export const GroupsPage = () => {
 
                 <h2>{activeSwitch ? "Deleted Classes" : "Classes"}</h2>
                 {loadingWithFilter === true  ? <DefaultPageLoader/> :
-                activeSwitch ? <DeletedGroups loadingWithFilter={loadingWithFilter} currentTableData={getFilteredGroups?.results}/> : <GroupsList
-                    loadingWithFilter={loadingWithFilter} currentTableData={getFilteredGroups?.results}
+                activeSwitch ? <DeletedGroups loadingWithFilter={loadingWithFilter} currentTableData={getFilteredGroups}/> : <GroupsList
+                    loadingWithFilter={loadingWithFilter} currentTableData={getFilteredGroups}
                 />}
             </div>
             <Pagination

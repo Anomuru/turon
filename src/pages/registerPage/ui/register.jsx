@@ -182,6 +182,7 @@ export const Register = () => {
 
     const onSubmit = (data) => {
 
+        console.log(data , "datra")
         if (!isUsernameAvailable) {
             return;
         }
@@ -196,6 +197,7 @@ export const Register = () => {
                 observer: true,
                 language: selectedLanguage?.id,
                 branch: branchID,
+                birth_date: data.born_date,
             },
         };
         let res2 = {
