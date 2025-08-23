@@ -210,7 +210,7 @@ const groupProfileSlice = createSlice({
                 // state.error = null
             })
             .addCase(fetchWeekDays.fulfilled, (state, action) => {
-                state.weekDays = action.payload?.days?.results?.map(item => ({...item, name: item.name_uz}))
+                state.weekDays = action.payload?.days?.map(item => ({...item, name: item.name_uz}))
                 state.selectedWeekDay = action.payload?.today
                 // state.filteredStudents = action.payload.students
                 // state.loading = false

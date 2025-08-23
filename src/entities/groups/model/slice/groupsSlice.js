@@ -1,11 +1,12 @@
 
 import {createSlice} from "@reduxjs/toolkit";
-import { fetchGroupsDataWithFilter, fetchGroupTypeThunk} from "./groupsThunk";
+import {fetchClassesDataForFlow, fetchGroupsDataWithFilter, fetchGroupTypeThunk} from "./groupsThunk";
 
 const initialState = {
     data: [],
     totalCount: 0,
     typeData: [],
+    dataForFlow: [],
     loading: false,
     loadingClasses: false,
     error: null
@@ -48,6 +49,20 @@ export const groupsSlice = createSlice({
                 state.error = null
             })
             .addCase(fetchGroupTypeThunk.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload ?? null
+            })
+
+            .addCase(fetchClassesDataForFlow.pending, state => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(fetchClassesDataForFlow.fulfilled, (state, action) => {
+                state.dataForFlow = action.payload?.results
+                state.loading = false
+                state.error = null
+            })
+            .addCase(fetchClassesDataForFlow.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.payload ?? null
             })
