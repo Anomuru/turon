@@ -13,3 +13,5 @@ export const getGroupListWithFilterLoading = (state) =>
     state.groupsSlice?.loadingClasses
 export const getGroupTypes = (state) =>
     state.groupsSlice?.typeData
+export const getClassDataForFlow = (state) =>
+    state.groupsSlice?.dataForFlow

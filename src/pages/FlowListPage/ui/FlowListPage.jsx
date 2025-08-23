@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import {FlowList} from "entities/flowList";
 import {
-    fetchGroupsDataWithFilter,
+    fetchGroupsDataWithFilter, getClassDataForFlow,
     getGroupsListCount,
     getGroupsListData,
     getGroupsLoading,
@@ -20,6 +20,7 @@ import {getSearchValue} from "features/searchInput";
 import {useEffect, useMemo, useState} from "react";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {useNavigate} from "react-router";
+import {fetchClassesDataForFlow} from "entities/groups/model/slice/groupsThunk.js";
 
 const reducers = {
     groupsSlice: groupsReducer
@@ -35,13 +36,13 @@ export const FlowListPage = () => {
     useEffect(() => {
         if (userBranchId) {
             dispatch(flowListThunk())
-            dispatch(fetchGroupsDataWithFilter({userBranchId}))
+            dispatch(fetchClassesDataForFlow({branch:userBranchId}))
         }
     }, [userBranchId])
 
     // const flowList = useSelector(getFlowList)
     const totalCount = useSelector(getGroupsListCount)
-    const flowList = useSelector(getGroupsListData)
+    const flowList = useSelector(getClassDataForFlow)
     const loading = useSelector(getGroupsLoading)
     const search = useSelector(getSearchValue)
 
