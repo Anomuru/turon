@@ -1,8 +1,8 @@
 
 
 export const getFilteredLeadsListData = (state) =>
-    state.filteredLeadsListSlice.data
+    state.filteredLeadsListSlice?.data
 
 
 export const getFilteredLeadsListCount = (state) =>
-    state.filteredLeadsListSlice.count
+    state.filteredLeadsListSlice?.count

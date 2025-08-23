@@ -33,4 +33,4 @@ export const filteredLeadsListSlice = createSlice({
 
 export const {} = filteredLeadsListSlice.actions
 
-export default filteredLeadsListSlice.reducer
+export const {reducer: filterLeadsReducers} = filteredLeadsListSlice.reducer

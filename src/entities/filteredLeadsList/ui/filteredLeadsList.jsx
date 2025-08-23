@@ -17,7 +17,7 @@ export const FilteredLeadsList = ({date}) => {
 
 
     const dispatch = useDispatch()
-    const branch = useSelector(getBranch)
+    const branch = localStorage.getItem("branchId")
     const [currentTableData, setCurrentTableData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -26,9 +26,9 @@ export const FilteredLeadsList = ({date}) => {
 
     useEffect(()=> {
         if (date && branch) {
-            dispatch(fetchFilteredListData({date,branch: branch.id,currentPage,PageSize}))
+            dispatch(fetchFilteredListData({date,branch,currentPage,PageSize}))
         }
-    },[date,branch.id,currentPage,PageSize])
+    },[date,branch,currentPage,PageSize])
 
 
     const data = useSelector(getFilteredLeadsListData)

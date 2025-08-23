@@ -62,8 +62,8 @@ const TaskManager = lazyPage(() => import("pages/taskManager/ui/taskManager"), "
 
 const AdminTaskManager = lazyPage(() => import("pages/adminTaskManager"), "AdminTaskManager");
 
-const FilteredLeadsPage = React.lazy(() => import("pages/filteredLeadsPage/ui/FilteredLeadsPage"));
 
+const FilteredLeadsPage = lazyPage(() => import("pages/filteredLeadsPage"), "FilteredLeadsPage");
 
 
 
