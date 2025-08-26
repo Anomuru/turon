@@ -14,6 +14,8 @@ import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/Dyn
 import {teacherParseReducer} from "entities/teachers/model/teacherParseSlice.js";
 import {getLoading, getStudentLoading} from "entities/teachers/model/selector/teacherIdSelector.js";
 import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {fetchTimeTableData, fetchTimeTableForShow} from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 
 const reducers = {
@@ -22,15 +24,16 @@ const reducers = {
 
 export const ProfileTeacherPage = () => {
 
+    const date = new Date().toLocaleDateString('en-CA')
     const [active, setActive] = useState(false)
     const [actives, setActives] = useState(false)
     const dispatch = useDispatch()
     const {id} = useParams()
     // const {id} = useSelector(getBranch)
     const teacherId = useSelector(getTeacherId)
+    const branch = useSelector(getUserBranchId)
     const [activeModal, setActiveModal] = useState("")
     const [newImage, setNewImage] = useState("")
-    const {theme} = useTheme()
 
     const loading = useSelector(getLoading)
     const teacherLoading = useSelector(getStudentLoading)
@@ -42,6 +45,12 @@ export const ProfileTeacherPage = () => {
         }
 
     } ,[dispatch, id])
+
+    useEffect(() => {
+        if (id && branch) {
+            dispatch(fetchTimeTableForShow({teacher: id, branch}))
+        }
+    }, [id, branch])
 
 
     const onSubmitImage = (data) => {
@@ -80,12 +89,8 @@ export const ProfileTeacherPage = () => {
                             [cls.active]: active
                         })}
                     >
-                        {
-                            theme === "app_school_theme" ?
+
                                 <SchoolTeacherGroups/>
-                                :
-                                <TeacherProfileTeachersGroup/>
-                        }
 
                     </div>
                     <ImageCrop

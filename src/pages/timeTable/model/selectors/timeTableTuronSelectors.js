@@ -33,6 +33,8 @@ export const getTimeTableTuronGroupStatus = (state) =>
 
 export const getTimeTableTuronData = (state) =>
     state.timeTableTuronSlice?.data
+export const getTimeTableTuronForShow = (state) =>
+    state.timeTableTuronSlice?.forShow
 
 
 export const getTimeTableTuronDataStatus = (state) =>

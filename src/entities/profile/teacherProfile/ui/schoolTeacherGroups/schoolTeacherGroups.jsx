@@ -14,6 +14,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {getTeacherId} from "../../../../teachers";
 
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {
+    getTimeTableTuronData,
+    getTimeTableTuronForShow
+} from "pages/timeTable/model/selectors/timeTableTuronSelectors.js";
+import classNames from "classnames";
 
 export const SchoolTeacherGroups = memo(() => {
 
@@ -26,13 +31,12 @@ export const SchoolTeacherGroups = memo(() => {
     const teacherData = useSelector(getTeacherId)
     const students = useSelector(getTeacherStudent)
     const studentsLoading = useSelector(getStudentLoading)
+    const data = useSelector(getTimeTableTuronForShow)
     const schoolTeacherGroups = teacherData?.group
 
     useEffect(() => {
         dispatch(fetchDropStudents({id}))
     }, [])
-
-
 
 
     const renderStudents = () => {
@@ -111,6 +115,73 @@ export const SchoolTeacherGroups = memo(() => {
                         </div>
                 }
 
+            </EditableCard>
+
+            <EditableCard titleType={false}>
+                <h1>Time Table</h1>
+                <div className={cls.time}>
+                    <div className={cls.time__hours}>
+                        {/*<div>{" "}</div>*/}
+                        {
+                            data?.hours_list?.map(item => {
+                                return (
+                                    <div className={cls.hour}>{item?.start_time}-{item?.end_time}</div>
+                                )
+                            })
+                        }
+                    </div>
+                    {
+                        data?.time_tables?.map(item => {
+                            return (
+                                <div className={cls.time__week}>
+                                    <div className={cls.weekDay}>{item?.weekday}</div>
+                                    {
+                                        data?.hours_list?.map((inn, index) => {
+                                            return (
+                                                <div className={cls.rooms}>
+                                                    {/*{index+1}*/}
+                                                    {
+                                                        item?.rooms?.map(room => {
+                                                            const lesson = room.lessons.find((l) => l?.hours === inn?.id && l?.id);
+                                                            return (
+                                                                <div
+                                                                    key={room.id}
+                                                                    className={classNames(cls.rooms__lesson, {
+                                                                        [cls.large]: lesson?.subject?.name?.length > 8
+                                                                    })}
+                                                                >
+                                                                    <span
+                                                                        className={cls.roomName}>{room.name}:</span>{" "}
+                                                                    <span
+                                                                        className={classNames(cls.lessonName)}
+                                                                    >
+                                                                        {
+                                                                            lesson
+                                                                                ? lesson?.subject?.name?.length > 8
+                                                                                    ? `${lesson?.subject?.name?.slice(0, 8)}...`
+                                                                                    : lesson?.subject?.name
+                                                                                : "-"
+                                                                        }
+                                                                    </span>
+                                                                    {
+                                                                        lesson?.subject?.name?.length > 8 && (
+                                                                            <span
+                                                                                className={cls.largeName}>{lesson?.subject?.name}</span>
+                                                                        )
+                                                                    }
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            )
+                        })
+                    }
+                </div>
             </EditableCard>
         </div>
     );

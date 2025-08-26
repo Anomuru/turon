@@ -96,6 +96,82 @@
   height: 600px !important
   overflow: auto
 
+.time
+  padding-bottom: 1rem
+  width: 100%
+  display: flex
+  overflow: auto
+  position: relative
+  &__hours
+    top: 0
+    left: 0
+    position: sticky
+    margin-top: 4.4rem
+    display: flex
+    flex-direction: column
+    background: rgba(255, 255, 255, 0.7)
+    backdrop-filter: blur(1rem)
+    z-index: 101
+    .hour
+      display: flex
+      align-items: center
+      min-height: 7.04rem
+      padding: 1rem 2rem
+      font-size: 2rem
+      border-top: 1px solid
+      border-right: 2px solid
+      border-bottom: 1px solid
+      border-left: 3px solid
+      &:nth-child(1)
+        border-top: 3px solid
+      &:nth-last-child(1)
+        border-bottom: 3px solid
+  &__week
+    min-width: 20rem
+    min-height: 20rem
+    padding: 1rem 2rem 0 2rem
+    font-size: 2rem
+    border-top: 3px solid
+    border-right: 1px solid
+    border-bottom: 3px solid
+    border-left: 1px solid
+    &:nth-child(2)
+      border-left: 3px solid
+    &:nth-last-child(1)
+      border-right: 3px solid
+    .weekDay
+      padding-bottom: 1rem
+      border-bottom: 2px solid
+      text-align: center
+    .rooms
+      display: flex
+      flex-direction: column
+      justify-content: space-between
+      height: 7rem
+      padding: 1rem 0
+      border-top: 1px solid
+      &__lesson
+        display: flex
+        position: relative
+        &.large
+          &:hover .largeName
+            display: flex
+        .largeName
+          display: none
+          width: fit-content
+          position: absolute
+          right: -15rem
+          bottom: -4rem
+          padding: .5rem 1rem
+          background: white
+          white-space: nowrap
+          border: 1px solid
+          z-index: 100
+          border-radius: 1rem
+        .lessonName
+          width: 100%
+          display: flex
+          justify-content: center
 
 
 

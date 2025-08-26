@@ -43,9 +43,11 @@ import {fetchStudentDebtorData, getMonthDataThunk} from "features/studentPayment
 import {getMonth} from "features/studentPayment/model/selectors/selectors.js";
 
 import {getUserBranchId, getUserJob} from "entities/profile/userProfile";
+import {fetchTimeTableData, fetchTimeTableForShow} from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
 
 export const StudentProfilePage = () => {
 
+    const date = new Date().toLocaleDateString('en-CA')
     const formData = new FormData()
     const {register, handleSubmit} = useForm()
     const dispatch = useDispatch()
@@ -100,6 +102,12 @@ export const StudentProfilePage = () => {
         }
 
     }, [id ,branch])
+
+    useEffect(() => {
+        if (id && branch) {
+            dispatch(fetchTimeTableForShow({group: 372, branch}))
+        }
+    }, [id, branch])
 
 
     // if (!userData || !userData.user) {

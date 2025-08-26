@@ -3,7 +3,7 @@ import {fetchTeacherProfileData} from "pages/profilePage/model/thunk/teacherProf
 import {
     fetchTimeTableClassView,
     fetchTimeTableColors,
-    fetchTimeTableData, fetchTimeTableSubject, fetchTimeTableTeacher,
+    fetchTimeTableData, fetchTimeTableForShow, fetchTimeTableSubject, fetchTimeTableTeacher,
     fetchTimeTableTypesData,
     fetchTimeTableWeekDays
 } from "pages/timeTable/model/thunks/timeTableTuronThunks";
@@ -14,6 +14,7 @@ const initialState = {
     type: 'group',
     hours: [],
     data: [],
+    forShow: [],
     group: [],
     flows: [],
     subjects: [],
@@ -230,7 +231,7 @@ const timeTableTuronSlice = createSlice({
                 let indexContainer = 1
 
 
-                state.data = action.payload.time_tables.map(room => {
+                state.data = action.payload.time_tables[0]?.rooms?.map(room => {
 
                     const newLessons = room.lessons.map(item => {
                         indexContainer += 1
@@ -288,6 +289,20 @@ const timeTableTuronSlice = createSlice({
                 state.loading = false
                 state.fetchStatusData = false
 
+                state.error = action.payload ?? null
+            })
+
+            .addCase(fetchTimeTableForShow.pending, state => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(fetchTimeTableForShow.fulfilled, (state, action) => {
+                state.loading = false
+                state.forShow = action.payload
+                state.error = null
+            })
+            .addCase(fetchTimeTableForShow.rejected, (state, action) => {
+                state.loading = false
                 state.error = action.payload ?? null
             })
 })

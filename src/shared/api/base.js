@@ -10,6 +10,7 @@ export const API_URL = `${API_URL_DOC}api/`
 // export const CLASSROOM_API_URL = `https://classroom.gennis.uz/`
 // export const CLASSROOM_API_URL_DOC = `https://classroom.gennis.uz/`
 
+// 207_teacher
 
 export const headers = () => {
     const token = sessionStorage.getItem("token")

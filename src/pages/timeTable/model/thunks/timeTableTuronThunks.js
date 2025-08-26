@@ -21,9 +21,17 @@ export const fetchTimeTableTypesData = createAsyncThunk(
 
 export const fetchTimeTableData = createAsyncThunk(
     "TimeTableTuronSlice/fetchTimeTableData",
-    async ({date, branch, week}) => {
+    async ({date, branch, week, teacher, student, group}) => {
         const {request} = useHttp()
         return await  request(`${API_URL}SchoolTimeTable/timetable-lessons/?${ParamUrl({date, branch, week})}`, "GET", null, headers())
+    }
+)
+
+export const fetchTimeTableForShow = createAsyncThunk(
+    "TimeTableTuronSlice/fetchTimeTableForShow",
+    async ({branch, teacher, student, group}) => {
+        const {request} = useHttp()
+        return await  request(`${API_URL}SchoolTimeTable/timetable-lessons/?${ParamUrl({branch, teacher, student, group})}`, "GET", null, headers())
     }
 )
 
