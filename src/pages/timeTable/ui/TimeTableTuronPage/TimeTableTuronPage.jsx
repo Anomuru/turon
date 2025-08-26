@@ -77,9 +77,6 @@ const times = [
         from: "11:00"
     }
 ]
-const reducer = {
-    timeTableTuronSlice: timeTableTuronReducer
-}
 
 export const TimeTableTuronPage = () => {
 
@@ -773,7 +770,6 @@ export const TimeTableTuronPage = () => {
     const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
     return (
-        <DynamicModuleLoader reducers={reducer}>
 
             <div className={cls.timeTable}>
 
@@ -895,7 +891,6 @@ export const TimeTableTuronPage = () => {
 
 
             </div>
-        </DynamicModuleLoader>
     );
 };
 

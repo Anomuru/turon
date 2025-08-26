@@ -41,6 +41,8 @@ import cls from "./groupProfilePage.module.sass";
 
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import {StudentProfileTimeTable} from "entities/profile/studentProfile/index.js";
+import {fetchTimeTableForShow} from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
 
 const reducers = {
     groupProfileSlice: groupProfileReducer
@@ -69,6 +71,13 @@ export const GroupProfilePage = () => {
         dispatch(fetchReasons())
         dispatch(fetchWeekDays())
     }, [])
+
+
+    useEffect(() => {
+        if (id && branch) {
+            dispatch(fetchTimeTableForShow({group: id, branch}))
+        }
+    }, [id, branch])
 
 
     useEffect(() => {
@@ -147,6 +156,7 @@ export const GroupProfilePage = () => {
                         <GroupProfileAttendanceForm data={data?.students} setAttendance={setAttendance}
                                                     attendance={attendance}/>
                         {/*<GroupProfileAttendance/>*/}
+                        <StudentProfileTimeTable/>
 
                     </div>
                     <div className={classNames(cls.profile__otherContent, {

@@ -3,7 +3,7 @@
 .info
   //width: 400px
   //grid-area: info
-  height: 100%
+  height: fit-content
   justify-content: space-between
   align-items: center
 
@@ -41,6 +41,7 @@
 
   &__name
     &:hover
+
   &__hoverName
     z-index: 10
     position: absolute
@@ -95,31 +96,39 @@
   display: flex
   flex-direction: column
   gap: 2rem
+
   &__btn
     align-self: flex-end
+
   .form
     display: flex
     flex-direction: column
     gap: 2rem
+
     &__input
       min-width: 100% !important
       margin: 0 !important
+
     &__select
       width: 100%
+
     &__switch
       display: flex
       align-items: center
       gap: .7rem
       align-self: center
       font-size: 1.6rem
+
     &__radios
       display: flex
       gap: 3rem
       align-self: center
+
     &__inner
       display: flex
       gap: 1rem
       align-items: center
       font-size: 1.8rem
+
     &__item
       margin: 0 !important

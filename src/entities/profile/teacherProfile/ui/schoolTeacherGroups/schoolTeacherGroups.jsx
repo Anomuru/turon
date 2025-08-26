@@ -20,6 +20,21 @@ import {
 } from "pages/timeTable/model/selectors/timeTableTuronSelectors.js";
 import classNames from "classnames";
 
+function getWeekdayUz(dateInput) {
+    const daysUz = [
+        "yakshanba",  // воскресенье
+        "dushanba",   // понедельник
+        "seshanba",   // вторник
+        "chorshanba", // среда
+        "payshanba",  // четверг
+        "juma",       // пятница
+        "shanba"      // суббота
+    ];
+
+    const date = new Date(dateInput);
+    return daysUz[date.getDay()];
+}
+
 export const SchoolTeacherGroups = memo(() => {
 
     // const {id} = useParams()
@@ -134,49 +149,63 @@ export const SchoolTeacherGroups = memo(() => {
                         data?.time_tables?.map(item => {
                             return (
                                 <div className={cls.time__week}>
-                                    <div className={cls.weekDay}>{item?.weekday}</div>
-                                    {
-                                        data?.hours_list?.map((inn, index) => {
-                                            return (
-                                                <div className={cls.rooms}>
-                                                    {/*{index+1}*/}
-                                                    {
-                                                        item?.rooms?.map(room => {
-                                                            const lesson = room.lessons.find((l) => l?.hours === inn?.id && l?.id);
-                                                            return (
-                                                                <div
-                                                                    key={room.id}
-                                                                    className={classNames(cls.rooms__lesson, {
-                                                                        [cls.large]: lesson?.subject?.name?.length > 8
-                                                                    })}
-                                                                >
-                                                                    <span
-                                                                        className={cls.roomName}>{room.name}:</span>{" "}
-                                                                    <span
-                                                                        className={classNames(cls.lessonName)}
-                                                                    >
-                                                                        {
-                                                                            lesson
-                                                                                ? lesson?.subject?.name?.length > 8
-                                                                                    ? `${lesson?.subject?.name?.slice(0, 8)}...`
-                                                                                    : lesson?.subject?.name
-                                                                                : "-"
-                                                                        }
-                                                                    </span>
-                                                                    {
-                                                                        lesson?.subject?.name?.length > 8 && (
+                                    <div
+                                        className={classNames(cls.weekDay, {
+                                            [cls.nowaday]: item?.weekday?.toLocaleLowerCase() === getWeekdayUz(new  Date())
+                                        })}
+                                    >
+                                        {item?.weekday}
+                                    </div>
+                                    <div className={cls.container}>
+                                        {
+                                            data?.hours_list?.map((inn, index) => {
+                                                const hasLessons = item?.rooms?.some(room =>
+                                                    room.lessons.some(l => l?.hours === inn?.id && l?.id)
+                                                );
+
+                                                return (
+                                                    <div
+                                                        key={index}
+                                                        className={classNames(cls.rooms, {
+                                                            [cls.noLesson]: !hasLessons
+                                                        })}
+                                                    >
+                                                        {
+                                                            hasLessons
+                                                                ? item?.rooms?.map(room => {
+                                                                    const lesson = room.lessons.find((l) => l?.hours === inn?.id && l?.id);
+                                                                    if (!lesson) return null
+                                                                    return (
+                                                                        <div
+                                                                            key={room.id}
+                                                                            className={classNames(cls.rooms__lesson, {
+                                                                                [cls.isFlow]: lesson?.is_flow,
+                                                                            })}
+                                                                        >
+                                                                        <span
+                                                                            className={cls.roomName}
+                                                                        >
+                                                                            Xona:
+                                                                            <span className={cls.roomName__inner}>{room.name}</span>
+                                                                        </span>
                                                                             <span
-                                                                                className={cls.largeName}>{lesson?.subject?.name}</span>
-                                                                        )
-                                                                    }
-                                                                </div>
-                                                            )
-                                                        })
-                                                    }
-                                                </div>
-                                            )
-                                        })
-                                    }
+                                                                                className={classNames(cls.lessonName, {
+                                                                                    [cls.large]: lesson?.subject?.name?.length > 8
+                                                                                })}
+                                                                            >
+                                                                            {lesson?.is_flow ? "Flow:" : "Class:"}
+                                                                                <span className={cls.lessonName__inner}>{lesson?.group?.name}</span>
+                                                                        </span>
+                                                                        </div>
+                                                                    )
+                                                                })
+                                                                : <div className={cls.noLesson}>——</div>
+                                                        }
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
                                 </div>
                             )
                         })

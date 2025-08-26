@@ -48,6 +48,7 @@ export const ProfileTeacherPage = () => {
 
     useEffect(() => {
         if (id && branch) {
+            console.log(true)
             dispatch(fetchTimeTableForShow({teacher: id, branch}))
         }
     }, [id, branch])

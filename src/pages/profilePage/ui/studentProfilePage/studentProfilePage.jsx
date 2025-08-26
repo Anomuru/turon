@@ -25,7 +25,7 @@ import {
     StudentProfileTotalAttendance,
     StudentProfileChangeInfo,
     StudentProfileContract,
-    StudentProfileAttendanceAll
+    StudentProfileAttendanceAll, StudentProfileTimeTable
 } from "entities/profile/studentProfile";
 import {
     fetchStudentProfileData,
@@ -105,7 +105,7 @@ export const StudentProfilePage = () => {
 
     useEffect(() => {
         if (id && branch) {
-            dispatch(fetchTimeTableForShow({group: 372, branch}))
+            dispatch(fetchTimeTableForShow({student: id, branch}))
         }
     }, [id, branch])
 
@@ -183,6 +183,7 @@ export const StudentProfilePage = () => {
                     onSelectGroup={setSelectedGroup}
                     onSelectGroupName={setSelectedGroupName}
                 />
+                <StudentProfileTimeTable/>
             </div>
             <div
                 className={classNames(cls.profile__otherContent, {

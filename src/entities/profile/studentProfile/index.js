@@ -12,6 +12,7 @@ export {StudentProfileTotalAttendance} from "./ui/studentProfileTotalAttendance/
 export {StudentProfileChangeInfo} from "./ui/studentProfileChangeInfo/studentProfileChangeInfo";
 export {StudentProfileContract} from "./ui/studentProfileContract/studentProfileContract"
 export {StudentProfileAttendanceAll} from "./ui/studentProfileAttendanceAll/studentAttendanceAll";
+export {StudentProfileTimeTable} from "./ui/studentProfileTimeTable/studentProfileTimeTable";
 
 export {amountService, amountTypes} from "./model/consts/amountConsts";
 
