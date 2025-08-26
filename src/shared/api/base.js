@@ -1,7 +1,7 @@
 //
 // export const API_URL_DOC = `http://192.168.1.61:8000/`
 // export const API_URL_DOC = `http://26.196.249.247:8000/`
-// export const API_URL_DOC = `http://26.253.30.50:8000/`
+// export const API_URL_DOC = `http://26.253.30.50:8000/`//
 // export const API_URL_DOC = `http://26.12.122.72:7622/`
 
 export const API_URL_DOC = `https://school.gennis.uz/`
@@ -19,6 +19,7 @@ export const headers = () => {
         'Content-Type': 'application/json'
     }
 }
+
 
 
 export const header = () => {
@@ -88,3 +89,5 @@ export const ParamUrl = (params) => {
 
     return res.slice(0, -1);
 };
+
+

@@ -4,14 +4,14 @@ import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 
 
-export const DeletedGroups = ({currentTableData , loadingWithFilter}) => {
+export const DeletedGroups = ({currentTableData}) => {
 
 
 
 
     return (
         <div className={cls.deletedGroups}>
-            {loadingWithFilter ? <DefaultPageLoader/> : <div className={cls.table}>
+           <div className={cls.table}>
                 <Table extraClass={cls.table__head}>
                     <thead>
                     <tr>
@@ -48,7 +48,7 @@ export const DeletedGroups = ({currentTableData , loadingWithFilter}) => {
                     })}
                     </tbody>
                 </Table>
-            </div>}
+            </div>
 
 
         </div>

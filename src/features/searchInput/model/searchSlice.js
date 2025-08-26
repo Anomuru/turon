@@ -2,17 +2,18 @@ import {createSlice} from "@reduxjs/toolkit";
 import {fetchSearch} from "./searchThunk";
 
 const initialState = {
-    search: null,
+    search: localStorage.getItem("search") || "",
     loading: false,
-    error: null
-}
-
+    error: null,
+    newStudents: []
+};
 export const searchSlice = createSlice({
     name: "searchSlice",
     initialState,
     reducers: {
         getSearchStr: (state, action) => {
             state.search = action.payload
+
             state.loading = false
             state.error = null
         }
@@ -25,6 +26,7 @@ export const searchSlice = createSlice({
             })
             .addCase(fetchSearch.fulfilled, (state, action) => {
                 state.newStudents = action.payload
+
                 state.loading = false
                 state.error = null
             })

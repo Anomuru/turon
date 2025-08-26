@@ -1,14 +1,14 @@
-import {getUserBranchId} from "entities/profile/userProfile";
+
 import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+
 import {useNavigate} from "react-router";
 
 import {Table} from "shared/ui/table";
-import {getGroupListWithFilter} from "../../model/selectors/groupsList";
-import cls from "./groupsList.module.sass";
-import {DefaultPageLoader} from "../../../../shared/ui/defaultLoader";
 
-export const GroupsList = React.memo(({currentTableData , loadingClasses}) => {
+import cls from "./groupsList.module.sass";
+
+
+export const GroupsList = React.memo(({currentTableData}) => {
     const navigate = useNavigate()
 
     const renderGroups = () => {
@@ -54,7 +54,7 @@ export const GroupsList = React.memo(({currentTableData , loadingClasses}) => {
 
     return (
         <>
-            {loadingClasses ? <DefaultPageLoader/> :
+
             <Table extraClass={cls.table__head}>
                 <thead>
                 <tr>
@@ -104,7 +104,7 @@ export const GroupsList = React.memo(({currentTableData , loadingClasses}) => {
                 {/*    })*/}
                 {/*}*/}
                 </tbody>
-            </Table>}
+            </Table>
         </>
     );
 })

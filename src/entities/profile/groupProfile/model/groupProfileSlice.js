@@ -33,7 +33,8 @@ const initialState = {
     debtStudents: [],
     loading: false,
     studentsLoading: false,
-    error: null
+    error: null,
+    loadingStudent: false
 }
 
 const groupProfileSlice = createSlice({
@@ -73,16 +74,16 @@ const groupProfileSlice = createSlice({
     extraReducers: builder =>
         builder
             .addCase(fetchGroupProfile.pending, state => {
-                state.loading = true
+                state.loadingStudent = true
                 state.error = null
             })
             .addCase(fetchGroupProfile.fulfilled, (state, action) => {
                 state.data = action.payload
-                state.loading = false
+                state.loadingStudent = false
                 state.error = null
             })
             .addCase(fetchGroupProfile.rejected, (state, action) => {
-                state.loading = false
+                state.loadingStudent = false
                 state.error = "error"
             })
             .addCase(changeGroupProfile.pending, state => {
@@ -112,17 +113,17 @@ const groupProfileSlice = createSlice({
                 state.error = "error"
             })
             .addCase(filteredStudents.pending, state => {
-                // state.loading = true
-                // state.error = "error"
+                state.loadingStudent = true
+                state.error = "error"
             })
             .addCase(filteredStudents.fulfilled, (state, action) => {
                 state.filteredStudents = action.payload.students
                 // state.error = action.payload.errors
-                // state.loading = false
+                state.loadingStudent = false
             })
             .addCase(filteredStudents.rejected, (state, action) => {
-                // state.loading = false
-                // state.error = "error"
+                state.loadingStudent = false
+                state.error = "error"
             })
             // .addCase(fetchFilteredTeachers.pending, state => {
             //     // state.loading = true

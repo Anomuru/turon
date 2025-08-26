@@ -35,10 +35,9 @@ import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import {
     AdditionalCostsDeleted
 } from "entities/accounting/ui/acauntingTables/accountingTableAdditionalCosts/additionalCostsDeleted";
-import {onAddAlertOptions} from "../../../../features/alert/model/slice/alertSlice";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 
-import {ConfirmModal} from "../../../../shared/ui/confirmModal";
-import {getBranch} from "../../../../features/branchSwitcher";
+import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 import classNames from "classnames";
 
 const reducers = {
@@ -48,6 +47,9 @@ const reducers = {
 
 
 export const AdditionalCosts = ({deleted, setDeleted}) => {
+
+    const activeBtnId = localStorage.getItem("activeBtnId")
+
     const [activeModal, setActiveModal] = useState(false)
     const overHeadType = useSelector(getOverHeadType)
     const dispatch = useDispatch()
@@ -66,7 +68,16 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
     const [changingData, setChangingData] = useState({})
     const overheadDeletedList = useSelector(getOverHeadDeletedList)
     const [changePayment, setChangePayment] = useState(false)
-    const [activeBtn, setActiveBtn] = useState(null)
+
+    const [activeBtn, setActiveBtn] = useState(
+        activeBtnId ? Number(activeBtnId) : null
+    );
+
+    useEffect(() => {
+        if (activeBtnId) {
+            setActiveBtn(Number(activeBtnId));
+        }
+    }, [activeBtnId]);
     const getCapitalType = useSelector(getCapitalTypes)
     const [changePaymentType, setChangePaymentType] = useState(null)
     let branchID = useSelector(getUserBranchId)
@@ -82,12 +93,21 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
 
     useEffect(() => {
         if (branchID && currentPage && PageSize)
+            if (deleted) {
+                dispatch(overHeadDeletedList({
+                    type: activeBtn,
+                    branch: branchID,
+                    limit: PageSize,
+                    offset: (currentPage - 1) * PageSize
+                }))
+            }{
             dispatch(overHeadList({
                 type: activeBtn,
                 branch: branchID,
                 limit: PageSize,
                 offset: (currentPage - 1) * PageSize
             }))
+        }
     }, [activeBtn, branchID, currentPage, PageSize])
     // useEffect(() => {
     //
@@ -204,6 +224,7 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
     const formatSalary = (salary) => {
         return Number(salary).toLocaleString();
     };
+
     return (
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.overhead}>
@@ -231,8 +252,10 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
                                         [cls.active]: activeBtn === item.id
                                     })}
                                     onClick={() => {
-                                        setActiveBtn(item.id)
-                                        setCurrentPage(1)
+                                        const newId = activeBtn === item.id ? "" : item.id;
+                                        setActiveBtn(newId);
+                                        localStorage.setItem("activeBtnId", newId);  // ✅
+                                        setCurrentPage(1);
                                     }}
                                 >
                                     {item.name}

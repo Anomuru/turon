@@ -33,21 +33,11 @@ export const AccountingAdditionalCosts = ({
     const loading = useSelector(getOverHeadLoading)
     const totalCount = useSelector(getOverHeadCount)
 
-    const searchedUsers = useMemo(() => {
-        const filteredHeroes = additionalCosts?.slice()
 
-
-        if (!search) return filteredHeroes
-        setCurrentPage(1)
-
-        return filteredHeroes.filter(item =>
-            item.name?.toLowerCase().includes(search.toLowerCase())
-        )
-    }, [additionalCosts, setCurrentPage, search])
 
 
     const renderOverHeadList = () => {
-        return searchedUsers?.map((item, i) => (
+        return additionalCosts?.map((item, i) => (
             <tr>
                 <td>{i + 1}</td>
                 <td>{item.name}</td>

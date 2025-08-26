@@ -62,14 +62,11 @@ export const GroupProfileInfoForm = memo(({}) => {
     const [activeSwitch, setActiveSwitch] = useState(data?.status ?? false)
     const [deleteID, setDelete] = useState(false)
 
-    const onSubmitChange = (formData) => {
-        console.log(formData, "formData")
-        console.log(formData?.class_number, "formData?.class_number")
-        console.log(data?.class_number, "data?.class_number")
+
+    const onSubmitChange = (data) => {
         const res = {
-            color: formData?.color ?? selectColor ?? data?.color,
-            class_number: Number(formData?.class_number) ?? Number(data?.class_number),
-            ...formData,
+            ...data,
+            color: data.color.id ? data.color.id : schoolClassColors.filter(item => item.name === data.color)[0]?.id ?? selectColor
         }
         dispatch(changeGroupProfile({
             status: activeSwitch,
@@ -92,7 +89,7 @@ export const GroupProfileInfoForm = memo(({}) => {
             .then(res => {
 
                 dispatch(deleteGroup(id))
-                navigate(-2)
+                navigate(-1)
             })
         //
         // dispatch(deleteGroupProfile({
@@ -100,12 +97,17 @@ export const GroupProfileInfoForm = memo(({}) => {
         // }))
     }
 
+
+
+
     useEffect(() => {
         setValue("name", data?.name)
         setValue("price", data?.price)
         setValue("language", data?.language?.id)
-        setValue("color", data?.color)
-        setValue("class_number", data?.class_number)
+        if (data){
+            setValue("color", data?.color?.id ? data.color?.id : schoolClassColors.filter(item => item?.name === data?.color)[0]?.id)
+            setValue("class_number", data?.class_number?.id ? data.class_number.id : schoolClassNumbers.filter(item => item.number === data.class_number)[0]?.id)
+        }
     }, [data])
 
 
@@ -144,8 +146,8 @@ export const GroupProfileInfoForm = memo(({}) => {
                         data?.level?.name ? <p>Level: <span>{data?.level?.name}</span></p> : null
                     }
                     {
-                        data?.class_number ?
-                            <p>Sinf raqami: <span>{data?.class_number}</span></p> : null
+                        data?.class_number?.number ?
+                            <p>Sinf raqami: <span>{data?.class_number?.number}</span></p> : null
                     }
 
                     <p>Guruh narxi: <span>{data?.price}</span></p>
@@ -211,7 +213,7 @@ export const GroupProfileInfoForm = memo(({}) => {
                             title={"Sinf raqami"}
                             register={register}
                             name={"class_number"}
-                            defaultValue={data?.class_number}
+                            defaultValue={data?.class_number?.id ? data?.class_number?.id : schoolClassNumbers.filter(item => item?.number === data?.class_number)[0]?.id}
                             required
                         />
                         <Input title={"Sinf narxi"} type={"number"} placeholder={"Amount"} register={register}
@@ -227,7 +229,7 @@ export const GroupProfileInfoForm = memo(({}) => {
                                                 <Radio
                                                     extraClasses={cls.form__item}
                                                     onChange={() => setSelectColor(item.id)}
-                                                    checked={selectColor ? selectColor === item.id : data?.color === item.id}
+                                                    checked={selectColor ? selectColor === item.id : data?.color.id === item.id}
                                                     name={"color"}
                                                 />
                                                 {
@@ -245,7 +247,8 @@ export const GroupProfileInfoForm = memo(({}) => {
                                 title={"Sinf rangi"}
                                 name={"color"}
                                 options={schoolClassColors}
-                                defaultValue={schoolClassColors.filter(item => item.name === data?.color)[0]?.id}
+                                defaultValue={data?.color?.id ? data?.color?.id : schoolClassColors.filter(item => item?.name === data?.color)[0]?.id}
+                                // value={selectedColor}
                                 register={register}
                             />
                     }

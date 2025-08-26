@@ -13,7 +13,7 @@ export const fetchFlowProfileNextLesson = createAsyncThunk(
     "flowsProfileSlice/fetchFlowProfileNextLesson",
     ({id}) => {
         const {request} = useHttp()
-        return request(`${API_URL}TimeTable/check_group_next_lesson?id=${id}&type=flow`, "GET", null, headers())
+        return request(`${API_URL}TimeTable/check_group_next_lesson?id=${id}&type=flow/`, "GET", null, headers())
     }
 )
 

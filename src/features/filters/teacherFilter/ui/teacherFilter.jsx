@@ -17,8 +17,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchDeletedTeachersData, fetchTeachersDataWithFilter} from "entities/teachers/model/teacherThunk";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Button} from "shared/ui/button/index.js";
+import {getSearchValue} from "features/searchInput/index.js";
 
 export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setActiveSwitch , activeSwitch , currentPage , pageSize}) => {
+    const search = useSelector(getSearchValue);
 
     const teacherAgeTo = localStorage.getItem("teacherAgeTo")
     const teacherAgeFrom = localStorage.getItem("teacherAgeFrom")
@@ -35,6 +37,7 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
     const [selectedLanguage, setSelectedLanguage] = useState(teacherLanguage)
     const {"*": id} = useParams()
     const branchId = localStorage.getItem("branchId")
+
 
     //
     // useEffect(() => {
@@ -67,10 +70,11 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
             userBranchId: branchId,
             switchItem: activeSwitch,
             currentPage ,
-            pageSize
+            pageSize,
+            search: search === null ? "" : search
         }))
         setIsFilter(true)
-    } , [selectedSubject , selectedAgeFrom , selectedAgeTo , selectedLanguage , activeSwitch , currentPage])
+    } , [selectedSubject , selectedAgeFrom , selectedAgeTo , selectedLanguage , activeSwitch , currentPage , search])
 
     const onSelectSubject = (value) => {
         if (value !== selectedSubject) {

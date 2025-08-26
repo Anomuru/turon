@@ -66,10 +66,17 @@ export const GroupsPage = () => {
             type: "groups"
         }
     ]
+
+    // if (loadingWithFilter) {
+    //     return <DefaultPageLoader/>
+    // }
     return (
 
         // <DynamicModuleLoader reducers={reducers}>
         <div className={cls.deletedGroups}>
+
+
+
             <div className={cls.mainContainer_filterPanelBox}>
                 <Button
                     status={"filter"}
@@ -94,8 +101,9 @@ export const GroupsPage = () => {
             <div className={cls.table}>
 
                 <h2>{activeSwitch ? "Deleted Classes" : "Classes"}</h2>
-                {activeSwitch ? <DeletedGroups loadingWithFilter={loadingWithFilter} currentTableData={getFilteredGroups?.results}/> : <GroupsList
-                    loadingWithFilter={loadingWithFilter} currentTableData={getFilteredGroups?.results}
+                {loadingWithFilter === true  ? <DefaultPageLoader/> :
+                activeSwitch ? <DeletedGroups loadingWithFilter={loadingWithFilter} currentTableData={getFilteredGroups}/> : <GroupsList
+                    loadingWithFilter={loadingWithFilter} currentTableData={getFilteredGroups}
                 />}
             </div>
             <Pagination

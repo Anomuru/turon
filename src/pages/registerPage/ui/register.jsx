@@ -196,6 +196,7 @@ export const Register = () => {
                 observer: true,
                 language: selectedLanguage?.id,
                 branch: branchID,
+                birth_date: data.born_date,
             },
         };
         let res2 = {
@@ -344,7 +345,7 @@ export const Register = () => {
                         <Select
                             extraClass={cls.extraClasses}
                             name={"category"}
-                            options={categories?.results}
+                            options={categories}
                             onChangeOption={setSelectedCategory}
                             title={"Toifa"}
                         />

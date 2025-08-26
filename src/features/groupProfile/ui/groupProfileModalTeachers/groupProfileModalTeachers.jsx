@@ -114,6 +114,8 @@ export const GroupProfileModalTeachers = memo(({branch}) => {
 
     const render = renderTeachers()
 
+
+    console.log(profileData , "profileData")
     return (
         <>
             <EditableCard
@@ -135,7 +137,7 @@ export const GroupProfileModalTeachers = memo(({branch}) => {
                         />
                         <h2 className={cls.teacher__name}>
                             <span>
-                            {profileData?.teacher[0]?.user?.name}
+                            {profileData?.teacher[0]?.user?.name ? profileData.teacher[0]?.user?.name : profileData?.teacher}
                             </span>
                             <span>
                             {profileData?.teacher[0]?.user?.surname}

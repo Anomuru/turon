@@ -1,7 +1,7 @@
 import {flowsReducer} from "entities/flows";
 import {
     getFlowsProfileData,
-    getFlowsProfileNextLs,
+    getFlowsProfileNextLs, getFlowsProfileProfileLoading,
     getFlowsProfileStatus
 } from "entities/flowsProfile/model/flowsProfileSelector";
 import {
@@ -62,19 +62,18 @@ export const FlowProfileNavigators = memo(() => {
     // const {id} = useSelector(getBranch)
     const data = useSelector(getFlowsProfileData)
     const nextLesson = useSelector(getFlowsProfileNextLs)
-    const loading = useSelector(getFlowsProfileStatus)
     const userBranchId = useSelector(getUserBranchId)
     const level = useSelector(getCurseLevelData)
-
-    const [deleteId, setDeleteId] = useState(false)
     const [activeTeacher, setActiveTeacher] = useState("")
     const [subject, setSubject] = useState(null)
     const [isDeleted, setIsDeleted] = useState(false)
+    const loading = useSelector(getFlowsProfileProfileLoading)
 
     useEffect(() => {
         dispatch(fetchFlowProfileData({id}))
-        dispatch(fetchFlowProfileNextLesson({id}))
+        // dispatch(fetchFlowProfileNextLesson({id}))
     }, [id])
+
 
     useEffect(() => {
         if (userBranchId && data)
@@ -105,7 +104,7 @@ export const FlowProfileNavigators = memo(() => {
     const onSubmitDelete = () => {
         request(`${API_URL}Flow/flow-delete/${id}`, "DELETE", null, headers())
             .then(res => {
-                navigate(-2)
+                navigate(-1)
                 dispatch(onAddAlertOptions({
                     type: "success",
                     status: true,
@@ -122,14 +121,12 @@ export const FlowProfileNavigators = memo(() => {
         // dispatch(deleteGroupProfile({id}))
     }
 
-    const onDelete = () => {
-        setIsDeleted(true)
-    }
+
 
     const onSubmitChange = (data) => {
         const res = {
             ...data,
-            subject: subject
+            subject: subject.id
             // color: selectColor
         }
         dispatch(changeFlowProfile({
@@ -146,12 +143,8 @@ export const FlowProfileNavigators = memo(() => {
         }))
     }
 
-    if (loading) {
-        if (activeTeacher)
-            setActiveTeacher(false)
-        return <DefaultPageLoader/>
-    }
-    return (
+
+    return  (
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.flowProfile}>
                 <div className={cls.navigators}>
@@ -255,6 +248,7 @@ export const FlowProfileNavigators = memo(() => {
                 <FlowProfileStudentsForm
                     activeTeacher={activeTeacher}
                     setActiveTeacher={setActiveTeacher}
+                    loading={loading}
                 />
                 <Modal
                     extraClass={cls.infoModal}
@@ -264,7 +258,7 @@ export const FlowProfileNavigators = memo(() => {
                     <h1>Ma’lumot o’zgartirish</h1>
                     <Button
                         extraClass={cls.infoModal__btn}
-                        onClick={() => setDeleteId(!deleteId)}
+                        onClick={() => setIsDeleted(true)}
                         type={"danger"}
                     >
                         Delete group
@@ -296,9 +290,9 @@ export const FlowProfileNavigators = memo(() => {
                             extraClass={cls.form__input}
                             options={data?.teacher?.subject}
                             title={"Fan"}
-                            defaultValue={data?.subject?.id}
+                            defaultValue={data?.teacher?.subject.find(item => item.id === +data?.subject_id)}
                             onChangeOption={setSubject}
-                            // defaultValue={data?.subject?.id}
+
                             required
                         />
                         {
@@ -309,7 +303,8 @@ export const FlowProfileNavigators = memo(() => {
                                     title={"Level"}
                                     register={register}
                                     name={"level"}
-                                    defaultValue={data?.level?.id}
+                                    defaultValue={level?.find(item => item.name === data?.level_name)?.id}
+
                                     required
                                 /> : null
                         }
@@ -324,8 +319,6 @@ export const FlowProfileNavigators = memo(() => {
                         {/*/>*/}
                         <Button id={"formChange"} extraClass={cls.infoModal__btn}>Change</Button>
                     </Form>
-                    <ConfirmModal setActive={setDeleteId} active={deleteId} onClick={onDelete}
-                                  title={`Rostanham o'chirmoqchimisiz `} type={"danger"}/>
 
 
                 </Modal>

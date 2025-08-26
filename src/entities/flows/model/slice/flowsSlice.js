@@ -1,11 +1,12 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {fetchFilterFlow, fetchFlows, flowListThunk} from "./flowsThunk";
+import {fetchFilterFlow, fetchFlows, fetchFlowsSelect, flowListThunk} from "./flowsThunk";
 
 
 const initialState = {
     flows: [],
     flowsCount: 0,
     flowsStatus: "idle",
+    flowsSelect: [],
     flowList: [
         {
             className : "1blue",
@@ -108,15 +109,28 @@ export const flowsSlice = createSlice({
     extraReducers: builder => {
         builder
             .addCase(fetchFlows.pending, state => {
-                state.flowsStatus = "loading"
+                state.flowsStatus = true
             })
             .addCase(fetchFlows.fulfilled, (state, action) => {
                 state.flows = action.payload?.results
                 state.flowsCount = action.payload?.count
                 // state.flows = action.payload.results
-                state.flowsStatus = "success"
+                state.flowsStatus = false
             })
             .addCase(fetchFlows.rejected, (state, action) => {
+                state.flowsStatus = "error"
+            })
+
+
+            .addCase(fetchFlowsSelect.pending, state => {
+                state.flowsStatus = "loading"
+            })
+            .addCase(fetchFlowsSelect.fulfilled, (state, action) => {
+                state.flowsSelect = action.payload
+                // state.flows = action.payload.results
+                state.flowsStatus = "success"
+            })
+            .addCase(fetchFlowsSelect.rejected, (state, action) => {
                 state.flowsStatus = "error"
             })
 

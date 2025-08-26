@@ -99,6 +99,6 @@ export const getClassNewNumberList = createAsyncThunk(
     "classSlice/getClassNewNumberList",
     async ({branchId,id}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Class/class_number_subject_list?branch=${branchId}&id=${id}`, "GET", null, headers())
+        return await request(`${API_URL}Class/class_number_subject_list/?branch=${branchId}&id=${id}`, "GET", null, headers())
     }
 )

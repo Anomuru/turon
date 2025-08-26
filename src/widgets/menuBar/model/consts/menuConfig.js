@@ -17,7 +17,14 @@ export const menuConfig = [
         to: "taskManager",
         name: "Task Manager",
         icon: "fa-tasks",
-        roles: [ROLES.operator , ROLES.admin],
+        roles: [ROLES.operator],
+    },
+    {
+        to: "adminTaskManager",
+        name: "Operator Tasks",
+        icon: "fa-tasks",
+        roles: [ROLES.admin]
+        // roles: true
     },
     // {
     //     to: "adminTaskManager",
@@ -52,7 +59,7 @@ export const menuConfig = [
         to: "groups",
         name: "Sinflar",
         icon: "fa-users",
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+        roles: [ROLES.admin,ROLES.director,ROLES.programmer, ROLES.teacher],
         branches: true
 
     },
@@ -110,7 +117,7 @@ export const menuConfig = [
         name: "Class",
         icon: "fa-user-graduate",
 
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+        roles: [ROLES.admin,ROLES.director,ROLES.programmer ],
         branches: true
     },
     {
@@ -154,11 +161,6 @@ export const menuConfig = [
         roles: [ROLES.smm]
     },
 
-    {
-        to: "adminTaskManager",
-        name: "Operator Tasks",
-        icon: "fa-tasks",
-        roles: [ROLES.admin]
-    }
+
 
 ];

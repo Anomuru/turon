@@ -134,7 +134,7 @@ export const fetchUpdateClassStudent = createAsyncThunk(
             branch,
             limit,
             offset,
-            search
+            // search
         })}`, "GET", null, headers())
     }
 )

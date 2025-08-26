@@ -28,9 +28,14 @@ import {AccountingOtchotPage, EmployerSalaryPage} from "../index";
 import {TeacherSalaryPage} from "../index";
 
 import cls from './accountingPageMain.module.sass';
+import {capitalReducer} from "entities/capital/index.js";
+import {SearchInput} from "shared/ui/searchInput/index.js";
+import {getSearchStr, SearchPlatformInput} from "features/searchInput/index.js";
 
 const reducers = {
     accountingSlice: accountingReducer,
+    capital: capitalReducer
+
 }
 
 export const AccountingPageMain = () => {
@@ -132,7 +137,17 @@ export const AccountingPageMain = () => {
         {name: "overhead", type: "overhead"},
         {name: "capital", type: "capital"},
     ], [])
+    const savedSearch = localStorage.getItem("search") || "";
 
+    const onChange = (value) => {
+        localStorage.setItem("search", value);
+        dispatch(getSearchStr(value));
+    };
+    useEffect(() => {
+        if (savedSearch) {
+            dispatch(getSearchStr(savedSearch));
+        }
+    }, [dispatch]);
 
     return (
 
@@ -141,31 +156,40 @@ export const AccountingPageMain = () => {
                 <div className={cls.accounting}>
                     <div className={cls.accounting__wrapper}>
                         <div className={cls.wrapper__filter}>
-                            <Button
-                                type={"filter"}
-                                status={"filter"}
-                                onClick={() => setActive(!active)}
-                            >
-                                Filter
-                            </Button>
-                            <Select
-                                defaultValue={oldActivePage}
-                                options={getAccountingPage}
-                                onChangeOption={setPage}
+
+
+                            {/*<SearchInput onChange={onChange}/>*/}
+                            <SearchPlatformInput
+                                defaultSearch={savedSearch}
+                                onSearch={onChange}
                             />
                         </div>
 
 
                         <div className={cls.wrapper__middle}>
-                            {otchot ? null :
-                                <div className={cls.middle__box}>
-                                    {encashment?.map(item => (
-                                        <div>{item?.payment_type}: {formatSalary(item.overall)}</div>
-                                    ))}
-                                </div>
+                            <div style={{display: "flex" , justifyContent: "space-between"}}>
+                                {otchot ? null :
+                                    <div className={cls.middle__box}>
+                                        {encashment?.map(item => (
+                                            <div>{item?.payment_type}: {formatSalary(item.overall)}</div>
+                                        ))}
+                                    </div>
 
-                            }
+                                }
+                                <Select
+                                    defaultValue={oldActivePage}
+                                    options={getAccountingPage}
+                                    onChangeOption={setPage}
+                                />
+                            </div>
                             <div className={cls.typeExpenses}>
+                                <Button
+                                    type={"filter"}
+                                    status={"filter"}
+                                    onClick={() => setActive(!active)}
+                                >
+                                    Filter
+                                </Button>
                                 <Link to={`../inkasatsiya`}>
                                     <Button>
                                         Inkasatsiya
@@ -176,11 +200,14 @@ export const AccountingPageMain = () => {
                                         buxgalteriya
                                     </Button>
                                 </Link>
+
+
                             </div>
                         </div>
                     </div>
                 </div>
                 <Outlet/>
+                {activeDel ? <h2 style={{color: "red"}}>Deleted (O'chirilganlar)</h2> : ""}
             </div>
 
 

@@ -10,7 +10,7 @@ export const fetchTeachersData = createAsyncThunk(
     "teachersSlice/fetchTeachersData",
     async ({userBranchId}) =>{
         const {request} = useHttp()
-        return await request(`${API_URL}Teachers/teachers/?branch=${userBranchId}&deleted=False` , "GET" , null , headers())
+        return await request(`${API_URL}Teachers/teachers/?branch=${userBranchId}&deleted=False&offset=0&limit=50` , "GET" , null , headers())
     }
 )
 
@@ -25,9 +25,9 @@ export const fetchDeletedTeachersData = createAsyncThunk(
 
 export const fetchTeachersDataWithFilter = createAsyncThunk(
     "teachersSlice/fetchTeachersDataWithFilter",
-    async ({userBranchId, fromAge, untilAge, subjId, langId , switchItem , currentPage , pageSize}) =>{
+    async ({userBranchId, fromAge, untilAge, subjId, langId , switchItem , currentPage , pageSize , search}) =>{
         const {request} = useHttp()
-        return await request(`${API_URL}Teachers/teachers/?branch=${userBranchId}${renderItem({untilAge , subjId , fromAge , langId , switchItem})}${pageSize ? `&offset=${(currentPage - 1) * pageSize}&limit=${pageSize}` : ""}` , "GET" , null , headers())
+        return await request(`${API_URL}Teachers/teachers/?branch=${userBranchId}${renderItem({untilAge , subjId , fromAge , langId , switchItem})}${pageSize ? `&offset=${(currentPage - 1) * pageSize}&limit=${pageSize}` : ""}&search=${search}` , "GET" , null , headers())
     }
 )
 

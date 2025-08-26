@@ -26,18 +26,6 @@ export const StudentsPayments = ({
     const loading = useSelector(getLoadingStudent)
     const totalCount = useSelector(getStudentPaymentsCount)
 
-    const searchedUsers = useMemo(() => {
-        const filteredHeroes = studentData?.slice()
-
-
-        if (!search) return filteredHeroes
-        setCurrentPage(1)
-
-        return filteredHeroes.filter(item =>
-            item?.student_name?.toLowerCase().includes(search.toLowerCase())
-        )
-    }, [studentData, setCurrentPage, search])
-
     const navigation = useNavigate();
 
     const onDeleteModal = (data) => {
@@ -45,10 +33,10 @@ export const StudentsPayments = ({
     }
 
     const renderStudents = () => {
-        return searchedUsers?.map((item, i) => (
+        return studentData?.map((item, i) => (
             <tr>
                 <td>{i + 1}</td>
-                <td onClick={() => navigation(`../../students/profile/${item.id}`)}>{item?.student_name} {item?.student_surname}</td>
+                <td onClick={() => navigation(`../../students/profile/${item.student_id}`)}>{item?.student_name} {item?.student_surname}</td>
                 <td>{formatSalary(item.payment_sum)}</td>
                 <td>{item.date}</td>
                 <td>

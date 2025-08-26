@@ -2,11 +2,11 @@ import {FlowList} from "entities/flowList";
 import {fetchFlows, getFlows} from "entities/flows";
 import {
     getFlowsProfileData,
-    getFlowsProfileFilteredStudents, getFlowsProfileFilteredTeachers,
+    getFlowsProfileFilteredStudents, getFlowsProfileFilteredTeachers, getFlowsProfileTeacherLoading,
 } from "entities/flowsProfile/model/flowsProfileSelector";
 import {
     changeFlowProfile,
-    fetchFilteredTeachers,
+    fetchFilteredTeachers, fetchFlowProfileData,
 } from "entities/flowsProfile/model/flowsProfileThunk";
 import {getUserBranchId} from "entities/profile/userProfile";
 import {onAddAlertOptions, onAddMultipleAlertOptions} from "features/alert/model/slice/alertSlice";
@@ -31,8 +31,11 @@ import {Table} from "shared/ui/table";
 import cls from "./FlowProfileStudentsForm.module.sass";
 import {ConfirmModal} from "../../../shared/ui/confirmModal";
 import {getBranch} from "../../branchSwitcher";
+import {fetchFlowsSelect} from "entities/flows/model/slice/flowsThunk.js";
+import {getFlowsSelect} from "entities/flows/model/selector/flowsSelector.js";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
-export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
+export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loading}) => {
 
     const {request} = useHttp()
     const {id} = useParams()
@@ -44,7 +47,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
     } = useForm()
     const navigation = useNavigate()
     const data = useSelector(getFlowsProfileData)
-    const flows = useSelector(getFlows)
+    const flows = useSelector(getFlowsSelect)
     const filteredStudents = useSelector(getFlowsProfileFilteredStudents)
     const filteredTeachers = useSelector(getFlowsProfileFilteredTeachers)
     const branch = useSelector(getUserBranchId)
@@ -58,6 +61,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
     const [deleteId, setDeleteId] = useState(null)
     const [currentFilteredData, setCurrentFilteredData] = useState([])
 
+    // const loading = useSelector(getFlowsProfileTeacherLoading)
     useEffect(() => {
         if (filteredStudents)
             setCurrentFilteredData(filteredStudents)
@@ -65,11 +69,12 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
 
     useEffect(() => {
         if (branch)
-            dispatch(fetchFlows({branch}))
+            dispatch(fetchFlowsSelect({branch}))
     }, [branch])
 
+
     useEffect(() => {
-        if (data && id && branch) {
+        if (data) {
             const res = {
                 ignore_teacher: data?.teacher?.id
             }
@@ -109,10 +114,14 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
         request(`${API_URL}Flow/move-to-flow/?flow_id=${id}&to_flow_id=${data?.to_id}`, "POST", JSON.stringify({students: selectedMoveId}), headers())
             .then(res => {
                 dispatch(onAddMultipleAlertOptions(res.errors.map(item => ({
-                    type: "error",
+                    type: "success",
                     status: true,
                     msg: item
                 }))))
+                dispatch(fetchFlowProfileData({id}))
+
+                setActiveModal(false)
+
             })
     }
 
@@ -324,11 +333,13 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
         }))
     }, [selectedId])
 
+
     const renderFlowList = () => {
         return currentFilteredData.map((item, i) => (
             <FlowList
                 key={i}
                 flowList={item}
+                title={`${item?.class_number?.number}-${item?.color?.name}`}
                 onChangeAll={onChangeAll}
                 onChangeSingle={onChangeSingle}
                 // flowList={item?.students}
@@ -383,6 +394,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
     const render = renderStudentsList()
     // const renderStudent = renderStudentsData()
 
+
     return (
         <>
             <div className={cls.studentsList}>
@@ -408,6 +420,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
                     </div>
                 </div>
                 <div className={cls.studentsList__container}>
+                    {loading === true ? <DefaultPageLoader/> :
                     <Table>
                         <thead>
                         <tr>
@@ -427,7 +440,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
                         <tbody>
                         {render}
                         </tbody>
-                    </Table>
+                    </Table>}
                 </div>
             </div>
             <Modal
@@ -508,6 +521,8 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
                 {/*    onChange={(e) => setSearchValue(e.target.value)}*/}
                 {/*    defaultValue={searchValue}*/}
                 {/*/>*/}
+
+                {loading === true ? <DefaultPageLoader/> :
                 <div className={cls.teachersModal__container}>
                     <Table>
                         <thead>
@@ -523,7 +538,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher}) => {
                         {renderTeacher}
                         </tbody>
                     </Table>
-                </div>
+                </div> }
             </Modal>
             <Modal
                 extraClass={cls.changeTeacher}

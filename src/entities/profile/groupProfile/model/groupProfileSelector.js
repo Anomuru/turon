@@ -38,3 +38,7 @@ export const getDebtStudents = (state) =>
 
 // export const getGroupAttendance = (state) =>
 //     state.groupProfileSlice.groupAttendance
+
+
+export const getLoadingStudent = (state) =>
+    state.groupProfileSlice?.loadingStudent

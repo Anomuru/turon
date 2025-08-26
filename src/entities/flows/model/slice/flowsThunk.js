@@ -4,9 +4,18 @@ import {API_URL, headers, ParamUrl, useHttp} from "shared/api/base";
 
 export const fetchFlows = createAsyncThunk(
     "flowsSlice/fetchFlows",
-    async ({branch, subject, teacher, limit, offset}) => {
+    async ({branch, subject, teacher, limit, offset , search}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Flow/flow-list/?${ParamUrl({branch, subject, teacher, limit, offset})}`, "GET", null, headers())
+        return await request(`${API_URL}Flow/flow-list/?${ParamUrl({branch, subject, teacher, limit, offset , search})}`, "GET", null, headers())
+    }
+)
+
+
+export const fetchFlowsSelect = createAsyncThunk(
+    "flowsSlice/fetchFlowsSelect",
+    async ({branch}) => {
+        const {request} = useHttp()
+        return await request(`${API_URL}Flow/flow-list/?${ParamUrl({branch})}`, "GET", null, headers())
     }
 )
 

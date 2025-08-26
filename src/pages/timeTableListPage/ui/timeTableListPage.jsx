@@ -47,10 +47,13 @@ export const TimeTableListPage = () => {
     let PageSize = useMemo(() => 11, [])
     const [currentPage, setCurrentPage] = useState(1);
 
+
+
+
     useEffect(() => {
-        dispatch(fetchTimeTableListData({currentPage, pageSize: PageSize}))
+        dispatch(fetchTimeTableListData({currentPage, pageSize: PageSize , search}))
         // dispatch(fetchClassInput())
-    }, [currentPage])
+    }, [currentPage , search])
     const onSubmitCreate = (data) => {
         dispatch(createTimeTable(data))
         dispatch(onAddAlertOptions({

@@ -10,7 +10,7 @@ import {Pagination} from "features/pagination";
 import {useSelector} from "react-redux";
 import {getSearchValue} from "features/searchInput";
 
-export const FlowList = memo(({flowList, number, onChangeSingle, onChangeAll, currentPage}) => {
+export const FlowList = memo(({flowList, number, onChangeSingle, onChangeAll, currentPage  , title}) => {
 
     const [isAccordion, setIsAccordion] = useState(false)
 
@@ -57,7 +57,7 @@ export const FlowList = memo(({flowList, number, onChangeSingle, onChangeAll, cu
                 backOpen={isAccordion}
                 number={number + 1}
                 // title={`${flowList?.class_number?.number}-${flowList?.color?.name}`}
-                title={flowList?.name}
+                title={title}
                 subtitle={
                     <Input
                         type={"checkbox"}

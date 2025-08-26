@@ -13,6 +13,7 @@ import {Modal} from "shared/ui/modal";
 import {Table} from "shared/ui/table";
 
 import cls from "./studentCreateClass.module.sass";
+import {onDeleteCreateStudents} from "entities/students/model/studentsSlice.js";
 
 export const StudentCreateClass = memo((props) => {
 
@@ -41,7 +42,6 @@ export const StudentCreateClass = memo((props) => {
             students: selectStudents
         }
 
-
         request(`${API_URL}Group/groups/create/`, "POST", JSON.stringify(res), headers())
             .then(res => {
                 dispatch(onAddAlertOptions({
@@ -49,18 +49,19 @@ export const StudentCreateClass = memo((props) => {
                     status: true,
                     msg: `Sinf yaratildi`
                 }))
-                dispatch(fetchOnlyNewStudentsData({branch}))
+                // dispatch(fetchOnlyNewStudentsData({branch}))
+                dispatch(onDeleteCreateStudents(selectStudents))
+
                 setActive(false)
                 deactiveModal(false)
                 // setCreateStatus(true)
             })
     }
 
-
     const renderStudents = () => {
         if (loading === "loading" || loading === "idle") return <DefaultPageLoader/>;
 
-        return studentsList?.results?.map((item, i) => {
+        return studentsList?.map((item, i) => {
             return <tr>
                 <td>{i + 1}</td>
                 <td>{item.user?.surname} {item.user?.name}</td>

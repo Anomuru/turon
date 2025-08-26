@@ -7,26 +7,19 @@ import {useNavigate, useParams} from "react-router";
 import {
     GroupProfileAttendanceForm,
     GroupProfileModalTeachers,
-    GroupProfileTimeForm,
     GroupProfileInfoForm,
-    GroupProfileStudents,
     GroupProfileDeleteForm
 } from "features/groupProfile";
 import {
-    GroupProfileSubjectList,
-    GroupProfileAttendance,
-    GroupProfileStatistics,
+
     fetchGroupProfile,
-    GroupProfileInfo,
-    GroupProfileMore,
+
     getGroupProfileData,
     getGroupProfileLoading, GroupProfileRating
 } from "entities/profile/groupProfile";
 import {getTimeTable} from "entities/profile/groupProfile";
 import {
-    fetchFilteredStudents,
-    fetchFilteredStudentsAndTeachers,
-    fetchFilteredTeachers,
+
     fetchGroupProfileTimeTable,
     fetchReasons,
     fetchWeekDays

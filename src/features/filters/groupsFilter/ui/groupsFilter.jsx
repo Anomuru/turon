@@ -16,6 +16,7 @@ import {
 import {fetchTeachersDataWithFilter} from "entities/teachers/model/teacherThunk";
 
 import cls from "../../filters.module.sass";
+import {getSearchValue} from "features/searchInput/index.js";
 
 export const GroupsFilter = React.memo(({active, setActive, setIsFilter , activeSwitch , setActiveSwitch , currentPage , pageSize}) => {
 
@@ -34,16 +35,19 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
     localStorage.setItem("selectedTeacher" , selectedTeacher)
     localStorage.setItem("selectedSwitch" , `${activeSwitch}`)
 
+    const search=useSelector(getSearchValue)
+
     useEffect(() => {
         dispatch(fetchGroupsDataWithFilter({
             teacherId: selectedTeacher,
             userBranchId,
             deleted:activeSwitch,
             pageSize,
-            currentPage
+            currentPage,
+            search
         }))
         setIsFilter(true)
-    } , [selectedTeacher , activeSwitch, currentPage])
+    } , [selectedTeacher , activeSwitch, currentPage , search])
 
     // function fetchGroups(teacher, type, subject) {
     //

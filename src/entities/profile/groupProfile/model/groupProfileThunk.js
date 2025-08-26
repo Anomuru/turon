@@ -16,7 +16,7 @@ export const fetchGroupProfileTimeTable = createAsyncThunk(
     "groupProfileSlice/fetchGroupProfileTimeTable",
     ({group_id}) => {
         const {request} = useHttp()
-        return request(`${API_URL}TimeTable/GrouptimeTableList/${group_id}`, "GET", null, headers())
+        return request(`${API_URL}TimeTable/GrouptimeTableList/${group_id}/`, "GET", null, headers())
     }
 )
 

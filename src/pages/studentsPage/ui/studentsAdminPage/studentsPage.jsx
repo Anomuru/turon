@@ -88,7 +88,7 @@ export const StudentsPage = () => {
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams();
     const {register, handleSubmit} = useForm();
-    const userBranchId = useSelector(getUserBranchId)
+    const userBranchId = localStorage.getItem("branchId")
 
 
     const search = useSelector(getSearchValue);
@@ -130,6 +130,8 @@ export const StudentsPage = () => {
     const studentClassUpdateCount = useSelector(getStudentClassUpdateCount)
     const [currentPageClassUpdate, setCurrentPageClassUpdate] = useState(1);
 
+
+
     // useEffect(() => {
     //     if (studentClassUpdateCount <= 50 && currentPageClassUpdate !== 1) {
     //             true, "change"
@@ -139,7 +141,7 @@ export const StudentsPage = () => {
     // }, [studentClassUpdateCount])
 
     useEffect(() => {
-        if (search && userBranchId && currentPageClassUpdate) {
+        if (currentPageClassUpdate) {
             dispatch(fetchUpdateClassStudent({
                 offset: search ? 0 : (currentPageClassUpdate - 1) * PageSize,
                 limit: PageSize,
@@ -147,7 +149,7 @@ export const StudentsPage = () => {
                 search
             }))
         }
-    }, [search, currentPageClassUpdate, userBranchId])
+    }, [currentPageClassUpdate])
 
 
     useEffect(() => {
@@ -232,15 +234,14 @@ export const StudentsPage = () => {
     };
 
 
+
+
     const renderStudents = useCallback(() => {
         switch (selectedRadio) {
             case "new_students":
                 return (
                     <NewStudents
-                        currentPage={currentPageClassUpdate}
-                        setCurrentPage={setCurrentPageClassUpdate}
-                        branchId={userBranchId}
-                        pageSize={PageSize}
+
 
                         // currentTableData={searchedUsers.slice((currentPage - 1) * PageSize, currentPage * PageSize)}
                         currentTableData={newStudents}
@@ -357,6 +358,7 @@ export const StudentsPage = () => {
                 activePage={selectedRadio}
                 setIsFilter={setIsFilter}
                 branchId={userBranchId}
+                search={search}
             />
 
             <Pagination
@@ -383,7 +385,7 @@ export const StudentsPage = () => {
                             required
                             extraClass={cls.modal__select}
                             title={"O'qituvchi"}
-                            options={teachers?.results}
+                            options={teachers}
                             onChangeOption={setSelectTeacher}
                         />
                         <Select
@@ -461,6 +463,7 @@ export const StudentsPage = () => {
 
 
                 <div style={{marginBottom: "1rem"}}>
+                    <h2 style={{marginBottom: ".3rem" , color: "#444343"}}>O'zgartiriladigan sinf raqami</h2>
                     <Select options={schoolClassNumbers} onChangeOption={setSelectClass} defaultValue={selectClass}/>
                 </div>
 

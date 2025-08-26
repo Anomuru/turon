@@ -13,28 +13,25 @@ import {
 } from "entities/filteredLeadsList/model/filteredLeadsListSelector";
 import {getBranch} from "features/branchSwitcher";
 
-export const FilteredLeadsList = ({date}) => {
+export const FilteredLeadsList = ({dateFrom , dateTo}) => {
 
 
     const dispatch = useDispatch()
-    const branch = useSelector(getBranch)
-    const [currentTableData, setCurrentTableData] = useState([]);
+    const branch = localStorage.getItem("branchId")
     const [currentPage, setCurrentPage] = useState(1);
 
     let PageSize = useMemo(() => 50, []);
 
 
     useEffect(()=> {
-        if (date && branch) {
-            dispatch(fetchFilteredListData({date,branch: branch.id,currentPage,PageSize}))
+        if (dateFrom && dateTo && branch) {
+            dispatch(fetchFilteredListData({dateTo , dateFrom,branch,currentPage,PageSize}))
         }
-    },[date,branch.id,currentPage,PageSize])
+    },[dateFrom,branch,currentPage,PageSize , dateTo])
 
 
     const data = useSelector(getFilteredLeadsListData)
     const count = useSelector(getFilteredLeadsListCount)
-
-
 
 
 
@@ -56,7 +53,7 @@ export const FilteredLeadsList = ({date}) => {
                 </thead>
                 <tbody>
                 {
-                    currentTableData?.map((item, index) => (
+                    data?.map((item, index) => (
                         <tr key={index + 1}>
                             <td>{index + 1}</td>
                             <td>{item?.name}</td>
@@ -70,8 +67,6 @@ export const FilteredLeadsList = ({date}) => {
 
 
             <Pagination
-                setCurrentTableData={setCurrentTableData}
-                users={data || []}
                 setCurrentPage={setCurrentPage}
                 currentPage={currentPage}
                 pageSize={PageSize}
@@ -79,6 +74,7 @@ export const FilteredLeadsList = ({date}) => {
                     setCurrentPage(page)
                 }}
                 type={"custom"}
+                totalCount={count}
             />
         </div>
     );

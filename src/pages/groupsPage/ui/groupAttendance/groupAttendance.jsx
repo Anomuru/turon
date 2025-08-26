@@ -95,7 +95,7 @@ export const GroupAttendance = () => {
     return (
         <div className={cls.attendance}>
             <div className={cls.attendance_header}>
-                <h2>Davomat </h2>
+                <h2>Davomat</h2>
                 <div className={cls.attendance_end}>
                     <div className={cls.attendance_end_select}>
                         <Select extraClass={cls.select}

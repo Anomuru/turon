@@ -17,8 +17,9 @@ export const filteredLeadsListSlice = createSlice({
             .addCase(fetchFilteredListData.pending, (state) => {state.loading = true})
             .addCase(fetchFilteredListData.fulfilled, (state, action) => {
                 state.loading = false
-                state.data = action.payload.data
-                state.count = action.payload.lead_count
+                state.data = action.payload.results.data
+
+                state.count = action.payload.count
             })
             .addCase(fetchFilteredListData.rejected, (state) => {
                 state.loading = false;
@@ -33,4 +34,4 @@ export const filteredLeadsListSlice = createSlice({
 
 export const {} = filteredLeadsListSlice.actions
 
-export default filteredLeadsListSlice.reducer
+export const  filterLeadsReducers = filteredLeadsListSlice.reducer
