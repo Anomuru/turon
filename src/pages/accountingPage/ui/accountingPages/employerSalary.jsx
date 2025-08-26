@@ -15,6 +15,7 @@ import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {ConfirmModal} from "shared/ui/confirmModal";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
+import {getSearchValue} from "features/searchInput/index.js";
 
 const reducers = {
     employerSlice: employerReducer
@@ -34,17 +35,19 @@ export const EmployerSalaryPage = memo(({deleted, setDeleted}) => {
     const [currentPage, setCurrentPage] = useState(1);
 
     let PageSize = useMemo(() => 50, [])
+    const search = useSelector(getSearchValue)
 
     useEffect(() => {
         if (branchID && currentPage && PageSize)
             dispatch(getEmpSalary({
                 branch: branchID,
                 offset: (currentPage - 1) * PageSize,
-                limit: PageSize
+                limit: PageSize,
+                search
             }))
         // dispatch(getPaymentType())
         // dispatch(getDeletedEmpSalary())
-    }, [branchID, currentPage, PageSize])
+    }, [branchID, search, currentPage, PageSize])
 
 
     const [changingData, setChangingData] = useState({})

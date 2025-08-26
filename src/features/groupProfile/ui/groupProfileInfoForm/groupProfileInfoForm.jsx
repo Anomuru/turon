@@ -63,7 +63,6 @@ export const GroupProfileInfoForm = memo(({}) => {
     const [deleteID, setDelete] = useState(false)
 
 
-    console.log(data)
     const onSubmitChange = (data) => {
         const res = {
             ...data,
@@ -90,7 +89,7 @@ export const GroupProfileInfoForm = memo(({}) => {
             .then(res => {
 
                 dispatch(deleteGroup(id))
-                navigate(-2)
+                navigate(-1)
             })
         //
         // dispatch(deleteGroupProfile({

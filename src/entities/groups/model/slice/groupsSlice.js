@@ -58,7 +58,7 @@ export const groupsSlice = createSlice({
                 state.error = null
             })
             .addCase(fetchClassesDataForFlow.fulfilled, (state, action) => {
-                state.dataForFlow = action.payload?.results
+                state.dataForFlow = action.payload
                 state.loading = false
                 state.error = null
             })

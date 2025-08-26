@@ -25,6 +25,7 @@ export const Flows = ({currentTableData, teacherData, loading, levelData, getLev
         handleSubmit,
         setValue
     } = useForm()
+
     const [activeFlow, setActiveFlow] = useState(false)
     const [addFlow, setAddFlow] = useState(false)
     const [filter, setFilter] = useState(false)
@@ -110,7 +111,7 @@ export const Flows = ({currentTableData, teacherData, loading, levelData, getLev
                     </tr>
                     </thead>
                     {
-                        loading === "loading" ? <DefaultPageLoader/> :
+                        loading === true? <DefaultPageLoader/> :
                             <tbody>
                             {renderFlowData()}
                             </tbody>

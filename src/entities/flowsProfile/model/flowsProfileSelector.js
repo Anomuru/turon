@@ -13,6 +13,10 @@ export const getFlowsProfileFilteredTeachers = (state) =>
 
 export const getFlowsProfileStatus = (state) =>
     state.flowsProfileSlice?.loading
+export const getFlowsProfileTeacherLoading = (state) =>
+    state.flowsProfileSlice?.loadingTeacher
+export const getFlowsProfileProfileLoading = (state) =>
+    state.flowsProfileSlice?.loadingProfile
 
 
 

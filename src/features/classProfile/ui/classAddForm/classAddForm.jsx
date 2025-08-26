@@ -31,6 +31,7 @@ import {Table} from "shared/ui/table";
 import cls from "./classAddForm.module.sass";
 import {fetchGroupsForSelect} from "entities/oftenUsed/model/oftenUsedThunk";
 import {getGroupsSelect} from "entities/oftenUsed/model/oftenUsedSelector";
+import {getFilteredStudents} from "entities/students/index.js";
 
 
 
@@ -139,6 +140,7 @@ export const ClassAddForm = memo((props) => {
             item?.user?.surname?.toLowerCase().includes(searchValue?.toLowerCase())
         )
     }, [students, searchValue])
+
 
     const renderStudentsData = () => {
         return searched?.map(item =>

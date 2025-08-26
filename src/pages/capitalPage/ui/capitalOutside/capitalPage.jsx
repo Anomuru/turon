@@ -16,6 +16,7 @@ import {getCapitalDataThunk, getCapitalPermission, getLoading} from "entities/ca
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import {AddCategoryModal, CreateCapitalModal} from "features/createCapitalModal";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import {getSearchValue} from "features/searchInput/index.js";
 
 
 const img = {
@@ -44,10 +45,11 @@ export const CapitalPage = memo(() => {
 
 
     const capitalPermission = useSelector(getCapitalPermission)
+    const search = useSelector(getSearchValue)
 
     useEffect(() => {
-        dispatch(getCapitalDataThunk())
-    }, [])
+        dispatch(getCapitalDataThunk(search))
+    }, [search])
     const getCapital = useSelector(getCapitalData)
 
     const onClick = (data) => {

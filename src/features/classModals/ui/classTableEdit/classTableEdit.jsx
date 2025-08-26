@@ -177,7 +177,6 @@ export const ClassTableEdit = ({
         }))
     }
 
-    console.log(selectedSubject , "selectedSubject")
     return (
         <>
             <Modal active={editClass} setActive={setEditClass}>

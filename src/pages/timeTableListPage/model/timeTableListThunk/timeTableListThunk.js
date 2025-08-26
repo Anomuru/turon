@@ -3,9 +3,9 @@ import {API_URL, headers, useHttp} from "shared/api/base";
 
 export const fetchTimeTableListData = createAsyncThunk(
     "timeTable/fetchTimeTableListData",
-    async ({pageSize , currentPage}) => {
+    async ({pageSize , currentPage , search}) => {
         const {request} = useHttp()
-        return request(`${API_URL}SchoolTimeTable/hours-list-create/${pageSize ? `?offset=${(currentPage - 1) * pageSize}&limit=${pageSize}` : ""}`, "GET", null)
+        return request(`${API_URL}SchoolTimeTable/hours-list-create/${pageSize ? `?offset=${(currentPage - 1) * pageSize}&limit=${pageSize}` : ""}&search=${search}`, "GET", null)
     }
 )
 

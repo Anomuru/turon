@@ -17,6 +17,7 @@ import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {ConfirmModal} from "shared/ui/confirmModal";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
+import {getSearchValue} from "features/searchInput/index.js";
 
 const reducers = {
     studentSlice: studentReducer
@@ -38,14 +39,17 @@ export const StudentSalary = ({deleted, setDeleted}) => {
 
     let PageSize = useMemo(() => 50, [])
 
+    const search  = useSelector(getSearchValue)
+
     useEffect(() => {
         if (branchID && currentPage)
             dispatch(getStudentPayment({
                 branch: branchID,
                 limit: PageSize,
-                offset: (currentPage - 1) * PageSize
+                offset: (currentPage - 1) * PageSize,
+                search
             }))
-    }, [branchID, currentPage])
+    }, [branchID, currentPage , search])
 
 
     const formatSalary = (payment_sum) => {

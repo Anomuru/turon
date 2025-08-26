@@ -12,6 +12,7 @@ import {getUserBranchId} from "entities/profile/userProfile";
 import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/filterStorage/filterStorage";
 
 import cls from "../../filters.module.sass";
+import {getSearchValue} from "features/searchInput/index.js";
 
 export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
 
@@ -24,6 +25,8 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
     const [selectedSubject, setSelectedSubject] = useState("all");
     const [selectedTeacher, setSelectedTeacher] = useState("all");
     const [initialApplied, setInitialApplied] = useState(false);
+
+    const search  = useSelector(getSearchValue)
 
     const fetchFlowsData = (subject, teacher, offset, limit) => {
         dispatch(fetchFlows({
@@ -42,10 +45,11 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
                 subject: selectedSubject,
                 teacher: selectedTeacher,
                 limit: pageSize,
-                offset: (currentPage - 1) * pageSize
+                offset: (currentPage - 1) * pageSize,
+                search
             }));
         }
-    }, [currentPage, pageSize, id])
+    }, [currentPage, pageSize, id , search])
 
     useEffect(() => {
         if (id) {

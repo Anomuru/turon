@@ -126,7 +126,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
         if (!students) return []
 
         const filteredSlice = [...students]
-        console.log(filteredSlice, "students")
+
 
         const search = searchValue ? searchValue.toLowerCase() : ""
 
@@ -464,7 +464,6 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
     const render = renderStudents()
     const renderStudent = renderStudentsData()
 
-    console.log(renderStudent , "renderStudent")
     return (
         <>
             <EditableCard
@@ -533,7 +532,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                         selectOpt === "deleted" ?
                             <Select
                                 extraClass={cls.deleteForm__select}
-                                options={reasons?.results}
+                                options={reasons}
                                 title={"Sabablar"}
                                 onChangeOption={setSelectOptId}
                                 register={register}

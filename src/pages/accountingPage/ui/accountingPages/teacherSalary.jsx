@@ -20,6 +20,7 @@ import {ConfirmModal} from "shared/ui/confirmModal";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 
 import cls from "../accountingPageMain.module.sass";
+import {getSearchValue} from "features/searchInput/index.js";
 
 const reducers = {
     teacher: teacherReducer
@@ -43,16 +44,18 @@ export const TeacherSalaryPage = ({deleted, setDeleted}) => {
     let PageSize = useMemo(() => 50, [])
 
 
+    const search = useSelector(getSearchValue)
     useEffect(() => {
         // dispatch(getPaymentType())
         if (branchID && currentPage && PageSize)
             dispatch(getTeacherSalary({
                 branch: branchID,
                 limit: PageSize,
-                offset: (currentPage - 1) * PageSize
+                offset: (currentPage - 1) * PageSize,
+                search
             }))
         // dispatch(getDeletedTeacherSalary())
-    }, [branchID, PageSize, currentPage])
+    }, [branchID, search, PageSize, currentPage])
 
 
     const onDelete = () => {

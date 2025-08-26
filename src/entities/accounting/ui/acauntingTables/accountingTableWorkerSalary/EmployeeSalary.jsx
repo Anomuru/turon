@@ -33,17 +33,7 @@ export const EmployeeSalary = ({
     const loading = useSelector(getEmployerLoading)
     const [payment, setPayment] = useState(null)
 
-    const searchedUsers = useMemo(() => {
-        const filteredHeroes = filteredSalary?.slice()
 
-
-        if (!search) return filteredHeroes
-        setCurrentPage(1)
-
-        return filteredHeroes.filter(item =>
-            item?.user?.name.toLowerCase().includes(search.toLowerCase())
-        )
-    }, [filteredSalary, setCurrentPage, search])
     // const onDeleteModal = (data) => {
     //     setActiveDelete(true)
     //
@@ -55,7 +45,7 @@ export const EmployeeSalary = ({
 
 
     const renderFilteredSalary = () => {
-        return searchedUsers?.map((item, i) => (
+        return filteredSalary?.map((item, i) => (
             <>
                 <tbody>
                 <tr>

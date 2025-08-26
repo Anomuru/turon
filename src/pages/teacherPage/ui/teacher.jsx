@@ -31,20 +31,12 @@ const reducers = {
 
 export const TeachersPage = () => {
     const {theme} = useTheme()
-    const loading = useSelector(getTeacherLoading)
-    const search = useSelector(getSearchValue)
-    const teachersData = useSelector(getTeachers)
-    const deletedTeacher = useSelector(getDeletedTeacher)
     const filteredTeachersData = useSelector(getTeachersWithFilter)
     const dispatch = useDispatch()
     const teacherStatus = localStorage.getItem("teacherStatus")
-
     const totalCount = useSelector(getTotalCount)
-
     let PageSize = useMemo(() => 50, [])
-    const [currentTableData, setCurrentTableData] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
-    const [selected, setSelected] = useState()
     const [active, setActive] = useState()
     const [activeSwitch, setActiveSwitch] = useState(teacherStatus === "true" )
     const [activeDelete, setActiveDelete] = useState({})
@@ -135,7 +127,6 @@ export const TeachersPage = () => {
 
                     <Pagination
                         totalCount={totalCount}
-                        search={search}
                         currentPage={currentPage}
                         pageSize={PageSize}
                         onPageChange={page => {

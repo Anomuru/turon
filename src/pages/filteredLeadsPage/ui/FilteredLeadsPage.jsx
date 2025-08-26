@@ -15,7 +15,8 @@ const reducers = {
 
 export const FilteredLeadsPage = () => {
 
-    const [date, setDate] = useState(null)
+    const [dateTo, setDateTo] = useState(null)
+    const [dateFrom, setDateFrom] = useState(null)
 
     return (
 
@@ -26,10 +27,13 @@ export const FilteredLeadsPage = () => {
                     <BackButton/>
 
 
-                    <Input type={"date"} value={date} onChange={(e) => setDate(e.target.value)}/>
+                    <div style={{display: "flex" , gap: "2rem"}}>
+                        <Input type={"date"} value={dateFrom} onChange={(e) => setDateFrom(e.target.value)}/>
+                    <Input type={"date"} value={dateTo} onChange={(e) => setDateTo(e.target.value)}/>
+                    </div>
                 </div>
                 <div className={cls.content}>
-                    <FilteredLeadsList date={date}/>
+                    <FilteredLeadsList dateTo={dateTo} dateFrom={dateFrom}/>
 
 
                 </div>

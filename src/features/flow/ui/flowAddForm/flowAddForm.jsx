@@ -40,9 +40,6 @@ export const FlowAddForm = memo((props) => {
     const [activeModal, setActiveModal] = useState(false)
     const [selectedId, setSelectedId] = useState([])
 
-    // useEffect(() => {
-    //     dispatch(fetchFlows(userBranchId))
-    // }, [])
 
 
     useEffect(() => {
@@ -185,11 +182,13 @@ export const FlowAddForm = memo((props) => {
         }))
     }, [selectedId])
 
+
     const renderFlowList = () => {
         return currentFilteredData.map((item, i) => (
             <FlowList
                 key={i}
                 flowList={item}
+                title={`${item?.class_number?.number}-${item?.color?.name}`}
                 onChangeAll={onChangeAll}
                 onChangeSingle={onChangeSingle}
                 // flowList={item?.students}

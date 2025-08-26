@@ -36,7 +36,7 @@ export const FlowListPage = () => {
     useEffect(() => {
         if (userBranchId) {
             dispatch(flowListThunk())
-            dispatch(fetchClassesDataForFlow({branch:userBranchId}))
+            dispatch(fetchClassesDataForFlow({branch: userBranchId}))
         }
     }, [userBranchId])
 
@@ -195,23 +195,28 @@ export const FlowListPage = () => {
                 localStorage.removeItem("flowData")
             })
             .then(() => {
-                navigate(-2)
+                navigate(-1)
             })
     }
 
+
     const renderFlowList = () => {
-        return currentTableData?.map((item, i) => (
-            <FlowList
-                currentPage={currentPage}
-                key={i}
-                flowList={item}
-                onChangeAll={onChangeAll}
-                onChangeSingle={onChangeSingle}
-                // flowList={item?.students}
-                number={i}
-                // name={item?.name}
-            />
-        ))
+        return currentTableData?.map((item, i) => {
+
+            return (
+                <FlowList
+                    currentPage={currentPage}
+                    key={i}
+                    flowList={item}
+                    title={`${item?.class_number}-${item?.color}`}
+                    onChangeAll={onChangeAll}
+                    onChangeSingle={onChangeSingle}
+                    // flowList={item?.students}
+                    number={i}
+                    // name={item?.name}
+                />
+            )
+        })
     }
 
     const render = renderFlowList()

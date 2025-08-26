@@ -22,7 +22,7 @@ import {getSearchValue} from "features/searchInput/index.js";
 
 export const StudentsFilter = React.memo(({active, setActive, activePage, pageSize, currentPage}) => {
 
-    const search = useSelector(getSearchValue)
+    const search = localStorage.getItem("search")
 
     const lang = localStorage.getItem("selectedLang")
     const ageFrom = localStorage.getItem("ageFrom")
@@ -41,6 +41,8 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
     const userBranchId = localStorage.getItem("branchId")
 
 
+
+
     useEffect(() => {
 
         if (activePage === "studying_students") {
@@ -50,8 +52,8 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                 branch: userBranchId,
                 offset: search ? 0 : (currentPage - 1) * pageSize,
                 limit: pageSize,
-                search
-            }))
+                search: search === null ? "" : search,
+        }))
         } else if (activePage === "new_students") {
 
             if (isSwitch) {
@@ -62,7 +64,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                     branch: userBranchId,
                     offset: search ? 0 : (currentPage - 1) * pageSize,
                     limit: pageSize,
-                    search
+                    search: search === null ? "" : search,
                 }));
 
             } else {
@@ -72,7 +74,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                     branch: userBranchId,
                     offset: search ? 0 : (currentPage - 1) * pageSize,
                     limit: pageSize,
-                    search
+                    search: search === null ? "" : search,
                 }))
             }
         } else {
@@ -82,7 +84,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                 branch: userBranchId,
                 offset: search ? 0 : (currentPage - 1) * pageSize,
                 limit: pageSize,
-                search
+                search: search === null ? "" : search,
             }))
         }
     }, [selectedLang, selectedAgeTo, selectedAgeFrom, activePage, isSwitch, currentPage, search])

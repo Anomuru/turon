@@ -227,7 +227,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                         <Select
                             extraClass={cls.extraClasses}
                             name={"category"}
-                            options={categories.results}
+                            options={categories}
                             defaultValue={teacherSalaryType?.id ?? teacherSalaryType}
                             onChangeOption={setTeacherSalaryType}
                             title={"Toifa"}

@@ -41,15 +41,23 @@ export const NewStudents = memo(({currentTableData}) => {
                 <td>
                     {item?.class_number}-sinf
                 </td>
+                <td>
+                    <div className={cls.td}>
+                        {item?.comment?.slice(0, 10) + "..."}
+                        {item?.comment?.length >2 && <div className={cls.popup}>
+                            {item.comment}
+                        </div>}
+                    </div>
+                </td>
                 <td>{item.user?.registered_date}</td>
 
-                {!item.deleted && <td onClick={() => {
+                 <td onClick={() => {
                     setStudentId(item.id);
                     setIsOpen(!isOpen);
                     setIsDeleted(item?.deleted)
                 }}>
                     <i style={{color: '#FF3737FF'}} className={`fa-solid fa-xmark ${cls.xmark}`}></i>
-                </td>}
+                </td>
 
 
             </tr>
@@ -91,6 +99,7 @@ export const NewStudents = memo(({currentTableData}) => {
                         <th>Age</th>
                         <th>Til</th>
                         <th>Sinf</th>
+                        <th>Comment (Izoh)</th>
 
                         <th>Reg. sana</th>
 

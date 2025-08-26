@@ -28,6 +28,7 @@ export const Accordion = ({title, subtitle, children, backOpen, setBackOpen, cla
     }
 
 
+
     return (
         <div
             className={classNames(cls.accordion, clazz, {

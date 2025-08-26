@@ -25,17 +25,7 @@ export const TeachersSalary = ({
     const loading = useSelector(getTeachersLoading)
 
 
-    const searchedUsers = useMemo(() => {
-        const filteredHeroes = teacherSalary?.slice()
 
-
-        if (!search) return filteredHeroes
-        setCurrentPage(1)
-
-        return filteredHeroes.filter(item =>
-            item?.teacher?.user?.name?.toLowerCase().includes(search.toLowerCase())
-        )
-    }, [teacherSalary, setCurrentPage, search])
     const formatSalary = (salary) => {
         return Number(salary).toLocaleString();
     };
@@ -101,7 +91,7 @@ export const TeachersSalary = ({
 
 
     const renderTeacherSalary = () => {
-        return searchedUsers?.map((item, index) => (
+        return teacherSalary?.map((item, index) => (
             <tbody>
             <tr key={item.id}>
                 <td>{index + 1}</td>

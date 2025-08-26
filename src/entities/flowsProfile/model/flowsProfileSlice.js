@@ -12,26 +12,31 @@ const initialState = {
     filteredStudents: null,
     filteredTeachers: null,
     loading: false,
-    error: null
+    error: null,
+    loadingTeacher: false,
+    loadingProfile: false
 }
 
 const flowsProfileSlice = createSlice({
     name: "flowsProfileSlice",
     initialState,
-    reducers: {},
+    reducers: {
+
+
+    },
     extraReducers: builder =>
         builder
             .addCase(fetchFlowProfileData.pending, (state) => {
-                state.loading = true
+                state.loadingProfile = true
                 state.error = null
             })
             .addCase(fetchFlowProfileData.fulfilled, (state, action) => {
                 state.data = action.payload
-                state.loading = false
+                state.loadingProfile = false
                 state.error = null
             })
             .addCase(fetchFlowProfileData.rejected, (state) => {
-                state.loading = false
+                state.loadingProfile = false
                 state.error = "error"
             })
             .addCase(fetchFlowProfileNextLesson.pending, (state) => {
@@ -61,16 +66,16 @@ const flowsProfileSlice = createSlice({
                 // state.error = null
             })
             .addCase(fetchFilteredTeachers.pending, (state) => {
-                // state.loading = true
+                state.loadingTeacher = true
                 // state.error = null
             })
             .addCase(fetchFilteredTeachers.fulfilled, (state, action) => {
                 state.filteredTeachers = action.payload?.teachers_list
-                // state.loading = false
+                state.loadingTeacher = false
                 // state.error = null
             })
             .addCase(fetchFilteredTeachers.rejected, (state) => {
-                // state.loading = false
+                state.loadingTeacher = false
                 // state.error = null
             })
             .addCase(changeFlowProfile.pending, (state) => {

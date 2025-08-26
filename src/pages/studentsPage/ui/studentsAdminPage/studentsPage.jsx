@@ -234,6 +234,8 @@ export const StudentsPage = () => {
     };
 
 
+
+
     const renderStudents = useCallback(() => {
         switch (selectedRadio) {
             case "new_students":
@@ -356,6 +358,7 @@ export const StudentsPage = () => {
                 activePage={selectedRadio}
                 setIsFilter={setIsFilter}
                 branchId={userBranchId}
+                search={search}
             />
 
             <Pagination

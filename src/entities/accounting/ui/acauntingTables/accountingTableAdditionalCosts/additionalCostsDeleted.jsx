@@ -26,13 +26,13 @@ export const AdditionalCostsDeleted = ({overheadDeletedList , extraClassName , p
     }, [overheadDeletedList, setCurrentPage, search])
 
     const renderDeleted = () => {
-        return searchedUsers.map((item, i) => (
+        return searchedUsers?.map((item, i) => (
             <tr>
                 <td>{i + 1}</td>
                 <td>{item.name}</td>
                 <td>{item.price}</td>
                 <td>{item.created}</td>
-                <td><div className={paymentStyle}>{item.payment.name}</div></td>
+                <td><div className={paymentStyle}>{item.payment}</div></td>
             </tr>
         ))
     }

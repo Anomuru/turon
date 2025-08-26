@@ -20,9 +20,9 @@ export const createCapitalCategory = createAsyncThunk(
 
 export const getCapitalDataThunk = createAsyncThunk(
     'capitalSlice/getCapitalDataThunk',
-    async () => {
+    async (search) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Capital/capital_category/`, "GET", null, headers())
+        return await request(`${API_URL}Capital/capital_category/?search=${search}`, "GET", null, headers())
     }
 )
 export const getCapitalInfo = createAsyncThunk(

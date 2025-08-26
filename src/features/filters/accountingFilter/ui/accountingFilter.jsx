@@ -17,6 +17,7 @@ import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/f
 
 import cls from "../../filters.module.sass";
 import {Button} from "shared/ui/button";
+import {getSearchValue} from "features/searchInput/index.js";
 
 export const AccountingFilter = ({setActive, active, setActiveDel, activeDel, activePage, currentPage, pageSize}) => {
     const dispatch = useDispatch();
@@ -26,7 +27,8 @@ export const AccountingFilter = ({setActive, active, setActiveDel, activeDel, ac
     const [isArchive, setIsArchive] = useState(false);
     const [initialApplied, setInitialApplied] = useState(false);
 
-    // При монтировании: восстанавливаем фильтры
+
+    const search  = useSelector(getSearchValue)
     useEffect(() => {
         const saved = getSavedFilters()["accountingFilter"];
         if (branch) {
@@ -48,31 +50,36 @@ export const AccountingFilter = ({setActive, active, setActiveDel, activeDel, ac
             dispatch(getDeletedPayment({
                 branch,
                 offset: (currentPage - 1) * 50,
-                limit: pageSize
+                limit: pageSize,
+                search
             }));
         } else if (activePage === "teachersSalary") {
             dispatch(getDeletedTeacherSalary({
                 branch,
                 offset: (currentPage - 1) * 50,
-                limit: pageSize
+                limit: pageSize,
+                search
             }));
         } else if (activePage === "employeesSalary") {
             dispatch(getDeletedEmpSalary({
                 branch,
                 offset: (currentPage - 1) * 50,
-                limit: pageSize
+                limit: pageSize,
+                search
             }));
         } else if (activePage === "overhead") {
             dispatch(overHeadDeletedList({
                 branch,
                 offset: (currentPage - 1) * 50,
-                limit: pageSize
+                limit: pageSize,
+                search
             }));
         } else {
             dispatch(capitalDeletedListThunk({
                 branch,
                 offset: (currentPage - 1) * 50,
-                limit: pageSize
+                limit: pageSize,
+                search
             }));
         }
     };

@@ -182,7 +182,6 @@ export const Register = () => {
 
     const onSubmit = (data) => {
 
-        console.log(data , "datra")
         if (!isUsernameAvailable) {
             return;
         }
@@ -346,7 +345,7 @@ export const Register = () => {
                         <Select
                             extraClass={cls.extraClasses}
                             name={"category"}
-                            options={categories?.results}
+                            options={categories}
                             onChangeOption={setSelectedCategory}
                             title={"Toifa"}
                         />
