@@ -10,11 +10,12 @@ const initialState = {
 }
 
 const AlertSlice = createSlice({
-    name: "AlertSlice",
+    name: "alertSlice",
     initialState,
     reducers: {
 
         onAddAlertOptions: (state,action) => {
+            console.log(action.payload, "action.payload")
             state.alert = [action.payload]
         },
         onAddMultipleAlertOptions: (state,action) => {

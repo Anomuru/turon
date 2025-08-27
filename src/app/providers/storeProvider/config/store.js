@@ -36,7 +36,7 @@ export function createReduxStore(
 ) {
     const rootReducers = {
         ...asyncReducers,
-        AlertSlice: AlertReducer,
+        alertSlice: AlertReducer,
         // user: userReducer,
         oftenUsedSlice: oftenUsedReducer,
         loginSlice: loginReducer,

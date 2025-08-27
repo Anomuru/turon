@@ -15,9 +15,9 @@ const alertTypes = {
     warning: 'warning'
 };
 
-const reducers = {
-    AlertSlice: AlertReducer,
-}
+// const reducers = {
+//     AlertSlice: AlertReducer,
+// }
 
 export const Alert = () => {
 
@@ -53,16 +53,18 @@ export const Alert = () => {
     //     setCanDelete(true)
     // }
 
+    console.log(alertsData, "alertsData")
+
 
     return (
-        <DynamicModuleLoader reducers={reducers}>
+        // <DynamicModuleLoader reducers={reducers}>
             <div className={cls.alerts}>
 
                 {alertsData?.map((alert, index) => (
                     <AlertItem  alert={alert} index={index}/>
                 ))}
             </div>
-        </DynamicModuleLoader>
+        // </DynamicModuleLoader>
         //
         // <TransitionGroup
         //     className={cls.alerts}
