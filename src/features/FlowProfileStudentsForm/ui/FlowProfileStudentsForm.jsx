@@ -80,7 +80,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
             }
             dispatch(fetchFilteredTeachers({res, id, branch}))
         }
-    }, [id, branch])
+    }, [id, branch, data])
 
     const onSubmitAdd = () => {
         let idArr = []

@@ -92,7 +92,7 @@ export const FlowProfileNavigators = memo(() => {
     }, [data])
 
     useEffect(() => {
-        if (data)
+        if (data && !data?.activity)
             request(`${API_URL}Subjects/level-for-subject/${data?.subject_id}/`, "GET", null, headers())
                 .then(res => {
 
@@ -122,12 +122,18 @@ export const FlowProfileNavigators = memo(() => {
     }
 
 
-
-    const onSubmitChange = (data) => {
-        const res = {
-            ...data,
-            subject: subject.id
-            // color: selectColor
+    const onSubmitChange = (dataForm) => {
+        let res;
+        if (!data?.activity) {
+            res = {
+                ...dataForm,
+                subject: subject.id
+                // color: selectColor
+            }
+        } else {
+            res = {
+                ...dataForm
+            }
         }
         dispatch(changeFlowProfile({
             // status: activeSwitch,
@@ -145,50 +151,56 @@ export const FlowProfileNavigators = memo(() => {
     }
 
 
-    return  (
+    return (
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.flowProfile}>
                 <div className={cls.navigators}>
-                    <div
-                        className={cls.navigatorsItem}
-                        style={{borderColor: "#3B82F6"}}
-                    >
-                        <div className={cls.navigatorsItem__link}>
-                            <p>Next lesson</p>
-                            <i
-                                className={classNames("fas fa-share", cls.navigatorsItem__icon)}
-                            />
-                        </div>
-                        <div className={cls.navigatorsItem__border}/>
-                        <div className={cls.navigatorsItem__info}>
-                            {
-                                nextLesson?.msg ? <h2>{nextLesson?.msg}</h2> : <>
-                                    <h2>{nextLesson?.day}</h2>
-                                    <h2>{nextLesson?.hour}</h2>
-                                    <h2>{nextLesson?.room}</h2>
-                                </>
-                            }
-                        </div>
-                    </div>
-                    <div
-                        className={cls.navigatorsItem}
-                        style={{borderColor: "#5A588E"}}
-                    >
-                        <div className={cls.navigatorsItem__link}>
-                            <p>Teacher</p>
-                            <img src={teacher} alt=""/>
-                        </div>
-                        <div className={cls.navigatorsItem__border}/>
-                        <div className={cls.navigatorsItem__info}>
-                            <img className={cls.navigatorsItem__image} src={defaultUser} alt=""/>
-                            <h2>{`${data?.teacher?.surname} ${data?.teacher?.name}`}</h2>
-                            <h2 className={cls.navigatorsItem__subject}>{data?.subject_name}</h2>
-                            <i
-                                className={classNames("fas fa-edit", cls.navigatorsItem__iconPosition)}
-                                onClick={() => setActiveTeacher("changeTeacher")}
-                            />
-                        </div>
-                    </div>
+                    {
+                        !data?.activity ?
+                            <>
+                                <div
+                                    className={cls.navigatorsItem}
+                                    style={{borderColor: "#3B82F6"}}
+                                >
+                                    <div className={cls.navigatorsItem__link}>
+                                        <p>Next lesson</p>
+                                        <i
+                                            className={classNames("fas fa-share", cls.navigatorsItem__icon)}
+                                        />
+                                    </div>
+                                    <div className={cls.navigatorsItem__border}/>
+                                    <div className={cls.navigatorsItem__info}>
+                                        {
+                                            nextLesson?.msg ? <h2>{nextLesson?.msg}</h2> : <>
+                                                <h2>{nextLesson?.day}</h2>
+                                                <h2>{nextLesson?.hour}</h2>
+                                                <h2>{nextLesson?.room}</h2>
+                                            </>
+                                        }
+                                    </div>
+                                </div>
+                                <div
+                                    className={cls.navigatorsItem}
+                                    style={{borderColor: "#5A588E"}}
+                                >
+                                    <div className={cls.navigatorsItem__link}>
+                                        <p>Teacher</p>
+                                        <img src={teacher} alt=""/>
+                                    </div>
+                                    <div className={cls.navigatorsItem__border}/>
+                                    <div className={cls.navigatorsItem__info}>
+                                        <img className={cls.navigatorsItem__image} src={defaultUser} alt=""/>
+                                        <h2>{`${data?.teacher?.surname} ${data?.teacher?.name}`}</h2>
+                                        <h2 className={cls.navigatorsItem__subject}>{data?.subject_name}</h2>
+                                        <i
+                                            className={classNames("fas fa-edit", cls.navigatorsItem__iconPosition)}
+                                            onClick={() => setActiveTeacher("changeTeacher")}
+                                        />
+                                    </div>
+                                </div>
+                            </>
+                            : null
+                    }
                     <div
                         className={cls.navigatorsItem}
                         style={{borderColor: "#5A588E"}}
@@ -281,27 +293,33 @@ export const FlowProfileNavigators = memo(() => {
                         {/*    // defaultValue={data?.subject?.id}*/}
                         {/*    required*/}
                         {/*/>*/}
-                        <Select
-                            extraClass={cls.form__input}
-                            options={data?.teacher?.subject}
-                            title={"Fan"}
-                            defaultValue={data?.teacher?.subject.find(item => item.id === +data?.subject_id)}
-                            onChangeOption={setSubject}
-
-                            required
-                        />
                         {
-                            level?.length ?
-                                <Select
-                                    extraClass={cls.form__input}
-                                    options={level}
-                                    title={"Level"}
-                                    register={register}
-                                    name={"level"}
-                                    defaultValue={level?.find(item => item.name === data?.level_name)?.id}
+                            !data?.activity
+                                ? <>
+                                    <Select
+                                        extraClass={cls.form__input}
+                                        options={data?.teacher?.subject}
+                                        title={"Fan"}
+                                        defaultValue={data?.teacher?.subject.find(item => item.id === +data?.subject_id)}
+                                        onChangeOption={setSubject}
 
-                                    required
-                                /> : null
+                                        required
+                                    />
+                                    {
+                                        level?.length ?
+                                            <Select
+                                                extraClass={cls.form__input}
+                                                options={level}
+                                                title={"Level"}
+                                                register={register}
+                                                name={"level"}
+                                                defaultValue={level?.find(item => item.name === data?.level_name)?.id}
+
+                                                required
+                                            /> : null
+                                    }
+                                </>
+                                : null
                         }
 
                         {/*<Input*/}
@@ -312,7 +330,7 @@ export const FlowProfileNavigators = memo(() => {
                         {/*    type={"number"}*/}
                         {/*    required*/}
                         {/*/>*/}
-                        <div style={{display: "flex" , justifyContent: "end"}}>
+                        <div style={{display: "flex", justifyContent: "end"}}>
                             <Button id={"formChange"} extraClass={cls.infoModal__btn}>Change</Button>
                             <Button
                                 extraClass={cls.infoModal__btn}
