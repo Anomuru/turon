@@ -108,10 +108,9 @@ export const RoomsProfilePage = () => {
                         :
                         <div className={cls.container_leftBox}>
                             <div className={cls.container_leftBox_buttonPanel}>
-                                {localRoomData.can_delete ?
+
                                     <Button onClick={() => setModal(true)} extraClass={cls.buttonDelete}
-                                            children={<i className="fa-solid fa-trash"></i>}/> : null
-                                }
+                                            children={<i className="fa-solid fa-trash"></i>}/>
 
                             </div>
                             <div className={cls.container_leftBox_sliderBox}>

@@ -211,66 +211,68 @@ export const AccountingPageMain = () => {
             </div>
 
 
-            <Routes>
-                <Route
+           <div style={{padding: "2rem"}}>
+               <Routes>
+                   <Route
 
-                    path={"studentsPayments"}
-                    element={
-                        <StudentSalary
-                            deleted={activeDel}
-                            setDeleted={setActiveDel}
-                        />
-                    }
-                />
-                <Route
-                    path={"teachersSalary"}
-                    element={<TeacherSalaryPage
-                        deleted={activeDel}
-                        setDeleted={setActiveDel}
-                        path={"teachersSalary"}
-                    />
-                    }
-                />
-                <Route
-                    path={"employeesSalary"}
-                    element={
-                        <EmployerSalaryPage
-                            deleted={activeDel}
-                            setDeleted={setActiveDel}
-                            path={"employeesSalary"}
-                        />
-                    }
-                />
-                <Route
-                    path={"overhead"}
-                    element={
-                        <AdditionalCosts
-                            path={"overhead"}
-                            deleted={activeDel}
-                            setDeleted={setActiveDel}
-                        />
-                    }
-                />
-                <Route path={"capital"}
+                       path={"studentsPayments"}
                        element={
-                           <Capital
+                           <StudentSalary
                                deleted={activeDel}
                                setDeleted={setActiveDel}
-                               path={"capital"}
                            />
                        }
-                />
-                <Route path={"otchot"}
+                   />
+                   <Route
+                       path={"teachersSalary"}
+                       element={<TeacherSalaryPage
+                           deleted={activeDel}
+                           setDeleted={setActiveDel}
+                           path={"teachersSalary"}
+                       />
+                       }
+                   />
+                   <Route
+                       path={"employeesSalary"}
                        element={
-                           <AccountingOtchotPage
-
-                               path={"otchot"}
+                           <EmployerSalaryPage
+                               deleted={activeDel}
+                               setDeleted={setActiveDel}
+                               path={"employeesSalary"}
                            />
                        }
-                />
+                   />
+                   <Route
+                       path={"overhead"}
+                       element={
+                           <AdditionalCosts
+                               path={"overhead"}
+                               deleted={activeDel}
+                               setDeleted={setActiveDel}
+                           />
+                       }
+                   />
+                   <Route path={"capital"}
+                          element={
+                              <Capital
+                                  deleted={activeDel}
+                                  setDeleted={setActiveDel}
+                                  path={"capital"}
+                              />
+                          }
+                   />
+                   <Route path={"otchot"}
+                          element={
+                              <AccountingOtchotPage
+
+                                  path={"otchot"}
+                              />
+                          }
+                   />
 
 
-            </Routes>
+               </Routes>
+           </div>
             <AccountingFilter
                 setActive={setActive}
                 active={active}

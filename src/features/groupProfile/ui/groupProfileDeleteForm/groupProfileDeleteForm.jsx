@@ -575,7 +575,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                     />
                     <Select
                         extraClass={cls.deleteForm__select}
-                        options={groups?.results}
+                        options={groups}
                         title={"Group"}
                         register={register}
                         name={"to_group_id"}

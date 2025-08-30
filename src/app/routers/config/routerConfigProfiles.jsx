@@ -11,7 +11,7 @@ import {
     getTeacherProfile,
     getRoomsProfilePage,
     getEmployerProfile,
-    getBranch,
+     getBranch,
     getLocations,
     getRouteCreateGroup,
     getEmployerSalaryInsideSource,

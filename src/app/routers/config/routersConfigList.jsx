@@ -43,6 +43,7 @@ const AccountingPageMainIndex = lazyPage(() => import("pages/accountingPage"), "
 const CalendarPage = lazyPage(() => import("pages/calendarPage"), "CalendarPage");
 const TimeTableTuronPage = lazyPage(() => import("pages/timeTable"), "TimeTableTuronPage");
 const ClassMain = lazyPage(() => import("pages/classPage/ui/classMain"), "ClassMain");
+const Settings = lazyPage(() => import("pages/settings"), "Settings");
 
 export const routersConfigList = [
     {
@@ -156,6 +157,11 @@ export const routersConfigList = [
         name: "Registratsiya",
         path: getRouteRegister(),
         element: <Register/>,
+    },
+    {
+        name: "settings",
+        path: `settings/*`,
+        element: <Settings/>,
     },
 
 ]

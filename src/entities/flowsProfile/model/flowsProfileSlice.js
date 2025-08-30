@@ -49,16 +49,16 @@ const flowsProfileSlice = createSlice({
                 // state.error = null
             })
             .addCase(fetchFlowProfileNextLesson.rejected, (state) => {
-                // state.loading = false
+                state.loading = false
                 // state.error = null
             })
             .addCase(fetchFilteredStudents.pending, (state) => {
-                // state.loading = true
+                state.loading = true
                 // state.error = null
             })
             .addCase(fetchFilteredStudents.fulfilled, (state, action) => {
                 state.filteredStudents = action.payload?.classes
-                // state.loading = false
+                state.loading = false
                 // state.error = null
             })
             .addCase(fetchFilteredStudents.rejected, (state) => {

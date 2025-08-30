@@ -95,7 +95,7 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
     return (
         <Modal active={active} setActive={setActive}>
             <div className={cls.filter}>
-                <h1>Filter</h1>
+                <h1>Filter Flow</h1>
                 <div className={cls.filter__container}>
                     {teachers &&  <Select
                         title={"Teacher"}

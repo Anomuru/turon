@@ -54,6 +54,12 @@ export const RoomEditModal = ({ isOpen, onClose, roomId, onUpdate }) => {
             });
     };
 
+
+    // const handleDeleteRoom = () => {
+    //    request(`${API_URL}Rooms/rooms_delete/${roomId}/`)
+    //        .then(dis)
+    // };
+
     if (!isOpen) return null;
 
     return (
@@ -88,6 +94,9 @@ export const RoomEditModal = ({ isOpen, onClose, roomId, onUpdate }) => {
                     <div className={cls.filter__switch}>
                         <Button onClick={handleEditRoom} children={"Edit room"} />
                     </div>
+                    {/*<div className={cls.filter__switch}>*/}
+                    {/*    <Button onClick={handleDeleteRoom} children={"Edit room"} />*/}
+                    {/*</div>*/}
                 </div>
             </div>
         </Modal>

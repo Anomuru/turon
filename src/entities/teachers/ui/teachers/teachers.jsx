@@ -50,16 +50,14 @@ export const Teachers = memo(({data, setSelect, select, theme, onClick , setActi
                             )}</div>
                         </td>
                         <td>{item?.face_id}</td>
-                        {item.status ?
+
                             <td>
                                 <i onClick={() => {
                                     setActiveDelete(item)
                                     setActiveModal(true)
                                 }} className={"fa fa-times"} style={{color: "red"}}/>
                             </td>
-                            :
-                            null
-                        }
+
                         {/*<td>*/}
                         {/*    {item?.extra_info?.status ? <div className={cls.teacher__inner}>*/}
                         {/*        <div className={cls.status}>*/}
