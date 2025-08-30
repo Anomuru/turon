@@ -136,6 +136,7 @@ export const FlowProfileNavigators = memo(() => {
             res
             // group_type: theme === "app_center_theme" ? "center" : "school"
         }))
+        setActiveTeacher(false)
         dispatch(onAddAlertOptions({
             type: "success",
             status: true,
@@ -256,13 +257,7 @@ export const FlowProfileNavigators = memo(() => {
                     setActive={setActiveTeacher}
                 >
                     <h1>Ma’lumot o’zgartirish</h1>
-                    <Button
-                        extraClass={cls.infoModal__btn}
-                        onClick={() => setIsDeleted(true)}
-                        type={"danger"}
-                    >
-                        Delete group
-                    </Button>
+
                     <Form
                         id={"formChange"}
                         extraClassname={cls.form}
@@ -317,7 +312,16 @@ export const FlowProfileNavigators = memo(() => {
                         {/*    type={"number"}*/}
                         {/*    required*/}
                         {/*/>*/}
-                        <Button id={"formChange"} extraClass={cls.infoModal__btn}>Change</Button>
+                        <div style={{display: "flex" , justifyContent: "end"}}>
+                            <Button id={"formChange"} extraClass={cls.infoModal__btn}>Change</Button>
+                            <Button
+                                extraClass={cls.infoModal__btn}
+                                onClick={() => setIsDeleted(true)}
+                                type={"danger"}
+                            >
+                                Delete group
+                            </Button>
+                        </div>
                     </Form>
 
 

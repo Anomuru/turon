@@ -1,5 +1,5 @@
 import {useForm} from "react-hook-form";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router";
 import {useEffect, useState} from "react";
 
@@ -15,8 +15,21 @@ import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import {useHttp} from "shared/api/base";
 
 import cls from "pages/flowsPage/ui/flowsPage.module.sass";
+import {FlowAddForm} from "features/flow/index.js";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
-export const Flows = ({currentTableData, teacherData, loading, levelData, getLevelData, setActive, branchId, currentPage, pageSize}) => {
+export const Flows = ({
+                          currentTableData,
+                          teacherData,
+                          loading,
+                          levelData,
+                          getLevelData,
+                          setActive,
+                          branchId,
+                          setActiveFlow,
+                          activeFlow,
+                          active
+                      }) => {
 
     const navigate = useNavigate()
 
@@ -25,10 +38,11 @@ export const Flows = ({currentTableData, teacherData, loading, levelData, getLev
         handleSubmit,
         setValue
     } = useForm()
+    const userBranchId = useSelector(getUserBranchId)
 
-    const [activeFlow, setActiveFlow] = useState(false)
-    const [addFlow, setAddFlow] = useState(false)
-    const [filter, setFilter] = useState(false)
+    // const [activeFlow, setActiveFlow] = useState(false)
+    // const [addFlow, setAddFlow] = useState(false)
+    // const [filter, setFilter] = useState(false)
     const [selectedSubjects, setSelectedSubjects] = useState([])
 
     const dispatch = useDispatch()
@@ -77,28 +91,28 @@ export const Flows = ({currentTableData, teacherData, loading, levelData, getLev
 
     return (
         <div className={cls.flowMain}>
-            <div className={cls.flow__filter}>
-                <Button
-                    onClick={() => setFilter(!filter)}
-                    type={"simple-add"}
-                >
-                    Filter
-                </Button>
-                <div className={cls.flowMain__wrapper}>
-                    <Button
-                        onClick={() => setActiveFlow(!activeFlow)}
-                        type={"simple"}
-                    >
-                        Create Flow
-                    </Button>
-                    <Button
-                        type={"simple-add"}
-                        onClick={() => setActive(true)}
-                    >
-                        Add Flow
-                    </Button>
-                </div>
-            </div>
+            {/*<div className={cls.flow__filter}>*/}
+            {/*    <Button*/}
+            {/*        onClick={() => setFilter(!filter)}*/}
+            {/*        type={"simple-add"}*/}
+            {/*    >*/}
+            {/*        Filter*/}
+            {/*    </Button>*/}
+            {/*    <div className={cls.flowMain__wrapper}>*/}
+            {/*        <Button*/}
+            {/*            onClick={() => setActiveFlow(!activeFlow)}*/}
+            {/*            type={"simple"}*/}
+            {/*        >*/}
+            {/*            Create Flow*/}
+            {/*        </Button>*/}
+            {/*        <Button*/}
+            {/*            type={"simple-add"}*/}
+            {/*            onClick={() => setActive(true)}*/}
+            {/*        >*/}
+            {/*            Add Flow*/}
+            {/*        </Button>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
             <div className={cls.flowMain__table}>
                 <Table>
                     <thead style={{top: "0"}}>
@@ -111,7 +125,7 @@ export const Flows = ({currentTableData, teacherData, loading, levelData, getLev
                     </tr>
                     </thead>
                     {
-                        loading === true? <DefaultPageLoader/> :
+                        loading === true ? <DefaultPageLoader/> :
                             <tbody>
                             {renderFlowData()}
                             </tbody>
@@ -188,21 +202,11 @@ export const Flows = ({currentTableData, teacherData, loading, levelData, getLev
                     </div>
                 </div>
             </Modal>
-            <Modal active={addFlow} setActive={setAddFlow}>
-                <h2>Add Flow</h2>
-                <div className={cls.flowModalForm}>
-                    <Form typeSubmit={""}>
-                        <Select/>
-                        <Button type={"simple"}>Add</Button>
-                    </Form>
-                </div>
 
-            </Modal>
-            <FlowFilter
-                active={filter}
-                setActive={setFilter}
-                currentPage={currentPage}
-                pageSize={pageSize}
+            <FlowAddForm
+                userBranchId={userBranchId}
+                active={active}
+                setActive={setActive}
             />
         </div>
     );

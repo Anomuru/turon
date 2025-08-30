@@ -55,19 +55,20 @@ export const menuConfig = [
     //
     //
     // },
-    {
-        to: "groups",
-        name: "Sinflar",
-        icon: "fa-users",
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer, ROLES.teacher],
-        branches: true
 
-    },
     {
         to: "teacher",
         name: "O'qituvchilar",
         icon: "fa-user-tie",
         roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+        branches: true
+
+    },
+    {
+        to: "groups",
+        name: "Sinflar",
+        icon: "fa-users",
+        roles: [ROLES.admin,ROLES.director,ROLES.programmer, ROLES.teacher],
         branches: true
 
     },
@@ -78,15 +79,15 @@ export const menuConfig = [
         roles: [ROLES.director,ROLES.programmer],
         branches: true
     },
-    {
-        to: "timeList",
-        name: "Time List",
-        icon: "fa-clock",
-
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
-        branches: true
-
-    },
+    // {
+    //     to: "timeList",
+    //     name: "Time List",
+    //     icon: "fa-clock",
+    //
+    //     roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+    //     branches: true
+    //
+    // },
     {
         to: "time",
         name: "Time Table",
@@ -94,40 +95,40 @@ export const menuConfig = [
         roles: [ROLES.admin,ROLES.director,ROLES.programmer],
         branches: true
     },
-    {
-        to: "employer",
-        name: "Employers",
-        icon: "fa-user-graduate",
-
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
-        branches: true
-
-    },
-    {
-        to: "flows",
-        name: "Flows",
-        icon: "fa-user-graduate",
-
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
-        branches: true
-
-    },
-    {
-        to: "class",
-        name: "Class",
-        icon: "fa-user-graduate",
-
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer ],
-        branches: true
-    },
-    {
-        to: "contract",
-        name: "Contract",
-        icon: "fa-file-contract",
-
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer]
-
-    },
+    // {
+    //     to: "employer",
+    //     name: "Employers",
+    //     icon: "fa-user-graduate",
+    //
+    //     roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+    //     branches: true
+    //
+    // },
+    // {
+    //     to: "flows",
+    //     name: "Flows",
+    //     icon: "fa-user-graduate",
+    //
+    //     roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+    //     branches: true
+    //
+    // },
+    // {
+    //     to: "class",
+    //     name: "Class",
+    //     icon: "fa-user-graduate",
+    //
+    //     roles: [ROLES.admin,ROLES.director,ROLES.programmer ],
+    //     branches: true
+    // },
+    // {
+    //     to: "contract",
+    //     name: "Contract",
+    //     icon: "fa-file-contract",
+    //
+    //     roles: [ROLES.admin,ROLES.director,ROLES.programmer]
+    //
+    // },
     {
         to: "capital",
         name: "Capital",
@@ -146,14 +147,14 @@ export const menuConfig = [
         multi: true
 
     },
-    {
-        to: "rooms",
-        name: "Honalar",
-        icon: "fa-door-closed",
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
-        branches: true
-
-    },
+    // {
+    //     to: "rooms",
+    //     name: "Honalar",
+    //     icon: "fa-door-closed",
+    //     roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+    //     branches: true
+    //
+    // },
 
     {
         to: "../../",

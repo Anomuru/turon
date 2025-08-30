@@ -4,7 +4,11 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {FlowList} from "entities/flowList";
 import {fetchFlows, getFlows} from "entities/flows";
-import {getFlowsProfileData, getFlowsProfileFilteredStudents} from "entities/flowsProfile/model/flowsProfileSelector";
+import {
+    getFlowsProfileData,
+    getFlowsProfileFilteredStudents,
+    getFlowsProfileStatus
+} from "entities/flowsProfile/model/flowsProfileSelector";
 import {
     changeFlowProfile,
     fetchFilteredStudents,
@@ -17,6 +21,7 @@ import {Modal} from "shared/ui/modal";
 import {Select} from "shared/ui/select";
 
 import cls from "./flowAddForm.module.sass";
+import {DefaultLoader} from "shared/ui/defaultLoader/index.js";
 
 export const FlowAddForm = memo((props) => {
 
@@ -40,6 +45,7 @@ export const FlowAddForm = memo((props) => {
     const [activeModal, setActiveModal] = useState(false)
     const [selectedId, setSelectedId] = useState([])
 
+    const loading = useSelector(getFlowsProfileStatus)
 
 
     useEffect(() => {
@@ -221,45 +227,48 @@ export const FlowAddForm = memo((props) => {
                     <Button extraClass={cls.addForm__btn}>Tekshirmoq</Button>
                 </Form>
             </Modal>
-            <Modal
-                active={activeModal}
-                setActive={setActiveModal}
-                extraClass={cls.addModal}
-            >
-                {/*<Input*/}
-                {/*    placeholder={"Search"}*/}
-                {/*    // onChange={(e) => setSearchValue(e.target.value)}*/}
-                {/*    // defaultValue={searchValue}*/}
-                {/*/>*/}
-                <div className={cls.addModal__header}>
-                    <div className={cls.addModal__inner}>
-                        <span>No</span>
-                        <span>Sinf Raqami</span>
-                    </div>
-                </div>
-                <div className={cls.addModal__container}>
-                    {/*<Table>*/}
-                    {/*    <thead>*/}
-                    {/*    <tr>*/}
-                    {/*        <th/>*/}
-                    {/*        <th>Ism</th>*/}
-                    {/*        <th>Familya</th>*/}
-                    {/*        <th>Tel</th>*/}
-                    {/*        <th/>*/}
-                    {/*    </tr>*/}
-                    {/*    </thead>*/}
-                    {/*    <tbody>*/}
-                    {renderFlow}
-                    {/*    </tbody>*/}
-                    {/*</Table>*/}
-                </div>
-                <Button
-                    extraClass={cls.addModal__btn}
-                    onClick={onSubmitAdd}
+
+            {loading ? <DefaultLoader/>
+                :
+                <Modal
+                    active={activeModal}
+                    setActive={setActiveModal}
+                    extraClass={cls.addModal}
                 >
-                    Add
-                </Button>
-            </Modal>
+                    {/*<Input*/}
+                    {/*    placeholder={"Search"}*/}
+                    {/*    // onChange={(e) => setSearchValue(e.target.value)}*/}
+                    {/*    // defaultValue={searchValue}*/}
+                    {/*/>*/}
+                    <div className={cls.addModal__header}>
+                        <div className={cls.addModal__inner}>
+                            <span>No</span>
+                            <span>Sinf Raqami</span>
+                        </div>
+                    </div>
+                    <div className={cls.addModal__container}>
+                        {/*<Table>*/}
+                        {/*    <thead>*/}
+                        {/*    <tr>*/}
+                        {/*        <th/>*/}
+                        {/*        <th>Ism</th>*/}
+                        {/*        <th>Familya</th>*/}
+                        {/*        <th>Tel</th>*/}
+                        {/*        <th/>*/}
+                        {/*    </tr>*/}
+                        {/*    </thead>*/}
+                        {/*    <tbody>*/}
+                        {renderFlow}
+                        {/*    </tbody>*/}
+                        {/*</Table>*/}
+                    </div>
+                    <Button
+                        extraClass={cls.addModal__btn}
+                        onClick={onSubmitAdd}
+                    >
+                        Add
+                    </Button>
+                </Modal>}
         </>
     );
 })

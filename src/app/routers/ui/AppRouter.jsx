@@ -129,12 +129,12 @@ export const AppRouter = () => {
                             element={<ClassMolassesPage/>}
                         />
                         <Route
-                            path={"flows/flowsProfile/:id"}
+                            path={"groups/flowsProfile/:id"}
                             element={<FlowProfileNavigators/>}
                         />
 
                         <Route
-                            path={"flows/flow-list"}
+                            path={"groups/flow-list"}
                             element={<FlowListPage/>}
                         />
                         <Route

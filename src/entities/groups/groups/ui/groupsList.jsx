@@ -53,9 +53,8 @@ export const GroupsList = React.memo(({currentTableData}) => {
     const render = renderGroups()
 
     return (
-        <>
-
-            <Table extraClass={cls.table__head}>
+        <div className={cls.table__head}>
+            <Table>
                 <thead>
                 <tr>
                         <th>No</th>
@@ -105,6 +104,6 @@ export const GroupsList = React.memo(({currentTableData}) => {
                 {/*}*/}
                 </tbody>
             </Table>
-        </>
+        </div>
     );
 })

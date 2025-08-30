@@ -5,7 +5,7 @@ export const  fetchInsideRoom = createAsyncThunk(
     'roomsSlice/fetchInsideRoom',
     async (id) => {
         const {request} = useHttp();
-        return await request(`${API_URL}Rooms/rooms/${id}`,"GET",null,headers())
+        return await request(`${API_URL}Rooms/rooms/${id}/`,"GET",null,headers())
     }
 )
 

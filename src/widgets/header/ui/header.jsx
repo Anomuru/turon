@@ -13,6 +13,9 @@ import logo from 'shared/assets/logo/turonNew.svg';
 import {deleteSelectedLocations} from "features/locations";
 import {BranchSwitcher} from "features/branchSwitcher";
 import BackButton from "shared/ui/backButton/backButton";
+import {getUserData, getUserRoles} from "entities/user/index.js";
+import {getUserRole} from "pages/loginPage/index.js";
+import {getUserProfileData} from "entities/profile/userProfile/index.js";
 
 
 export const Header = () => {
@@ -27,6 +30,9 @@ export const Header = () => {
     const [locationHistory, setLocationHistory] = useState([]);
 
     const [searchParams, setSearchParams] = useSearchParams();
+
+    const user = useSelector(getUserProfileData);
+    console.log(user )
     // const [valueData, setValueData] = useState(null);
     // const debouncedFetchData = useDebounce(fetchSearchData, 500);
     //
@@ -95,26 +101,34 @@ export const Header = () => {
     return (
         <header className={cls.header}>
             <div className={cls.header__top}>
-                <img className={cls.header__logo} src={logo} alt=""/>
-                <SearchPlatformInput
-                    defaultSearch={savedSearch}
-                    onSearch={onChange}
-                />
+                {/*<div style={{display: "flex" , flexDirection: "column" , gap: "2rem" , marginTop: "1rem"}}>*/}
+                {/*    <img className={cls.header__logo} src={logo} alt=""/>*/}
+                    <BackButton
+                        onClick={() => {
+                            // if (locationHistory.length) {
+                            //     locationHistory.shift();
+                            //     navigate(locationHistory[0]);
+                            //     locationHistory.shift();
+                            // }
+                            // setSearchParams({});
+                            navigate(-1)
+                            // setValueData(null);
+                        }}
+                    />
+                {/*</div>*/}
+               <div className={cls.header__right}>
+                   <SearchPlatformInput
+                       defaultSearch={savedSearch}
+                       onSearch={onChange}
+                   />
+                   <i onClick={() => {
+                       navigate(`settings`)
+                   }} className="fa-solid fa-gear"/>
+               </div>
             </div>
-            <div className={cls.header__bottom}>
-                <BackButton
-                    onClick={() => {
-                        // if (locationHistory.length) {
-                        //     locationHistory.shift();
-                        //     navigate(locationHistory[0]);
-                        //     locationHistory.shift();
-                        // }
-                        // setSearchParams({});
-                        navigate(-1)
-                        // setValueData(null);
-                    }}
-                />
-            </div>
+            {/*<div className={cls.header__bottom}>*/}
+            {/*    */}
+            {/*</div>*/}
         </header>
     );
 };

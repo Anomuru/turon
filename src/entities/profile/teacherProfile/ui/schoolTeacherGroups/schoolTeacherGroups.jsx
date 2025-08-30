@@ -49,6 +49,7 @@ export const SchoolTeacherGroups = memo(() => {
     const studentsLoading = useSelector(getStudentLoading)
     const data = useSelector(getTimeTableTuronForShow)
     const schoolTeacherGroups = teacherData?.group
+    const schoolTeacherFlows = teacherData?.flow
 
     useEffect(() => {
         if (id)
@@ -75,7 +76,23 @@ export const SchoolTeacherGroups = memo(() => {
     }
 
     const render = renderStudents()
+    const renderStudentsFlow = () => {
+        return schoolTeacherFlows?.map((item, index) => {
+            return (
+                <tr>
+                    <td>{index + 1}</td>
+                    <td
+                        onClick={() => navigation(`../students/profile/${item?.id}`)}
+                    >
+                        {`${item?.name}`}
+                    </td>
+                    <td>{item?.subject?.name}</td>
+                </tr>
+            )
+        })
+    }
 
+    const renderFlow = renderStudentsFlow()
     return (
         <div className={cls.groupsContainer}>
             {
@@ -100,7 +117,27 @@ export const SchoolTeacherGroups = memo(() => {
                     ))
             }
 
+            <EditableCard extraClass={cls.flowList}>
+                <h1>Flows </h1>
+                {
 
+                    studentsLoading ? <DefaultPageLoader/>
+                        : <Table>
+                            <thead className={cls.theadBody}>
+                            <tr>
+                                <th>№</th>
+                                <th>Nomi</th>
+                                <th>Fan</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {renderFlow}
+                            </tbody>
+                        </Table>
+
+                }
+
+            </EditableCard>
             <EditableCard extraClass={cls.classList}>
                 <h1>O'quvchilar ro'yxati</h1>
                 {

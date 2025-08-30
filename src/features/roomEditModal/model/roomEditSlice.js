@@ -8,7 +8,12 @@ const roomsEditModalSlice = createSlice({
         status: 'idle',
         error: null,
     },
-    reducers: {},
+    reducers: {
+        onDeleteRoom: (state, action) => {
+            state.room = state.room.filter(room => room.id !== action.payload);
+        }
+
+    },
     extraReducers: (builder) => {
         builder
             .addCase(editRoomThunk.pending, (state) => {
@@ -24,5 +29,7 @@ const roomsEditModalSlice = createSlice({
             });
     },
 });
+
+export const {onDeleteRoom} = roomsEditModalSlice.actions
 
 export default roomsEditModalSlice.reducer;
