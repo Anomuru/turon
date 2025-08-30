@@ -1,5 +1,8 @@
 export {TeacherProfileTeachersGroup} from "./ui/teacherProfileTeachersGroup/teacherProfileTeachersGroup";
 export {TeacherProfileInfo} from "./ui/teacherProfileInfo/teacherProfileInfo";
 export {TeacherProfileTotalAmount} from "./ui/teacherProfileTotalAmount/teacherProfileTotalAmount";
-export {SchoolTeacherGroups} from './ui/schoolTeacherGroups/schoolTeacherGroups'
+export {SchoolTeacherGroups} from './ui/schoolTeacherGroups/schoolTeacherGroups';
+export {TeacherProfileTimeTable} from "./ui/teacherProfileTimeTable/teacherProfileTimeTable";
+
+
 export {groups} from "./model/consts";

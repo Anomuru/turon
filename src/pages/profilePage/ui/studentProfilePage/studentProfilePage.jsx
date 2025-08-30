@@ -88,7 +88,7 @@ export const StudentProfilePage = () => {
 
 
     useEffect(() => {
-        if (id ) {
+        if (id && branch) {
             dispatch(fetchStudentProfileData(id))
 
             dispatch(fetchStudentCharity(id))

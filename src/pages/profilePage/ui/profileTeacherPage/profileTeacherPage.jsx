@@ -44,7 +44,7 @@ export const ProfileTeacherPage = () => {
             dispatch(fetchTeacherId(id))
         }
 
-    } ,[dispatch, id])
+    }, [dispatch, id])
 
     useEffect(() => {
         if (id && branch) {
@@ -63,46 +63,46 @@ export const ProfileTeacherPage = () => {
 
     return (
 
-            <DynamicModuleLoader reducers={reducers}>
+        <DynamicModuleLoader reducers={reducers}>
 
-                {/*{loading && teacherLoading === true ? <DefaultPageLoader/> :*/}
+            {/*{loading && teacherLoading === true ? <DefaultPageLoader/> :*/}
+            <div
+                className={classNames(cls.profile, {
+                    [cls.active]: active
+                })}
+            >
+                <TeacherProfileInfo
+                    setActive={setActive}
+                    active={active}
+                    setActiveModal={setActiveModal}
+                    newImage={newImage}
+                />
+
+                {/*// actives={actives}*/}
+                {/*// setActives={setActives}*/}
+
+                {/*<ProfileInfo*/}
+                {/*    setActive={setActive}*/}
+                {/*    active={active}*/}
+                {/*/>*/}
                 <div
-                    className={classNames(cls.profile, {
+                    className={classNames(cls.profile__mainContent, {
                         [cls.active]: active
                     })}
                 >
-                    <TeacherProfileInfo
-                        setActive={setActive}
-                        active={active}
-                        setActiveModal={setActiveModal}
-                        newImage={newImage}
-                    />
 
-                    {/*// actives={actives}*/}
-                    {/*// setActives={setActives}*/}
-
-                    {/*<ProfileInfo*/}
-                    {/*    setActive={setActive}*/}
-                    {/*    active={active}*/}
-                    {/*/>*/}
-                    <div
-                        className={classNames(cls.profile__mainContent, {
-                            [cls.active]: active
-                        })}
-                    >
-
-                                <SchoolTeacherGroups/>
-
-                    </div>
-                    <ImageCrop
-                        setActive={setActiveModal}
-                        active={activeModal === "changeImage"}
-                        setNewImage={onSubmitImage}
-                    />
+                    <SchoolTeacherGroups/>
 
                 </div>
+                <ImageCrop
+                    setActive={setActiveModal}
+                    active={activeModal === "changeImage"}
+                    setNewImage={onSubmitImage}
+                />
+
+            </div>
             {/*}*/}
-            </DynamicModuleLoader>
+        </DynamicModuleLoader>
 
 
     );
