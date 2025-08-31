@@ -8,12 +8,13 @@ import {
 
 const initialState = {
     data: [],
+    dataCount: 0,
     loading: false,
     error: null
 }
 
 const TimeTableSlice = createSlice({
-    name: "timeTable",
+    name: "TimeTableSlice",
     initialState,
     reducers: {
         // changeTime: (state, action) => {
@@ -36,7 +37,8 @@ const TimeTableSlice = createSlice({
                 state.error = null
             })
             .addCase(fetchTimeTableListData.fulfilled, (state, action) => {
-                state.data = action.payload
+                state.dataCount = action.payload?.count
+                state.data = action.payload?.results
                 state.loading = false
                 state.error = null
             })

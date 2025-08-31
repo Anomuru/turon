@@ -32,7 +32,6 @@ export const Header = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const user = useSelector(getUserProfileData);
-    console.log(user )
     // const [valueData, setValueData] = useState(null);
     // const debouncedFetchData = useDebounce(fetchSearchData, 500);
     //

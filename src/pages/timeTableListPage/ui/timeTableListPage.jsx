@@ -13,7 +13,7 @@ import {
 } from "entities/timeTable";
 import {ConfirmModal} from "shared/ui/confirmModal";
 import {
-    getTimeTableData,
+    getTimeTableData, getTimeTableDataCount,
     getTimeTableLoading
 } from "../model/timeTableListSelector/timeTableListSelector";
 import {onDelete} from "../model/timeTableListSlice/timeTableListSlice";
@@ -35,6 +35,7 @@ export const TimeTableListPage = () => {
     const dispatch = useDispatch()
 
     const data = useSelector(getTimeTableData)
+    const dataCount = useSelector(getTimeTableDataCount)
     const classInput = useSelector(getClassInputData)
     const loading = useSelector(getTimeTableLoading)
     const [isCreate, setIsCreate] = useState(false)
@@ -46,7 +47,6 @@ export const TimeTableListPage = () => {
     const search = useSelector(getSearchValue)
     let PageSize = useMemo(() => 11, [])
     const [currentPage, setCurrentPage] = useState(1);
-
 
 
 
@@ -102,7 +102,7 @@ export const TimeTableListPage = () => {
     }
 
     return (
-        <DynamicModuleLoader reducers={reducers}>
+        // <DynamicModuleLoader reducers={reducers}>
             <div className={cls.timeTable}>
                 <TimeTableHeader
                     isCreate={isCreate}
@@ -112,13 +112,13 @@ export const TimeTableListPage = () => {
                 />
                 <div className={cls.timeTable__table}>
                     <TimeTableList
-                        data={data?.results}
+                        data={data}
                         setIsChange={setIsChange}
                         loading={loading}
                         setStatus={setCurrentStatus}
                     />
                     <Pagination
-                        totalCount={data?.count}
+                        totalCount={dataCount}
                         currentPage={currentPage}
                         pageSize={PageSize}
                         onPageChange={page => {
@@ -148,7 +148,7 @@ export const TimeTableListPage = () => {
                     onClick={onDeleteTimeTable}
                 />
             </div>
-        </DynamicModuleLoader>
+        // </DynamicModuleLoader>
     )
 }
 

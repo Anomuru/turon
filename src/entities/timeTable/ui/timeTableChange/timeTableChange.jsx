@@ -10,9 +10,15 @@ import {MiniLoader} from "shared/ui/miniLoader";
 
 import cls from "./timeTableChange.module.sass";
 import {Select} from "shared/ui/select";
+import {updateTimeTable} from "pages/timeTableListPage/model/timeTableListThunk/timeTableListThunk.js";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
+import {useDispatch} from "react-redux";
+import {API_URL, headers, useHttp} from "shared/api/base.js";
 
 export const TimeTableChange = memo((props) => {
 
+    const {request} = useHttp()
+    const dispatch = useDispatch()
     const {
         register,
         handleSubmit,
@@ -69,13 +75,26 @@ export const TimeTableChange = memo((props) => {
         )
     }, [])
 
+    const onSubmitChange = (dataForm) => {
+        dispatch(updateTimeTable({id: active?.id, obj: dataForm}))
+        dispatch(onAddAlertOptions({
+            type: "success",
+            status: true,
+            msg: `malumotlari o'zgardi`
+        }))
+        // request(`${API_URL}SchoolTimeTable/hours-list-update/${active?.id}`, "PATCH", JSON.stringify(dataForm), headers())
+        //     .then(res => console.log(res))
+        setActive(false)
+    }
+
     return (
         <Modal
             active={active}
             setActive={setActive}
         >
             <Form
-
+                id={"changeTime"}
+                // onSubmit={handleSubmit(onSubmit)}
                 typeSubmit={""}
             >
                 <div className={cls.change}>
@@ -122,18 +141,18 @@ export const TimeTableChange = memo((props) => {
                         fontSize={15}
                     />
 
-                    <Select
-                        name={"type"}
-                        register={register}
-                        required
-                        options={optionsType}
-                        defaultValue={type}
-                    />
+                    {/*<Select*/}
+                    {/*    name={"type"}*/}
+                    {/*    register={register}*/}
+                    {/*    required*/}
+                    {/*    options={optionsType}*/}
+                    {/*    defaultValue={type}*/}
+                    {/*/>*/}
                     {
                         loading ? <MiniLoader/> :
                             <div style={{display: "flex", gap: "1rem"}}>
                                 <Button
-                                    onClick={handleSubmit(onSubmit)}
+                                    onClick={handleSubmit(onSubmitChange)}
                                     extraClass={cls.change__btn}
                                     type={"simple"}
                                 >

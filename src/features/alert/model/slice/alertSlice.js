@@ -15,7 +15,6 @@ const AlertSlice = createSlice({
     reducers: {
 
         onAddAlertOptions: (state,action) => {
-            console.log(action.payload, "action.payload")
             state.alert = [action.payload]
         },
         onAddMultipleAlertOptions: (state,action) => {

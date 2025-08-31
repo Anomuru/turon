@@ -16,7 +16,7 @@ export const TimeTableList = memo((props) => {
     } = props
 
     const renderTimeTableList = useCallback(() => {
-        return data?.map((item, i) =>
+        return data && [...data]?.sort(compareById)?.map((item, i) =>
             <tr>
                 <td>{i + 1}</td>
                 <td>{item?.order}-dars</td>

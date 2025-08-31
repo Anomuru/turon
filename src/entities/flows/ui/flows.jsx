@@ -18,6 +18,10 @@ import cls from "pages/flowsPage/ui/flowsPage.module.sass";
 import {FlowAddForm} from "features/flow/index.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
+function compareById(a, b) {
+    return a.id - b.id;
+}
+
 export const Flows = ({
                           currentTableData,
                           teacherData,
@@ -68,7 +72,6 @@ export const Flows = ({
             }
         }
 
-        console.log(res, "POST")
         localStorage.setItem("flowData", JSON.stringify(res))
         navigate("flow-list")
     }
@@ -81,7 +84,7 @@ export const Flows = ({
 
 
     const renderFlowData = () => {
-        return currentTableData?.map((item, i) => {
+        return currentTableData && [...currentTableData]?.sort(compareById)?.map((item, i) => {
             return (
                 <tr onClick={() => navigate(`./flowsProfile/${item?.id}`)}>
                     <td>{i + 1}</td>
