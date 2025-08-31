@@ -62,11 +62,13 @@ const timeTableTuronSlice = createSlice({
         onChangeDateTimeTable: (state, action) => {
             state.date = action.payload
             state.isDataStatus = "date"
+            localStorage.setItem("dateForTimeTable", JSON.stringify({type: "date", value: action.payload}))
             // state.weekDay = null
         },
         onChangeWeekDayTimeTable: (state, action) => {
             state.weekDay = action.payload
             state.isDataStatus = "week"
+            localStorage.setItem("dateForTimeTable", JSON.stringify({type: "week", value: action.payload}))
         }
     },
     extraReducers: builder =>

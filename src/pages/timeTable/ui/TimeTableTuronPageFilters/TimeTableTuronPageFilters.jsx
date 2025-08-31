@@ -34,6 +34,7 @@ const TimeTableTuronPageFilters = React.memo((props) => {
         groups
     } = props
 
+    const currentDateForTimeTable = localStorage.getItem("dateForTimeTable")
     const {register} = useForm()
 
     const [activeIdColor, setActiveIdColor] = useState(1)
@@ -52,6 +53,17 @@ const TimeTableTuronPageFilters = React.memo((props) => {
     const onChangeColor = (id) => {
         dispatch(onChangeColorTimeTable(id))
     }
+
+    useEffect(() => {
+        if (currentDateForTimeTable) {
+            const dateForTimeTable = JSON.parse(currentDateForTimeTable)
+            if (dateForTimeTable.type === "week") {
+                onChangeWeekDay(dateForTimeTable.value)
+            } else {
+                onChangeDate(dateForTimeTable.value)
+            }
+        }
+    }, [currentDateForTimeTable])
 
 
     const onChangeDate = (date) => {
