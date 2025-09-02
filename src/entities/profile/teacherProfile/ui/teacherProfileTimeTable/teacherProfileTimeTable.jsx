@@ -1,29 +1,34 @@
-import React, {memo, useRef, useState} from "react";
+import React, {memo, useEffect, useRef, useState} from "react";
 import {useSelector} from "react-redux";
 import classNames from "classnames";
 import {createPortal} from "react-dom";
 import {Swiper, SwiperSlide} from "swiper/react";
-import {Mousewheel, Pagination} from "swiper/modules";
+import {Mousewheel} from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-
 
 import {
     getTimeTableTuronForShow,
     getTimeTableTuronLoading
 } from "pages/timeTable/model/selectors/timeTableTuronSelectors";
 import {EditableCard} from "shared/ui/editableCard";
+import {MiniLoader} from "shared/ui/miniLoader";
 
 import cls from "./teacherProfileTimeTable.module.sass";
 import location from "shared/assets/logo/location.svg";
 import roomImage from "shared/assets/logo/room.svg";
-import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 export const TeacherProfileTimeTable = memo(() => {
 
     const data = useSelector(getTimeTableTuronForShow);
     const loading = useSelector(getTimeTableTuronLoading);
     const containerRef = useRef(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        if (containerRef.current) setMounted(true);
+    }, [loading]);
+
 
     const renderLessons = (data, isSlide = false) => {
         return data.map(item => {
@@ -64,13 +69,13 @@ export const TeacherProfileTimeTable = memo(() => {
     return (
         <EditableCard extraClass={cls.timetable} titleType={false}>
             {
-                // loading
-                //     ? <DefaultPageLoader/>
-                //     :
+                loading
+                    ? <MiniLoader/>
+                    :
                     <div className={cls.newTimeTable}>
                         <div className={cls.wrapper}>
                             <div
-                                ref={containerRef}
+                                ref={containerRef }
                                 id={"mainTimeTableContainer"}
                                 className={cls.wrapper__header}
                             >
@@ -92,7 +97,7 @@ export const TeacherProfileTimeTable = memo(() => {
 
                                 {data?.time_tables?.map((item) => (
                                     <div key={item.id} className={cls.newTimeTable__weekDay}>
-                                        {containerRef.current &&
+                                        {mounted &&
                                             createPortal(
                                                 <div className={cls.weekTitle}>
                                                     <h2 className={cls.weekTitle__subTitle}>
