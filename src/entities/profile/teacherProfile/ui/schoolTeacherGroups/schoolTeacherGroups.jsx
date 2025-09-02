@@ -36,7 +36,7 @@ function getWeekdayUz(dateInput) {
     return daysUz[date.getDay()];
 }
 
-export const SchoolTeacherGroups = memo(() => {
+export const SchoolTeacherGroups = memo(({activeSwitch}) => {
 
     // const {id} = useParams()
     const id = useSelector(getUserBranchId)
@@ -93,8 +93,8 @@ export const SchoolTeacherGroups = memo(() => {
     }
 
     const renderFlow = renderStudentsFlow()
-    return (
-        <div className={cls.groupsContainer}>
+    return activeSwitch
+        ? <div className={cls.groupsContainer}>
             {
                 schoolTeacherGroups?.length === 0 ?
                     <EditableCard>
@@ -170,8 +170,6 @@ export const SchoolTeacherGroups = memo(() => {
                 }
 
             </EditableCard>
-
-            {/*<TeacherProfileTimeTable/>*/}
         </div>
-    );
+        : <TeacherProfileTimeTable/>
 });

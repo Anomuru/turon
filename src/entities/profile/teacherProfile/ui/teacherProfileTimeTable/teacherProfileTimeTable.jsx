@@ -1,125 +1,185 @@
-import React, {memo} from 'react';
+import React, {memo, useRef, useState} from "react";
 import {useSelector} from "react-redux";
 import classNames from "classnames";
 import {createPortal} from "react-dom";
+import {Swiper, SwiperSlide} from "swiper/react";
+import {Mousewheel, Pagination} from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
 
-import {getTimeTableTuronForShow} from "pages/timeTable/model/selectors/timeTableTuronSelectors";
+
+import {
+    getTimeTableTuronForShow,
+    getTimeTableTuronLoading
+} from "pages/timeTable/model/selectors/timeTableTuronSelectors";
 import {EditableCard} from "shared/ui/editableCard";
 
 import cls from "./teacherProfileTimeTable.module.sass";
 import location from "shared/assets/logo/location.svg";
 import roomImage from "shared/assets/logo/room.svg";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 export const TeacherProfileTimeTable = memo(() => {
 
-    const data = useSelector(getTimeTableTuronForShow)
+    const data = useSelector(getTimeTableTuronForShow);
+    const loading = useSelector(getTimeTableTuronLoading);
+    const containerRef = useRef(null);
 
-    const main = document.getElementById("mainTimeTableContainer")
+    const renderLessons = (data, isSlide = false) => {
+        return data.map(item => {
+            return (
+                <div
+                    key={item.id}
+                    className={classNames(cls.lesson__inner, {
+                        [cls.isFlow]: item?.is_flow,
+                        [cls.isSlide]: isSlide,
+                    })}
+                >
+                    <div className={cls.header}>
+                        <img
+                            className={cls.header__image}
+                            src={location}
+                            alt=""
+                        />
+                        <span className={cls.header__title}>
+                            Xona: {item?.room?.name}
+                        </span>
+                    </div>
+                    <div className={cls.header}>
+                        <img
+                            className={cls.header__image2}
+                            src={roomImage}
+                            alt=""
+                        />
+                        <span className={cls.header__title}>
+                            {item?.is_flow ? "Flow:" : "Class:"}:{" "}
+                            {item?.group?.name}
+                        </span>
+                    </div>
+                </div>
+            )
+        })
+    }
 
     return (
-        <EditableCard
-            extraClass={cls.timetable}
-            titleType={false}
-        >
-            {/*<h1>My Schedule</h1>*/}
-            <div className={cls.newTimeTable}>
-                <div className={cls.wrapper}>
-                    <div id={"mainTimeTableContainer"} className={cls.wrapper__header}>
-                        <div className={cls.timeTitle}>
-                            <h1 className={cls.timeTitle__inner}>Time</h1>
-                        </div>
-                    </div>
-                    <div className={cls.wrapper__container}>
-                        <div className={cls.newTimeTable__time}>
-
-                            {
-                                data?.hours_list?.map(item => {
-                                    return (
-                                        <div className={cls.hour}>
+        <EditableCard extraClass={cls.timetable} titleType={false}>
+            {
+                // loading
+                //     ? <DefaultPageLoader/>
+                //     :
+                    <div className={cls.newTimeTable}>
+                        <div className={cls.wrapper}>
+                            <div
+                                ref={containerRef}
+                                id={"mainTimeTableContainer"}
+                                className={cls.wrapper__header}
+                            >
+                                <div className={cls.timeTitle}>
+                                    <h1 className={cls.timeTitle__inner}>Time</h1>
+                                </div>
+                            </div>
+                            <div className={cls.wrapper__container}>
+                                <div className={cls.newTimeTable__time}>
+                                    {data?.hours_list?.map((item) => (
+                                        <div key={item.id} className={cls.hour}>
                                             <h1 className={cls.hour__inner}>
-                                                <span className={cls.title}>{item?.start_time}</span>
-                                                —
+                                                <span className={cls.title}>{item?.start_time}</span> —{" "}
                                                 <span className={cls.title}>{item?.end_time}</span>
                                             </h1>
                                         </div>
-                                    )
-                                })
-                            }
-                        </div>
-                        {
-                            data?.time_tables?.map(item => {
-                                return (
-                                    <div className={cls.newTimeTable__weekDay}>
-                                        {
+                                    ))}
+                                </div>
+
+                                {data?.time_tables?.map((item) => (
+                                    <div key={item.id} className={cls.newTimeTable__weekDay}>
+                                        {containerRef.current &&
                                             createPortal(
                                                 <div className={cls.weekTitle}>
-                                                    <h2 className={cls.weekTitle__subTitle}>{item?.weekday}</h2>
-                                                    <h1 className={cls.weekTitle__title}>{item?.date?.slice(8, 10)}</h1>
-                                                </div>, main
-                                            )
-                                        }
-                                        {
-                                            data?.hours_list?.map((inn, index) => {
-                                                const hasLessons = item?.rooms?.some(room =>
-                                                    room.lessons.some(l => l?.hours === inn?.id && l?.id)
-                                                );
+                                                    <h2 className={cls.weekTitle__subTitle}>
+                                                        {item?.weekday}
+                                                    </h2>
+                                                    <h1 className={cls.weekTitle__title}>
+                                                        {item?.date?.slice(8, 10)}
+                                                    </h1>
+                                                </div>,
+                                                containerRef.current
+                                            )}
 
+                                        {data?.hours_list?.map((hour) => {
+                                            const lessonsForHour = item?.rooms?.flatMap((room) =>
+                                                room.lessons
+                                                    .filter((l) => l?.hours === hour?.id && l?.id)
+                                                    .map((lesson) => ({...lesson, room}))
+                                            );
+
+                                            if (!lessonsForHour || lessonsForHour.length === 0) {
                                                 return (
-                                                    <div className={cls.lesson}>
-                                                        {
-                                                            hasLessons
-                                                                ? item?.rooms?.map((room, index) => {
-                                                                    const lesson = room.lessons.find((l) => l?.hours === inn?.id && l?.id);
-                                                                    if (!lesson) return null
-                                                                    return (
-                                                                        <div className={classNames(cls.lesson__inner, {
-                                                                            [cls.isFlow]: lesson?.is_flow
-                                                                        })}>
-                                                                            <div className={cls.header}>
-                                                                                {/*<img className={cls.header__image} src={lesson?.is_flow ? location : location2} alt=""/>*/}
-                                                                                <img
-                                                                                    className={cls.header__image}
-                                                                                    src={location}
-                                                                                    alt=""
-                                                                                />
-                                                                                <span
-                                                                                    className={cls.header__title}
-                                                                                >
-                                                                                    Xona: {room?.name}
-                                                                                </span>
-                                                                            </div>
-                                                                            <div className={cls.header}>
-                                                                                {/*<img className={cls.header__image2} src={lesson?.is_flow ? roomImage : roomImage2} alt=""/>*/}
-                                                                                <img
-                                                                                    className={cls.header__image2}
-                                                                                    src={roomImage}
-                                                                                    alt=""
-                                                                                />
-                                                                                <span className={cls.header__title}>
-                                                                                    {lesson?.is_flow ? "Flow:" : "Class:"}: {lesson?.group?.name}
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                    )
-                                                                })
-                                                                :
-                                                                null
-                                                                // <div
-                                                                //     className={classNames(cls.lesson__inner, cls.empty)}>
-                                                                //     <h1 className={cls.empty__title}></h1>
-                                                                // </div>
-                                                        }
+                                                    <div
+                                                        key={hour.id}
+                                                        className={classNames(cls.lesson, cls.empty)}
+                                                    >
+                                                        <h1 className={cls.empty__title}></h1>
                                                     </div>
+                                                );
+                                            }
+
+                                            if (lessonsForHour.length > 1) {
+                                                return (
+                                                    <LessonSwiper
+                                                        hour={hour.id}
+                                                        lesson={lessonsForHour}
+                                                        renderLessons={renderLessons}
+                                                    />
                                                 )
-                                            })
-                                        }
+                                            }
+
+
+                                            return (
+                                                <div key={hour.id} className={cls.lesson}>
+                                                    {renderLessons(lessonsForHour)}
+                                                </div>
+                                            );
+                                        })}
                                     </div>
-                                )
-                            })
-                        }
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+            }
         </EditableCard>
     );
-})
+});
+
+const LessonSwiper = ({hour, lesson, renderLessons}) => {
+
+    const [currentSlide, setCurrentSlide] = useState(1)
+
+    const handleSlideChange = (swiper) => {
+        setCurrentSlide(swiper.activeIndex + 1)
+    }
+
+    return (
+        <Swiper
+            key={hour}
+            className={classNames(cls.lesson, cls.customSwiper)}
+            direction="vertical"
+            spaceBetween={20}
+            slidesPerView={1}
+            mousewheel={true}
+            modules={[Mousewheel]}
+            onSlideChange={handleSlideChange}
+        >
+            {lesson.map((item) => (
+                <SwiperSlide
+                    key={item.id}
+                    className={cls.lesson__slide}
+                >
+                    {renderLessons([item], true)}
+                </SwiperSlide>
+            ))}
+            <span className={cls.customSwiper__slide}>{currentSlide} / {lesson.length}</span>
+        </Swiper>
+    )
+}
+
+

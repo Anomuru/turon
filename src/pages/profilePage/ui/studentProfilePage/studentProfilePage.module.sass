@@ -12,8 +12,15 @@
   &__mainContent
     display: grid
     grid-gap: 2rem
-    grid-template-areas: "teacher teacher rating" "reward subject subject" "attendance attendance attendance" "timeTable timeTable timeTable"
+    grid-template-areas: "header header header" "teacher teacher rating" "reward subject subject" "attendance attendance attendance" "timeTable timeTable timeTable"
     grid-template-columns: auto auto auto
+    .header
+      grid-area: header
+      display: flex
+      align-items: center
+      justify-content: flex-end
+      gap: 1rem
+      margin-bottom: 2rem
 
     &.active
       display: none

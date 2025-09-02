@@ -16,6 +16,7 @@ import {getLoading, getStudentLoading} from "entities/teachers/model/selector/te
 import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 import {fetchTimeTableData, fetchTimeTableForShow} from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {Switch} from "shared/ui/switch/index.js";
 
 
 const reducers = {
@@ -26,7 +27,7 @@ export const ProfileTeacherPage = () => {
 
     const date = new Date().toLocaleDateString('en-CA')
     const [active, setActive] = useState(false)
-    const [actives, setActives] = useState(false)
+    const [activeSwitch, setActiveSwitch] = useState(true)
     const dispatch = useDispatch()
     const {id} = useParams()
     // const {id} = useSelector(getBranch)
@@ -90,8 +91,15 @@ export const ProfileTeacherPage = () => {
                         [cls.active]: active
                     })}
                 >
+                    <div className={cls.header}>
+                        <h2>{activeSwitch ? "Ma'lumotlar" : "Time Table"}</h2>
+                        <Switch
+                            activeSwitch={activeSwitch}
+                            onChangeSwitch={setActiveSwitch}
+                        />
+                    </div>
 
-                    <SchoolTeacherGroups/>
+                    <SchoolTeacherGroups activeSwitch={activeSwitch}/>
 
                 </div>
                 <ImageCrop

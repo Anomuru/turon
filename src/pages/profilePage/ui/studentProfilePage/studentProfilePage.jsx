@@ -4,7 +4,7 @@ import {
     getClassNumberData,
     getLanguagesData
 } from "entities/oftenUsed";
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import classNames from "classnames";
 import {useParams} from "react-router";
 import {useDispatch, useSelector} from "react-redux";
@@ -44,6 +44,8 @@ import {getMonth} from "features/studentPayment/model/selectors/selectors.js";
 
 import {getUserBranchId, getUserJob} from "entities/profile/userProfile";
 import {fetchTimeTableData, fetchTimeTableForShow} from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
+import {Switch} from "shared/ui/switch/index.js";
+import {TeacherProfileTimeTable} from "entities/profile/teacherProfile/index.js";
 
 export const StudentProfilePage = () => {
 
@@ -83,6 +85,7 @@ export const StudentProfilePage = () => {
 
     const [changeSelectedClass,setChangeSelectedClass] = useState(null)
     const [changeSelectedLang,setChangeSelectedLang] = useState(null)
+    const [activeSwitch, setActiveSwitch] = useState(true)
 
 
 
@@ -169,21 +172,32 @@ export const StudentProfilePage = () => {
                     [cls.active]: active
                 })}
             >
-                <StudentProfileTeachers data={userData?.group}/>
-                <StudentProfileRating setActive={setActive}/>
-                <StudentProfileReward/>
-                <StudentProfileSubjects
-                    setActive={setActive}
-                    data={userData?.group}
-                    onSelectSubject={setSelectedSubject}
-                />
-                <StudentProfileAttendance
-                    setActive={setActive}
-                    data={userData?.group}
-                    onSelectGroup={setSelectedGroup}
-                    onSelectGroupName={setSelectedGroupName}
-                />
-                <StudentProfileTimeTable/>
+                <div className={cls.header}>
+                    <h2>{activeSwitch ? "Ma'lumotlar" : "Time Table"}</h2>
+                    <Switch
+                        activeSwitch={activeSwitch}
+                        onChangeSwitch={setActiveSwitch}
+                    />
+                </div>
+                {
+                    activeSwitch ? <>
+                        <StudentProfileTeachers data={userData?.group}/>
+                        <StudentProfileRating setActive={setActive}/>
+                        <StudentProfileReward/>
+                        <StudentProfileSubjects
+                            setActive={setActive}
+                            data={userData?.group}
+                            onSelectSubject={setSelectedSubject}
+                        />
+                        <StudentProfileAttendance
+                            setActive={setActive}
+                            data={userData?.group}
+                            onSelectGroup={setSelectedGroup}
+                            onSelectGroupName={setSelectedGroupName}
+                        />
+                    </> : <TeacherProfileTimeTable/>
+                }
+                {/*<StudentProfileTimeTable/>*/}
             </div>
             <div
                 className={classNames(cls.profile__otherContent, {

@@ -35,6 +35,8 @@ export const getTimeTableTuronData = (state) =>
     state.timeTableTuronSlice?.data
 export const getTimeTableTuronForShow = (state) =>
     state.timeTableTuronSlice?.forShow
+export const getTimeTableTuronLoading = (state) =>
+    state.timeTableTuronSlice?.loading
 
 
 export const getTimeTableTuronDataStatus = (state) =>

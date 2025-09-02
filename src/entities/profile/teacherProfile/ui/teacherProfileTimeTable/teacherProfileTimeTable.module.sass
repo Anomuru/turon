@@ -1,5 +1,5 @@
 .timetable
-  width: 100%
+  width: 110rem
 
 .newTimeTable
   display: flex
@@ -44,7 +44,7 @@
         align-items: center
         gap: 1rem
         min-width: 15rem
-        min-height: 15rem
+        min-height: 18rem
         border-top: 1px solid
         border-right: 1px solid
         position: sticky
@@ -108,7 +108,7 @@
       align-items: center
       gap: 1rem
       min-width: 15rem
-      min-height: 15rem
+      min-height: 18rem
       border-top: 1px solid
       border-right: 1px solid
       position: sticky
@@ -121,12 +121,29 @@
         font-size: 1.8rem
       &__title
         font-size: 3.6rem
+    .customSwiper
+      height: 18rem
+      overflow: hidden
+      position: relative
+      flex-direction: column
+      &__slide
+        z-index: 100
+        background: white
+        left: 50%
+        transform: translate(-50%)
+        font-size: 1.8rem
+        position: absolute
+        //bottom: .7rem
+        bottom: 0
+        padding: .3rem .5rem
+        //border: 1px solid
+        //border-radius: 10rem
     .lesson
       display: flex
       justify-content: center
       //align-items: center
       min-width: 25rem
-      min-height: 15rem
+      min-height: 18rem
       border-top: 1px solid
       //border-right: 1px solid
       position: relative
@@ -154,6 +171,9 @@
           position: absolute
           top: 0
           left: 0
+      &__slide
+        display: flex
+        justify-content: center
       &__inner
         width: 90%
         height: 90%
@@ -187,6 +207,8 @@
         &.isFlow
           &:after
             background: #1E90FF
+        &.isSlide
+          height: 83%
         &:after
           display: flex
           content: ""
