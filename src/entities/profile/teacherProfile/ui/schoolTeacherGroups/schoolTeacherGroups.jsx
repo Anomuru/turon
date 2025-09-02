@@ -171,7 +171,7 @@ export const SchoolTeacherGroups = memo(() => {
 
             </EditableCard>
 
-            <TeacherProfileTimeTable/>
+            {/*<TeacherProfileTimeTable/>*/}
         </div>
     );
 });

@@ -68,7 +68,7 @@ export const TeacherProfileTimeTable = memo(() => {
                                                     <div className={cls.lesson}>
                                                         {
                                                             hasLessons
-                                                                ? item?.rooms?.map(room => {
+                                                                ? item?.rooms?.map((room, index) => {
                                                                     const lesson = room.lessons.find((l) => l?.hours === inn?.id && l?.id);
                                                                     if (!lesson) return null
                                                                     return (
@@ -77,25 +77,37 @@ export const TeacherProfileTimeTable = memo(() => {
                                                                         })}>
                                                                             <div className={cls.header}>
                                                                                 {/*<img className={cls.header__image} src={lesson?.is_flow ? location : location2} alt=""/>*/}
-                                                                                <img className={cls.header__image} src={location}
-                                                                                     alt=""/>
+                                                                                <img
+                                                                                    className={cls.header__image}
+                                                                                    src={location}
+                                                                                    alt=""
+                                                                                />
                                                                                 <span
-                                                                                    className={cls.header__title}>Xona: {room?.name}</span>
+                                                                                    className={cls.header__title}
+                                                                                >
+                                                                                    Xona: {room?.name}
+                                                                                </span>
                                                                             </div>
                                                                             <div className={cls.header}>
                                                                                 {/*<img className={cls.header__image2} src={lesson?.is_flow ? roomImage : roomImage2} alt=""/>*/}
-                                                                                <img className={cls.header__image2} src={roomImage}
-                                                                                     alt=""/>
+                                                                                <img
+                                                                                    className={cls.header__image2}
+                                                                                    src={roomImage}
+                                                                                    alt=""
+                                                                                />
                                                                                 <span className={cls.header__title}>
-                                                                        {lesson?.is_flow ? "Flow:" : "Class:"}: {lesson?.group?.name}
-                                                                    </span>
+                                                                                    {lesson?.is_flow ? "Flow:" : "Class:"}: {lesson?.group?.name}
+                                                                                </span>
                                                                             </div>
                                                                         </div>
                                                                     )
                                                                 })
-                                                                : <div className={classNames(cls.lesson__inner, cls.empty)}>
-                                                                    <h1 className={cls.empty__title}>Dars yo'q</h1>
-                                                                </div>
+                                                                :
+                                                                null
+                                                                // <div
+                                                                //     className={classNames(cls.lesson__inner, cls.empty)}>
+                                                                //     <h1 className={cls.empty__title}></h1>
+                                                                // </div>
                                                         }
                                                     </div>
                                                 )
