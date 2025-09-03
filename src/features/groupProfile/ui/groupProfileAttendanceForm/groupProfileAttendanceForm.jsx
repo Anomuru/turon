@@ -7,7 +7,8 @@ import {Table} from "shared/ui/table";
 import {Select} from "shared/ui/select";
 
 import cls from "./groupProfileAttendanceForm.module.sass";
-import {useNavigate} from "react-router";
+import {useNavigate, useParams} from "react-router";
+import {API_URL, headers, useHttp} from "shared/api/base.js";
 
 // const data = [
 //     {
@@ -87,11 +88,12 @@ const daysData = [
     }
 ]
 
-export const GroupProfileAttendanceForm = memo(({attendance, setAttendance , data , id}) => {
+export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, data}) => {
 
 
-
+    const {request} = useHttp()
     const navigate = useNavigate()
+    const {id} = useParams()
 
     const [active, setActive] = useState(false)
 
@@ -119,6 +121,19 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance , dat
 
     const render = renderAttendance()
 
+    const onClick = () => {
+        const res = {
+            status: true,
+            day: "2025-09-01",
+            year: "2025",
+            month: "09",
+            // reason: "keldi",
+            student_id: data[0]?.id,
+            group_id: id
+        }
+        request(`${API_URL}Attendance/attendance/create/`, "POST", JSON.stringify(res), headers())
+            .then(res => console.log(res, "res"))
+    }
 
     return (
         <>
@@ -126,7 +141,7 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance , dat
                 extraClass={cls.attendance}
                 onClick={() => navigate(`attendance`)}
             >
-                <h1>Davomat</h1>
+                <h1 onClick={onClick}>Davomat</h1>
                 <div className={cls.attendance__contauner}>
                     <Table>
                         <thead>

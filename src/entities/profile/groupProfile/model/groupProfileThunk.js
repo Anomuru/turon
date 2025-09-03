@@ -170,10 +170,10 @@ export const getGroupDebtStudents = createAsyncThunk(
 )
 
 
-// export const getSchoolAttendance = createAsyncThunk(
-//     "groupProfileSlice/getSchoolAttendance",
-//     (id) => {
-//         const {request} = useHttp()
-//         return request(`${API_URL}Attendance/to_attend_school/${id}/`)
-//     }
-// )
+export const getSchoolAttendance = createAsyncThunk(
+    "groupProfileSlice/getSchoolAttendance",
+    (id) => {
+        const {request} = useHttp()
+        return request(`${API_URL}Attendance/attendance/periods/?group_id=${id}`, "GET", null, headers())
+    }
+)

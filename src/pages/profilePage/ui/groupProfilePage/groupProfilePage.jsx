@@ -130,6 +130,20 @@ export const GroupProfilePage = () => {
     //     }
     // }, [branchId, data])
 
+    console.log(id)
+
+    // useEffect(() => {
+    //     if (id)
+    //         request(`${API_URL}Attendance/attendance/periods/?group_id=${id}`, "GET", null, headers())
+    //             .then(res => console.log(res, "res"))
+    // }, [id])
+
+    // useEffect(() => {
+    //     if (id) {
+    //
+    //     }
+    // }, [])
+
     useEffect(() => {
         if (data) {
             dispatch(fetchGroupProfileTimeTable({
@@ -166,8 +180,11 @@ export const GroupProfilePage = () => {
                                 {/*<GroupProfileTeacher setActive={setActiveModal}/>*/}
                                 <GroupProfileDeleteForm branch={branch}/>
                                 {/*<GroupProfileStudents/>*/}
-                                <GroupProfileAttendanceForm data={data?.students} setAttendance={setAttendance}
-                                                            attendance={attendance}/>
+                                <GroupProfileAttendanceForm
+                                    data={data?.students}
+                                    setAttendance={setAttendance}
+                                    attendance={attendance}
+                                />
                             </> : <TeacherProfileTimeTable/>
                         }
                         {/*<GroupProfileAttendance/>*/}

@@ -14,7 +14,7 @@ import {
     filteredStudents,
     getGroupStudyYears,
     getGroupStudyMonth,
-    getGroupDebtStudents
+    getGroupDebtStudents, getSchoolAttendance
 } from "./groupProfileThunk";
 
 const initialState = {
@@ -283,19 +283,19 @@ const groupProfileSlice = createSlice({
 
 
 
-    // .addCase(getSchoolAttendance.pending, state => {
-    //     state.loading = true
-    //     state.error = null
-    // })
-    // .addCase(getSchoolAttendance.fulfilled, (state, action) => {
-    //     state.groupAttendance = action.payload
-    //     state.loading = false
-    //     state.error = null
-    // })
-    // .addCase(getSchoolAttendance.rejected, (state, action) => {
-    //     state.loading = false
-    //     state.error = true
-    // })
+    .addCase(getSchoolAttendance.pending, state => {
+        state.loading = true
+        state.error = null
+    })
+    .addCase(getSchoolAttendance.fulfilled, (state, action) => {
+        state.groupAttendance = action.payload
+        state.loading = false
+        state.error = null
+    })
+    .addCase(getSchoolAttendance.rejected, (state, action) => {
+        state.loading = false
+        state.error = true
+    })
 })
 
 export const {getNextLesson, changeDebtStudent, deleteDebtStudent, onMoveToGroup} = groupProfileSlice.actions
