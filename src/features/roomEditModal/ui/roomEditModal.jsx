@@ -8,17 +8,22 @@ import cls from './roomEditModal.module.sass';
 import { getRoomsID } from "../../roomsEditModal/model";
 import {onAddAlertOptions} from "../../alert/model/slice/alertSlice";
 import {API_URL, headers, useHttp} from "../../../shared/api/base";
+import {getRoomEdit} from "features/roomEditModal/model/selectors/selectors.js";
+import {onChangeRoom} from "features/roomsEditModal/ui/roomSlice.js";
 
 export const RoomEditModal = ({ isOpen, onClose, roomId, onUpdate }) => {
     const dispatch = useDispatch();
     const room = useSelector(getRoomsID);
     const [groupName, setGroupName] = useState('');
+    const [groupOrder, setGroupOrder] = useState('');
     const [seatCount, setSeatCount] = useState('');
     const [electronicBoard, setElectronicBoard] = useState(false);
+
 
     useEffect(() => {
         if (room) {
             setGroupName(room.name);
+            setGroupOrder(room.order);
             setSeatCount(room.seats_number);
             setElectronicBoard(room.electronic_board);
         }
@@ -30,6 +35,7 @@ export const RoomEditModal = ({ isOpen, onClose, roomId, onUpdate }) => {
         if (!roomId) return;
         const updatedRoom = {
             name: groupName,
+            order: groupOrder,
             seats_number: parseInt(seatCount, 10),
             electronic_board: electronicBoard,
         };
@@ -43,14 +49,15 @@ export const RoomEditModal = ({ isOpen, onClose, roomId, onUpdate }) => {
         //     })
 
         dispatch(editRoomThunk({ id: roomId, updatedRoom }))
-            .then(() => {
+            .then((res) => {
                 dispatch(onAddAlertOptions({
                     type: "success",
                     status: true,
                     msg: "Xona muvofaqqiyatli tahrirlandi"
                 }))
-                onClose();
+                dispatch(onChangeRoom(res?.payload))
                 onUpdate(updatedRoom);
+                onClose();
             });
     };
 
@@ -73,6 +80,12 @@ export const RoomEditModal = ({ isOpen, onClose, roomId, onUpdate }) => {
                             type={"text"}
                             value={groupName}
                             onChange={(e) => setGroupName(e.target.value)}
+                        />
+                        <Input
+                            title={"Group order"}
+                            type={"number"}
+                            value={groupOrder}
+                            onChange={(e) => setGroupOrder(e.target.value)}
                         />
                     </div>
                     <div>

@@ -21,9 +21,9 @@ export const fetchTimeTableTypesData = createAsyncThunk(
 
 export const fetchTimeTableData = createAsyncThunk(
     "TimeTableTuronSlice/fetchTimeTableData",
-    async ({date, branch, week, teacher, student, group}) => {
+    async ({date, branch, week, teacher}) => {
         const {request} = useHttp()
-        return await  request(`${API_URL}SchoolTimeTable/timetable-lessons/?${ParamUrl({date, branch, week})}`, "GET", null, headers())
+        return await  request(`${API_URL}SchoolTimeTable/timetable-lessons/?${ParamUrl({date, branch, week, teacher})}`, "GET", null, headers())
     }
 )
 
@@ -63,9 +63,9 @@ export const fetchTimeTableColors = createAsyncThunk(
 
 export const fetchTimeTableClassView  = createAsyncThunk(
     "TimeTableTuronSlice/fetchTimeTableClassView",
-    async ({date, branch, week}) => {
+    async ({date, branch, week, teacher}) => {
         const {request} = useHttp()
-        return await  request(`${API_URL}SchoolTimeTable/timetable-lessons-class/?${ParamUrl({date, branch, week})}`, "GET", null, headers())
+        return await  request(`${API_URL}SchoolTimeTable/timetable-lessons-class/?${ParamUrl({date, branch, week, teacher})}`, "GET", null, headers())
     }
 )
 

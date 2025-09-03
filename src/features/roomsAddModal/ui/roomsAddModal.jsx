@@ -19,6 +19,7 @@ export const RoomModal = ({isOpen, onClose}) => {
 
     const [groupName, setGroupName] = useState('');
     const [seatCount, setSeatCount] = useState('');
+    const [order, setOrder] = useState('');
     const [electronicBoard, setElectronicBoard] = useState(false);
     const dispatch = useDispatch();
     const {"*": id} = useParams()
@@ -27,6 +28,7 @@ export const RoomModal = ({isOpen, onClose}) => {
     const handleAddRoom = () => {
         const newRoom = {
             name: groupName,
+            order: order,
             seats_number: parseInt(seatCount, 10),
             electronic_board: electronicBoard,
             deleted: false,
@@ -83,6 +85,12 @@ export const RoomModal = ({isOpen, onClose}) => {
                         />
                     </div>
                     <div>
+                        <Input
+                            title={"Xona raqami"}
+                            type={"number"}
+                            value={order}
+                            onChange={(e) => setOrder(e.target.value)}
+                        />
                         <Input
                             title={"O'rindiqlar soni"}
                             type={"number"}

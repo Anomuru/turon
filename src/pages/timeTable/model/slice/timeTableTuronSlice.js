@@ -31,6 +31,7 @@ const initialState = {
     day: "",
     color: "",
     filterClass: "",
+    filterTeacher: "",
 
     fetchStatusTeachers: "idle",
     fetchStatusGroup: "idle",
@@ -53,6 +54,10 @@ const timeTableTuronSlice = createSlice({
 
         onChangeFilterClassTimeTable: (state, action) => {
             state.filterClass = action.payload
+        },
+
+        onChangeFilterTeacherTimeTable: (state, action) => {
+            state.filterTeacher = action.payload
         },
 
         onChangeColorTimeTable: (state, action) => {
@@ -317,6 +322,7 @@ export const {
     onChangeDayTimeTable,
     onChangeColorTimeTable,
     onChangeFilterClassTimeTable,
+    onChangeFilterTeacherTimeTable,
     onChangeDateTimeTable,
     onChangeWeekDayTimeTable
 } = timeTableTuronSlice.actions

@@ -33,7 +33,7 @@ import {
     getTimeTableTuronClassViewData,
     getTimeTableTuronColor,
     getTimeTableTuronData, getTimeTableTuronDataStatus, getTimeTableTuronDate,
-    getTimeTableTuronFilterClass,
+    getTimeTableTuronFilterClass, getTimeTableTuronFilterTeacher,
     getTimeTableTuronGroup, getTimeTableTuronGroupStatus,
     getTimeTableTuronHours, getTimeTableTuronIsDataStatus,
     getTimeTableTuronSubjects,
@@ -53,6 +53,8 @@ import {TimeTableClassView} from "entities/timeTableTuron/ui/TimeTableClassView/
 import {MiniLoader} from "shared/ui/miniLoader";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {timeTableTuronReducer} from "pages/timeTable/model/slice/timeTableTuronSlice.js";
+import {fetchTeachersForSelect} from "entities/oftenUsed/index.js";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 
 const rooms = [
@@ -112,13 +114,14 @@ export const TimeTableTuronPage = () => {
     const teachersData = useSelector(getTimeTableTuronTeachers)
     const teachersStatus = useSelector(getTimeTableTuronTeachersStatus)
     const filteredClass = useSelector(getTimeTableTuronFilterClass)
+    const filteredTeacher = useSelector(getTimeTableTuronFilterTeacher)
     const date = useSelector(getTimeTableTuronDate)
     const weekDay = useSelector(getTimeTableTuronWeekDay)
     const currentWeekDay = useSelector(getSelectedWeekDay)
     const isDataStatus = useSelector(getTimeTableTuronIsDataStatus)
 
 
-    const branch = localStorage.getItem("branchId")
+    const branch = useSelector(getUserBranchId)
 
 
     const dispatch = useDispatch()
@@ -126,15 +129,22 @@ export const TimeTableTuronPage = () => {
     useEffect(() => {
         dispatch(fetchTimeTableColors())
         dispatch(fetchWeekDays())
+
     }, [])
 
     useEffect(() => {
-        if (isDataStatus === "week" && weekDay && branch) {
-            dispatch(fetchTimeTableData({week: weekDay, branch }))
-        } else if (isDataStatus === "date" && date && branch) {
-            dispatch(fetchTimeTableData({date, branch}))
+        if (branch) {
+            dispatch(fetchTeachersForSelect(branch))
         }
-    }, [isDataStatus, date, weekDay, branch])
+    }, [branch])
+
+    useEffect(() => {
+        if (isDataStatus === "week" && weekDay && branch) {
+            dispatch(fetchTimeTableData({week: weekDay, branch, teacher: filteredTeacher }))
+        } else if (isDataStatus === "date" && date && branch) {
+            dispatch(fetchTimeTableData({date, branch, teacher: filteredTeacher}))
+        }
+    }, [isDataStatus, date, weekDay, branch, filteredTeacher])
 
     useEffect(() => {
         if (isDataStatus === "week" && weekDay && branch && classView) {

@@ -20,7 +20,7 @@ import {deleteRoomThunk} from "features/roomDeleteModal/model/roomDeleteThunk";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {ConfirmModal} from "../../../shared/ui/confirmModal";
 import {useNavigate} from "react-router";
-import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 
 const reducers = {
     roomssSlice: roomssReducer,
@@ -138,6 +138,10 @@ export const RoomsProfilePage = () => {
                             <div className={cls.container_leftBox_seatsNumberBox}>
                                 <h4 className={cls.container_leftBox_seatsNumberBox_label}>O'rindiqlar soni</h4>
                                 <h2 className={cls.container_leftBox_seatsNumberBox_label}>{localRoomData?.seats_number}</h2>
+                            </div>
+                            <div className={cls.container_leftBox_seatsNumberBox}>
+                                <h4 className={cls.container_leftBox_seatsNumberBox_label}>Xona raqami</h4>
+                                <h2 className={cls.container_leftBox_seatsNumberBox_label}>{localRoomData?.order}</h2>
                             </div>
                             <div className={cls.container_leftBox_seatsNumberBox}>
                                 <h4 className={cls.container_leftBox_seatsNumberBox_label}>Qo'shimcha</h4>
