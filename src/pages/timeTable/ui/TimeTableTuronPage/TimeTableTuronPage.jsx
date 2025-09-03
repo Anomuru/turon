@@ -55,6 +55,7 @@ import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/Dyn
 import {timeTableTuronReducer} from "pages/timeTable/model/slice/timeTableTuronSlice.js";
 import {fetchTeachersForSelect} from "entities/oftenUsed/index.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 
 
 const rooms = [
@@ -100,6 +101,8 @@ export const TimeTableTuronPage = () => {
     const [selectedGroup, setSelectedGroup] = useState(null)
     const [canSubmitLesson, setCanSubmitLesson] = useState({})
     const [rooms, setRooms] = useState([])
+    const [activeUpdate, setActiveUpdate] = useState(false)
+    const [activeEvent, setActiveEvent] = useState({})
 
 
     const color = useSelector(getTimeTableTuronColor)
@@ -321,22 +324,32 @@ export const TimeTableTuronPage = () => {
 
 
     async function handleDragEnd(event) {
-        const {active, over} = event;
+        let curActive;
+        let curOver;
+        if (!!event) {
+            let {active, over} = event;
+            curActive = active
+            curOver = over
+        } else {
+            let {active, over} = activeEvent;
+            curActive = active
+            curOver = over
+        }
 
 
-        if (!over || !active) return
+        if (!curOver || !curActive) return
         // if (over && over.data.current.accepts.includes(active.data.current.type)) {
         //     // do stuff
         // }
 
 
-        const activeTypeItem = active?.data?.current?.type
-        const activeItemRoom = active?.data?.current?.room
-        const activeItemId = active.id
+        const activeTypeItem = curActive?.data?.current?.type
+        const activeItemRoom = curActive?.data?.current?.room
+        const activeItemId = curActive.id
 
-        const overItemId = over.id
-        const overItemRoom = over?.data?.current?.room
-        const overTypeItem = over?.data?.current?.type
+        const overItemId = curOver.id
+        const overItemRoom = curOver?.data?.current?.room
+        const overTypeItem = curOver?.data?.current?.type
 
 
         let isActiveItem
@@ -482,7 +495,6 @@ export const TimeTableTuronPage = () => {
 
         } else {
 
-
             const filteredOverItem = rooms.filter(item => item.id === overItemRoom)[0].lessons.filter(item => item.dndId === overItemId)[0]
 
 
@@ -490,11 +502,11 @@ export const TimeTableTuronPage = () => {
 
 
             if (activeTypeItem === "group" || activeTypeItem === "flow") {
-                filteredActiveItem = groups.filter(item => item.dndId === active.id)[0]
+                filteredActiveItem = groups.filter(item => item.dndId === curActive.id)[0]
             } else if (activeTypeItem === "subject") {
-                filteredActiveItem = subjects.filter(item => item.dndId === active.id)[0]
+                filteredActiveItem = subjects.filter(item => item.dndId === curActive.id)[0]
             } else {
-                filteredActiveItem = teachers.filter(item => item.dndId === active.id)[0]
+                filteredActiveItem = teachers.filter(item => item.dndId === curActive.id)[0]
             }
 
 
@@ -509,7 +521,7 @@ export const TimeTableTuronPage = () => {
                 rooms.map(room => {
                     if (room.id === overItemRoom) {
                         const newLessons = room.lessons.map(container => {
-                            if (container.dndId === over.id) {
+                            if (container.dndId === curOver.id) {
                                 if (container.items) {
                                     let have
 
@@ -611,6 +623,8 @@ export const TimeTableTuronPage = () => {
             )
         }
         setCanDisabled(false)
+        setActiveUpdate(false)
+        setActiveEvent({})
     }
 
 
@@ -805,7 +819,15 @@ export const TimeTableTuronPage = () => {
                     sensors={sensors}
                     collisionDetection={rectIntersection}
                     onDragStart={onDragStart}
-                    onDragEnd={handleDragEnd}
+                    onDragEnd={(event)=> {
+                        const {over, active} = event
+                        if (active?.data?.current?.type === "container" && over?.data?.current?.type === "container") {
+                            setActiveUpdate(true)
+                            setActiveEvent(event)
+                        } else {
+                            handleDragEnd(event)
+                        }
+                    }}
                     // modifiers={[restrictToFirstScrollableAncestor]}
                 >
                     <TimeTableDragItems
@@ -899,6 +921,13 @@ export const TimeTableTuronPage = () => {
 
                 </Modal>
 
+                <ConfirmModal
+                    setActive={setActiveUpdate}
+                    active={activeUpdate}
+                    title={"Rostanham o'zgartirmoqchimisiz"}
+                    type={"success"}
+                    onClick={() => handleDragEnd(false)}
+                />
 
             </div>
     );
