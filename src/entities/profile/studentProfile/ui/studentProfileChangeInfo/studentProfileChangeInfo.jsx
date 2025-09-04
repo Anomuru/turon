@@ -97,51 +97,9 @@ export const StudentProfileChangeInfo = memo((props) => {
                         required
                     />
 
-                    <Input
-                        placeholder={"Ota-ona fio"}
-                        name={"parents_fullname"}
-                        register={register}
-                        value={currentData?.parents_fullname}
-                        required
-                    />
-                    <Input
-                        placeholder={"kelgan maktabi"}
-                        name={"old_school"}
-                        register={register}
-                        value={currentData?.old_school}
-                        required
-                    />
-                    <Input
-                        placeholder={"region"}
-                        name={"parent_region"}
-                        register={register}
-                        value={currentData?.parent_region}
-                        required
-                    />
-                    <Input
-                        placeholder={"xudud"}
-                        name={"district"}
-                        register={register}
-                        value={currentData?.district}
-                        required
-                    />
-                    <div className={cls.seria}>
-                        <Input
-                            placeholder={"seriya"}
-                            name={"parent_seria"}
-                            register={register}
-                            value={currentData?.parent_seria}
-                            required
-                        />
-                        <Input
-                            placeholder={"seriya raqami"}
-                            name={"parent_seria_num"}
-                            register={register}
-                            value={currentData?.parent_seria_num}
-                            required
-                            type={"number"}
-                        />
-                    </div>
+      
+
+
                     <Input
                         placeholder={"Tug'ilgan sana ota-ona"}
                         name={"born_date"}

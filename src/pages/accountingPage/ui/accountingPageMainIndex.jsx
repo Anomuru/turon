@@ -34,7 +34,7 @@ import {getSearchStr, SearchPlatformInput} from "features/searchInput/index.js";
 
 const reducers = {
     accountingSlice: accountingReducer,
-    capital: capitalReducer
+    CapitalSlice: capitalReducer
 
 }
 

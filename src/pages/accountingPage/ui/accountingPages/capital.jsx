@@ -28,10 +28,11 @@ import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {getBranch} from "features/branchSwitcher";
 import {ConfirmModal} from "shared/ui/confirmModal";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {getPaymentType} from "entities/capital/model/thunk/capitalThunk.js";
 
 const reducers = {
     capitalSlice: capitalListReducer,
-    capital: capitalReducer,
+    CapitalSlice: capitalReducer,
     overHeadSlice: overHeadReducer,
 }
 
@@ -52,7 +53,9 @@ export const Capital = ({deleted, setDeleted}) => {
 
     const [currentPage, setCurrentPage] = useState(1)
     const PageSize = useMemo(() => 50, [])
-
+    useEffect(() => {
+        dispatch(getPaymentType())
+    }, [])
     const {request} = useHttp()
     useEffect(() => {
         if (branchID && currentPage && PageSize) {
