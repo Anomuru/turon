@@ -1,28 +1,27 @@
 
 
-
 export const getCapitalData = (state) =>
-    state.capital?.capitalsData
+    state.CapitalSlice?.capitalsData
 
 
 
 export const getCapitalInsideInfo = (state) =>
-    state.capital?.capitalCategoryInfo
+    state.CapitalSlice?.capitalCategoryInfo
 
 export const getLoading = (state) =>
-    state.capital?.loading
+    state.CapitalSlice?.loading
 
 export const getCapitalPermission = (state) =>
-    state.capital?.capitalPermission
+    state.CapitalSlice?.capitalPermission
 
 
 export const getCapitalInside = (state) =>
-    state.capital?.capitalInsideCategory
+    state.CapitalSlice?.capitalInsideCategory
 
 
 export const getCapitalTypes = (state) =>
-    state.capital?.paymentTypes
+    state.CapitalSlice?.paymentTypes
 
 
 export const getCapitalCategoryInfo = (state) =>
-    state.capital?.capitalCategory
+    state.CapitalSlice?.capitalCategory

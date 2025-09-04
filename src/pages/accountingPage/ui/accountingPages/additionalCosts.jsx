@@ -31,7 +31,7 @@ import {
     getOverHeadList,
 } from "entities/accounting/model/selector/additionalCosts";
 import {onAddOverhead, onChangePaymentType, onDeleteOverhead} from "entities/accounting/model/slice/additionalCosts";
-import {DefaultPageLoader} from "shared/ui/defaultLoader";
+
 import {
     AdditionalCostsDeleted
 } from "entities/accounting/ui/acauntingTables/accountingTableAdditionalCosts/additionalCostsDeleted";
@@ -39,10 +39,12 @@ import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 
 import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 import classNames from "classnames";
+import {getPaymentType} from "entities/capital/model/thunk/capitalThunk.js";
+
 
 const reducers = {
     overHeadSlice: overHeadReducer,
-    capital: capitalReducer
+    CapitalSlice: capitalReducer
 }
 
 
@@ -89,6 +91,9 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
         // dispatch(getPaymentType())
         dispatch(getMonthDay())
         // dispatch(overHeadDeletedList())
+    }, [])
+    useEffect(() => {
+        dispatch(getPaymentType())
     }, [])
 
     useEffect(() => {
