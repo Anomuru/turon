@@ -68,7 +68,7 @@ export const StudentProfileAttendance = memo(({setActive, data, onSelectGroup, o
 
         >
             <div className={cls.attendance__title}>
-                <h1>Davomat</h1>
+                <h2>Davomat</h2>
                 <p>1 oylik davomat</p>
             </div>
             <div className={cls.attendance__list}>

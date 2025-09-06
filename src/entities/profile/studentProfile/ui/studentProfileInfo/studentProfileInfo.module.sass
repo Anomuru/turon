@@ -1,22 +1,131 @@
 @import "app/styles/abstracts/variables"
 
 .info
-  //width: 400px
-  //grid-area: info
-  height: fit-content
-  justify-content: space-between
-  align-items: center
-
-  &__avatar
+  width: 100%
+  height: 300px
+  //justify-content: space-between
+  display: flex
+  flex-direction: row
+  overflow: hidden
+  padding: 0 !important
+  background: linear-gradient(to left, #4232B8, #822FD2, #2955D3)
+  align-items: end
+  &__div
+    width: 100%
+    height: 50%
+    background: white
     display: flex
-    flex-direction: column
     align-items: center
-    gap: 2rem
+    padding: 2rem
+    justify-content: space-between
 
-  &__image
-    width: 180px
-    height: 180px
-    border-radius: 50%
+
+    &__avatar
+      margin-top: -10rem
+      display: flex
+      //background: red
+      //flex-direction: column
+      align-items: center
+      gap: 3rem
+
+      &__image
+        width: 180px
+        height: 180px
+        object-fit: cover
+        border-radius: 15%
+        cursor: pointer
+      &__box
+        display: flex
+        margin-top: 2rem
+        flex-direction: column
+        gap: 1rem
+        justify-content: start
+        //background: red
+        height: 230px
+        &__name
+          font-size: 4rem
+          color: white
+        &__panel
+          width: 100%
+          display: flex
+          gap: 2rem
+          align-items: center
+          &__stBtn
+            font-size: 1.5rem
+            text-transform: capitalize
+            border-radius: 4rem
+            font-family: "Montserrat", sans-serif
+            background: linear-gradient(to right, #1DBD60, #089A68)
+            &:hover
+              background: linear-gradient(to right, #1DBD60, #089A68)
+              color: white
+              cursor: text !important
+              box-shadow: none
+          &__btn
+            font-size: 1.5rem
+            text-transform: capitalize
+            border-radius: 4rem
+            font-family: "Montserrat", sans-serif
+            background: linear-gradient(to right, #3C80F6, #4E49E5)
+            &:hover
+              background: linear-gradient(to right, #3C80F6, #4E49E5)
+              color: white
+              box-shadow: none
+          &__switch
+            display: flex
+            gap: 2rem
+            align-items: center
+            padding: .9rem
+            border-radius: 4rem
+            background: linear-gradient(to right, #FF9040, #FF004E)
+            h1
+              font-size: 1.5rem
+              font-family: "Montserrat", sans-serif
+              color: white
+        &__source
+          width: 100%
+          height: 30%
+          display: flex
+          gap: 8rem
+          align-items: end
+          align-self: end
+          &__each
+            display: flex
+            align-items: center
+            cursor: pointer
+            gap: 1rem
+            h1
+              font-size: 2.5rem
+          &__payment
+            display: flex
+            align-items: center
+            width: 300px
+            position: absolute
+            bottom: 0
+            right: 16rem
+
+            &__img
+              width: 400px
+              user-select: none
+            &__text
+              position: absolute
+              left: 6rem
+              bottom: 5rem
+              font-size: 2rem
+              color: white
+              font-family: Monospaced, monospace
+            &__clicker
+              width: 6rem
+              height: 4rem
+              padding: 1rem
+              position: absolute
+              left: 6rem
+              bottom: 11.2rem
+              cursor: pointer
+
+
+
+
 
   &__role
     border: 1px solid #86EFAC
@@ -32,6 +141,8 @@
     align-items: center
     font-size: 1.6rem
     gap: 3rem
+
+    //background: red
 
     p
       width: 100%

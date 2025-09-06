@@ -42,7 +42,7 @@ export const StudentProfileTeachers = memo(({data}) => {
         <EditableCard
             extraClass={cls.teacher}
         >
-            <h1>O’qituvchilari</h1>
+            <h2>O’qituvchilari</h2>
             <div className={cls.items}>
                 {renderedTeachers.length > 0 ? (
                     renderedTeachers

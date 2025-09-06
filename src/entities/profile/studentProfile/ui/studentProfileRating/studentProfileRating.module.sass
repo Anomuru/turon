@@ -2,7 +2,9 @@
   font-size: 1.6rem
   grid-area: rating
   align-items: center
-
+  transition: .4s ease
+  &:hover
+    transform: translateY(-1rem)
   &__title
     display: flex
     flex-direction: column
@@ -14,7 +16,7 @@
       color: #9CA3AF
 
   &__inner
-    width: 350px
+    width: 250px
     height: 143px
     display: flex
     justify-content: center

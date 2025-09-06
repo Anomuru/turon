@@ -69,6 +69,7 @@ export const StudentProfilePage = () => {
     const languages = useSelector(getLanguagesData)
     const charity = useSelector(getCharity)
 
+    console.log(charity, 'charity')
 
 
 
@@ -85,7 +86,7 @@ export const StudentProfilePage = () => {
 
     const [changeSelectedClass,setChangeSelectedClass] = useState(null)
     const [changeSelectedLang,setChangeSelectedLang] = useState(null)
-    const [activeSwitch, setActiveSwitch] = useState(true)
+    const [activeSwitch, setActiveSwitch] = useState(false)
 
 
 
@@ -155,35 +156,31 @@ export const StudentProfilePage = () => {
         <div
             className={classNames(cls.profile)}
         >
-            <StudentProfileInfo
-                setActive={setActive}
-                active={active}
-                setActiveModal={setActiveModal}
-                data={userData?.user}
-                content={userData}
-                contract={userData}
-                newImage={newImage}
-                month={month}
-                charity={charity}
-            />
+            <div className={cls.profile__content}>
+                <StudentProfileInfo
+                    setActive={setActive}
+                    active={active}
+                    setActiveModal={setActiveModal}
+                    data={userData?.user}
+                    content={userData}
+                    contract={userData}
+                    newImage={newImage}
+                    month={month}
+                    charity={charity}
+                    activeSwitch={activeSwitch}
+                    setSwitch={setActiveSwitch}
+                />
+            </div>
 
             <div
                 className={classNames(cls.profile__mainContent, {
                     [cls.active]: active
                 })}
             >
-                <div className={cls.header}>
-                    <h2>{activeSwitch ? "Ma'lumotlar" : "Time Table"}</h2>
-                    <Switch
-                        activeSwitch={activeSwitch}
-                        onChangeSwitch={setActiveSwitch}
-                    />
-                </div>
                 {
-                    activeSwitch ? <>
+                    !activeSwitch ? <>
                         <StudentProfileTeachers data={userData?.group}/>
                         <StudentProfileRating setActive={setActive}/>
-                        <StudentProfileReward/>
                         <StudentProfileSubjects
                             setActive={setActive}
                             data={userData?.group}
@@ -195,9 +192,10 @@ export const StudentProfilePage = () => {
                             onSelectGroup={setSelectedGroup}
                             onSelectGroupName={setSelectedGroupName}
                         />
-                    </> : <TeacherProfileTimeTable/>
+                    </> :  <StudentProfileTimeTable/>
                 }
-                {/*<StudentProfileTimeTable/>*/}
+                {/*<TeacherProfileTimeTable/>*/}
+
             </div>
             <div
                 className={classNames(cls.profile__otherContent, {
