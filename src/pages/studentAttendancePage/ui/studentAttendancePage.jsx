@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {Fragment, useEffect, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 
 import {groupProfileReducer} from "entities/profile/groupProfile/model/groupProfileSlice";
@@ -96,7 +96,14 @@ export const StudentAttendancePage = () => {
     const render = () => {
         return attendanceListForDay?.map((item, i) => (
             <>
-                <h2 className={cls.title}>{item?.group_name}</h2>
+                <div className={cls.header}>
+                    <h2 className={cls.header__title}>{item?.group_name}</h2>
+                    <div className={cls.header__numbers}>
+                        <h2 className={cls.subTitle} style={{color: "#22C55E"}}>Kelganlar: {item?.summary?.present}</h2>
+                        <h2 className={cls.subTitle} style={{color: "#F43F5E"}}>Kelmaganlar: {item?.summary?.absent}</h2>
+                        <h2 className={cls.subTitle}>Umumiy: {item?.summary?.total}</h2>
+                    </div>
+                </div>
 
                 {
                     item?.students?.length
@@ -110,7 +117,7 @@ export const StudentAttendancePage = () => {
                                     {
                                         itemIn?.status === null
                                             ? "qilinmagan"
-                                            : itemIn?.status? (
+                                            : itemIn?.status ? (
                                                 <i className="fas fa-check" style={{color: "#22C55E"}}/>
                                             ) : (
                                                 <i className="fas fa-times" style={{color: "#F43F5E"}}/>
@@ -156,7 +163,7 @@ export const StudentAttendancePage = () => {
                 </div>
                 <div className={cls.studentAttendance__container}>
                     <Table>
-                        <thead>
+                        <thead style={{top: 0, position: "initial"}}>
                         <tr>
                             <th>No</th>
                             <th>Ism Familiya</th>

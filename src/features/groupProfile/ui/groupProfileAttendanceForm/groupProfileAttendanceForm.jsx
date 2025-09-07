@@ -23,6 +23,7 @@ import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, studentData}) => {
 
 
+    const dayNumber = new Date().getDate().toString();
     const {register, handleSubmit, setValue} = useForm()
     const {request} = useHttp()
     const {id} = useParams()
