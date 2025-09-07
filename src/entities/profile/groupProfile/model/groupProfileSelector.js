@@ -34,6 +34,18 @@ export const getStudyMonths = (state) =>
     state.groupProfileSlice?.studyMonths
 export const getDebtStudents = (state) =>
     state.groupProfileSlice?.debtStudents
+export const getAttendance = (state) =>
+    state.groupProfileSlice?.groupAttendanceDate
+export const getAttendanceAll = (state) =>
+    state.groupProfileSlice?.groupAttendanceDateAll
+export const getAttendanceLoading = (state) =>
+    state.groupProfileSlice?.groupAttendanceDateLoading
+export const getAttendanceList = (state) =>
+    state.groupProfileSlice?.attendanceList
+export const getAttendanceListLoading = (state) =>
+    state.groupProfileSlice?.attendanceListLoading
+export const getAttendanceListForDay = (state) =>
+    state.groupProfileSlice?.attendanceListForDay
 
 
 // export const getGroupAttendance = (state) =>

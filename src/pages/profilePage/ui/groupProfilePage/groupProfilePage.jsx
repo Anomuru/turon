@@ -163,7 +163,8 @@ export const GroupProfilePage = () => {
                     {/*<GroupProfileInfo/>*/}
                     <div
                         className={classNames(cls.profile__mainContent, {
-                            [cls.active]: active
+                            [cls.active]: active,
+                            [cls.attendance]: attendance
                         })}
                     >
                         <div className={cls.header}>
@@ -176,12 +177,17 @@ export const GroupProfilePage = () => {
                         {
                             activeSwitch ? <>
 
-                                <GroupProfileModalTeachers branch={branch}/>
+                                {
+                                    attendance ? null
+                                        : <>
+                                            <GroupProfileModalTeachers branch={branch}/>
+                                            <GroupProfileDeleteForm branch={branch}/>
+                                        </>
+                                }
                                 {/*<GroupProfileTeacher setActive={setActiveModal}/>*/}
-                                <GroupProfileDeleteForm branch={branch}/>
                                 {/*<GroupProfileStudents/>*/}
                                 <GroupProfileAttendanceForm
-                                    data={data?.students}
+                                    studentData={data?.students}
                                     setAttendance={setAttendance}
                                     attendance={attendance}
                                 />

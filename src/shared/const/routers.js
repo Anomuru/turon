@@ -63,5 +63,6 @@ export const getGroupHistory = (id) => `students/profile/history/${id}`
 export const getRouteClassProfile = (id) => `groups/classProfile/${id}`
 export const getCapitalCategoryProfile = (id) => `capital/:id/capitalBoxProfile/:id/categoryProfile/${id}`
 export const getRouteRGBData = () => `students/RGBData/*`
+export const getRouteStudentAttendance = () => `students/attendance/*`
 
 

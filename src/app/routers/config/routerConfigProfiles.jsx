@@ -11,20 +11,28 @@ import {
     getTeacherProfile,
     getRoomsProfilePage,
     getEmployerProfile,
-     getBranch,
+    getBranch,
     getLocations,
     getRouteCreateGroup,
     getEmployerSalaryInsideSource,
     getEmployerSalary,
-    getTeacherSalary, getInkasatsiya,
+    getTeacherSalary,
+    getInkasatsiya,
     getGroupHistory,
-    getRouteClassProfile, getOtchot, getRouteRGBData, getRouteTaskManager, getRouteFilteredLeads, getAccounting
+    getRouteClassProfile,
+    getOtchot,
+    getRouteRGBData,
+    getRouteTaskManager,
+    getRouteFilteredLeads,
+    getAccounting,
+    getRouteStudentAttendance
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
 import {AccountingPageMainIndex} from "pages/accountingPage/index.js";
 
 
+const StudentAttendancePage = lazyPage(() => import("pages/studentAttendancePage"), "StudentAttendancePage")
 const ClassProfilePage = lazyPage(() => import("pages/School"), "ClassProfilePage");
 // const StudentProfilePage = lazyPage(() => import("pages/profilePage" , "StudentProfilePage"));
 const GroupCreatePage = lazyPage(() => import("pages/groupsPage"), "GroupCreatePage");
@@ -195,6 +203,11 @@ export const routersConfigProfile = [
         name: "rgbData",
         path: getRouteRGBData(),
         element: <RgbDataPage/>
+    },
+    {
+        name: "attendance",
+        path: getRouteStudentAttendance(),
+        element: <StudentAttendancePage/>
     },
 
 

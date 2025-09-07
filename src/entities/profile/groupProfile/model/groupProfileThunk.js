@@ -1,5 +1,5 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {API_URL, headers, useHttp} from "shared/api/base";
+import {API_URL, headers, ParamUrl, useHttp} from "shared/api/base";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {useDispatch} from "react-redux";
 
@@ -172,8 +172,32 @@ export const getGroupDebtStudents = createAsyncThunk(
 
 export const getSchoolAttendance = createAsyncThunk(
     "groupProfileSlice/getSchoolAttendance",
-    (id) => {
+    ({id}) => {
         const {request} = useHttp()
         return request(`${API_URL}Attendance/attendance/periods/?group_id=${id}`, "GET", null, headers())
+    }
+)
+
+export const getSchoolAttendanceAll = createAsyncThunk(
+    "groupProfileSlice/getSchoolAttendanceAll",
+    () => {
+        const {request} = useHttp()
+        return request(`${API_URL}Attendance/attendance/periods-all/`, "GET", null, headers())
+    }
+)
+
+export const getSchoolAttendanceList = createAsyncThunk(
+    "groupProfileSlice/getSchoolAttendanceList",
+    ({group_id, year, month}) => {
+        const {request} = useHttp()
+        return request(`${API_URL}Attendance/attendance/monthly/?${ParamUrl({group_id, year, month})}`, "GET", null, headers())
+    }
+)
+
+export const getSchoolAttendanceForDay = createAsyncThunk(
+    "groupProfileSlice/getSchoolAttendanceForDay",
+    ({day, year, month, branch}) => {
+        const {request} = useHttp()
+        return request(`${API_URL}Attendance/attendance/branch-daily/${branch}/?${ParamUrl({day, year, month})}`, "GET", null, headers())
     }
 )
