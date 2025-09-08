@@ -84,7 +84,7 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
         }
         request(`${API_URL}Attendance/attendance/create/`, "POST", JSON.stringify(res), headers())
             .then(res => {
-                if (attendanceList && attendanceList.days?.length) {
+                if (attendanceList && attendanceList.students?.length) {
                     dispatch(createAttendance({...res, studentId: active?.student}))
                 } else {
                     dispatch(getSchoolAttendanceList({
@@ -151,7 +151,7 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
         let data = [];
         let isAttendance = false;
 
-        if (attendanceList && attendanceList?.days?.length) {
+        if (attendanceList && attendanceList?.students?.length) {
             data = attendanceList?.students;
             isAttendance = true;
         } else {
@@ -258,7 +258,7 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
                             <th>№</th>
                             <th>Ism Familya</th>
                             {
-                                attendanceList?.days ?
+                                attendanceList?.students ?
                                     attendanceList?.days?.map((item, index) => {
                                         if (index >= 3 && !attendance) return null
                                         return (
