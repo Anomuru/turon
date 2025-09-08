@@ -46,6 +46,8 @@ export const getAttendanceListLoading = (state) =>
     state.groupProfileSlice?.attendanceListLoading
 export const getAttendanceListForDay = (state) =>
     state.groupProfileSlice?.attendanceListForDay
+export const getAttendanceAllForDay = (state) =>
+    state.groupProfileSlice?.attendanceAllForDay
 
 
 // export const getGroupAttendance = (state) =>

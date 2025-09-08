@@ -34,6 +34,7 @@ const initialState = {
     groupAttendanceDate: [],
     groupAttendanceDateLoading: false,
     attendanceListForDay: [],
+    attendanceAllForDay: {},
     attendanceList: {},
     attendanceListLoading: false,
     nextLessonData: null,
@@ -399,6 +400,7 @@ const groupProfileSlice = createSlice({
     })
     .addCase(getSchoolAttendanceForDay.fulfilled, (state, action) => {
         state.attendanceListForDay = action.payload?.groups
+        state.attendanceAllForDay = action.payload?.overall_summary
         state.loading = false
         state.error = null
     })

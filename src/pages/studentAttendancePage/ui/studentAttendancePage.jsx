@@ -5,7 +5,7 @@ import {groupProfileReducer} from "entities/profile/groupProfile/model/groupProf
 import {getSchoolAttendanceAll, getSchoolAttendanceForDay} from "entities/profile/groupProfile/model/groupProfileThunk";
 import {
     getAttendance,
-    getAttendanceAll,
+    getAttendanceAll, getAttendanceAllForDay,
     getAttendanceListForDay
 } from "entities/profile/groupProfile/model/groupProfileSelector";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
@@ -24,6 +24,7 @@ export const StudentAttendancePage = () => {
     const dispatch = useDispatch()
 
     const attendanceListForDay = useSelector(getAttendanceListForDay)
+    const attendanceAllForDay = useSelector(getAttendanceAllForDay)
     const attendanceDates = useSelector(getAttendanceAll)
     const branch = useSelector(getUserBranchId)
 
@@ -100,7 +101,8 @@ export const StudentAttendancePage = () => {
                     <h2 className={cls.header__title}>{item?.group_name}</h2>
                     <div className={cls.header__numbers}>
                         <h2 className={cls.subTitle} style={{color: "#22C55E"}}>Kelganlar: {item?.summary?.present}</h2>
-                        <h2 className={cls.subTitle} style={{color: "#F43F5E"}}>Kelmaganlar: {item?.summary?.absent}</h2>
+                        <h2 className={cls.subTitle}
+                            style={{color: "#F43F5E"}}>Kelmaganlar: {item?.summary?.absent}</h2>
                         <h2 className={cls.subTitle}>Umumiy: {item?.summary?.total}</h2>
                     </div>
                 </div>
@@ -139,7 +141,16 @@ export const StudentAttendancePage = () => {
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.studentAttendance}>
                 <div className={cls.studentAttendance__header}>
-                    <h1>Davomat</h1>
+                    <div className={cls.info}>
+                        <h1>Davomat</h1>
+                        <div className={cls.subTitles}>
+                            <h2 className={cls.subTitle}
+                                style={{color: "#22C55E"}}>Kelganlar: {attendanceAllForDay?.present}</h2>
+                            <h2 className={cls.subTitle}
+                                style={{color: "#F43F5E"}}>Kelmaganlar: {attendanceAllForDay?.absent}</h2>
+                            <h2 className={cls.subTitle}>Umumiy: {attendanceAllForDay?.total}</h2>
+                        </div>
+                    </div>
                     <div className={cls.selects}>
                         <Select
                             titleOption={"Kun"}
