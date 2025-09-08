@@ -41,7 +41,7 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
     const [attendanceMonth, setAttendanceMonth] = useState([])
     const [selectedMonth, setSelectedMonth] = useState(null)
     const [selectedDays, setSelectedDays] = useState([])
-    const [status, setStatus] = useState(false)
+    const [status, setStatus] = useState(true)
 
     useEffect(() => {
         if (id)
@@ -73,7 +73,6 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
 
 
     const onCreate = (data) => {
-        console.log(active, "active")
         const res = {
             ...data,
             status,
@@ -95,7 +94,7 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
                     }))
                 }
                 setActive(false)
-                setStatus(false)
+                setStatus(true)
                 setValue("reason", "")
             })
     }
@@ -122,8 +121,8 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
             await onDelete();
 
             const res = {
-                ...data,
                 status,
+                reason: status ? "" : data?.reason,
                 day: `${selectedYear}-${selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth}-${isChange?.day < 10 ? `0${isChange?.day}` : isChange?.day}`,
                 year: selectedYear,
                 month: selectedMonth,
@@ -140,7 +139,7 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
 
             dispatch(createAttendance({...response, studentId: isChange?.student}));
             setIsChange(false);
-            setStatus(false);
+            setStatus(true);
             setValue("reason", "");
         } catch (error) {
             console.error("Ошибка при изменении:", error);
@@ -182,8 +181,12 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
                                             setIsChange({
                                                 day: Object.keys(item?.days)[idx],
                                                 student: item?.student?.id,
-                                                id: i?.id
+                                                id: i?.id,
                                             });
+                                            setStatus(i?.status)
+                                            if (i?.reason) {
+                                                setValue("reason", i?.reason)
+                                            }
                                         }
                                     }}
                                 >
@@ -294,14 +297,15 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
                 <h1>Davomat qilish</h1>
                 <Form extraClassname={cls.create} onSubmit={handleSubmit(onCreate)}>
                     <div className={cls.create__checkbox}>
-                        <h2>O'quvchi darsda qatnashdimi</h2>
+                        <h2>O'quvchi darsga kemagan</h2>
                         <Input
                             extraClassName={cls.checkbox}
                             type={"checkbox"}
                             // register={register}
                             name={"status"}
                             onChange={() => setStatus(!status)}
-                            value={status}
+                            checked={!status}
+                            // value={status}
                         />
                     </div>
                     {
@@ -322,14 +326,14 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, stud
                 <h1>Davomatni o'zgartirish</h1>
                 <Form id={"change"} typeSubmit extraClassname={cls.create} onSubmit={handleSubmit(onChange)}>
                     <div className={cls.create__checkbox}>
-                        <h2>O'quvchi darsda qatnashdimi</h2>
+                        <h2>O'quvchi darsga kemagan</h2>
                         <Input
                             extraClassName={cls.checkbox}
                             type={"checkbox"}
                             // register={register}
                             name={"status"}
                             onChange={() => setStatus(!status)}
-                            value={status}
+                            checked={!status}
                         />
                     </div>
                     {
