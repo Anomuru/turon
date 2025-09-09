@@ -4,14 +4,14 @@ import {editRoomThunk} from "./roomEditThunk";
 const roomsEditModalSlice = createSlice({
     name: 'roomsEditModal',
     initialState: {
-        room: {},
+        room: null,
         status: 'idle',
         error: null,
     },
     reducers: {
         onDeleteRoom: (state, action) => {
             state.room = state.room.filter(room => room.id !== action.payload);
-        }
+        },
 
     },
     extraReducers: (builder) => {
@@ -30,6 +30,6 @@ const roomsEditModalSlice = createSlice({
     },
 });
 
-export const {onDeleteRoom} = roomsEditModalSlice.actions
+export const {onDeleteRoom, } = roomsEditModalSlice.actions
 
-export default roomsEditModalSlice.reducer;
+export const {reducer: roomsEditModalReducer} = roomsEditModalSlice;

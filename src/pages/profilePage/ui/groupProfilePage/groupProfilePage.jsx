@@ -43,6 +43,8 @@ import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {StudentProfileTimeTable} from "entities/profile/studentProfile/index.js";
 import {fetchTimeTableForShow} from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
+import {Switch} from "shared/ui/switch/index.js";
+import {TeacherProfileTimeTable} from "entities/profile/teacherProfile/index.js";
 
 const reducers = {
     groupProfileSlice: groupProfileReducer
@@ -59,6 +61,7 @@ export const GroupProfilePage = () => {
     const branch = useSelector(getUserBranchId)
     const [active, setActive] = useState(false)
     const [attendance, setAttendance] = useState(false)
+    const [activeSwitch, setActiveSwitch] = useState(true)
     useEffect(() => {
         dispatch(fetchGroupProfile({id}))
 
@@ -127,6 +130,20 @@ export const GroupProfilePage = () => {
     //     }
     // }, [branchId, data])
 
+    console.log(id)
+
+    // useEffect(() => {
+    //     if (id)
+    //         request(`${API_URL}Attendance/attendance/periods/?group_id=${id}`, "GET", null, headers())
+    //             .then(res => console.log(res, "res"))
+    // }, [id])
+
+    // useEffect(() => {
+    //     if (id) {
+    //
+    //     }
+    // }, [])
+
     useEffect(() => {
         if (data) {
             dispatch(fetchGroupProfileTimeTable({
@@ -146,17 +163,38 @@ export const GroupProfilePage = () => {
                     {/*<GroupProfileInfo/>*/}
                     <div
                         className={classNames(cls.profile__mainContent, {
-                            [cls.active]: active
+                            [cls.active]: active,
+                            [cls.attendance]: attendance
                         })}
                     >
-                        <GroupProfileModalTeachers branch={branch}/>
-                        {/*<GroupProfileTeacher setActive={setActiveModal}/>*/}
-                        <GroupProfileDeleteForm branch={branch}/>
-                        {/*<GroupProfileStudents/>*/}
-                        <GroupProfileAttendanceForm data={data?.students} setAttendance={setAttendance}
-                                                    attendance={attendance}/>
+                        <div className={cls.header}>
+                            <h2>{activeSwitch ? "Ma'lumotlar" : "Time Table"}</h2>
+                            <Switch
+                                activeSwitch={activeSwitch}
+                                onChangeSwitch={setActiveSwitch}
+                            />
+                        </div>
+                        {
+                            activeSwitch ? <>
+
+                                {
+                                    attendance ? null
+                                        : <>
+                                            <GroupProfileModalTeachers branch={branch}/>
+                                            <GroupProfileDeleteForm branch={branch}/>
+                                        </>
+                                }
+                                {/*<GroupProfileTeacher setActive={setActiveModal}/>*/}
+                                {/*<GroupProfileStudents/>*/}
+                                <GroupProfileAttendanceForm
+                                    studentData={data?.students}
+                                    setAttendance={setAttendance}
+                                    attendance={attendance}
+                                />
+                            </> : <TeacherProfileTimeTable/>
+                        }
                         {/*<GroupProfileAttendance/>*/}
-                        <StudentProfileTimeTable/>
+                        {/*<StudentProfileTimeTable/>*/}
 
                     </div>
                     <div className={classNames(cls.profile__otherContent, {

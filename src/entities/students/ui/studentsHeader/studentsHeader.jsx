@@ -47,6 +47,12 @@ export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onC
                     >
                         RB-Baza
                     </Button>
+                    <Button
+                        onClick={() => navigate("attendance")}
+                        type={"filter"}
+                    >
+                        Davomat
+                    </Button>
 
                     <a style={{color: "white"}}
                        href={`${API_URL}Students/export-students/?branch=${branchID?.id}&format=json`}>

@@ -16,6 +16,7 @@ import {getLoading, getStudentLoading} from "entities/teachers/model/selector/te
 import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 import {fetchTimeTableData, fetchTimeTableForShow} from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {Switch} from "shared/ui/switch/index.js";
 
 
 const reducers = {
@@ -26,7 +27,7 @@ export const ProfileTeacherPage = () => {
 
     const date = new Date().toLocaleDateString('en-CA')
     const [active, setActive] = useState(false)
-    const [actives, setActives] = useState(false)
+    const [activeSwitch, setActiveSwitch] = useState(true)
     const dispatch = useDispatch()
     const {id} = useParams()
     // const {id} = useSelector(getBranch)
@@ -44,7 +45,7 @@ export const ProfileTeacherPage = () => {
             dispatch(fetchTeacherId(id))
         }
 
-    } ,[dispatch, id])
+    }, [dispatch, id])
 
     useEffect(() => {
         if (id && branch) {
@@ -63,46 +64,53 @@ export const ProfileTeacherPage = () => {
 
     return (
 
-            <DynamicModuleLoader reducers={reducers}>
+        <DynamicModuleLoader reducers={reducers}>
 
-                {/*{loading && teacherLoading === true ? <DefaultPageLoader/> :*/}
+            {/*{loading && teacherLoading === true ? <DefaultPageLoader/> :*/}
+            <div
+                className={classNames(cls.profile, {
+                    [cls.active]: active
+                })}
+            >
+                <TeacherProfileInfo
+                    setActive={setActive}
+                    active={active}
+                    setActiveModal={setActiveModal}
+                    newImage={newImage}
+                />
+
+                {/*// actives={actives}*/}
+                {/*// setActives={setActives}*/}
+
+                {/*<ProfileInfo*/}
+                {/*    setActive={setActive}*/}
+                {/*    active={active}*/}
+                {/*/>*/}
                 <div
-                    className={classNames(cls.profile, {
+                    className={classNames(cls.profile__mainContent, {
                         [cls.active]: active
                     })}
                 >
-                    <TeacherProfileInfo
-                        setActive={setActive}
-                        active={active}
-                        setActiveModal={setActiveModal}
-                        newImage={newImage}
-                    />
-
-                    {/*// actives={actives}*/}
-                    {/*// setActives={setActives}*/}
-
-                    {/*<ProfileInfo*/}
-                    {/*    setActive={setActive}*/}
-                    {/*    active={active}*/}
-                    {/*/>*/}
-                    <div
-                        className={classNames(cls.profile__mainContent, {
-                            [cls.active]: active
-                        })}
-                    >
-
-                                <SchoolTeacherGroups/>
-
+                    <div className={cls.header}>
+                        <h2>{activeSwitch ? "Ma'lumotlar" : "Time Table"}</h2>
+                        <Switch
+                            activeSwitch={activeSwitch}
+                            onChangeSwitch={setActiveSwitch}
+                        />
                     </div>
-                    <ImageCrop
-                        setActive={setActiveModal}
-                        active={activeModal === "changeImage"}
-                        setNewImage={onSubmitImage}
-                    />
+
+                    <SchoolTeacherGroups activeSwitch={activeSwitch}/>
 
                 </div>
+                <ImageCrop
+                    setActive={setActiveModal}
+                    active={activeModal === "changeImage"}
+                    setNewImage={onSubmitImage}
+                />
+
+            </div>
             {/*}*/}
-            </DynamicModuleLoader>
+        </DynamicModuleLoader>
 
 
     );

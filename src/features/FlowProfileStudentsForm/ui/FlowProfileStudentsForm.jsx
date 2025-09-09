@@ -74,13 +74,13 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
 
 
     useEffect(() => {
-        if (data) {
+        if (data && id && branch) {
             const res = {
                 ignore_teacher: data?.teacher?.id
             }
             dispatch(fetchFilteredTeachers({res, id, branch}))
         }
-    }, [id, branch])
+    }, [id, branch, data])
 
     const onSubmitAdd = () => {
         let idArr = []

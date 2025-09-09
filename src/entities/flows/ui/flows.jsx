@@ -18,6 +18,10 @@ import cls from "pages/flowsPage/ui/flowsPage.module.sass";
 import {FlowAddForm} from "features/flow/index.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
+function compareById(a, b) {
+    return a.id - b.id;
+}
+
 export const Flows = ({
                           currentTableData,
                           teacherData,
@@ -44,6 +48,7 @@ export const Flows = ({
     // const [addFlow, setAddFlow] = useState(false)
     // const [filter, setFilter] = useState(false)
     const [selectedSubjects, setSelectedSubjects] = useState([])
+    const [isPostTeacher, setIsPostTeacher] = useState(false)
 
     const dispatch = useDispatch()
     const {request} = useHttp()
@@ -51,11 +56,20 @@ export const Flows = ({
     const [activeCheckbox, setActiveCheckBox] = useState(false)
 
     const createFlow = (data) => {
-        const res = {
-            ...data,
-            activity: activeCheckbox,
-            branch: branchId,
-            // subject: teacherData.filter(item => item.id === +data?.teacher)[0]?.subject[0]?.id
+        let res;
+        if (data.teacher === "none") {
+            res = {
+                name: data?.name,
+                activity: activeCheckbox,
+                branch: branchId,
+            }
+        } else {
+            res = {
+                ...data,
+                activity: activeCheckbox,
+                branch: branchId,
+                // subject: teacherData.filter(item => item.id === +data?.teacher)[0]?.subject[0]?.id
+            }
         }
 
         localStorage.setItem("flowData", JSON.stringify(res))
@@ -70,19 +84,21 @@ export const Flows = ({
 
 
     const renderFlowData = () => {
-        return currentTableData?.map((item, i) => {
+        return currentTableData && [...currentTableData]?.sort(compareById)?.map((item, i) => {
             return (
                 <tr onClick={() => navigate(`./flowsProfile/${item?.id}`)}>
                     <td>{i + 1}</td>
                     <td>{item?.name}</td>
-                    <td>
-                        {item?.subject_name}
-                        {
-                            item?.level_name ? ` / ${item?.level_name}` : null
-                        }
-                    </td>
+                    {
+                        !item?.activity ? <td>
+                            {item?.subject_name}
+                            {
+                                item?.level_name ? ` / ${item?.level_name}` : null
+                            }
+                        </td> : <td/>
+                    }
                     <td>{item?.student_count}</td>
-                    <td>{`${item?.teacher_name} ${item?.teacher_surname}`}</td>
+                    {!item?.activity ? <td>{`${item?.teacher_name} ${item?.teacher_surname}`}</td> : <td/>}
                 </tr>
             )
         })
@@ -142,10 +158,13 @@ export const Flows = ({
                 <h2>Create Flow</h2>
                 <div className={cls.flowModal}>
 
-                    <div className={cls.flowModalHeader}>
-                        <h3>Activity</h3>
-                        <Input onChange={() => setActiveCheckBox(!activeCheckbox)} type={"checkbox"}/>
-                    </div>
+                    {
+                        !isPostTeacher ?
+                            <div className={cls.flowModalHeader}>
+                                <h3>Activity</h3>
+                                <Input onChange={() => setActiveCheckBox(!activeCheckbox)} type={"checkbox"}/>
+                            </div> : null
+                    }
 
                     <div className={cls.flowModalForm}>
                         <Form typeSubmit={""} onSubmit={handleSubmit(createFlow)} action="">
@@ -161,10 +180,15 @@ export const Flows = ({
                                 <>
                                     <Select
                                         title={"O'qituvchini tanlang"}
-                                        options={teacherData}
+                                        options={[{id: "none", name: "O'qituvchi yo'q"}, ...teacherData]}
                                         onChangeOption={(e) => {
                                             if (e) {
                                                 getLevelData(e)
+                                                if (e === "none") {
+                                                    setIsPostTeacher(false)
+                                                } else {
+                                                    setIsPostTeacher(true)
+                                                }
                                             }
                                             setSelectedSubjects(teacherData.filter(item => item.id === +e)[0]?.subject)
                                         }}

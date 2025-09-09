@@ -58,7 +58,9 @@ export const DraggableContainer = (props) => {
 
                     <i
                         onClick={() => onDelete(item.room, item.dndId, item.id)}
-                        className={classNames("fa-solid  fa-times", cls.trash)}
+                        className={classNames("fa-solid  fa-times", cls.trash, {
+                            [cls.isNotTeacher]: !item?.teacher?.name
+                        })}
                     >
 
                     </i>

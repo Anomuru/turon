@@ -10,7 +10,11 @@ const initialState = {
 export const roomssSlice = createSlice({
     name: "roomssSlice",
     initialState,
-    reducers: {},
+    reducers: {
+        onChangeRoom: (state, action) => {
+            state.insideRoom.room = action.payload
+        }
+    },
     extraReducers: builder => {
         builder
             .addCase(fetchInsideRoom.pending, state => { state.fetchRoomsStatus = 'loading'; })
@@ -38,5 +42,6 @@ export const roomssSlice = createSlice({
 });
 
 export default roomssSlice.reducer;
-export const {reducer: roomssReducer} = roomssSlice
+export const {reducer: roomssReducer, actions: roomsActions} = roomssSlice
+export const {onChangeRoom} = roomsActions
 

@@ -1,15 +1,24 @@
 @import "app/styles/abstracts/variables"
 
 .attendance
+  width: 100%
   height: fit-content
   grid-area: attendance
   display: flex
   flex-direction: column
   gap: 2rem
   font-size: 1.6rem
-  &__contauner
+  &__header
+    display: flex
+    gap: 1rem
+    .select
+      min-width: 20rem
+  &__container
     max-height: 25rem
     overflow: auto
+    &.active
+      padding-bottom: 1rem
+      max-width: 110rem
     &::-webkit-scrollbar
       width: .7rem
 
@@ -23,6 +32,16 @@
 
     &::-webkit-scrollbar-thumb:hover
       background: $color-grey-dark
+    .day
+      text-align: center
+      //display: flex
+      //justify-content: center
+      //&__inner
+        width: 2rem
+        height: 2rem
+        border: 1px solid
+      &:hover
+        background: #d9f4ff
     .days
       //width: fit-content
       font-size: 1.3rem
@@ -49,3 +68,21 @@
     place-content: center
     border-radius: 50%
     cursor: pointer
+
+.create
+  padding: 2rem 0
+  gap: 2rem
+  display: flex
+  flex-direction: column
+  &__checkbox
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 5rem
+    .checkbox
+      margin: 0 !important
+  &__btns
+    display: flex
+    justify-content: space-between
+    align-items: center
+

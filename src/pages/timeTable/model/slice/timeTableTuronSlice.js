@@ -31,6 +31,7 @@ const initialState = {
     day: "",
     color: "",
     filterClass: "",
+    filterTeacher: "",
 
     fetchStatusTeachers: "idle",
     fetchStatusGroup: "idle",
@@ -55,6 +56,10 @@ const timeTableTuronSlice = createSlice({
             state.filterClass = action.payload
         },
 
+        onChangeFilterTeacherTimeTable: (state, action) => {
+            state.filterTeacher = action.payload
+        },
+
         onChangeColorTimeTable: (state, action) => {
             state.color = action.payload
         },
@@ -62,11 +67,13 @@ const timeTableTuronSlice = createSlice({
         onChangeDateTimeTable: (state, action) => {
             state.date = action.payload
             state.isDataStatus = "date"
+            localStorage.setItem("dateForTimeTable", JSON.stringify({type: "date", value: action.payload}))
             // state.weekDay = null
         },
         onChangeWeekDayTimeTable: (state, action) => {
             state.weekDay = action.payload
             state.isDataStatus = "week"
+            localStorage.setItem("dateForTimeTable", JSON.stringify({type: "week", value: action.payload}))
         }
     },
     extraReducers: builder =>
@@ -315,6 +322,7 @@ export const {
     onChangeDayTimeTable,
     onChangeColorTimeTable,
     onChangeFilterClassTimeTable,
+    onChangeFilterTeacherTimeTable,
     onChangeDateTimeTable,
     onChangeWeekDayTimeTable
 } = timeTableTuronSlice.actions

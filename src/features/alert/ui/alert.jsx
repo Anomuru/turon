@@ -53,8 +53,6 @@ export const Alert = () => {
     //     setCanDelete(true)
     // }
 
-    console.log(alertsData, "alertsData")
-
 
     return (
         // <DynamicModuleLoader reducers={reducers}>

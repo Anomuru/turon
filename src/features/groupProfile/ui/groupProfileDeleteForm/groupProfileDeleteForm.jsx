@@ -149,6 +149,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
         dispatch(changeGroupProfile({
             id,
             data: res,
+            group_type: "school"
         }))
         dispatch(onAddAlertOptions({
             type: "success",
@@ -206,7 +207,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                 update_method: "add_students"
             },
             id,
-            // group_type: "center"
+            group_type: "school"
         }))
         dispatch(onAddAlertOptions({
             type: "success",

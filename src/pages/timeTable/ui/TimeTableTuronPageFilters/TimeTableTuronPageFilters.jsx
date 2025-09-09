@@ -10,7 +10,7 @@ import classNames from "classnames";
 import {useDispatch, useSelector} from "react-redux";
 import {
     onChangeColorTimeTable, onChangeDateTimeTable,
-    onChangeDayTimeTable, onChangeFilterClassTimeTable,
+    onChangeDayTimeTable, onChangeFilterClassTimeTable, onChangeFilterTeacherTimeTable,
     onChangeTypeTimeTable, onChangeWeekDayTimeTable
 } from "../../model/slice/timeTableTuronSlice";
 import {
@@ -22,6 +22,7 @@ import {
 } from "pages/timeTable/model/selectors/timeTableTuronSelectors";
 import {fetchTimeTableColors, fetchTimeTableWeekDays} from "pages/timeTable/model/thunks/timeTableTuronThunks";
 import {Input} from "shared/ui/input";
+import {getTeachersSelect} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 
 const TimeTableTuronPageFilters = React.memo((props) => {
@@ -34,6 +35,7 @@ const TimeTableTuronPageFilters = React.memo((props) => {
         groups
     } = props
 
+    const currentDateForTimeTable = localStorage.getItem("dateForTimeTable")
     const {register} = useForm()
 
     const [activeIdColor, setActiveIdColor] = useState(1)
@@ -48,10 +50,22 @@ const TimeTableTuronPageFilters = React.memo((props) => {
     const weekDays = useSelector(getWeekDays)
     const weekDay = useSelector(getSelectedWeekDay)
     const selectedWeekDay = useSelector(getTimeTableTuronWeekDay)
+    const teachersForSelect = useSelector(getTeachersSelect)
 
     const onChangeColor = (id) => {
         dispatch(onChangeColorTimeTable(id))
     }
+
+    useEffect(() => {
+        if (currentDateForTimeTable) {
+            const dateForTimeTable = JSON.parse(currentDateForTimeTable)
+            if (dateForTimeTable.type === "week") {
+                onChangeWeekDay(dateForTimeTable.value)
+            } else {
+                onChangeDate(dateForTimeTable.value)
+            }
+        }
+    }, [currentDateForTimeTable])
 
 
     const onChangeDate = (date) => {
@@ -118,6 +132,10 @@ const TimeTableTuronPageFilters = React.memo((props) => {
         dispatch(onChangeFilterClassTimeTable(item))
     }
 
+    const onChangeOptionTeacherLesson = (teacher) => {
+        dispatch(onChangeFilterTeacherTimeTable(teacher))
+    }
+
 
     return (
         <div className={cls.filters}>
@@ -164,11 +182,19 @@ const TimeTableTuronPageFilters = React.memo((props) => {
                             extraClassName={cls.select}
                         />
                     </div>
-                    <Select
-                        onChangeOption={onChangeOptionClassLesson}
-                        options={groups}
-                        titleOption={"filter"}
-                    />
+                    <div className={cls.container}>
+                        <Select
+                            titleOption={"O'qituvchi filtri"}
+                            options={[{name: "Hamma", id: "all"}, ...teachersForSelect]}
+                            onChangeOption={onChangeOptionTeacherLesson}
+                        />
+                        <Select
+                            onChangeOption={onChangeOptionClassLesson}
+                            options={groups}
+                            titleOption={"filter"}
+                        />
+                    </div>
+
                 </div>
 
             </div>

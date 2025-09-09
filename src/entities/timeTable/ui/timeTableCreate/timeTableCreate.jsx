@@ -92,12 +92,12 @@ export const TimeTableCreate = memo((props) => {
                         name={"name"}
                         required
                     />
-                    <Select
-                        name={"type"}
-                        register={register}
-                        required
-                        options={optionsType}
-                    />
+                    {/*<Select*/}
+                    {/*    name={"type"}*/}
+                    {/*    register={register}*/}
+                    {/*    required*/}
+                    {/*    options={optionsType}*/}
+                    {/*/>*/}
                     <AnimatedMulti
                         options={classInputData}
                         onChange={setSelectedCI}

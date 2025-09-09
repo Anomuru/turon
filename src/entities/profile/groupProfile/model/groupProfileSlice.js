@@ -14,12 +14,29 @@ import {
     filteredStudents,
     getGroupStudyYears,
     getGroupStudyMonth,
-    getGroupDebtStudents
+    getGroupDebtStudents,
+    getSchoolAttendance,
+    getSchoolAttendanceAll,
+    getSchoolAttendanceList,
+    getSchoolAttendanceForDay
 } from "./groupProfileThunk";
 
 const initialState = {
     data: null,
     groupAttendance: [],
+    // groupAttendanceDate: {
+    //     date: null,
+    //     lastYear: null,
+    //     lastMonth: null,
+    //     lastDay: null
+    // },
+    groupAttendanceDateAll: [],
+    groupAttendanceDate: [],
+    groupAttendanceDateLoading: false,
+    attendanceListForDay: [],
+    attendanceAllForDay: {},
+    attendanceList: {},
+    attendanceListLoading: false,
     nextLessonData: null,
     filteredTeachers: null,
     filteredStudents: null,
@@ -69,6 +86,50 @@ const groupProfileSlice = createSlice({
             state.data.students = state.data.students.filter(item =>
                 !action.payload.includes(item.id)
             );
+        },
+        createAttendance: (state, action) => {
+            const dayNumber = new Date(action.payload.day).getDate().toString();
+
+            state.attendanceList = {
+                days: state.attendanceList.days,
+                students: state.attendanceList.students.map((s) => {
+                    if (s.student.id === action.payload.studentId) {
+                        return {
+                            ...s,
+                            days: {
+                                ...s.days,
+                                [dayNumber]: {
+                                    id: action.payload.id,
+                                    status: action.payload.status,
+                                    reason: action.payload.reason ?? null
+                                }
+                            }
+                        };
+                    }
+                    return s;
+                })
+            };
+        },
+        deleteAttendance: (state, action) => {
+            state.attendanceList = {
+                days: state.attendanceList.days,
+                students: state.attendanceList.students.map((s) => {
+                    let updatedDays = {};
+
+                    for (const [day, value] of Object.entries(s.days)) {
+                        if (value.id === action.payload.id) {
+                            updatedDays[day] = { id: null, status: null };
+                        } else {
+                            updatedDays[day] = value;
+                        }
+                    }
+
+                    return {
+                        ...s,
+                        days: updatedDays
+                    };
+                })
+            };
         }
     },
     extraReducers: builder =>
@@ -283,22 +344,80 @@ const groupProfileSlice = createSlice({
 
 
 
-    // .addCase(getSchoolAttendance.pending, state => {
-    //     state.loading = true
-    //     state.error = null
-    // })
-    // .addCase(getSchoolAttendance.fulfilled, (state, action) => {
-    //     state.groupAttendance = action.payload
-    //     state.loading = false
-    //     state.error = null
-    // })
-    // .addCase(getSchoolAttendance.rejected, (state, action) => {
-    //     state.loading = false
-    //     state.error = true
-    // })
+    .addCase(getSchoolAttendance.pending, state => {
+        state.groupAttendanceDateLoading = true
+        state.error = null
+    })
+    .addCase(getSchoolAttendance.fulfilled, (state, action) => {
+        state.groupAttendanceDate = action.payload?.periods
+        // state.groupAttendanceDate.date = action.payload?.periods
+        // const lastYear = action.payload?.periods[action.payload?.periods?.length - 1]?.year
+        // const yearMonths = action.payload?.periods.filter(item => item.year === lastYear)[0]?.months
+        // const lastMonth = yearMonths[yearMonths?.length - 1]
+        // state.groupAttendanceDate.lastYear = lastYear
+        // state.groupAttendanceDate.lastMonth = lastMonth?.month
+        // state.groupAttendanceDate.lastDay = lastMonth?.days[lastMonth?.days?.length - 1]
+        state.groupAttendanceDateLoading = false
+        state.error = null
+    })
+    .addCase(getSchoolAttendance.rejected, (state, action) => {
+        state.groupAttendanceDateLoading = false
+        state.error = true
+    })
+
+    .addCase(getSchoolAttendanceAll.pending, state => {
+        state.loading = true
+        state.error = null
+    })
+    .addCase(getSchoolAttendanceAll.fulfilled, (state, action) => {
+        state.groupAttendanceDateAll = action.payload?.periods
+        state.loading = false
+        state.error = null
+    })
+    .addCase(getSchoolAttendanceAll.rejected, (state, action) => {
+        state.loading = false
+        state.error = true
+    })
+
+
+    .addCase(getSchoolAttendanceList.pending, state => {
+        state.attendanceListLoading = true
+        state.error = null
+    })
+    .addCase(getSchoolAttendanceList.fulfilled, (state, action) => {
+        state.attendanceList = action.payload
+        state.attendanceListLoading = false
+        state.error = null
+    })
+    .addCase(getSchoolAttendanceList.rejected, (state, action) => {
+        state.attendanceListLoading = false
+        state.error = true
+    })
+
+    .addCase(getSchoolAttendanceForDay.pending, state => {
+        state.loading = true
+        state.error = null
+    })
+    .addCase(getSchoolAttendanceForDay.fulfilled, (state, action) => {
+        state.attendanceListForDay = action.payload?.groups
+        state.attendanceAllForDay = action.payload?.overall_summary
+        state.loading = false
+        state.error = null
+    })
+    .addCase(getSchoolAttendanceForDay.rejected, (state, action) => {
+        state.loading = false
+        state.error = true
+    })
 })
 
-export const {getNextLesson, changeDebtStudent, deleteDebtStudent, onMoveToGroup} = groupProfileSlice.actions
+export const {
+    getNextLesson,
+    changeDebtStudent,
+    deleteDebtStudent,
+    onMoveToGroup,
+    createAttendance,
+    deleteAttendance
+} = groupProfileSlice.actions
 // export default groupProfileSlice.reducer
 
 export const {reducer: groupProfileReducer} = groupProfileSlice

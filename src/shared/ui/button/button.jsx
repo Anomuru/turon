@@ -8,10 +8,10 @@ import close from "shared/assets/icons/close.svg"
 import timeTable from "shared/assets/icons/Clock.png"
 import Filter from "shared/assets/Filtericons/Filter.svg";
 
-export const Button = React.memo(({id,children, onClick, type, disabled, status, extraClass, editPlus,active}) => {
+export const Button = React.memo(({id,children, onClick, btnType, type, disabled, status, extraClass, editPlus,active}) => {
     return (
         <button
-
+            type={btnType}
             id={id}
             form={id}
             onClick={onClick}

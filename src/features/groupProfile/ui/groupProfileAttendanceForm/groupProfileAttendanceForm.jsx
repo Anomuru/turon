@@ -1,4 +1,4 @@
-import React, {memo, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 
 import {EditableCard} from "shared/ui/editableCard";
 import {Modal} from "shared/ui/modal";
@@ -7,144 +7,280 @@ import {Table} from "shared/ui/table";
 import {Select} from "shared/ui/select";
 
 import cls from "./groupProfileAttendanceForm.module.sass";
-import {useNavigate} from "react-router";
+import {useNavigate, useParams} from "react-router";
+import {API_URL, headers, ParamUrl, useHttp} from "shared/api/base.js";
+import {useDispatch, useSelector} from "react-redux";
+import {getSchoolAttendance, getSchoolAttendanceList} from "entities/profile/groupProfile/model/groupProfileThunk.js";
+import {getAttendance, getAttendanceList} from "entities/profile/groupProfile/model/groupProfileSelector.js";
+import classNames from "classnames";
+import {Input} from "shared/ui/input/index.js";
+import {useForm} from "react-hook-form";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {createAttendance, deleteAttendance} from "entities/profile/groupProfile/model/groupProfileSlice.js";
+import {Button} from "shared/ui/button/index.js";
+import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 
-// const data = [
-//     {
-//         name: "Madina",
-//         surname: "Abdurahmonova",
-//         days: [true, false, true, true, false, true, false, false, true, false, false, true, false , true , false , true]
-//     },
-//     {
-//         name: "Madina",
-//         surname: "Abdurahmonova",
-//         days: [true, false, true, true, false, true, false, false, true, false, false, true, false , true , false , true]
-//     },
-//     {
-//         name: "Madina",
-//         surname: "Abdurahmonova",
-//         days: [true, false, true, true, false, true, false, false, true, false, false, true, false , true , false , true]
-//     },
-//     {
-//         name: "312323",
-//         surname: "Abdurahmonova",
-//         days: [true, false, true, true, false, true, false, false, true, false, false, true, false , true , false , true , false, true]
-//     }
-//
-// ]
-const daysData = [
-    {
-        number: "01",
-        day: "Dushanba"
-    },
-    {
-        number: "03",
-        day: "Dushanba"
-    },
-    {
-        number: "05",
-        day: "Dushanba"
-    },
-    {
-        number: "07",
-        day: "Dushanba"
-    },
-    {
-        number: "09",
-        day: "Dushanba"
-    },
-    {
-        number: 11,
-        day: "Dushanba"
-    },
-    {
-        number: "13",
-        day: "Dushanba"
-    },
-    {
-        number: "15",
-        day: "Dushanba"
-    },
-    {
-        number: "17",
-        day: "Dushanba"
-    },
-    {
-        number: "19",
-        day: "Dushanba"
-    },
-    {
-        number: "21",
-        day: "Dushanba"
-    },
-    {
-        number: 23,
-        day: "Dushanba"
-    },
-    {
-        number: 25,
-        day: "Dushanba"
-    }
-]
-
-export const GroupProfileAttendanceForm = memo(({attendance, setAttendance , data , id}) => {
+export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, studentData}) => {
 
 
-
+    const dayNumber = new Date().getDate().toString();
+    const {register, handleSubmit, setValue} = useForm()
+    const {request} = useHttp()
+    const {id} = useParams()
+    const dispatch = useDispatch()
     const navigate = useNavigate()
+    const dateAttendance = useSelector(getAttendance)
+    const attendanceList = useSelector(getAttendanceList)
+    const branch = useSelector(getUserBranchId)
 
     const [active, setActive] = useState(false)
+    const [isChange, setIsChange] = useState(false)
+    const [isDelete, setIsDelete] = useState(false)
+    const [attendanceYears, setAttendanceYears] = useState([])
+    const [selectedYear, setSelectedYear] = useState(null)
+    const [attendanceMonth, setAttendanceMonth] = useState([])
+    const [selectedMonth, setSelectedMonth] = useState(null)
+    const [selectedDays, setSelectedDays] = useState([])
+    const [status, setStatus] = useState(true)
 
-    const renderAttendance = (limit = 3) => {
-        return data?.map(item =>
-            <tr>
-                <td/>
-                <td>{item?.user?.name} {item?.user?.surname}</td>
-                {
-                    item?.days?.map((i, index) => {
-                        if (index >= limit) return null
-                        return (
-                            <td>
-                                {
-                                    i ? <i className="fas fa-check" style={{color: "#22C55E"}}/> :
-                                        <i className="fas fa-times" style={{color: "#F43F5E"}}/>
-                                }
-                            </td>
-                        )
-                    })
+    useEffect(() => {
+        if (id)
+            dispatch(getSchoolAttendance({id}))
+    }, [id])
+
+    useEffect(() => {
+        if (id && selectedYear && selectedMonth)
+            dispatch(getSchoolAttendanceList({
+                group_id: id,
+                year: selectedYear,
+                month: selectedMonth
+            }))
+    }, [id, selectedYear, selectedMonth])
+
+    useEffect(() => {
+        if (dateAttendance && dateAttendance.length) {
+            // console.log(dateAttendance, "dateAttendance")
+            const lastYear = dateAttendance[dateAttendance?.length - 1]?.year
+            const yearMonths = dateAttendance.filter(item => item.year === lastYear)[0]?.months
+            const lastMonth = yearMonths[yearMonths?.length - 1]
+            setAttendanceYears(dateAttendance?.map(item => item?.year))
+            setAttendanceMonth(yearMonths?.map(item => item?.month))
+            setSelectedYear(lastYear)
+            setSelectedMonth(lastMonth?.month)
+            setSelectedDays(lastMonth?.days)
+        }
+    }, [dateAttendance])
+
+
+    const onCreate = (data) => {
+        const res = {
+            ...data,
+            status,
+            day: `${selectedYear}-${selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth}-${active?.day < 10 ? `0${active?.day}` : active?.day}`,
+            year: selectedYear,
+            month: selectedMonth,
+            student_id: active?.student,
+            group_id: id
+        }
+        request(`${API_URL}Attendance/attendance/create/`, "POST", JSON.stringify(res), headers())
+            .then(res => {
+                if (attendanceList && attendanceList.students?.length) {
+                    dispatch(createAttendance({...res, studentId: active?.student}))
+                } else {
+                    dispatch(getSchoolAttendanceList({
+                        group_id: id,
+                        year: selectedYear,
+                        month: selectedMonth
+                    }))
                 }
-            </tr>
-        )
+                setActive(false)
+                setStatus(true)
+                setValue("reason", "")
+            })
     }
 
-    const render = renderAttendance()
+    const onDelete = async () => {
+        try {
+            await request(
+                `${API_URL}Attendance/attendance/${isChange?.id}/delete/`,
+                "DELETE",
+                null,
+                headers()
+            );
+        } catch (err) {
+            console.error("Ошибка при удалении:", err);
+        }
+        dispatch(deleteAttendance(isChange));
+        setIsDelete(false);
+        setIsChange(false);
+        setValue("reason", "");
+    };
 
+    const onChange = async (data) => {
+        try {
+            await onDelete();
+
+            const res = {
+                status,
+                reason: status ? "" : data?.reason,
+                day: `${selectedYear}-${selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth}-${isChange?.day < 10 ? `0${isChange?.day}` : isChange?.day}`,
+                year: selectedYear,
+                month: selectedMonth,
+                student_id: isChange?.student,
+                group_id: id,
+            };
+
+            const response = await request(
+                `${API_URL}Attendance/attendance/create/`,
+                "POST",
+                JSON.stringify(res),
+                headers()
+            );
+
+            dispatch(createAttendance({...response, studentId: isChange?.student}));
+            setIsChange(false);
+            setStatus(true);
+            setValue("reason", "");
+        } catch (error) {
+            console.error("Ошибка при изменении:", error);
+        }
+    };
+
+
+    const renderAttendance = (limit = 3) => {
+        let data = [];
+        let isAttendance = false;
+
+        if (attendanceList && attendanceList?.students?.length) {
+            data = attendanceList?.students;
+            isAttendance = true;
+        } else {
+            data = studentData;
+        }
+
+        return data?.map((item, index) => (
+            <tr key={item?.student?.id || index}>
+                <td>{index + 1}</td>
+                <td>{item?.student?.name ?? item?.user?.name} {item?.student?.surname ?? item?.user?.surname}</td>
+
+                {
+                    isAttendance
+                        ? Object.values(item?.days)?.map((i, idx) => {
+                            if (idx >= limit && !attendance) return null;
+                            return (
+                                <td
+                                    key={idx}
+                                    className={cls.day}
+                                    onClick={() => {
+                                        if (i?.status === null) {
+                                            setActive({
+                                                day: Object.keys(item?.days)[idx],
+                                                student: item?.student?.id
+                                            });
+                                        } else {
+                                            setIsChange({
+                                                day: Object.keys(item?.days)[idx],
+                                                student: item?.student?.id,
+                                                id: i?.id,
+                                            });
+                                            setStatus(i?.status)
+                                            if (i?.reason) {
+                                                setValue("reason", i?.reason)
+                                            }
+                                        }
+                                    }}
+                                >
+                                    {
+                                        i?.status === null ? null :
+                                            i?.status ? (
+                                                <i className="fas fa-check" style={{color: "#22C55E"}}/>
+                                            ) : (
+                                                <i className="fas fa-times" style={{color: "#F43F5E"}}/>
+                                            )
+                                    }
+                                </td>
+                            );
+                        })
+                        : selectedDays?.map((day, idx) => {
+                            if (idx >= limit && !attendance) return null;
+                            return (
+                                <td
+                                    key={idx}
+                                    className={cls.day}
+                                    onClick={() =>
+                                        setActive({day, student: item?.id})
+                                    }
+                                />
+                            );
+                        })
+                }
+            </tr>
+        ));
+    };
+
+
+    const render = renderAttendance()
 
     return (
         <>
             <EditableCard
                 extraClass={cls.attendance}
-                onClick={() => navigate(`attendance`)}
+                onClick={() => {
+                    setAttendance(!attendance)
+                    // navigate(`attendance`)
+                }}
             >
-                <h1>Davomat</h1>
-                <div className={cls.attendance__contauner}>
+                <div className={cls.attendance__header}>
+                    <h1>Davomat</h1>
+                    <Select
+                        titleOption={"Yil"}
+                        extraClass={cls.select}
+                        onChangeOption={setSelectedYear}
+                        options={attendanceYears}
+                        defaultValue={selectedYear}
+                    />
+                    <Select
+                        titleOption={"Oy"}
+                        extraClass={cls.select}
+                        onChangeOption={setSelectedMonth}
+                        options={attendanceMonth}
+                        defaultValue={selectedMonth}
+                    />
+                </div>
+                <div
+                    className={classNames(cls.attendance__container, {
+                        [cls.active]: attendance
+                    })}
+                >
                     <Table>
-                        <thead>
+                        <thead style={{top: 0}}>
                         <tr>
-                            <th/>
+                            <th>№</th>
                             <th>Ism Familya</th>
                             {
-                                daysData.map((item, index) => {
-                                    if (index >= 3) return null
-                                    return (
-                                        <th>
-                                            <div className={cls.days}>
-                                                <h2>{item.number}</h2>
-                                                <p>{item.day}</p>
-                                            </div>
-                                        </th>
-                                    )
-                                })
+                                attendanceList?.students ?
+                                    attendanceList?.days?.map((item, index) => {
+                                        if (index >= 3 && !attendance) return null
+                                        return (
+                                            <th>
+                                                <div className={cls.days}>
+                                                    <h2>{item}</h2>
+                                                    {/*<p>{item.day}</p>*/}
+                                                </div>
+                                            </th>
+                                        )
+                                    })
+                                    : selectedDays?.map((item, index) => {
+                                        if (index >= 3 && !attendance) return null
+                                        return (
+                                            <th>
+                                                <div className={cls.days}>
+                                                    <h2>{item}</h2>
+                                                    {/*<p>{item.day}</p>*/}
+                                                </div>
+                                            </th>
+                                        )
+                                    })
                             }
                         </tr>
                         </thead>
@@ -154,6 +290,78 @@ export const GroupProfileAttendanceForm = memo(({attendance, setAttendance , dat
                     </Table>
                 </div>
             </EditableCard>
+            <Modal
+                active={active}
+                setActive={setActive}
+            >
+                <h1>Davomat qilish</h1>
+                <Form extraClassname={cls.create} onSubmit={handleSubmit(onCreate)}>
+                    <div className={cls.create__checkbox}>
+                        <h2>O'quvchi darsga kemagan</h2>
+                        <Input
+                            extraClassName={cls.checkbox}
+                            type={"checkbox"}
+                            // register={register}
+                            name={"status"}
+                            onChange={() => setStatus(!status)}
+                            checked={!status}
+                            // value={status}
+                        />
+                    </div>
+                    {
+                        status ? null
+                            : <Input
+                                required
+                                placeholder={"Sabab"}
+                                register={register}
+                                name={"reason"}
+                            />
+                    }
+                </Form>
+            </Modal>
+            <Modal
+                active={isChange}
+                setActive={setIsChange}
+            >
+                <h1>Davomatni o'zgartirish</h1>
+                <Form id={"change"} typeSubmit extraClassname={cls.create} onSubmit={handleSubmit(onChange)}>
+                    <div className={cls.create__checkbox}>
+                        <h2>O'quvchi darsga kemagan</h2>
+                        <Input
+                            extraClassName={cls.checkbox}
+                            type={"checkbox"}
+                            // register={register}
+                            name={"status"}
+                            onChange={() => setStatus(!status)}
+                            checked={!status}
+                        />
+                    </div>
+                    {
+                        status ? null
+                            : <Input
+                                required
+                                placeholder={"Sabab"}
+                                register={register}
+                                name={"reason"}
+                            />
+                    }
+                    <div className={cls.create__btns}>
+                        <Button
+                            btnType="button"
+                            type={"danger"}
+                            onClick={() => setIsDelete(true)}
+                        >
+                            O'chirish
+                        </Button>
+                        <Button>O'zgartirish</Button>
+                    </div>
+                </Form>
+            </Modal>
+            <ConfirmModal
+                active={isDelete}
+                setActive={setIsDelete}
+                onClick={onDelete}
+            />
         </>
     )
 })
