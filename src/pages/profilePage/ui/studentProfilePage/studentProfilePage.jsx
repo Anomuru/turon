@@ -34,7 +34,7 @@ import {
 } from "../../model/thunk/studentProfileThunk";
 import {
     getCharity,
-    getUserData
+    getUserData, getUserDataUsername
 } from "../../model/selector/studentProfileSelector";
 
 import cls from "./studentProfilePage.module.sass";

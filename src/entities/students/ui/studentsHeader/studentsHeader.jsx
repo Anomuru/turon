@@ -12,7 +12,7 @@ import {useSelector} from "react-redux";
 import {getBranch} from "../../../../features/branchSwitcher";
 import {Modal} from "shared/ui/modal/index.js";
 
-export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onClick , setActiveClass}) => {
+export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onClick , setActiveClass , totalCount , loadingStudents}) => {
 
 
 
@@ -73,6 +73,9 @@ export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onC
                 {/*{branches.length >= 1 ? <Select options={branches} onChangeOption={() => setSelected}*/}
                 {/*                                defaultValue={branches[0].name}/> : null}*/}
             </div>
+
+            <h2 style={{marginTop: "30px" , textAlign: "end"}}>{loadingStudents ? "Loading..." : `Umumiy soni : ${totalCount}`}</h2>
+
             <Modal active={activeModal} setActive={setActiveModal}>
 
                 {/*<h2>Class Settings</h2>*/}

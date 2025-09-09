@@ -15,7 +15,9 @@ const initialState = {
     charity: [],
 
 
-    error: null
+    error: null,
+    username: null
+
 }
 
 const studentProfileSlice = createSlice({
@@ -27,6 +29,10 @@ const studentProfileSlice = createSlice({
         //         ...state.data.filter(item => item.id !== action.payload.id, action.payload),
         //     ]
         // }
+        onChangeUserUsername: (state, action) => {
+            state.username = action.payload
+
+        }
 
 
     },
@@ -38,6 +44,8 @@ const studentProfileSlice = createSlice({
             })
             .addCase(fetchStudentProfileData.fulfilled, (state, action) => {
                 state.data = action.payload
+                state.username = action?.payload?.user?.username
+
                 state.loading = false
                 state.error = null
             })
@@ -107,6 +115,6 @@ const studentProfileSlice = createSlice({
 
 
 // export default StudentProfileSlice.reducer
-
+export const {onChangeUserUsername} = studentProfileSlice.actions
 
 export const {reducer: studentProfileReducer} = studentProfileSlice

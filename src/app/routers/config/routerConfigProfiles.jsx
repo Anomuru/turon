@@ -11,14 +11,21 @@ import {
     getTeacherProfile,
     getRoomsProfilePage,
     getEmployerProfile,
-     getBranch,
+    getBranch,
     getLocations,
     getRouteCreateGroup,
     getEmployerSalaryInsideSource,
     getEmployerSalary,
-    getTeacherSalary, getInkasatsiya,
+    getTeacherSalary,
+    getInkasatsiya,
     getGroupHistory,
-    getRouteClassProfile, getOtchot, getRouteRGBData, getRouteTaskManager, getRouteFilteredLeads, getAccounting
+    getRouteClassProfile,
+    getOtchot,
+    getRouteRGBData,
+    getRouteTaskManager,
+    getRouteFilteredLeads,
+    getAccounting,
+    getGroupQuarter
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
@@ -64,7 +71,8 @@ const AdminTaskManager = lazyPage(() => import("pages/adminTaskManager"), "Admin
 
 
 const FilteredLeadsPage = lazyPage(() => import("pages/filteredLeadsPage"), "FilteredLeadsPage");
-
+const GroupProfileQuarter = lazyPage(() => import("features/groupProfile"), "GroupProfileQuarter");
+// const GroupProfileQuarter = lazyPage(() => import("features/groupProfile/ui/groupProfileQuarter"))
 
 
 export const routersConfigProfile = [
@@ -207,6 +215,12 @@ export const routersConfigProfile = [
         name: "accounting",
         path: getAccounting(":id"),
         element: <AccountingPageMainIndex/>,
+        isMultiPage: true
+    },
+    {
+        name: "GroupProfileQuarter",
+        path: getGroupQuarter(":id"),
+        element: <GroupProfileQuarter/>,
         isMultiPage: true
     },
 

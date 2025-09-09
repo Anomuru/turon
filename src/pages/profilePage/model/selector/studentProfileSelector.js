@@ -1,6 +1,8 @@
 
 export const getUserData = (state) =>
     state.studentProfileSlice?.data
+export const getUserDataUsername = (state) =>
+    state.studentProfileSlice?.username
 
 
 export const getStudentProfileClasses = (state) =>

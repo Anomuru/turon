@@ -152,9 +152,12 @@ export const GroupProfileInfoForm = memo(({}) => {
 
                     <p>Guruh narxi: <span>{data?.price}</span></p>
                     <p>Studentlar soni: <span>{data?.students.length}</span></p>
+
                     <div className={cls.info__addInfo}>
                         <i className="fas fa-plus"/>
                     </div>
+
+
                 </div>
                 <EditableCard
                     extraClass={cls.info__balance}

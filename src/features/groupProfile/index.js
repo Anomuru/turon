@@ -4,3 +4,4 @@ export {GroupProfileTimeForm} from "./ui/groupProfileTimeForm/groupProfileTimeFo
 export {GroupProfileAttendanceForm} from "./ui/groupProfileAttendanceForm/groupProfileAttendanceForm";
 export {GroupProfileInfoForm} from "./ui/groupProfileInfoForm/groupProfileInfoForm";
 export {GroupProfileDeleteForm} from "./ui/groupProfileDeleteForm/groupProfileDeleteForm";
+export {GroupProfileQuarter} from "./ui/groupProfileQuarter/groupProfileQuarter"

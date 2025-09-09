@@ -14,7 +14,8 @@ export const TimeTableHeader = memo((props) => {
         isCreate,
         setIsCreate,
         setIsFilter,
-        setStatus
+        setStatus,
+        totalCount
     } = props
 
     // const [activeStudentType, setActiveStudentType] = useState("")
@@ -32,6 +33,7 @@ export const TimeTableHeader = memo((props) => {
                 >
                     Create Time
                 </Button>
+                <h2>{totalCount}</h2>
                 {/*<Select title={"Branch"}/>*/}
             </div>
             {/*<div className={cls.header__container}>*/}
