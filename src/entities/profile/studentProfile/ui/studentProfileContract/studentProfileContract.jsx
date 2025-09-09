@@ -72,7 +72,7 @@ export const StudentProfileContract = memo(({ setActive, active }) => {
     };
 
     return (
-        <EditableCard titleType={"cross"} extraClass={classNames(cls.contractMain, {
+        <EditableCard titleType={""} extraClass={classNames(cls.contractMain, {
             [cls.active]: active === "contract"
         })}
                       onClick={() => setActive(!"contract")}>

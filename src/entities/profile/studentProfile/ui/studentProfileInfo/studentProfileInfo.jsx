@@ -3,7 +3,7 @@ import {EditableCard} from "shared/ui/editableCard";
 import cls from "./studentProfileInfo.module.sass";
 import defaultUserImg from "shared/assets/images/user_image.png";
 import visa from "shared/assets/images/visa.svg"
-
+import classNames from "classnames";
 import {Button} from "shared/ui/button";
 
 import {Switch} from "shared/ui/switch/index.js";
@@ -17,8 +17,8 @@ export const StudentProfileInfo = memo(({
                                             contract,
                                             month,
                                             charity,
-                                            setSwitch,
-                                            activeSwitch
+                                            currentTab,
+                                            setCurrentTab,
                                         }) => {
     const number = Number(content?.debt)
 
@@ -43,16 +43,38 @@ export const StudentProfileInfo = memo(({
                     <div className={cls.info__div__avatar__box}>
                         <h1 className={cls.info__div__avatar__box__name}>{data?.name} {data?.surname} {data?.father_name}</h1>
                         <div className={cls.info__div__avatar__box__panel}>
-                            <Button extraClass={cls.info__div__avatar__box__panel__stBtn} children={"active student"}/>
-                            <Button onClick={() => setActive("contract")}
-                                    extraClass={cls.info__div__avatar__box__panel__btn} children={"Shartnoma"}/>
-                            <div className={cls.info__div__avatar__box__panel__switch}>
-                                <h1>Dars jadvalini ko'rish</h1>
-                                <Switch
-                                    activeSwitch={activeSwitch}
-                                    onChangeSwitch={setSwitch}
-                                />
-                            </div>
+                            <Button
+                                extraClass={classNames(cls.info__div__avatar__box__panel__stBtn, {
+                                    [cls.active]: currentTab === "info"
+                                })}
+                                onClick={() => setCurrentTab("info")}
+                            >
+                                Ma'lumotlar
+                            </Button>
+
+                            <Button
+                                extraClass={classNames(cls.info__div__avatar__box__panel__btn, {
+                                    [cls.active]: currentTab === "contract"
+                                })}
+                                onClick={() => setCurrentTab("contract")}
+                            >
+                                Shartnoma
+                            </Button>
+
+                            <Button
+                                extraClass={classNames(cls.info__div__avatar__box__panel__switch, {
+                                    [cls.active]: currentTab === "timetable"
+                                })}
+                                onClick={() => setCurrentTab("timetable")}
+                            >
+                                Dars jadvalini ko'rish
+                            </Button>
+                            <Button
+                                extraClass={cls.info__div__avatar__box__panel__quarter}
+                            >
+                               Chorakni ko'rish
+                            </Button>
+
 
                         </div>
                         <div className={cls.info__div__avatar__box__source}>

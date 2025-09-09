@@ -87,6 +87,7 @@ export const StudentProfilePage = () => {
     const [changeSelectedClass,setChangeSelectedClass] = useState(null)
     const [changeSelectedLang,setChangeSelectedLang] = useState(null)
     const [activeSwitch, setActiveSwitch] = useState(false)
+    const [currentTab, setCurrentTab] = useState("info");
 
 
 
@@ -167,8 +168,8 @@ export const StudentProfilePage = () => {
                     newImage={newImage}
                     month={month}
                     charity={charity}
-                    activeSwitch={activeSwitch}
-                    setSwitch={setActiveSwitch}
+                    currentTab={currentTab}
+                    setCurrentTab={setCurrentTab}
                 />
             </div>
 
@@ -177,24 +178,32 @@ export const StudentProfilePage = () => {
                     [cls.active]: active
                 })}
             >
-                {
-                    !activeSwitch ? <>
+                {currentTab === "info" && (
+                    <>
                         <StudentProfileTeachers data={userData?.group}/>
-                        <StudentProfileRating setActive={setActive}/>
+                        <StudentProfileRating/>
                         <StudentProfileSubjects
-                            setActive={setActive}
                             data={userData?.group}
                             onSelectSubject={setSelectedSubject}
                         />
                         <StudentProfileAttendance
-                            setActive={setActive}
                             data={userData?.group}
                             onSelectGroup={setSelectedGroup}
                             onSelectGroupName={setSelectedGroupName}
                         />
-                    </> :  <StudentProfileTimeTable/>
-                }
-                {/*<TeacherProfileTimeTable/>*/}
+                    </>
+                )}
+
+                {currentTab === "contract" && (
+                    <StudentProfileContract
+                        setActive={setActive}
+                        active={active}
+                    />
+                )}
+
+                {currentTab === "timetable" && (
+                    <StudentProfileTimeTable />
+                )}
 
             </div>
             <div
@@ -202,10 +211,10 @@ export const StudentProfilePage = () => {
                     [cls.active]: active
                 })}
             >
-                <StudentProfileContract
-                    setActive={setActive}
-                    active={active}
-                />
+                {/*<StudentProfileContract*/}
+                {/*    setActive={setActive}*/}
+                {/*    active={active}*/}
+                {/*/>*/}
                 <StudentProfileTotalAmount
                     active={active}
                     setActive={setActive}
