@@ -164,7 +164,7 @@ export const StudentsPage = () => {
         if (userBranchId) {
             // dispatch(fetchSchoolStudents({userBranchId}))
             dispatch(fetchClassColorData())
-            dispatch(fetchClassNumberData({branch: 22}))
+            dispatch(fetchClassNumberData({branch: userBranchId}))
         }
     }, [userBranchId])
 
