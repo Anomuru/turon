@@ -62,8 +62,29 @@ const groupQuarterSlice = createSlice({
                     if (!found.tableData) {
                         found.tableData = [];
                     }
-                    // serverdan kelgan testni qo‘shamiz
+                    // res kelgan testni qo‘shamiz
                     found.tableData.push(test);
+                } else {
+                    current = found.children ?? [];
+                }
+            }
+        },
+        deleteTest: (state, action) => {
+            const {path, testId} = action.payload;
+
+            let current = state.data;
+
+            for (let i = 0; i < path.length; i++) {
+                const {id, type} = path[i];
+                const found = current.find(item => item.id === id && item.type === type);
+
+                if (!found) return;
+
+                if (i === path.length - 1) {
+
+                    if (found.tableData) {
+                        found.tableData = found.tableData.filter(test => test.id !== testId);
+                    }
                 } else {
                     current = found.children ?? [];
                 }
@@ -99,5 +120,5 @@ const groupQuarterSlice = createSlice({
         })
 })
 
-export const {addTest} = groupQuarterSlice.actions;
+export const {addTest , deleteTest} = groupQuarterSlice.actions;
 export const {reducer: groupQuarterReducer} = groupQuarterSlice
