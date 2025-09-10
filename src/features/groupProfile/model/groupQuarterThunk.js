@@ -5,7 +5,7 @@ export const fetchTerm = createAsyncThunk(
     "groupQuarterSlice/fetchTerm",
     async (id) => {
         const {request} = useHttp()
-        return await request(`${API_URL}terms/list-term/`, "GET", null, headers())
+        return await request(`${API_URL}terms/list-term/${id}/`, "GET", null, headers())
 
     }
 )

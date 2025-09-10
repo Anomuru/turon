@@ -24,6 +24,7 @@ export const ClassFilter = ({classesType, active, setActive, setEdit}) => {
         return a.id - b.id;
     }
 
+    console.log(classesType , "class")
     return (
         <div className={cls.classFilter}>
             <div

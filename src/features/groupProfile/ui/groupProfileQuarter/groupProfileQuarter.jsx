@@ -45,15 +45,32 @@ export const GroupProfileQuarter = () => {
     const [assignments, setAssignments] = useState([]);
 
 
-
-
     //student geti
     const [viewActive, setViewActive] = useState(false)
     const [viewTest, setViewTest] = useState(null)
 
-    const [loading , setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const {request} = useHttp()
+    const [quarterYear, setQuarterYear] = useState(null)
+    const [quarterYearSelected, setQuarterYearSelected] = useState(null)
+
+    useEffect(() => {
+        if (quarterYear) {
+            setQuarterYearSelected(quarterYear[0]?.academic_year)
+
+        }
+    }, [quarterYear])
+
+
+    useEffect(() => {
+        request(`${API_URL}terms/education-years/`, "GET", null, headers())
+            .then(res => {
+                setQuarterYear(res)
+            })
+    }, [])
+
+
     useEffect(() => {
         if (term) {
             setSelectedTerm(term[0]?.id)
@@ -63,8 +80,11 @@ export const GroupProfileQuarter = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(fetchTerm())
-    }, [])
+        if (quarterYearSelected){
+             dispatch(fetchTerm(quarterYearSelected))
+
+        }
+    }, [quarterYearSelected])
 
     useEffect(() => {
 
@@ -92,7 +112,7 @@ export const GroupProfileQuarter = () => {
             setViewTest(null)
 
         }
-    } , [viewActive])
+    }, [viewActive])
     // fanni id && gruh ili sinf ni id sini olish uchun
     const onClick = (item, path) => {
 
@@ -193,9 +213,6 @@ export const GroupProfileQuarter = () => {
     const onSubmitAssignments = () => {
 
 
-
-
-
         console.log(assignments)
         //
         request(`${API_URL}terms/assignment-create/`, "POST", JSON.stringify(assignments), headers())
@@ -215,7 +232,9 @@ export const GroupProfileQuarter = () => {
 
             {loading ? <DefaultLoader/> : null}
             <div className={styles.quarter}>
-                <div style={{alignSelf: "flex-end"}}>
+                <div style={{alignSelf: "flex-end" , display: "flex" , gap: "2rem"}}>
+                    <Select defaultValue={quarterYearSelected} options={quarterYear}
+                            onChangeOption={setQuarterYearSelected}/>
                     <Select defaultValue={selectedTerm} options={term} onChangeOption={setSelectedTerm}/>
                 </div>
                 <Accordion onClick={onClick} items={data} onDeleteId={onDeleteId} onViewTest={onViewTest}/>
@@ -262,7 +281,7 @@ export const GroupProfileQuarter = () => {
                                                     const newValue = e.target.value;
                                                     setAssignments((prev) =>
                                                         prev.map((a, idx) =>
-                                                            idx === i ? { ...a, percentage: Number(newValue) } : a
+                                                            idx === i ? {...a, percentage: Number(newValue)} : a
                                                         )
                                                     );
                                                 }}
