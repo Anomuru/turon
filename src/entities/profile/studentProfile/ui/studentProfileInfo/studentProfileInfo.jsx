@@ -1,4 +1,4 @@
-import React, {memo, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import {EditableCard} from "shared/ui/editableCard";
 import cls from "./studentProfileInfo.module.sass";
 import defaultUserImg from "shared/assets/images/user_image.png";

@@ -10,7 +10,7 @@ import {onChangeAccountingPage} from "entities/accounting/model/slice/accounting
 import {useParams} from "react-router-dom";
 import {inkasatsiyaThunk} from "entities/inkasatsiya/model/inkasatsiyaThunk";
 import {Student} from "entities/inkasatsiya/ui/students/student";
-import {getInkasatsiya} from "entities/inkasatsiya/model/inkasatsiyaSelector";
+import {getInkasatsiya, getInkasatsiyaLoading} from "entities/inkasatsiya/model/inkasatsiyaSelector";
 import {Overhead} from "entities/inkasatsiya/ui/overhead/overhead";
 import {Capital} from "entities/inkasatsiya/ui/capital/capital";
 import {Teacher} from "entities/inkasatsiya/ui/teacher/teacher";
@@ -18,6 +18,8 @@ import {Employer} from "entities/inkasatsiya/ui/employer/employer";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import cls from "./inkasatsiya.module.module.sass"
 import {getBranch} from "../../../features/branchSwitcher";
+import {CapitalSlice} from "entities/capital/model/slice/capitalSlice.js";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 const filter = [
     {name: 'studentsPayments', label: "student payment"},
@@ -32,7 +34,7 @@ const filter = [
 
 const reducers = {
     inkasatsiyaSlice: inkasatsiyaReducer,
-    capital: capitalReducer
+    CapitalSlice: capitalReducer
 }
 
 export const Inkasatsiya = () => {
@@ -46,9 +48,12 @@ export const Inkasatsiya = () => {
     const student = useSelector(getInkasatsiya)
     const [radio, setSelectedRadio] = useState([])
 
+    const loading = useSelector(getInkasatsiyaLoading)
+
 
     const branchId = useSelector(getUserBranchId)
 
+    console.log(paymentType, "paymentType")
     useEffect(() => {
 
         if (to.length && ot.length && radio > 0) {
@@ -122,29 +127,31 @@ export const Inkasatsiya = () => {
 
 
                 <AccountingFilter activeMenu={activeMenu} setActive={setActiveMenu} setPage={setPage} filter={filter}/>
-                <Routes>
-                    <Route path={"teachersSalary"}
-                           element={<Teacher formatSalary={formatSalary} extraClass={cls.table} teacher={student}
-                                             path={"teachersSalary"} locationId={locationId}/>}/>
-                    {/*<Route path={"studentsDiscounts"}*/}
-                    {/*       element={<StudentsDiscount path={"studentsDiscounts"} locationId={locationId}/>}/>*/}
-                    <Route path={"employeesSalary"}
-                           element={<Employer formatSalary={formatSalary} extraClass={cls.table}
-                                              path={"employeesSalary"}
-                                              workers={student} locationId={locationId}/>}/>
-                    {/*<Route path={"debtStudents"} element={<DebtStudents path={"debtStudents"} locationId={locationId}/>}/>*/}
-                    <Route path={"overhead"}
-                           element={<Overhead formatSalary={formatSalary} extraClass={cls.table} overhead={student}
-                                              path={"overhead"} locationId={locationId}/>}/>
-                    <Route path={"studentsPayments"}
-                           element={<Student formatSalary={formatSalary} extraClass={cls.table} students={student}
-                                             locationId={locationId}/>}/>
-                    {/*<Route path={"bookPayment"} element={<AccountingBooks path={"bookPayment"} locationId={locationId}/>}/>*/}
-                    <Route path={"capital"}
-                           element={<Capital formatSalary={formatSalary} extraClass={cls.table} capital={student}
-                                             path={"capital"} locationId={locationId}/>}/>
-                    {/*<Route path={"debtStudents"} element={<DebtStudents/>}/>*/}
-                </Routes>
+
+                {loading === true ? <DefaultPageLoader/> :
+                    <Routes>
+                        <Route path={"teachersSalary"}
+                               element={<Teacher formatSalary={formatSalary} extraClass={cls.table} teacher={student}
+                                                 path={"teachersSalary"} locationId={locationId}/>}/>
+                        {/*<Route path={"studentsDiscounts"}*/}
+                        {/*       element={<StudentsDiscount path={"studentsDiscounts"} locationId={locationId}/>}/>*/}
+                        <Route path={"employeesSalary"}
+                               element={<Employer formatSalary={formatSalary} extraClass={cls.table}
+                                                  path={"employeesSalary"}
+                                                  workers={student} locationId={locationId}/>}/>
+                        {/*<Route path={"debtStudents"} element={<DebtStudents path={"debtStudents"} locationId={locationId}/>}/>*/}
+                        <Route path={"overhead"}
+                               element={<Overhead formatSalary={formatSalary} extraClass={cls.table} overhead={student}
+                                                  path={"overhead"} locationId={locationId}/>}/>
+                        <Route path={"studentsPayments"}
+                               element={<Student formatSalary={formatSalary} extraClass={cls.table} students={student}
+                                                 locationId={locationId}/>}/>
+                        {/*<Route path={"bookPayment"} element={<AccountingBooks path={"bookPayment"} locationId={locationId}/>}/>*/}
+                        <Route path={"capital"}
+                               element={<Capital formatSalary={formatSalary} extraClass={cls.table} capital={student}
+                                                 path={"capital"} locationId={locationId}/>}/>
+                        {/*<Route path={"debtStudents"} element={<DebtStudents/>}/>*/}
+                    </Routes>}
 
             </div>
         </DynamicModuleLoader>
