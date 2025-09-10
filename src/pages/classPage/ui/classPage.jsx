@@ -4,7 +4,7 @@ import {useState} from "react";
 import {useDispatch} from "react-redux";
 import {useHttp} from "shared/api/base";
 
-export const ClassPage = ({setEdit, edit, setActiveEdit, activeMenu, setActiveMenu, classes,branch}) => {
+export const  ClassPage = ({setEdit, edit, setActiveEdit, activeMenu, setActiveMenu, classes,branch}) => {
 
     const {request} = useHttp()
     const [selectBox, setSelectBox] = useState([])

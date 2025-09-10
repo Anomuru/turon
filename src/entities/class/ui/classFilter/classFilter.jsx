@@ -3,7 +3,7 @@ import classNames from "classnames";
 import {useDispatch, useSelector} from "react-redux";
 
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
-import {getClassNewNumberList} from "../../model/thunk/classThunk";
+import {getClassesForClassTypes, getClassNewNumberList} from "../../model/thunk/classThunk";
 
 import cls from "./classFilter.module.sass"
 import {classItemLoading, classItemTypeLoading} from "entities/class/model/selector/classSelector.js";
@@ -16,7 +16,8 @@ export const ClassFilter = ({classesType, active, setActive, setEdit}) => {
     const loading = useSelector(classItemTypeLoading)
 
     const onClick = useCallback((id) => {
-        dispatch(getClassNewNumberList({branchId: userBranchId, id: id}))
+        // dispatch(getClassNewNumberList({branchId: userBranchId, id: id}))
+        dispatch(getClassesForClassTypes({branchId: userBranchId, id: id}))
     }, [userBranchId])
 
     function compareById(a, b) {

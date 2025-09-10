@@ -3,7 +3,7 @@ import {
     classItem,
     createClassType,
     createColor,
-    fetchClassSubjects,
+    fetchClassSubjects, getClassesForClassTypes,
     getClassNewNumberList,
     getClassTypeNumber,
     getClassTypes,
@@ -21,7 +21,6 @@ const initialState = {
     classItems: [],
     color: [],
     subjects: [],
-
     classNewItems: []
 }
 
@@ -40,25 +39,29 @@ const classSlice = createSlice({
                 if (item.id === action.payload.id){
                     return {
                         ...item,
-                        status: !item.status
+                        status_class_type: !item.status_class_type
                     }
                 }
                 return item
             })
         },
 
+        // onUpdateClass: (state , action) => {
+        //     state.classItems = state.classItems.map(item => {
+        //         if (item.id === action.payload.id) {
+        //             return {
+        //                 ...item,
+        //                 price : action.payload.price,
+        //                 curriculum_hours : action.payload.curriculum_hours,
+        //                 subjects: action.payload.subjects
+        //             }
+        //         }
+        //         return item
+        //     })
+        // },
+
         onUpdateClass: (state , action) => {
-            state.classItems = state.classItems.map(item => {
-                if (item.id === action.payload.id) {
-                    return {
-                        ...item,
-                        price : action.payload.price,
-                        curriculum_hours : action.payload.curriculum_hours,
-                        subjects: action.payload.subjects
-                    }
-                }
-                return item
-            })
+            state.classItems = state.classItems.filter(item => item.id !== action.payload.id)
         },
 
 
@@ -133,8 +136,6 @@ const classSlice = createSlice({
                 state.loading = false
                 state.error = false
                 state.classItems = action.payload
-
-
             })
             .addCase(classItem.rejected, state => {
                 state.loading = false
@@ -250,6 +251,21 @@ const classSlice = createSlice({
 
             })
             .addCase(getClassNewNumberList.rejected, state => {
+                state.loading = false
+                state.error = true
+            })
+
+
+            .addCase(getClassesForClassTypes.pending, state => {
+                state.loading = true
+                state.error = false
+            })
+            .addCase(getClassesForClassTypes.fulfilled, (state, action) => {
+                state.classNewItems = action.payload.data
+                state.loading = false
+                state.error = false
+            })
+            .addCase(getClassesForClassTypes.rejected, state => {
                 state.loading = false
                 state.error = true
             })

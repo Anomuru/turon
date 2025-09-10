@@ -41,7 +41,6 @@ export const ClassTable = ({edit}) => {
 
 
     // const onChangeClass = (data) => {
-
     //     const res = {
     //         subjects: selectedSubject.map(item => (
     //             // name: item.label,
@@ -50,9 +49,8 @@ export const ClassTable = ({edit}) => {
     //         ...data
     //     }
     //     const idClass = editClass
-    //     //
-    //     // setValue("curriculum_hours", "")
-    //     // setValue("price", "")
+    //     setValue("curriculum_hours", "")
+    //     setValue("price", "")
     //     dispatch(updateClassItem({idClass, res}))
     //     setEditClass(!editClass)
     //     dispatch(classItem(1))
@@ -77,10 +75,10 @@ export const ClassTable = ({edit}) => {
         const res = {
             status: !type,
             class_type_id: edit.id,
-            class_number_id: id
+            group_id: id
         }
 
-        request(`${API_URL}Class/class_number_update_status/`, "POST", JSON.stringify(res), headers())
+        request(`${API_URL}Group/group_add_class_type/`, "POST", JSON.stringify(res), headers())
             .then(res => {
                 dispatch(onChangeClassStatus({id}))
                 dispatch(onAddAlertOptions({
@@ -88,7 +86,6 @@ export const ClassTable = ({edit}) => {
                     status: true,
                     msg: res.msg
                 }))
-
             })
             .catch(err => {
                 console.log(err)
@@ -101,35 +98,32 @@ export const ClassTable = ({edit}) => {
 
     const renderTable = () => {
         return classItems?.map((item, i) => {
-
             return <tr>
                 <td>{i + 1}</td>
-                <td>{item?.number}</td>
+                <td>{item?.class_number} {item?.color}</td>
                 <td>
                     <div className={cls.subject__main}>
                         {item?.subjects.map(itemSubject => (
-                            <span className={cls.subject}> {itemSubject.name}-{itemSubject.hours}</span>
+                            <span className={cls.subject}> {itemSubject.subject_name}-{itemSubject.hours}</span>
                         ))}
                     </div>
                 </td>
                 <td>{item.price}</td>
                 <td style={{width: "3rem"}}>
                     <div className={cls.items}>
-
                         <div
-                            onClick={() => onChange({id: item.id, type: item.status})}
+                            onClick={() => onChange({id: item.id, type: item.status_class_type})}
                             className={classNames(cls.checkbox__minus, {
-                                [cls.active]: item.status
+                                [cls.active]: item.status_class_type
                             })}
                         >
                             {
-                                item.status ?
+                                item.status_class_type ?
                                     <i className={`fa fa-check `}/> :
                                     <i className={`fa fa-minus`}/>
 
                             }
                         </div>
-
                         <i
                             onClick={() => {
                                 setEditClass(item.id)
@@ -147,19 +141,19 @@ export const ClassTable = ({edit}) => {
 
     return (
         <div>
-
             {
                 loading
-                    ? <DefaultPageLoader/>
-                    : <Table>
+                    ?
+                    <DefaultPageLoader/>
+                    :
+                    <Table>
                         <thead>
                         <tr>
                             <th>No</th>
-                            <th>Sinf Raqami</th>
+                            <th>Sinf </th>
                             <th>Fanlari</th>
                             <th>Narxi</th>
                             <th/>
-
                         </tr>
                         </thead>
                         <tbody>
@@ -186,9 +180,9 @@ export const ClassTable = ({edit}) => {
             {/*    // handleSubmit={handleSubmit}*/}
             {/*    // onDeleteSub={onDeleteSub}*/}
             {/*/>*/}
-            <ClassTableEdit
 
-                // register={register}
+
+            <ClassTableEdit
                 setEditClass={setEditClass}
                 selectOptions={subjects}
                 editClass={editClass}

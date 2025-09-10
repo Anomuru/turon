@@ -85,6 +85,8 @@ export const GroupsPage = () => {
     useEffect(() => {
         setCurrentPage(1)
     }, [pageSwitch])
+
+
     useEffect(() => {
         setDeletedGroups(deletedGroupsData)
     }, [deletedGroupsData])
