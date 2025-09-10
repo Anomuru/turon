@@ -5,3 +5,4 @@ export {GroupProfileAttendanceForm} from "./ui/groupProfileAttendanceForm/groupP
 export {GroupProfileInfoForm} from "./ui/groupProfileInfoForm/groupProfileInfoForm";
 export {GroupProfileDeleteForm} from "./ui/groupProfileDeleteForm/groupProfileDeleteForm";
 export {GroupProfileQuarter} from "./ui/groupProfileQuarter/groupProfileQuarter"
+export {GroupQuarterTable} from "./ui/groupQuarterTable/groupQuarterTable.jsx"

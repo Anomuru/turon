@@ -53,6 +53,7 @@ export const getEducation = (id) => `education/${id}`
 export const getAccounting = (id) => `accounting/*`
 export const getGroupQuarter = (id) => `groups/quarter`
 
+export const getGroupQuarterShow = (id) => `groups/groupInfo/${id}/quarter/${id}`
 export const getInkasatsiya = (id) => `inkasatsiya/*`
 
 

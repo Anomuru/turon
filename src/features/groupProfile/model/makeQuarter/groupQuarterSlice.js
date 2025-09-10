@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {fetchTerm, fetchTermData} from "features/groupProfile/model/groupQuarterThunk.js";
+import {fetchTerm, fetchTermData} from "features/groupProfile/model/makeQuarter/groupQuarterThunk.js";
 
 const initialState = {
     data: [
@@ -89,7 +89,27 @@ const groupQuarterSlice = createSlice({
                     current = found.children ?? [];
                 }
             }
-        }
+        },
+        updateTest: (state, action) => {
+            const {path, test} = action.payload;
+            let node = state.data;
+
+            path.forEach((p, idx) => {
+                const found = node.find((item) => item.id === p.id && item.type === p.type);
+                if (found) {
+                    if (idx === path.length - 1) {
+                        if (found.tableData) {
+                            const index = found.tableData.findIndex((t) => t.id === test.id);
+                            if (index !== -1) {
+                                found.tableData[index] = test;
+                            }
+                        }
+                    } else {
+                        node = found.children || [];
+                    }
+                }
+            });
+        },
     },
     extraReducers: builder => builder
         .addCase(fetchTerm.pending , state => {
@@ -120,5 +140,5 @@ const groupQuarterSlice = createSlice({
         })
 })
 
-export const {addTest , deleteTest} = groupQuarterSlice.actions;
+export const {addTest , deleteTest , updateTest} = groupQuarterSlice.actions;
 export const {reducer: groupQuarterReducer} = groupQuarterSlice

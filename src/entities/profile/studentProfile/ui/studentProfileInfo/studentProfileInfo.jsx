@@ -117,6 +117,7 @@ export const StudentProfileInfo = memo(({
                                 Dars jadvalini ko'rish
                             </Button>
                             <Button
+                                onClick={() => setCurrentTab("quarter")}
                                 extraClass={cls.info__div__avatar__box__panel__quarter}
                             >
                                Chorakni ko'rish

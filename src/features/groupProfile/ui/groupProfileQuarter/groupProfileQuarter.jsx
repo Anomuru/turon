@@ -1,10 +1,15 @@
 import {useEffect, useState} from "react";
 import styles from "./groupProfileQuarter.module.sass"
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
-import {addTest, deleteTest, groupQuarterReducer} from "features/groupProfile/model/groupQuarterSlice.js";
+import {
+    addTest,
+    deleteTest,
+    groupQuarterReducer,
+    updateTest
+} from "features/groupProfile/model/makeQuarter/groupQuarterSlice.js";
 import {useDispatch, useSelector} from "react-redux";
-import {getTerm, getTermData} from "features/groupProfile/model/groupQuarterSelector.js";
-import {fetchTerm, fetchTermData} from "features/groupProfile/model/groupQuarterThunk.js";
+import {getTerm, getTermData} from "features/groupProfile/model/makeQuarter/groupQuarterSelector.js";
+import {fetchTerm, fetchTermData} from "features/groupProfile/model/makeQuarter/groupQuarterThunk.js";
 import {Select} from "shared/ui/select/index.js";
 import {Modal} from "shared/ui/modal/index.js";
 import {Input} from "shared/ui/input/index.js";
@@ -32,10 +37,7 @@ export const GroupProfileQuarter = () => {
     //fanni gruh || sinf lani id sini saqlash uchun
     const [activeItems, setActiveItems] = useState({})
 
-    //delete items
-    const [deleteActive, setDeleteActive] = useState(false)
-    const [deletedItems, setDeletedItems] = useState({})
-    //delete items
+
 
 
     const branchId = localStorage.getItem("branchId")
@@ -156,43 +158,9 @@ export const GroupProfileQuarter = () => {
 
     }
 
-    //delete test//
-    const onDeleteId = (path, row) => {
-        const groupId = path.find(p => p.type === "group")?.id;
-        const subjectId = path.find(p => p.type === "subject")?.id;
-
-        const data = {
-            path,
-            groupId,
-            subjectId,
-            testId: row.id
-        };
-
-        setDeleteActive(true);
-        setDeletedItems(data);
-    };
-
-    const onDeleteTest = () => {
-
-        request(`${API_URL}terms/delete-test/${deletedItems.testId}/`, "DELETE", null, headers())
-            .then(() => {
-                dispatch(deleteTest({
-                    path: deletedItems.path,
-                    testId: deletedItems.testId
-                }));
-                setDeleteActive(false);
-                setDeletedItems(null);
-                dispatch(onAddAlertOptions({
-                    status: true,
-                    type: "success",
-                    msg: "Test muvaffaqiyatli o'chirildi"
-                }))
-            })
-            .catch(err => console.log(err));
-    };
 
 
-    //getModal
+
     const onViewTest = (path, row) => {
         const groupId = path.find(p => p.type === "group")?.id;
         setLoading(true)
@@ -208,7 +176,7 @@ export const GroupProfileQuarter = () => {
             .catch(err => console.log(err));
     };
 
-    console.log(viewTest)
+
 
     const onSubmitAssignments = () => {
 
@@ -237,7 +205,7 @@ export const GroupProfileQuarter = () => {
                             onChangeOption={setQuarterYearSelected}/>
                     <Select defaultValue={selectedTerm} options={term} onChangeOption={setSelectedTerm}/>
                 </div>
-                <Accordion onClick={onClick} items={data} onDeleteId={onDeleteId} onViewTest={onViewTest}/>
+                <Accordion selectedTerm={selectedTerm} onClick={onClick} items={data}  onViewTest={onViewTest}/>
             </div>
             <Modal setActive={setActive} active={active}>
                 <div style={{padding: "2rem"}}>
@@ -251,7 +219,7 @@ export const GroupProfileQuarter = () => {
 
             </Modal>
 
-            <ConfirmModal setActive={setDeleteActive} active={deleteActive} onClick={onDeleteTest}/>
+
 
             <Modal typeIcon={true} setActive={setViewActive} active={viewActive}>
                 {viewTest ? (
@@ -304,17 +272,17 @@ export const GroupProfileQuarter = () => {
     );
 }
 
-function Accordion({items, onClick, parentId = null, path = [], onDeleteId, onViewTest}) {
+function Accordion({items, onClick, parentId = null, path = [], onDeleteId, onViewTest ,selectedTerm}) {
     return (
         <div className={styles.accordion}>
             {items?.map((item, i) => (
                 <AccordionItem
+                    selectedTerm={selectedTerm}
                     key={i}
                     item={item}
                     parentId={parentId}
                     path={[...path, {id: item?.id, title: item?.title, type: item.type}]}
                     onClick={onClick}
-                    onDeleteId={onDeleteId}
                     onViewTest={onViewTest} // ✅ props forward
                 />
             ))}
@@ -322,10 +290,91 @@ function Accordion({items, onClick, parentId = null, path = [], onDeleteId, onVi
     );
 }
 
-function AccordionItem({item, path, onClick, onDeleteId, onViewTest}) {
+function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
     const [open, setOpen] = useState(false);
     const hasChildren = !!item?.children;
     const hasTable = !!item?.tableData;
+    const {request} = useHttp()
+
+
+
+    const [editActive, setEditActive] = useState(false);
+    const [editItem, setEditItem] = useState(null);
+
+    // delete confirm state
+    const [deleteActive, setDeleteActive] = useState(false);
+
+    const dispatch = useDispatch();
+
+    const {register, handleSubmit, reset} = useForm();
+
+
+
+    // pen bosilganda
+    const onEditId = (row) => {
+        setEditItem({path, ...row});
+        reset({
+            name: row.name,
+            weight: row.weight,
+            date: row.date,
+        });
+        setEditActive(true);
+    };
+
+    // update test
+    console.log(selectedTerm)
+    const onUpdateTest = (data) => {
+
+        const res = {
+
+            group: path.find(p => p.type === "group")?.id,
+            subject: path.find(p => p.type === "subject")?.id,
+            name: data.name,
+            weight: data.weight,
+
+            date: data.date,
+        };
+
+        request(`${API_URL}terms/update-test/${editItem.id}/`, "PATCH", JSON.stringify({...res ,  term: selectedTerm,}), headers())
+            .then((res) => {
+                dispatch(updateTest({
+                    path: editItem.path,
+                    test: res, // backend qaytargan yangilangan test
+                }));
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "success",
+                    msg: "Test muvaffaqiyatli yangilandi",
+                }));
+                setEditActive(false);
+                setEditItem(null);
+            })
+            .catch((err) => console.log(err));
+    };
+
+    // delete test
+    const onDeleteFromEdit = () => {
+        setDeleteActive(true);
+    };
+
+    const onDeleteTest = () => {
+        request(`${API_URL}terms/delete-test/${editItem.id}/`, "DELETE", null, headers())
+            .then(() => {
+                dispatch(deleteTest({
+                    path: editItem.path,
+                    testId: editItem.id,
+                }));
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "success",
+                    msg: "Test o‘chirildi",
+                }));
+                setDeleteActive(false);
+                setEditActive(false);
+                setEditItem(null);
+            })
+            .catch((err) => console.log(err));
+    };
 
     return (
         <div className={styles.item}>
@@ -373,9 +422,10 @@ function AccordionItem({item, path, onClick, onDeleteId, onViewTest}) {
                                         <i
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                onDeleteId(path, row)
+                                                onEditId(row);
                                             }}
-                                            style={{color: "red"}} className={"fa fa-trash"}
+                                            style={{cursor: "pointer"}}
+                                            className="fa fa-pen"
                                         />
                                     </td>
                                 </tr>
@@ -390,12 +440,37 @@ function AccordionItem({item, path, onClick, onDeleteId, onViewTest}) {
                             parentId={item?.id}
                             path={path}
                             onClick={onClick}
-                            onDeleteId={onDeleteId}
-                            onViewTest={onViewTest} // ✅ recursive forward
+                            onViewTest={onViewTest}
+                            selectedTerm={selectedTerm}
                         />
                     )}
                 </div>
             )}
+
+
+            <Modal setActive={setEditActive} active={editActive}>
+                <div style={{padding: "2rem", display: "flex", flexDirection: "column", gap: "1rem"}}>
+                    <Input name="name" placeholder="Nomi" register={register}/>
+                    <Input name="weight" type="number" placeholder="Foiz %" register={register}/>
+                    <Input name="date" type="date" register={register}/>
+
+                    <div style={{display: "flex", justifyContent: "space-between", marginTop: "1rem"}}>
+                        <Button onClick={handleSubmit(onUpdateTest)}>Update</Button>
+                        <Button type={"danger"} onClick={handleSubmit(onDeleteFromEdit)} style={{background: "red", color: "#fff"}}>
+                            Delete
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
+
+
+            <ConfirmModal
+                active={deleteActive}
+                setActive={setDeleteActive}
+                onClick={onDeleteTest}
+
+
+            />
         </div>
     );
 }

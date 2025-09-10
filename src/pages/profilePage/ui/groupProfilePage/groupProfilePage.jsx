@@ -182,10 +182,12 @@ export const GroupProfilePage = () => {
                                         : <>
                                             <GroupProfileModalTeachers branch={branch}/>
                                             <GroupProfileDeleteForm branch={branch}/>
+
                                         </>
                                 }
                                 {/*<GroupProfileTeacher setActive={setActiveModal}/>*/}
                                 {/*<GroupProfileStudents/>*/}
+
                                 <GroupProfileAttendanceForm
                                     studentData={data?.students}
                                     setAttendance={setAttendance}

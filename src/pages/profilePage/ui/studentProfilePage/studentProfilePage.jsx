@@ -25,7 +25,7 @@ import {
     StudentProfileTotalAttendance,
     StudentProfileChangeInfo,
     StudentProfileContract,
-    StudentProfileAttendanceAll, StudentProfileTimeTable
+    StudentProfileAttendanceAll, StudentProfileTimeTable, StudentProfileQuarter
 } from "entities/profile/studentProfile";
 import {
     fetchStudentProfileData,
@@ -203,6 +203,10 @@ export const StudentProfilePage = () => {
 
                 {currentTab === "timetable" && (
                     <StudentProfileTimeTable />
+                )}
+
+                {currentTab === "quarter" && (
+                    <StudentProfileQuarter/>
                 )}
 
             </div>
