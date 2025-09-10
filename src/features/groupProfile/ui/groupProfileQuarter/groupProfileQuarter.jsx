@@ -26,6 +26,9 @@ const reducers = {
     groupQuarterSlice: groupQuarterReducer
 }
 
+
+// optimizatsiya qilaman  (sardor)
+
 export const GroupProfileQuarter = () => {
     //data accardion
     const data = useSelector(getTermData)
