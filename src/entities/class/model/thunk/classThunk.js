@@ -49,14 +49,20 @@ export const classItem = createAsyncThunk(
 )
 
 
+// export const updateClassItem = createAsyncThunk(
+//     "classSlice/updateClassItem",
+//     async ({idClass, res}) => {
+//         const {request} = useHttp()
+//         return await request(`${API_URL}Class/class_number_update/${idClass}/`, "PUT", JSON.stringify(res), headers())
+//     }
+// )
 export const updateClassItem = createAsyncThunk(
     "classSlice/updateClassItem",
     async ({idClass, res}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Class/class_number_update/${idClass}/`, "PUT", JSON.stringify(res), headers())
+        return await request(`${API_URL}Group/groups_add_subject/?group_id=${idClass}`, "POST", JSON.stringify(res), headers())
     }
 )
-
 
 export const createColor = createAsyncThunk(
     "classSlice/createColor",
@@ -100,5 +106,14 @@ export const getClassNewNumberList = createAsyncThunk(
     async ({branchId,id}) => {
         const {request} = useHttp()
         return await request(`${API_URL}Class/class_number_subject_list/?branch=${branchId}&id=${id}`, "GET", null, headers())
+    }
+)
+
+
+export const getClassesForClassTypes = createAsyncThunk(
+    "classSlice/getClassesForClassTypes",
+    async ({branchId,id}) => {
+        const {request} = useHttp()
+        return await request(`${API_URL}Group/groups_by_class_type/?branch_id=${branchId}&class_type_id=${id}`, "GET", null, headers())
     }
 )

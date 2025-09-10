@@ -30,8 +30,14 @@ export const AnimatedMulti = React.memo(({ options, onChange, value, extraClass,
                     fontSize: fontSize ? `${fontSize}px` : '16px',
                 }),
             }}
+            isClearable={false}
+            backspaceRemovesValue={false}
+
             closeMenuOnSelect={false}
-            components={animatedComponents}
+            components={{
+                ...animatedComponents,
+                MultiValueRemove: () => null,
+            }}
             isMulti
             options={options}
             onChange={handleChange}

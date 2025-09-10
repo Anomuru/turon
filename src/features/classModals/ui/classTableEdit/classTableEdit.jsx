@@ -16,19 +16,19 @@ import {updateClassItem} from "entities/class/model/thunk/classThunk";
 import {useDispatch} from "react-redux";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {onUpdateClass} from "entities/class/model/slice/classSlice";
-
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 
 
 export const ClassTableEdit = ({
 
-                               selectOptions,
-                               editClass,
-                               setEditClass,
-                               edit,
-                               changedItem,
+                                   selectOptions,
+                                   editClass,
+                                   setEditClass,
+                                   edit,
+                                   changedItem,
 
 
-                           }) => {
+                               }) => {
 
 
     // const [selectedSubject, setSelectedSubject] = useState([])
@@ -102,6 +102,7 @@ export const ClassTableEdit = ({
     //         return item
     //     }))
     // }
+
     const [selectedSubject, setSelectedSubject] = useState([])
 
 
@@ -109,6 +110,36 @@ export const ClassTableEdit = ({
     const {request} = useHttp()
     const dispatch = useDispatch()
 
+
+    const onDeleteSubject = (item) => {
+        const id = item.value
+
+        if (item.fromDatabase) {
+            request(`${API_URL}Group/groups_remove_subject/`, "POST",JSON.stringify({subject_id: id, group_id: editClass}) , headers())
+                .then(res => {
+                    dispatch(onAddAlertOptions({
+                        type: "success",
+                        status: true,
+                        msg: res.msg
+                    }))
+                    setSelectedSubject(selectedSubject.filter(item => item.value !== id))
+                    // dispatch(onUpdateClass(res))
+                })
+                .catch(err => {
+                })
+        } else {
+            setSelectedSubject(selectedSubject.filter(item => item.value !== id))
+        }
+    }
+    //
+    //
+    //  const onChangeSubject = async (data) => {
+    //
+    //     if (selectedSubject.length !== data.length) {
+    //         await onDeleteSubject(data)
+    //     }
+    //     await setSelectedSubject(data)
+    // }
 
     const changeInfo = (data) => {
 
@@ -121,7 +152,6 @@ export const ClassTableEdit = ({
         const idClass = editClass
         setValue("price", selectedSubject.price)
         dispatch(updateClassItem({idClass, res}))
-        // dispatch(getClassNewNumberList(idClass))
         setEditClass(!editClass)
     }
 
@@ -132,8 +162,11 @@ export const ClassTableEdit = ({
     useEffect(() => {
         if (changedItem?.id) {
             setSelectedSubject(changedItem.subjects.map(item => ({
-                value: item.id,
-                label: item.name
+                value: item.subject_id,
+                label: item.subject_name,
+                hours: item.hours,
+                fromDatabase: item.from_database,
+                canDelete: item.can_delete
             })))
             setValue("curriculum_hours", changedItem.curriculum_hours)
             setValue("price", changedItem.price)
@@ -145,24 +178,24 @@ export const ClassTableEdit = ({
         if (selectOptions?.length)
             setOptionsSubject(selectOptions?.map(item => ({
                 value: item.id,
-                label: item.name
+                label: item.name,
+                canDelete: true
             })))
     }, [selectOptions])
 
 
-    useEffect(() => {
-        if (editClass) {
-            request(`${API_URL}Class/class_subjects/?id=${editClass}`, "GET", null, headers())
-                .then(res => {
-
-                    setSelectedSubject(res.hours.map(item => ({
-                        value: item.id,
-                        label: item.name,
-                        hours: item.hours
-                    })))
-                })
-        }
-    }, [editClass])
+    // useEffect(() => {
+    //     if (editClass) {
+    //         request(`${API_URL}Class/class_subjects/?id=${editClass}`, "GET", null, headers())
+    //             .then(res => {
+    //                 setSelectedSubject(res.hours.map(item => ({
+    //                     value: item.id,
+    //                     label: item.name,
+    //                     hours: item.hours
+    //                 })))
+    //             })
+    //     }
+    // }, [editClass])
 
 
     const onChangeSubjectPrice = (id, hours) => {
@@ -176,6 +209,7 @@ export const ClassTableEdit = ({
             return item
         }))
     }
+
 
     return (
         <>
@@ -202,18 +236,24 @@ export const ClassTableEdit = ({
                                 />
                             </div>
                         </div>
-                        <div className={cls.input}>
+                        <div className={cls.inputs}>
                             {
                                 selectedSubject.map(item => {
                                     return (
-                                        <Input
-                                            value={item.hours}
-                                            type={"number"}
-                                            title={item.label}
-                                            onChange={
-                                                (e) => onChangeSubjectPrice(item.value, e.target.value)
+                                        <div className={cls.inputs__item}>
+                                            <Input
+                                                value={item.hours || 0}
+                                                type={"number"}
+                                                title={item.label}
+                                                onChange={
+                                                    (e) => onChangeSubjectPrice(item.value, e.target.value)
+                                                }
+                                            />
+                                            {
+                                                item.canDelete  && <i className={"fas fa-times"} onClick={() => onDeleteSubject(item)}></i>
                                             }
-                                        />
+
+                                        </div>
                                     )
                                 })
                             }
