@@ -56,29 +56,20 @@ export const GroupProfileAttendanceForm = memo(
         const [status, setStatus] = useState(true);
         const [absentStudents, setAbsentStudents] = useState({});
 
-        // --- Helpers ---
+
         const formatDayString = useCallback(
             (year, month, day) =>
                 `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
             []
         );
 
-        /**
-         * Универсальный хелпер для добавления/обновления/удаления студента в absentStudents
-         *
-         * Поведение согласовано с оригинальным кодом:
-         * - Если prev.date существует и не равен day -> показываем алерт и возвращаем prev (не меняем)
-         * - Если найден студент -> обновляем поле status и reason (reason определяется так, как в оригинале:
-         *     * если мы вызываем из формы (formReason указан, sourceStatus === undefined) — используем formReason
-         *     * если мы вызываем в контексте объекта i (sourceStatus указан) — используем sourceStatus ? formReason : ""
-         * - Если после удаления массива студентов он пуст -> возвращаем {}
-         */
+
         const upsertAbsentStudent = useCallback(
             ({ studentId, day, newStatus, formReason = undefined, sourceStatus = undefined }) => {
                 const dayString = formatDayString(selectedYear, selectedMonth, day);
 
                 setAbsentStudents((prev) => {
-                    // если уже выбран другой день — не позволяем
+
                     if (prev.date && prev.date !== day) {
                         dispatch(
                             onAddAlertOptions({
@@ -93,11 +84,7 @@ export const GroupProfileAttendanceForm = memo(
                     const updated = [...(prev.students || [])];
                     const idx = updated.findIndex((st) => st.id === studentId);
 
-                    // выбор того, откуда брать reason:
-                    // - если sourceStatus !== undefined => мы пришли из уже существующей записи i (как в оригинале),
-                    //   тогда оригинал использовал `i?.status ? data?.reason : ""` — т.е. если sourceStatus=true -> пытались взять reason из формы,
-                    //   иначе -> "".
-                    // - если sourceStatus === undefined => используем formReason (например, при создании через модалку).
+
                     let reasonToSet;
                     if (typeof sourceStatus !== "undefined") {
                         reasonToSet = sourceStatus ? formReason : "";
@@ -109,7 +96,7 @@ export const GroupProfileAttendanceForm = memo(
                         updated[idx] = {
                             ...updated[idx],
                             status: newStatus,
-                            reason: !newStatus ? reasonToSet : "", // в оригинале часто использовалось !status ? data?.reason : ""
+                            reason: !newStatus ? reasonToSet : "",
                         };
                     } else {
                         updated.push({
@@ -134,7 +121,7 @@ export const GroupProfileAttendanceForm = memo(
             });
         }, []);
 
-        // --- Effects ---
+
         useEffect(() => {
             if (id) dispatch(getSchoolAttendance({ id }));
         }, [id]);
@@ -165,9 +152,9 @@ export const GroupProfileAttendanceForm = memo(
             }
         }, [dateAttendance]);
 
-        // --- Handlers ---
+
         const onCreate = (data) => {
-            // точно как в оригинале — добавляем запись с status = false и reason из формы
+
             upsertAbsentStudent({
                 studentId: active?.student,
                 day: active?.day,
@@ -198,13 +185,12 @@ export const GroupProfileAttendanceForm = memo(
         };
 
         const onChange = (data) => {
-            // В оригинале: reason = !status ? data?.reason : ""
+
             upsertAbsentStudent({
                 studentId: isChange?.student,
                 day: isChange?.day,
                 newStatus: status,
                 formReason: data?.reason,
-                // передаём sourceStatus undefined — потому что здесь reason берём из формы
                 sourceStatus: undefined,
             });
 
@@ -254,7 +240,6 @@ export const GroupProfileAttendanceForm = memo(
             });
         };
 
-        // --- Render ---
         const renderAttendance = (limit = 3) => {
             const data = attendanceList?.students?.length ? attendanceList.students : studentData;
             const isAttendance = Boolean(attendanceList?.students?.length);
@@ -292,9 +277,6 @@ export const GroupProfileAttendanceForm = memo(
                                         isAbsent,
                                     })}
                                     onClick={() => {
-                                        // поведение соответствует оригиналу:
-                                        // - если i?.status === null -> добавляем/удаляем из absentStudents (используем day и item.student.id)
-                                        // - если i?.status !== null -> разные ветви (удаление из absentStudents, переключение статуса, открытие модалки изменения)
                                         if (i?.status === null) {
                                             if (!isAbsent) {
                                                 if (absentStudents?.date && day !== String(absentStudents?.date)) {
@@ -306,11 +288,9 @@ export const GroupProfileAttendanceForm = memo(
                                                         })
                                                     );
                                                 } else {
-                                                    // открыть модалку на создание отсутствия
                                                     setActive({ day, student: item?.student?.id });
                                                 }
                                             } else {
-                                                // убрать студента из списка absent
                                                 setAbsentStudents((prev) => {
                                                     const updated = prev.students.filter((st) => st.id !== item?.student?.id);
                                                     return updated.length ? { ...prev, students: updated } : {};
@@ -318,7 +298,6 @@ export const GroupProfileAttendanceForm = memo(
                                             }
                                         } else {
                                             if (isAbsent) {
-                                                // студент уже в absentStudents — удаляем
                                                 setAbsentStudents((prev) => {
                                                     const updated = prev.students.filter((st) => st.id !== item?.student?.id);
                                                     return updated.length ? { ...prev, students: updated } : {};
@@ -334,17 +313,14 @@ export const GroupProfileAttendanceForm = memo(
                                                     );
                                                 } else {
                                                     if (!i?.status) {
-                                                        // В оригинале: при !i.status добавляли запись с status: !i.status и reason: i?.status ? data?.reason : ""
-                                                        // Так как data в этой области не определён — в оригинале reason становился "".
                                                         upsertAbsentStudent({
                                                             studentId: item?.student?.id,
                                                             day,
                                                             newStatus: !i?.status,
                                                             formReason: undefined,
-                                                            sourceStatus: i?.status, // передаём sourceStatus чтобы поведение reason соответствовало оригиналу
+                                                            sourceStatus: i?.status,
                                                         });
                                                     } else {
-                                                        // открываем модалку изменения — сохраняем данные изменения
                                                         setIsChange({
                                                             day,
                                                             student: item?.student?.id,
@@ -457,7 +433,6 @@ export const GroupProfileAttendanceForm = memo(
                     </div>
                 </EditableCard>
 
-                {/* --- Modals --- */}
                 <Modal active={active} setActive={setActive}>
                     <h1>Davomat qilish</h1>
                     <Form extraClassname={cls.create} onSubmit={handleSubmit(onCreate)}>
