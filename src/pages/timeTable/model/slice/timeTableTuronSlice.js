@@ -3,7 +3,7 @@ import {fetchTeacherProfileData} from "pages/profilePage/model/thunk/teacherProf
 import {
     fetchTimeTableClassView,
     fetchTimeTableColors,
-    fetchTimeTableData, fetchTimeTableForShow, fetchTimeTableSubject, fetchTimeTableTeacher,
+    fetchTimeTableData, fetchTimeTableForShow, fetchTimeTableStudents, fetchTimeTableSubject, fetchTimeTableTeacher,
     fetchTimeTableTypesData,
     fetchTimeTableWeekDays
 } from "pages/timeTable/model/thunks/timeTableTuronThunks";
@@ -21,6 +21,7 @@ const initialState = {
     teachers: [],
     weekDays: [],
     colors: [],
+    students: [],
     date: new Date().toLocaleDateString('en-CA'),
 
     classViewData: [],
@@ -63,7 +64,6 @@ const timeTableTuronSlice = createSlice({
         onChangeColorTimeTable: (state, action) => {
             state.color = action.payload
         },
-
         onChangeDateTimeTable: (state, action) => {
             state.date = action.payload
             state.isDataStatus = "date"
@@ -74,7 +74,12 @@ const timeTableTuronSlice = createSlice({
             state.weekDay = action.payload
             state.isDataStatus = "week"
             localStorage.setItem("dateForTimeTable", JSON.stringify({type: "week", value: action.payload}))
-        }
+        },
+
+        onRemoveStudents: (state, action) => {
+            state.students = []
+        },
+
     },
     extraReducers: builder =>
         builder
@@ -202,7 +207,6 @@ const timeTableTuronSlice = createSlice({
             .addCase(fetchTimeTableTypesData.rejected, (state, action) => {
                 state.loading = false
                 state.fetchStatusGroup = "error"
-
                 state.error = action.payload ?? null
             })
 
@@ -214,8 +218,6 @@ const timeTableTuronSlice = createSlice({
 
 
             .addCase(fetchTimeTableClassView.fulfilled, (state, action) => {
-
-
                 state.classViewData = action.payload.time_tables
                 state.loading = false
                 state.error = null
@@ -234,16 +236,10 @@ const timeTableTuronSlice = createSlice({
 
 
             .addCase(fetchTimeTableData.fulfilled, (state, action) => {
-
                 let indexContainer = 1
-
-
                 state.data = action.payload.time_tables[0]?.rooms?.map(room => {
-
                     const newLessons = room.lessons.map(item => {
                         indexContainer += 1
-
-
                         if (item.group.id) {
                             return {
                                 ...item,
@@ -278,7 +274,6 @@ const timeTableTuronSlice = createSlice({
                         }
                     })
 
-
                     return {
                         ...room,
                         lessons: newLessons
@@ -288,14 +283,13 @@ const timeTableTuronSlice = createSlice({
 
                 state.hours = action.payload.hours_list
                 state.fetchStatusData = false
-
                 state.loading = false
                 state.error = null
             })
+
             .addCase(fetchTimeTableData.rejected, (state, action) => {
                 state.loading = false
                 state.fetchStatusData = false
-
                 state.error = action.payload ?? null
             })
 
@@ -312,11 +306,29 @@ const timeTableTuronSlice = createSlice({
                 state.loading = false
                 state.error = action.payload ?? null
             })
+
+            .addCase(fetchTimeTableStudents.pending, state => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(fetchTimeTableStudents.fulfilled, (state, action) => {
+                state.loading = false
+                state.students = action.payload.students
+                state.error = null
+            })
+            .addCase(fetchTimeTableStudents.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload ?? null
+            })
+
+
 })
 
 export const {reducer: timeTableTuronReducer} = timeTableTuronSlice
 
 // export default TimeTableTuronSlice.reducer
+
+
 export const {
     onChangeTypeTimeTable,
     onChangeDayTimeTable,
@@ -324,5 +336,6 @@ export const {
     onChangeFilterClassTimeTable,
     onChangeFilterTeacherTimeTable,
     onChangeDateTimeTable,
-    onChangeWeekDayTimeTable
+    onChangeWeekDayTimeTable,
+    onRemoveStudents
 } = timeTableTuronSlice.actions

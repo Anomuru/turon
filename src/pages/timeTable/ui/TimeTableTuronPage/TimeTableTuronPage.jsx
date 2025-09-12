@@ -24,12 +24,13 @@ import {Button} from "shared/ui/button";
 import {useDispatch, useSelector} from "react-redux";
 import {
     fetchTimeTableClassView, fetchTimeTableColors,
-    fetchTimeTableData,
+    fetchTimeTableData, fetchTimeTableStudents,
     fetchTimeTableSubject,
     fetchTimeTableTeacher,
     fetchTimeTableTypesData
 } from "pages/timeTable/model/thunks/timeTableTuronThunks";
 import {
+    getTimeTableStudents,
     getTimeTableTuronClassViewData,
     getTimeTableTuronColor,
     getTimeTableTuronData, getTimeTableTuronDataStatus, getTimeTableTuronDate,
@@ -45,17 +46,23 @@ import {API_URL, headers, useHttp} from "shared/api/base";
 import {DefaultLoader} from "shared/ui/defaultLoader";
 import {onAddAlertOptions, onAddMultipleAlertOptions} from "features/alert/model/slice/alertSlice";
 import TimeTableTuronPageFilters from "../TimeTableTuronPageFilters/TimeTableTuronPageFilters";
-import {TimeTableDragItem, TimeTableDragItems, TimeTableDropContainer} from "entities/timeTableTuron";
+import {
+    TimeTableDragItem,
+    TimeTableDragItems,
+    TimeTableDropContainer,
+    TimeTableStudents
+} from "entities/timeTableTuron";
 import {DraggableContainer} from "entities/timeTableTuron/ui/DraggableContainer/DraggableContainer";
 import {Modal} from "shared/ui/modal";
 import {TimeTableFullScreen} from "entities/timeTableTuron/ui/TimeTableFullScreen/TimeTableFullScreen";
 import {TimeTableClassView} from "entities/timeTableTuron/ui/TimeTableClassView/TimeTableClassView";
 import {MiniLoader} from "shared/ui/miniLoader";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
-import {timeTableTuronReducer} from "pages/timeTable/model/slice/timeTableTuronSlice.js";
+import {onRemoveStudents, timeTableTuronReducer} from "pages/timeTable/model/slice/timeTableTuronSlice.js";
 import {fetchTeachersForSelect} from "entities/oftenUsed/index.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {ConfirmModal} from "shared/ui/confirmModal/index.js";
+
 
 
 const rooms = [
@@ -93,12 +100,14 @@ export const TimeTableTuronPage = () => {
 
     const [startItem, setStartItem] = useState()
     const [isSelected, setIsSelected] = useState(false)
+    const [selectedType, setSelectedType] = useState("")
     const [loading, setLoading] = useState(false)
     const [canDisabled, setCanDisabled] = useState(false)
     const [fullScreen, setFullScreen] = useState(false)
     const [classView, setClassView] = useState(false)
     const [selectedSubject, setSelectedSubject] = useState(null)
     const [selectedGroup, setSelectedGroup] = useState(null)
+    const [selectedContainerTimeTableId, setSelectedContainerTimeTableId] = useState(null)
     const [canSubmitLesson, setCanSubmitLesson] = useState({})
     const [rooms, setRooms] = useState([])
     const [activeUpdate, setActiveUpdate] = useState(false)
@@ -122,6 +131,7 @@ export const TimeTableTuronPage = () => {
     const weekDay = useSelector(getTimeTableTuronWeekDay)
     const currentWeekDay = useSelector(getSelectedWeekDay)
     const isDataStatus = useSelector(getTimeTableTuronIsDataStatus)
+    const students = useSelector(getTimeTableStudents)
 
 
     const branch = useSelector(getUserBranchId)
@@ -164,9 +174,17 @@ export const TimeTableTuronPage = () => {
 
 
     useEffect(() => {
-        if (selectedGroup)
+        if (selectedGroup && selectedType !== "flow") {
             dispatch(fetchTimeTableSubject(selectedGroup))
-    }, [selectedGroup])
+        }
+
+        dispatch(fetchTimeTableStudents({
+            time_table_id: selectedContainerTimeTableId,
+            // subject_id
+        }))
+
+
+    }, [selectedGroup,selectedContainerTimeTableId,selectedType])
 
 
     useEffect(() => {
@@ -239,7 +257,15 @@ export const TimeTableTuronPage = () => {
     },[rooms.length,filteredClass,type])
 
 
-
+    const onFilterStudentSubject = (id) => {
+        dispatch(fetchTimeTableStudents({
+            time_table_id: selectedContainerTimeTableId,
+            subject_id: id,
+            type: selectedType,
+            group_flow: selectedGroup,
+            date: date
+        }))
+    }
 
 
     const onDragStart = (e) => {
@@ -628,47 +654,54 @@ export const TimeTableTuronPage = () => {
     }
 
 
-    const onDoubleClickContainer = (roomId, id) => {
-        setRooms(rooms => rooms.map(room => {
-            if (room.id === roomId) {
-                const newLessons = room.lessons.map(item => {
-                    if (item.dndId === id) {
-                        setIsSelected(true)
-                        setSelectedGroup(item.group.id)
-                        setSelectedSubject(!item.teacher.id && item.subject.id ? item.subject.id : null)
+    const onDoubleClickContainer = (roomId, id, type) => {
+
+            setRooms(rooms => rooms.map(room => {
+                if (room.id === roomId) {
+                    const newLessons = room.lessons.map(item => {
+                        if (item.dndId === id) {
+
+                            setIsSelected(true)
+                            setSelectedGroup(item.group.id)
+                            setSelectedContainerTimeTableId(item.id)
+                            setSelectedType(type)
+                            setSelectedSubject(!item.teacher.id && item.subject.id ? item.subject.id : null)
+
+                            return {
+                                ...item,
+                                isSelected: true,
+                                isDisabled: false
+                            }
+                        }
 
                         return {
                             ...item,
-                            isSelected: true,
-                            isDisabled: false
+                            isSelected: false,
+                            isDisabled: true
                         }
-                    }
+                    })
 
                     return {
-                        ...item,
-                        isSelected: false,
-                        isDisabled: true
+                        ...room,
+                        lessons: newLessons
                     }
-                })
-
-                return {
-                    ...room,
-                    lessons: newLessons
-                }
-            } else {
-                const newLessons = room.lessons.map(item => {
+                } else {
+                    const newLessons = room.lessons.map(item => {
+                        return {
+                            ...item,
+                            isSelected: false,
+                            isDisabled: true
+                        }
+                    })
                     return {
-                        ...item,
-                        isSelected: false,
-                        isDisabled: true
+                        ...room,
+                        lessons: newLessons
                     }
-                })
-                return {
-                    ...room,
-                    lessons: newLessons
                 }
-            }
-        }))
+            }))
+
+
+
 
     }
 
@@ -689,6 +722,10 @@ export const TimeTableTuronPage = () => {
                 lessons: newLessons
             }
         }))
+        setSelectedSubject(null)
+        setSelectedType(null)
+        setSelectedContainerTimeTableId(null)
+        dispatch(onRemoveStudents())
     }
 
 
@@ -796,8 +833,6 @@ export const TimeTableTuronPage = () => {
     return (
 
             <div className={cls.timeTable}>
-
-
                 {
                     !isSelected ?
                         <TimeTableTuronPageFilters
@@ -840,23 +875,28 @@ export const TimeTableTuronPage = () => {
                         color={color}
                         type={type}
                         status={groupsDataStatus}
+                        selectedType={selectedType}
+                        onFilterStudentSubject={onFilterStudentSubject}
                     />
-                    {
-                        dataStatus === true ?
-                            <MiniLoader/>
-                            :
-                            <TimeTableDropContainer
-                                onDoubleClickContainer={onDoubleClickContainer}
-                                onDeleteContainer={onDeleteContainer}
-                                rooms={rooms}
-                                times={times}
-                                hours={hours}
-                                canDisabled={canDisabled}
-                                startItem={startItem}
-                                // containers={containers}
-                            />
+                    <div className={cls.wrapper}>
+                        {
+                            dataStatus === true ?
+                                <MiniLoader/>
+                                :
+                                <TimeTableDropContainer
+                                    onDoubleClickContainer={onDoubleClickContainer}
+                                    onDeleteContainer={onDeleteContainer}
+                                    rooms={rooms}
+                                    times={times}
+                                    hours={hours}
+                                    canDisabled={canDisabled}
+                                    startItem={startItem}
+                                    // containers={containers}
+                                />
+                        }
 
-                    }
+                        {students.length > 0 &&<TimeTableStudents students={students}/>}
+                    </div>
 
 
                     <DragOverlay>
@@ -866,7 +906,6 @@ export const TimeTableTuronPage = () => {
                                 startItem?.type === "teacher" ?
                                     <TimeTableDragItem
                                         item={startItem}
-
                                     >
                                         {startItem.name} {startItem.surname}
                                     </TimeTableDragItem>
@@ -875,14 +914,11 @@ export const TimeTableTuronPage = () => {
                                             item={startItem}
                                             color={startItem?.color?.value}
                                         >
-
                                             {startItem.class_name || startItem.name}
                                         </TimeTableDragItem>
                                         : null
                         }
                     </DragOverlay>
-
-
                 </DndContext>
 
 

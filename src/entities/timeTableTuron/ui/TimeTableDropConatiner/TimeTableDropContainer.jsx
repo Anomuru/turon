@@ -13,11 +13,7 @@ export const TimeTableDropContainer = (props) => {
 
 
     const renderContainers = (containers) => {
-
-
         return containers.map(item => {
-
-
             return (
                 <Container
                     onDoubleClickContainer={onDoubleClickContainer}
@@ -25,8 +21,6 @@ export const TimeTableDropContainer = (props) => {
                     item={item}
                 />
             )
-
-
         })
     }
 
@@ -67,6 +61,7 @@ export const TimeTableDropContainer = (props) => {
                     }
                 </div>
             </div>
+
         </div>
     );
 };
@@ -83,9 +78,9 @@ const Container = (props) => {
 
     const onDoubleClick = () => {
         if (!item.group.name ) return;
-        if (item.group.type === "flow") return;
+        // if (item.group.type === "flow") return;
 
-        onDoubleClickContainer(item.room, item.dndId)
+        onDoubleClickContainer(item.room, item.dndId, item.group.type)
     }
 
 

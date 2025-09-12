@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 
 
 import cls from "./TimeTableDragItems.module.sass"
@@ -6,12 +6,26 @@ import {TimeTableDragItem} from "entities/timeTableTuron/ui/TimeTableDragItem/Ti
 
 import {Button} from "shared/ui/button";
 import {MiniLoader} from "shared/ui/miniLoader";
+import Grip from "shared/assets/icons/grip-vertical-solid.svg";
 
 
 export const TimeTableDragItems = (props) => {
 
-    const {groups, isSelected, subjects, teachers, selectedSubject,color,setSelectedSubject,type,status} = props
+    const {
+        groups,
+        isSelected,
+        subjects,
+        teachers,
+        selectedSubject,
+        color,
+        setSelectedSubject,
+        type,
+        status,
+        selectedType,
+        onFilterStudentSubject
+    } = props
 
+    const [selectedItem, setSelectedItem] = useState(null)
 
 
     const filteredColors = () => {
@@ -22,16 +36,16 @@ export const TimeTableDragItems = (props) => {
     }
 
 
-
     const renderItems = useCallback(() => {
-        if (!isSelected) {
+        if (!isSelected || selectedType === "flow") {
             if (!groups?.length) {
                 return <h1 style={{color: 'red'}}>{type} yoq</h1>
             }
             return filteredColors()?.map(item => {
-                return <TimeTableDragItem color={item.type === "group" ? item?.color?.value : ""} typeItem={type} item={item}>
-                    <p style={{ textAlign: "center"}}>{item?.class_name || item?.name}</p>
-                    <p style={{ textAlign: "center"}}>
+                return <TimeTableDragItem color={item.type === "group" ? item?.color?.value : ""} typeItem={type}
+                                          item={item}>
+                    <p style={{textAlign: "center"}}>{item?.class_name || item?.name}</p>
+                    <p style={{textAlign: "center"}}>
                         {
                             type === "flow" &&
                             <>
@@ -45,24 +59,34 @@ export const TimeTableDragItems = (props) => {
 
                 </TimeTableDragItem>
             })
-        } else if (!selectedSubject) {
-            if (!subjects?.length ) {
+        } else if (!selectedSubject && selectedType === "group") {
+            if (!subjects?.length) {
                 return <h1 style={{color: 'red'}}>Fanlar yoq</h1>
             }
 
             return subjects.map(item => {
-                return <TimeTableDragItem type={"subject"} item={item}>{item?.name} - {item.hours}</TimeTableDragItem>
+                return (
+                        <TimeTableDragItem
+                            active={selectedItem === item.id}
+                            onClick={() => {
+                                onFilterStudentSubject(item.id)
+                                setSelectedItem(item.id)
+                            }}
+                            grip type={"subject"}
+                            item={item}
+                        >
+                            {item?.name} - {item.hours}
+                        </TimeTableDragItem>
+                    )
             })
         } else {
-
 
 
             return teachers.map(item => {
                 return <TimeTableDragItem type={"teacher"} item={item}>{item?.name} {item?.surname}</TimeTableDragItem>
             })
         }
-    }, [isSelected,selectedSubject,groups,teachers,color,subjects])
-
+    }, [isSelected, selectedSubject, groups, teachers, color, subjects, selectedType,selectedItem])
 
 
     if (status === true) {
