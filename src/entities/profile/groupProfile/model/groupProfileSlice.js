@@ -114,6 +114,7 @@ const groupProfileSlice = createSlice({
                     return s;
                 }),
             };
+            state.attendanceListLoading = false
         },
         deleteAttendance: (state, action) => {
             state.attendanceList = {
@@ -135,6 +136,9 @@ const groupProfileSlice = createSlice({
                     };
                 })
             };
+        },
+        loadingAttendance: (state) => {
+            state.attendanceListLoading = true
         }
     },
     extraReducers: builder =>
@@ -421,7 +425,8 @@ export const {
     deleteDebtStudent,
     onMoveToGroup,
     createAttendance,
-    deleteAttendance
+    deleteAttendance,
+    loadingAttendance
 } = groupProfileSlice.actions
 // export default groupProfileSlice.reducer
 
