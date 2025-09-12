@@ -88,26 +88,31 @@ const groupProfileSlice = createSlice({
             );
         },
         createAttendance: (state, action) => {
-            const dayNumber = new Date(action.payload.day).getDate().toString();
+            const dayNumber = new Date(action.payload.date).getDate().toString();
 
             state.attendanceList = {
                 days: state.attendanceList.days,
                 students: state.attendanceList.students.map((s) => {
-                    if (s.student.id === action.payload.studentId) {
+                    const studentAttendance = action.payload.attendance.find(
+                        (a) => a.student_id === s.student.id
+                    );
+
+                    if (studentAttendance) {
                         return {
                             ...s,
                             days: {
                                 ...s.days,
                                 [dayNumber]: {
-                                    id: action.payload.id,
-                                    status: action.payload.status,
-                                    reason: action.payload.reason ?? null
-                                }
-                            }
+                                    id: studentAttendance.student_id,
+                                    status: studentAttendance.status,
+                                    reason: studentAttendance.reason ?? null,
+                                },
+                            },
                         };
                     }
+
                     return s;
-                })
+                }),
             };
         },
         deleteAttendance: (state, action) => {

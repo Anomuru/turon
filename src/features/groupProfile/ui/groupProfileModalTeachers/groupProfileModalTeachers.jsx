@@ -115,7 +115,6 @@ export const GroupProfileModalTeachers = memo(({branch}) => {
     const render = renderTeachers()
 
 
-    console.log(profileData , "profileData")
     return (
         <>
             <EditableCard

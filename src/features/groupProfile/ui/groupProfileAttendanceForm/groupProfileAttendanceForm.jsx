@@ -1,367 +1,485 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, { memo, useEffect, useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router";
+import classNames from "classnames";
+import { useForm } from "react-hook-form";
 
-import {EditableCard} from "shared/ui/editableCard";
-import {Modal} from "shared/ui/modal";
-import {Form} from "shared/ui/form";
-import {Table} from "shared/ui/table";
-import {Select} from "shared/ui/select";
+import { EditableCard } from "shared/ui/editableCard";
+import { Modal } from "shared/ui/modal";
+import { Form } from "shared/ui/form";
+import { Table } from "shared/ui/table";
+import { Select } from "shared/ui/select";
+import { Input } from "shared/ui/input";
+import { Button } from "shared/ui/button";
+import { ConfirmModal } from "shared/ui/confirmModal";
+
+import { API_URL, headers, useHttp } from "shared/api/base";
+import {
+    getSchoolAttendance,
+    getSchoolAttendanceList,
+} from "entities/profile/groupProfile/model/groupProfileThunk";
+import {
+    getAttendance,
+    getAttendanceList,
+} from "entities/profile/groupProfile/model/groupProfileSelector";
+import {
+    createAttendance,
+    deleteAttendance,
+} from "entities/profile/groupProfile/model/groupProfileSlice";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import { getUserBranchId } from "entities/profile/userProfile";
 
 import cls from "./groupProfileAttendanceForm.module.sass";
-import {useNavigate, useParams} from "react-router";
-import {API_URL, headers, ParamUrl, useHttp} from "shared/api/base.js";
-import {useDispatch, useSelector} from "react-redux";
-import {getSchoolAttendance, getSchoolAttendanceList} from "entities/profile/groupProfile/model/groupProfileThunk.js";
-import {getAttendance, getAttendanceList} from "entities/profile/groupProfile/model/groupProfileSelector.js";
-import classNames from "classnames";
-import {Input} from "shared/ui/input/index.js";
-import {useForm} from "react-hook-form";
-import {getUserBranchId} from "entities/profile/userProfile/index.js";
-import {createAttendance, deleteAttendance} from "entities/profile/groupProfile/model/groupProfileSlice.js";
-import {Button} from "shared/ui/button/index.js";
-import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 
-export const GroupProfileAttendanceForm = memo(({attendance, setAttendance, studentData}) => {
+export const GroupProfileAttendanceForm = memo(
+    ({ attendance, setAttendance, studentData }) => {
+        const { register, handleSubmit, setValue } = useForm();
+        const { request } = useHttp();
+        const { id } = useParams();
+        const dispatch = useDispatch();
+        const navigate = useNavigate();
 
+        const dateAttendance = useSelector(getAttendance);
+        const attendanceList = useSelector(getAttendanceList);
+        const branch = useSelector(getUserBranchId);
 
-    const dayNumber = new Date().getDate().toString();
-    const {register, handleSubmit, setValue} = useForm()
-    const {request} = useHttp()
-    const {id} = useParams()
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const dateAttendance = useSelector(getAttendance)
-    const attendanceList = useSelector(getAttendanceList)
-    const branch = useSelector(getUserBranchId)
+        const [active, setActive] = useState(null);
+        const [isChange, setIsChange] = useState(null);
+        const [isDelete, setIsDelete] = useState(false);
 
-    const [active, setActive] = useState(false)
-    const [isChange, setIsChange] = useState(false)
-    const [isDelete, setIsDelete] = useState(false)
-    const [attendanceYears, setAttendanceYears] = useState([])
-    const [selectedYear, setSelectedYear] = useState(null)
-    const [attendanceMonth, setAttendanceMonth] = useState([])
-    const [selectedMonth, setSelectedMonth] = useState(null)
-    const [selectedDays, setSelectedDays] = useState([])
-    const [status, setStatus] = useState(true)
+        const [attendanceYears, setAttendanceYears] = useState([]);
+        const [selectedYear, setSelectedYear] = useState(null);
+        const [attendanceMonth, setAttendanceMonth] = useState([]);
+        const [selectedMonth, setSelectedMonth] = useState(null);
+        const [selectedDays, setSelectedDays] = useState([]);
 
-    useEffect(() => {
-        if (id)
-            dispatch(getSchoolAttendance({id}))
-    }, [id])
+        const [status, setStatus] = useState(true);
+        const [absentStudents, setAbsentStudents] = useState({});
 
-    useEffect(() => {
-        if (id && selectedYear && selectedMonth)
-            dispatch(getSchoolAttendanceList({
-                group_id: id,
-                year: selectedYear,
-                month: selectedMonth
-            }))
-    }, [id, selectedYear, selectedMonth])
+        // --- Helpers ---
+        const formatDayString = useCallback(
+            (year, month, day) =>
+                `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+            []
+        );
 
-    useEffect(() => {
-        if (dateAttendance && dateAttendance.length) {
-            // console.log(dateAttendance, "dateAttendance")
-            const lastYear = dateAttendance[dateAttendance?.length - 1]?.year
-            const yearMonths = dateAttendance.filter(item => item.year === lastYear)[0]?.months
-            const lastMonth = yearMonths[yearMonths?.length - 1]
-            setAttendanceYears(dateAttendance?.map(item => item?.year))
-            setAttendanceMonth(yearMonths?.map(item => item?.month))
-            setSelectedYear(lastYear)
-            setSelectedMonth(lastMonth?.month)
-            setSelectedDays(lastMonth?.days)
-        }
-    }, [dateAttendance])
+        /**
+         * Универсальный хелпер для добавления/обновления/удаления студента в absentStudents
+         *
+         * Поведение согласовано с оригинальным кодом:
+         * - Если prev.date существует и не равен day -> показываем алерт и возвращаем prev (не меняем)
+         * - Если найден студент -> обновляем поле status и reason (reason определяется так, как в оригинале:
+         *     * если мы вызываем из формы (formReason указан, sourceStatus === undefined) — используем formReason
+         *     * если мы вызываем в контексте объекта i (sourceStatus указан) — используем sourceStatus ? formReason : ""
+         * - Если после удаления массива студентов он пуст -> возвращаем {}
+         */
+        const upsertAbsentStudent = useCallback(
+            ({ studentId, day, newStatus, formReason = undefined, sourceStatus = undefined }) => {
+                const dayString = formatDayString(selectedYear, selectedMonth, day);
 
+                setAbsentStudents((prev) => {
+                    // если уже выбран другой день — не позволяем
+                    if (prev.date && prev.date !== day) {
+                        dispatch(
+                            onAddAlertOptions({
+                                type: "error",
+                                status: true,
+                                msg: "Boshqa kun tanlangan",
+                            })
+                        );
+                        return prev;
+                    }
 
-    const onCreate = (data) => {
-        const res = {
-            ...data,
-            status,
-            day: `${selectedYear}-${selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth}-${active?.day < 10 ? `0${active?.day}` : active?.day}`,
-            year: selectedYear,
-            month: selectedMonth,
-            student_id: active?.student,
-            group_id: id
-        }
-        request(`${API_URL}Attendance/attendance/create/`, "POST", JSON.stringify(res), headers())
-            .then(res => {
-                if (attendanceList && attendanceList.students?.length) {
-                    dispatch(createAttendance({...res, studentId: active?.student}))
-                } else {
-                    dispatch(getSchoolAttendanceList({
+                    const updated = [...(prev.students || [])];
+                    const idx = updated.findIndex((st) => st.id === studentId);
+
+                    // выбор того, откуда брать reason:
+                    // - если sourceStatus !== undefined => мы пришли из уже существующей записи i (как в оригинале),
+                    //   тогда оригинал использовал `i?.status ? data?.reason : ""` — т.е. если sourceStatus=true -> пытались взять reason из формы,
+                    //   иначе -> "".
+                    // - если sourceStatus === undefined => используем formReason (например, при создании через модалку).
+                    let reasonToSet;
+                    if (typeof sourceStatus !== "undefined") {
+                        reasonToSet = sourceStatus ? formReason : "";
+                    } else {
+                        reasonToSet = formReason;
+                    }
+
+                    if (idx > -1) {
+                        updated[idx] = {
+                            ...updated[idx],
+                            status: newStatus,
+                            reason: !newStatus ? reasonToSet : "", // в оригинале часто использовалось !status ? data?.reason : ""
+                        };
+                    } else {
+                        updated.push({
+                            id: studentId,
+                            status: newStatus,
+                            reason: !newStatus ? reasonToSet : "",
+                        });
+                    }
+
+                    return updated.length
+                        ? { date: day, studentId, day: dayString, students: updated }
+                        : {};
+                });
+            },
+            [dispatch, formatDayString, selectedYear, selectedMonth]
+        );
+
+        const removeStudentFromAbsent = useCallback((studentId) => {
+            setAbsentStudents((prev) => {
+                const updated = prev.students?.filter((st) => st.id !== studentId) || [];
+                return updated.length ? { ...prev, students: updated } : {};
+            });
+        }, []);
+
+        // --- Effects ---
+        useEffect(() => {
+            if (id) dispatch(getSchoolAttendance({ id }));
+        }, [id]);
+
+        useEffect(() => {
+            if (id && selectedYear && selectedMonth) {
+                dispatch(
+                    getSchoolAttendanceList({
                         group_id: id,
                         year: selectedYear,
-                        month: selectedMonth
-                    }))
-                }
-                setActive(false)
-                setStatus(true)
-                setValue("reason", "")
-            })
-    }
+                        month: selectedMonth,
+                    })
+                );
+            }
+        }, [id, selectedYear, selectedMonth]);
 
-    const onDelete = async () => {
-        try {
-            await request(
-                `${API_URL}Attendance/attendance/${isChange?.id}/delete/`,
-                "DELETE",
-                null,
-                headers()
-            );
-        } catch (err) {
-            console.error("Ошибка при удалении:", err);
-        }
-        dispatch(deleteAttendance(isChange));
-        setIsDelete(false);
-        setIsChange(false);
-        setValue("reason", "");
-    };
+        useEffect(() => {
+            if (dateAttendance?.length) {
+                const lastYear = dateAttendance.at(-1)?.year;
+                const yearMonths = dateAttendance.find((y) => y.year === lastYear)?.months;
+                const lastMonth = yearMonths?.at(-1);
 
-    const onChange = async (data) => {
-        try {
-            await onDelete();
+                setAttendanceYears(dateAttendance.map((item) => item.year));
+                setAttendanceMonth(yearMonths?.map((m) => m.month));
+                setSelectedYear(lastYear);
+                setSelectedMonth(lastMonth?.month);
+                setSelectedDays(lastMonth?.days);
+            }
+        }, [dateAttendance]);
 
-            const res = {
-                status,
-                reason: status ? "" : data?.reason,
-                day: `${selectedYear}-${selectedMonth < 10 ? `0${selectedMonth}` : selectedMonth}-${isChange?.day < 10 ? `0${isChange?.day}` : isChange?.day}`,
-                year: selectedYear,
-                month: selectedMonth,
-                student_id: isChange?.student,
+        // --- Handlers ---
+        const onCreate = (data) => {
+            // точно как в оригинале — добавляем запись с status = false и reason из формы
+            upsertAbsentStudent({
+                studentId: active?.student,
+                day: active?.day,
+                newStatus: false,
+                formReason: data?.reason,
+                sourceStatus: undefined,
+            });
+
+            setActive(null);
+            setValue("reason", "");
+        };
+
+        const onDelete = async () => {
+            try {
+                await request(
+                    `${API_URL}Attendance/attendance/${isChange?.id}/delete/`,
+                    "DELETE",
+                    null,
+                    headers()
+                );
+                dispatch(deleteAttendance(isChange));
+            } catch (err) {
+                console.error("Ошибка при удалении:", err);
+            }
+            setIsDelete(false);
+            setIsChange(null);
+            setValue("reason", "");
+        };
+
+        const onChange = (data) => {
+            // В оригинале: reason = !status ? data?.reason : ""
+            upsertAbsentStudent({
+                studentId: isChange?.student,
+                day: isChange?.day,
+                newStatus: status,
+                formReason: data?.reason,
+                // передаём sourceStatus undefined — потому что здесь reason берём из формы
+                sourceStatus: undefined,
+            });
+
+            setIsChange(null);
+            setValue("reason", "");
+            setStatus(true);
+        };
+
+        const onSubmitAll = () => {
+            const filtered = (absentStudents.students || []).filter((st) => st.status === false);
+            const trueFiltered = (absentStudents.students || [])
+                .filter((st) => st.status)
+                .map((item) => item.id);
+
+            const prevStudents = attendanceList.students
+                .filter((st) => st.student.id !== absentStudents.studentId && !trueFiltered.includes(st.student.id))
+                .filter((st) => st.days[absentStudents.date].status === false)
+                .map((item) => ({ ...item.days[absentStudents.date], id: item.student.id }));
+
+            const payload = {
+                day: absentStudents.day,
                 group_id: id,
+                absent_students: [...filtered, ...prevStudents].map(({ id, reason }) => ({
+                    id,
+                    reason,
+                })),
             };
 
-            const response = await request(
-                `${API_URL}Attendance/attendance/create/`,
+            request(
+                `${API_URL}Attendance/attendance/create-list/`,
                 "POST",
-                JSON.stringify(res),
+                JSON.stringify(payload),
                 headers()
-            );
+            ).then((res) => {
+                if (attendanceList?.students?.length) {
+                    dispatch(createAttendance(res));
+                } else {
+                    dispatch(
+                        getSchoolAttendanceList({
+                            group_id: id,
+                            year: selectedYear,
+                            month: selectedMonth,
+                        })
+                    );
+                }
+                setAbsentStudents({});
+            });
+        };
 
-            dispatch(createAttendance({...response, studentId: isChange?.student}));
-            setIsChange(false);
-            setStatus(true);
-            setValue("reason", "");
-        } catch (error) {
-            console.error("Ошибка при изменении:", error);
-        }
-    };
+        // --- Render ---
+        const renderAttendance = (limit = 3) => {
+            const data = attendanceList?.students?.length ? attendanceList.students : studentData;
+            const isAttendance = Boolean(attendanceList?.students?.length);
 
+            return data?.map((item, index) => (
+                <tr key={item?.student?.id || index}>
+                    <td>{index + 1}</td>
+                    <td>
+                        {item?.student?.name ?? item?.user?.name}{" "}
+                        {item?.student?.surname ?? item?.user?.surname}
+                    </td>
 
-    const renderAttendance = (limit = 3) => {
-        let data = [];
-        let isAttendance = false;
+                    {isAttendance
+                        ? Object.entries(item?.days).map(([day, i], idx) => {
+                            const isAbsent =
+                                absentStudents?.students?.some((st) => st.id === item?.student?.id) &&
+                                day === String(absentStudents?.date);
 
-        if (attendanceList && attendanceList?.students?.length) {
-            data = attendanceList?.students;
-            isAttendance = true;
-        } else {
-            data = studentData;
-        }
-
-        return data?.map((item, index) => (
-            <tr key={item?.student?.id || index}>
-                <td>{index + 1}</td>
-                <td>{item?.student?.name ?? item?.user?.name} {item?.student?.surname ?? item?.user?.surname}</td>
-
-                {
-                    isAttendance
-                        ? Object.values(item?.days)?.map((i, idx) => {
                             if (idx >= limit && !attendance) return null;
+
+                            const finalStatus = (() => {
+                                const override = absentStudents?.students?.find(
+                                    (st) => st.id === item?.student?.id && absentStudents?.date === String(day)
+                                );
+                                if (override) return override.status;
+                                return i?.status;
+                            })();
+
                             return (
                                 <td
-                                    key={idx}
-                                    className={cls.day}
+                                    key={day}
+                                    className={classNames(cls.day, {
+                                        [cls.active]:
+                                        (active?.student === item?.student?.id && day === active?.day) ||
+                                        isAbsent,
+                                    })}
                                     onClick={() => {
+                                        // поведение соответствует оригиналу:
+                                        // - если i?.status === null -> добавляем/удаляем из absentStudents (используем day и item.student.id)
+                                        // - если i?.status !== null -> разные ветви (удаление из absentStudents, переключение статуса, открытие модалки изменения)
                                         if (i?.status === null) {
-                                            setActive({
-                                                day: Object.keys(item?.days)[idx],
-                                                student: item?.student?.id
-                                            });
+                                            if (!isAbsent) {
+                                                if (absentStudents?.date && day !== String(absentStudents?.date)) {
+                                                    dispatch(
+                                                        onAddAlertOptions({
+                                                            type: "error",
+                                                            status: true,
+                                                            msg: "Boshqa kun tanlangan",
+                                                        })
+                                                    );
+                                                } else {
+                                                    // открыть модалку на создание отсутствия
+                                                    setActive({ day, student: item?.student?.id });
+                                                }
+                                            } else {
+                                                // убрать студента из списка absent
+                                                setAbsentStudents((prev) => {
+                                                    const updated = prev.students.filter((st) => st.id !== item?.student?.id);
+                                                    return updated.length ? { ...prev, students: updated } : {};
+                                                });
+                                            }
                                         } else {
-                                            setIsChange({
-                                                day: Object.keys(item?.days)[idx],
-                                                student: item?.student?.id,
-                                                id: i?.id,
-                                            });
-                                            setStatus(i?.status)
-                                            if (i?.reason) {
-                                                setValue("reason", i?.reason)
+                                            if (isAbsent) {
+                                                // студент уже в absentStudents — удаляем
+                                                setAbsentStudents((prev) => {
+                                                    const updated = prev.students.filter((st) => st.id !== item?.student?.id);
+                                                    return updated.length ? { ...prev, students: updated } : {};
+                                                });
+                                            } else {
+                                                if (absentStudents?.date && day !== String(absentStudents?.date)) {
+                                                    dispatch(
+                                                        onAddAlertOptions({
+                                                            type: "error",
+                                                            status: true,
+                                                            msg: "Boshqa kun tanlangan",
+                                                        })
+                                                    );
+                                                } else {
+                                                    if (!i?.status) {
+                                                        // В оригинале: при !i.status добавляли запись с status: !i.status и reason: i?.status ? data?.reason : ""
+                                                        // Так как data в этой области не определён — в оригинале reason становился "".
+                                                        upsertAbsentStudent({
+                                                            studentId: item?.student?.id,
+                                                            day,
+                                                            newStatus: !i?.status,
+                                                            formReason: undefined,
+                                                            sourceStatus: i?.status, // передаём sourceStatus чтобы поведение reason соответствовало оригиналу
+                                                        });
+                                                    } else {
+                                                        // открываем модалку изменения — сохраняем данные изменения
+                                                        setIsChange({
+                                                            day,
+                                                            student: item?.student?.id,
+                                                            id: i?.id,
+                                                            status: i?.status,
+                                                        });
+                                                        setStatus(false);
+                                                        if (i?.reason) setValue("reason", i?.reason);
+                                                    }
+                                                }
                                             }
                                         }
                                     }}
                                 >
-                                    {
-                                        i?.status === null ? null :
-                                            i?.status ? (
-                                                <i className="fas fa-check" style={{color: "#22C55E"}}/>
-                                            ) : (
-                                                <i className="fas fa-times" style={{color: "#F43F5E"}}/>
-                                            )
-                                    }
+                                    {(() => {
+                                        if (finalStatus === null || finalStatus === undefined) return null;
+
+                                        return finalStatus ? (
+                                            <i className="fas fa-check" style={{ color: "#22C55E" }} />
+                                        ) : (
+                                            <i className="fas fa-times" style={{ color: "#F43F5E" }} />
+                                        );
+                                    })()}
                                 </td>
                             );
                         })
-                        : selectedDays?.map((day, idx) => {
+                        : selectedDays.map((day, idx) => {
                             if (idx >= limit && !attendance) return null;
                             return (
                                 <td
-                                    key={idx}
+                                    key={day}
                                     className={cls.day}
-                                    onClick={() =>
-                                        setActive({day, student: item?.id})
-                                    }
+                                    onClick={() => setActive({ day, student: item?.id })}
                                 />
                             );
-                        })
-                }
-            </tr>
-        ));
-    };
+                        })}
+                </tr>
+            ));
+        };
 
+        return (
+            <>
+                <EditableCard extraClass={cls.attendance} onClick={() => setAttendance(!attendance)}>
+                    <div className={cls.attendance__header}>
+                        <h1>Davomat</h1>
+                        <Select
+                            titleOption="Yil"
+                            extraClass={cls.select}
+                            onChangeOption={setSelectedYear}
+                            options={attendanceYears}
+                            defaultValue={selectedYear}
+                        />
+                        <Select
+                            titleOption="Oy"
+                            extraClass={cls.select}
+                            onChangeOption={setSelectedMonth}
+                            options={attendanceMonth}
+                            defaultValue={selectedMonth}
+                        />
+                    </div>
 
-    const render = renderAttendance()
+                    <div className={classNames(cls.attendance__container, { [cls.active]: attendance })}>
+                        <Table>
+                            <thead>
+                            <tr>
+                                <th>№</th>
+                                <th>Ism Familya</th>
 
-    return (
-        <>
-            <EditableCard
-                extraClass={cls.attendance}
-                onClick={() => {
-                    setAttendance(!attendance)
-                    // navigate(`attendance`)
-                }}
-            >
-                <div className={cls.attendance__header}>
-                    <h1>Davomat</h1>
-                    <Select
-                        titleOption={"Yil"}
-                        extraClass={cls.select}
-                        onChangeOption={setSelectedYear}
-                        options={attendanceYears}
-                        defaultValue={selectedYear}
-                    />
-                    <Select
-                        titleOption={"Oy"}
-                        extraClass={cls.select}
-                        onChangeOption={setSelectedMonth}
-                        options={attendanceMonth}
-                        defaultValue={selectedMonth}
-                    />
-                </div>
-                <div
-                    className={classNames(cls.attendance__container, {
-                        [cls.active]: attendance
-                    })}
-                >
-                    <Table>
-                        <thead style={{top: 0}}>
-                        <tr>
-                            <th>№</th>
-                            <th>Ism Familya</th>
-                            {
-                                attendanceList?.students ?
-                                    attendanceList?.days?.map((item, index) => {
-                                        if (index >= 3 && !attendance) return null
-                                        return (
-                                            <th>
+                                {attendanceList?.students
+                                    ? Object.keys(attendanceList.students[0]?.days || {}).map((day, index) =>
+                                        index >= 3 && !attendance ? null : (
+                                            <th key={day}>
                                                 <div className={cls.days}>
-                                                    <h2>{item}</h2>
-                                                    {/*<p>{item.day}</p>*/}
+                                                    <h2>{day}</h2>
                                                 </div>
                                             </th>
                                         )
-                                    })
-                                    : selectedDays?.map((item, index) => {
-                                        if (index >= 3 && !attendance) return null
-                                        return (
-                                            <th>
+                                    )
+                                    : selectedDays.map((day, index) =>
+                                        index >= 3 && !attendance ? null : (
+                                            <th key={day}>
                                                 <div className={cls.days}>
-                                                    <h2>{item}</h2>
-                                                    {/*<p>{item.day}</p>*/}
+                                                    <h2>{day}</h2>
                                                 </div>
                                             </th>
                                         )
-                                    })
-                            }
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {render}
-                        </tbody>
-                    </Table>
-                </div>
-            </EditableCard>
-            <Modal
-                active={active}
-                setActive={setActive}
-            >
-                <h1>Davomat qilish</h1>
-                <Form extraClassname={cls.create} onSubmit={handleSubmit(onCreate)}>
-                    <div className={cls.create__checkbox}>
-                        <h2>O'quvchi darsga kemagan</h2>
-                        <Input
-                            extraClassName={cls.checkbox}
-                            type={"checkbox"}
-                            // register={register}
-                            name={"status"}
-                            onChange={() => setStatus(!status)}
-                            checked={!status}
-                            // value={status}
-                        />
+                                    )}
+                            </tr>
+                            </thead>
+
+                            <tbody>{renderAttendance()}</tbody>
+                        </Table>
                     </div>
-                    {
-                        status ? null
-                            : <Input
-                                required
-                                placeholder={"Sabab"}
-                                register={register}
-                                name={"reason"}
-                            />
-                    }
-                </Form>
-            </Modal>
-            <Modal
-                active={isChange}
-                setActive={setIsChange}
-            >
-                <h1>Davomatni o'zgartirish</h1>
-                <Form id={"change"} typeSubmit extraClassname={cls.create} onSubmit={handleSubmit(onChange)}>
-                    <div className={cls.create__checkbox}>
-                        <h2>O'quvchi darsga kemagan</h2>
-                        <Input
-                            extraClassName={cls.checkbox}
-                            type={"checkbox"}
-                            // register={register}
-                            name={"status"}
-                            onChange={() => setStatus(!status)}
-                            checked={!status}
-                        />
-                    </div>
-                    {
-                        status ? null
-                            : <Input
-                                required
-                                placeholder={"Sabab"}
-                                register={register}
-                                name={"reason"}
-                            />
-                    }
-                    <div className={cls.create__btns}>
+
+                    <div className={cls.attendance__btns}>
                         <Button
-                            btnType="button"
-                            type={"danger"}
-                            onClick={() => setIsDelete(true)}
+                            type={!absentStudents?.students?.length ? "disabled" : "danger"}
+                            disabled={!absentStudents?.students?.length}
+                            onClick={() => setAbsentStudents({})}
                         >
-                            O'chirish
+                            Tozalash
                         </Button>
-                        <Button>O'zgartirish</Button>
+                        <Button
+                            disabled={!absentStudents?.students?.length}
+                            type={!absentStudents?.students?.length ? "disabled" : ""}
+                            onClick={onSubmitAll}
+                        >
+                            Yuborish
+                        </Button>
                     </div>
-                </Form>
-            </Modal>
-            <ConfirmModal
-                active={isDelete}
-                setActive={setIsDelete}
-                onClick={onDelete}
-            />
-        </>
-    )
-})
+                </EditableCard>
+
+                {/* --- Modals --- */}
+                <Modal active={active} setActive={setActive}>
+                    <h1>Davomat qilish</h1>
+                    <Form extraClassname={cls.create} onSubmit={handleSubmit(onCreate)}>
+                        <Input required placeholder="Sabab" register={register} name="reason" />
+                    </Form>
+                </Modal>
+
+                <Modal active={isChange} setActive={setIsChange}>
+                    <h1>Davomatni o'zgартirish</h1>
+                    <Form id="change" typeSubmit extraClassname={cls.create} onSubmit={handleSubmit(onChange)}>
+                        <Input required placeholder="Sabab" register={register} name="reason" />
+                        <div className={cls.create__btns}>
+                            <Button btnType="button" type="danger" onClick={() => setIsDelete(true)}>
+                                O'chirish
+                            </Button>
+                            <Button>O'zgартириш</Button>
+                        </div>
+                    </Form>
+                </Modal>
+
+                <ConfirmModal active={isDelete} setActive={setIsDelete} onClick={onDelete} />
+            </>
+        );
+    }
+);

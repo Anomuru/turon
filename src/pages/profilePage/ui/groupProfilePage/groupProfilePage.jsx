@@ -130,7 +130,6 @@ export const GroupProfilePage = () => {
     //     }
     // }, [branchId, data])
 
-    console.log(id)
 
     // useEffect(() => {
     //     if (id)

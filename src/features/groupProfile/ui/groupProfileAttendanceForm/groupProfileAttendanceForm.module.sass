@@ -8,6 +8,10 @@
   flex-direction: column
   gap: 2rem
   font-size: 1.6rem
+  &__btns
+    display: flex
+    gap: 2rem
+    justify-content: flex-end
   &__header
     display: flex
     gap: 1rem
@@ -19,6 +23,7 @@
     &.active
       padding-bottom: 1rem
       max-width: 110rem
+      max-height: 80rem
     &::-webkit-scrollbar
       width: .7rem
 
@@ -34,13 +39,10 @@
       background: $color-grey-dark
     .day
       text-align: center
-      //display: flex
-      //justify-content: center
-      //&__inner
-        width: 2rem
-        height: 2rem
-        border: 1px solid
+      position: relative
       &:hover
+        background: #d9f4ff
+      &.active
         background: #d9f4ff
     .days
       //width: fit-content
