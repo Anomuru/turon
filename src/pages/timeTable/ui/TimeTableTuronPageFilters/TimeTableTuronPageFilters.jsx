@@ -32,7 +32,8 @@ const TimeTableTuronPageFilters = React.memo((props) => {
         isSelected,
         setIsSelected,
         setClassView,
-        groups
+        groups,
+        selectedType
     } = props
 
     const currentDateForTimeTable = localStorage.getItem("dateForTimeTable")
