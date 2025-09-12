@@ -25,7 +25,7 @@ import {
     StudentProfileTotalAttendance,
     StudentProfileChangeInfo,
     StudentProfileContract,
-    StudentProfileAttendanceAll, StudentProfileTimeTable
+    StudentProfileAttendanceAll, StudentProfileTimeTable, StudentProfileQuarter
 } from "entities/profile/studentProfile";
 import {
     fetchStudentProfileData,
@@ -34,7 +34,7 @@ import {
 } from "../../model/thunk/studentProfileThunk";
 import {
     getCharity,
-    getUserData
+    getUserData, getUserDataUsername
 } from "../../model/selector/studentProfileSelector";
 
 import cls from "./studentProfilePage.module.sass";
@@ -69,6 +69,7 @@ export const StudentProfilePage = () => {
     const languages = useSelector(getLanguagesData)
     const charity = useSelector(getCharity)
 
+    console.log(charity, 'charity')
 
 
 
@@ -85,7 +86,8 @@ export const StudentProfilePage = () => {
 
     const [changeSelectedClass,setChangeSelectedClass] = useState(null)
     const [changeSelectedLang,setChangeSelectedLang] = useState(null)
-    const [activeSwitch, setActiveSwitch] = useState(true)
+    const [activeSwitch, setActiveSwitch] = useState(false)
+    const [currentTab, setCurrentTab] = useState("info");
 
 
 
@@ -155,59 +157,68 @@ export const StudentProfilePage = () => {
         <div
             className={classNames(cls.profile)}
         >
-            <StudentProfileInfo
-                setActive={setActive}
-                active={active}
-                setActiveModal={setActiveModal}
-                data={userData?.user}
-                content={userData}
-                contract={userData}
-                newImage={newImage}
-                month={month}
-                charity={charity}
-            />
+            <div className={cls.profile__content}>
+                <StudentProfileInfo
+                    setActive={setActive}
+                    active={active}
+                    setActiveModal={setActiveModal}
+                    data={userData?.user}
+                    content={userData}
+                    contract={userData}
+                    newImage={newImage}
+                    month={month}
+                    charity={charity}
+                    currentTab={currentTab}
+                    setCurrentTab={setCurrentTab}
+                />
+            </div>
 
             <div
                 className={classNames(cls.profile__mainContent, {
                     [cls.active]: active
                 })}
             >
-                <div className={cls.header}>
-                    <h2>{activeSwitch ? "Ma'lumotlar" : "Time Table"}</h2>
-                    <Switch
-                        activeSwitch={activeSwitch}
-                        onChangeSwitch={setActiveSwitch}
-                    />
-                </div>
-                {
-                    activeSwitch ? <>
+                {currentTab === "info" && (
+                    <>
                         <StudentProfileTeachers data={userData?.group}/>
-                        <StudentProfileRating setActive={setActive}/>
-                        <StudentProfileReward/>
+                        <StudentProfileRating/>
                         <StudentProfileSubjects
-                            setActive={setActive}
                             data={userData?.group}
                             onSelectSubject={setSelectedSubject}
                         />
                         <StudentProfileAttendance
-                            setActive={setActive}
                             data={userData?.group}
                             onSelectGroup={setSelectedGroup}
                             onSelectGroupName={setSelectedGroupName}
                         />
-                    </> : <TeacherProfileTimeTable/>
-                }
-                {/*<StudentProfileTimeTable/>*/}
+                    </>
+                )}
+
+                {currentTab === "contract" && (
+                    <StudentProfileContract
+                        setActive={setActive}
+                        active={active}
+                    />
+                )}
+
+                {currentTab === "timetable" && (
+                    <StudentProfileTimeTable />
+                )}
+
+                {currentTab === "quarter" && (
+                    <StudentProfileQuarter/>
+                )}
+
             </div>
             <div
                 className={classNames(cls.profile__otherContent, {
                     [cls.active]: active
                 })}
             >
-                <StudentProfileContract
-                    setActive={setActive}
-                    active={active}
-                />
+                {/*<StudentProfileContract*/}
+                {/*    setActive={setActive}*/}
+                {/*    active={active}*/}
+                {/*/>*/}
                 <StudentProfileTotalAmount
                     active={active}
                     setActive={setActive}

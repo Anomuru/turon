@@ -22,7 +22,7 @@ import {EmployerCategoryPage} from "../../employeesPage";
 import {ConfirmModal} from "../../../shared/ui/confirmModal";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
-import {Employers, employersReducer} from "entities/employer/index.js";
+import {Employers, employersReducer, getEmployersCount} from "entities/employer/index.js";
 import {getEmployersData} from "entities/employer/model/selector/employersSelector.js";
 import {EmployeesFilter} from "features/filters/employeesFilter/index.js";
 
@@ -43,7 +43,7 @@ export const TeachersPage = () => {
     const [activeSwitch, setActiveSwitch] = useState(teacherStatus === "true")
     const [activeDelete, setActiveDelete] = useState({})
     const [activeCategory, setActiveCategory] = useState(false)
-
+    const totalCountEmployer = useSelector(getEmployersCount)
     const [activeModal, setActiveModal] = useState(false)
     const [isFilter, setIsFilter] = useState(false)
 
@@ -111,7 +111,10 @@ export const TeachersPage = () => {
                 </div>
                 <div className={cls.table}>
 
-                    <h2>{activeCategory ? "Toifa " : employerSwitch ? "Employers" : activeSwitch === true ? "Deleted Teachers" : "Teachers"}</h2>
+                    <div style={{display: "flex" , justifyContent: "space-between"}}>
+                        <h2>{activeCategory ? "Toifa " : employerSwitch ? "Employers" : activeSwitch === true ? "Deleted Teachers" : "Teachers"}</h2>
+                        <h2>{employerSwitch ? totalCountEmployer : totalCount}</h2>
+                    </div>
                     {activeCategory ?
                         <EmployerCategoryPage extraClass={cls.categoryItem}/>
                         :

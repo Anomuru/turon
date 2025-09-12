@@ -329,7 +329,11 @@ export const StudentsPage = () => {
         <DynamicModuleLoader reducers={initialReducers}>
 
 
+
+
             <StudentsHeader
+                totalCount={totalCount}
+                loadingStudents={loadingStudents}
                 // selected={selected}
                 // setSelected={setSelected}
                 // branches={branches}

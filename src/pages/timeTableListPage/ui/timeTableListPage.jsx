@@ -109,7 +109,9 @@ export const TimeTableListPage = () => {
                     setIsCreate={setIsCreate}
                     setIsFilter={setIsFilter}
                     setStatus={setCurrentStatus}
+                    totalCount={data?.count}
                 />
+
                 <div className={cls.timeTable__table}>
                     <TimeTableList
                         data={data}

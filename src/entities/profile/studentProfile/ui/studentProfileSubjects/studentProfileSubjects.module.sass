@@ -2,6 +2,9 @@
 
 .subject
   grid-area: subject
+  transition: .4s ease
+  &:hover
+    transform: translateY(-1rem)
 
   &__edit
     width: 35px
@@ -39,6 +42,7 @@
       &__inner
         display: flex
         gap: 1rem
+        width: 360px
 
       &__status
         background-color: #22C55E

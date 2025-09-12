@@ -85,6 +85,8 @@ export const GroupsPage = () => {
     useEffect(() => {
         setCurrentPage(1)
     }, [pageSwitch])
+
+
     useEffect(() => {
         setDeletedGroups(deletedGroupsData)
     }, [deletedGroupsData])
@@ -155,7 +157,12 @@ export const GroupsPage = () => {
                     {/*<Link to={"deletedGroups"}>*/}
                     <div style={{display: "flex"}}>
                         {!pageSwitch ? <>
-
+                                <Button
+                                    type={"login"}
+                                    extraClass={cls.extraCutClassFilter}
+                               onClick={() => navigate(`quarter`)}>
+                                    Chorak baholari
+                                </Button>
                                 <Button
                                     type={"login"}
                                     extraClass={cls.extraCutClassFilter}
@@ -207,7 +214,10 @@ export const GroupsPage = () => {
 
                 <div className={cls.table}>
 
-                    <h2>{pageSwitch ? "Flows" : activeSwitch ? "Deleted Classes" : "Classes"}</h2>
+                    <div style={{display: 'flex' , justifyContent: "space-between"}}>
+                        <h2>{pageSwitch ? "Flows" : activeSwitch ? "Deleted Classes" : "Classes"}</h2>
+                        <h2>{pageSwitch ? flowsCount : groupCount}</h2>
+                    </div>
                     {loadingWithFilter === true ? <DefaultPageLoader/> :
                         pageSwitch ? <Flows
                                 branchId={userBranchId}

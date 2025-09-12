@@ -5,7 +5,12 @@ import {getBranch} from "features/branchSwitcher";
 import {getUserBranchId} from "entities/profile/userProfile";
 import {ClassHeader, classReducer} from "entities/class";
 import {classData, classItemLoading, colorItem} from "entities/class/model/selector/classSelector";
-import {fetchClassSubjects, getClassTypes, getColor} from "entities/class/model/thunk/classThunk";
+import {
+    fetchClassSubjects,
+    getClassesForClassTypes,
+    getClassTypes,
+    getColor
+} from "entities/class/model/thunk/classThunk";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {ClassAddColorPage} from "./classAddColorPage";
 import {ClassPage} from "./classPage";
@@ -33,6 +38,7 @@ export const ClassMain = () => {
 
         if (userBranchId) {
             dispatch(getClassTypes(userBranchId))
+            // dispatch(getClassesForClassTypes({branchId: userBranchId}))
             dispatch(getColor())
             dispatch(fetchClassSubjects())
         }

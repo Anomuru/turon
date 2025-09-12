@@ -1,10 +1,19 @@
-import React, {memo} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import {EditableCard} from "shared/ui/editableCard";
 import cls from "./studentProfileInfo.module.sass";
 import defaultUserImg from "shared/assets/images/user_image.png";
-import {API_URL_DOC} from "../../../../../shared/api/base";
-import {Button} from "../../../../../shared/ui/button";
-import {Table} from "../../../../../shared/ui/table";
+import visa from "shared/assets/images/visa.svg"
+import classNames from "classnames";
+import {Button} from "shared/ui/button";
+
+import {API_URL, API_URL_DOC, headers, useHttp} from "../../../../../shared/api/base";
+import {useNavigate, useParams} from "react-router";
+import {Modal} from "shared/ui/modal/index.js";
+import {Input} from "shared/ui/input/index.js";
+import {useForm} from "react-hook-form";
+import {useDispatch, useSelector} from "react-redux";
+import {getUserDataUsername} from "pages/profilePage/model/selector/studentProfileSelector.js";
+import {onChangeUserUsername} from "pages/profilePage/model/slice/studentProfileSlice.js";
 
 export const StudentProfileInfo = memo(({
                                             setActive,
@@ -14,11 +23,54 @@ export const StudentProfileInfo = memo(({
                                             content,
                                             contract,
                                             month,
-                                            charity
+                                            charity,
+                                            currentTab,
+                                            setCurrentTab,
                                         }) => {
-    const number = content?.debt
+    const number = Number(content?.debt)
+
+    const id = data?.id
 
     const formattedNumber = number?.toLocaleString();
+    console.log(data?.profile_img)
+    const navigate = useNavigate()
+    const [activeChangePassword, setActiveChangePassword] = useState(false)
+    const [activeChangeUsername, setActiveChangeUsername] = useState(false)
+
+    const {register, setValue, handleSubmit} = useForm()
+    const userDataUsername = useSelector(getUserDataUsername)
+
+
+    useEffect(() => {
+        setValue("username" , userDataUsername)
+    } , [])
+    const {request} = useHttp()
+    const [activeErr , setActiveErr] = useState("")
+
+    const onChangePassword = (data) => {
+        console.log(data)
+        request(`${API_URL}Users/users/update/${id}/`, "PATCH", JSON.stringify(data), headers())
+            .then(res => {
+                console.log(data)
+            })
+    }
+
+    const dispatch = useDispatch()
+    const onChangeUsername = (data) => {
+
+        request(`${API_URL}Users/users/update/${id}/`, "PATCH", JSON.stringify(data), headers())
+            .then(res => {
+                console.log(res)
+                dispatch(onChangeUserUsername(res.username))
+                setActiveChangeUsername(false)
+                setActiveErr(false)
+
+            })
+            .catch(err => {
+                setActiveErr(true)
+            })
+    }
+
     return (
         <EditableCard
             onClick={() => {
@@ -27,60 +79,118 @@ export const StudentProfileInfo = memo(({
             extraClass={cls.info}
             title={<i className="fas fa-edit"/>}
         >
-            <div className={cls.info__avatar}>
-                <img
-                    onClick={() => setActiveModal("changeImage")}
-                    className={cls.info__image}
-                    src={data?.profile_img ?? defaultUserImg}
-                    alt=""
-                />
-                <div onClick={() => setActive("contract")} className={cls.subject__edit}>
-                    <i style={{fontSize: 20 + "px"}} className={"fa-solid fa-file-contract"}></i>
-                    <p>Shartnoma</p>
-                </div>
-                <h1>{data?.username}</h1>
-                <h2 className={cls.info__role}>Student</h2>
-            </div>
-            <div className={cls.info__text}>
-                <p>Ism: <span>{data?.name}</span></p>
-                <p>Familiya: <span>{data?.surname}</span></p>
-                <p>Otasinig ismi: <span>{data?.father_name}</span></p>
-                <p>Telefon raqami: <span>{data?.phone}</span></p>
-                <p>Yoshi: <span>{data?.age}</span></p>
-                <p>Tug'ilgan sana: <span>{data?.birth_date}</span></p>
+            <div className={cls.info__div}>
+                <div className={cls.info__div__avatar}>
+                    <img
+                        onClick={() => setActiveModal("changeImage")}
+                        className={cls.info__div__avatar__image}
+                        src={data?.profile_img ?? defaultUserImg}
+                        alt=""
+                    />
+                    <div className={cls.info__div__avatar__box}>
+                        <h1 className={cls.info__div__avatar__box__name}>{data?.name} {data?.surname} {data?.father_name}</h1>
+                        <div className={cls.info__div__avatar__box__panel}>
+                            <Button
+                                extraClass={classNames(cls.info__div__avatar__box__panel__stBtn, {
+                                    [cls.active]: currentTab === "info"
+                                })}
+                                onClick={() => setCurrentTab("info")}
+                            >
+                                Ma'lumotlar
+                            </Button>
 
-                <p>Shartnoma: <span>
-                    {
-                        !contract || !contract.contract || contract.contract.length === 0 ? (
-                            <Button onClick={() => setActive("contract")}>Qo'shish</Button>
-                        ) : (
-                            contract.contract.map((item, index) =>
-                                <a key={index} href={`${API_URL_DOC}${item.url}`} target="_blank"
-                                   rel="noopener noreferrer">
-                                    Yuklab olish
-                                </a>
-                            )
-                        )
-                    }
-                </span></p>
-                <p>Chegirma : <span>{charity.charity_sum}</span></p>
-                <p>Chegirma Sababi : <span>{charity.name}</span></p>
-                {/*<p>Xayriya Sababi : <span>{month?.data[0]?.reason ? month?.data[0]?.reason : null}</span></p>*/}
-                <div className={cls.info__addInfo}>
-                    <i className="fas fa-plus"/>
+                            <Button
+                                extraClass={classNames(cls.info__div__avatar__box__panel__btn, {
+                                    [cls.active]: currentTab === "contract"
+                                })}
+                                onClick={() => setCurrentTab("contract")}
+                            >
+                                Shartnoma
+                            </Button>
+
+                            <Button
+                                extraClass={classNames(cls.info__div__avatar__box__panel__switch, {
+                                    [cls.active]: currentTab === "timetable"
+                                })}
+                                onClick={() => setCurrentTab("timetable")}
+                            >
+                                Dars jadvalini ko'rish
+                            </Button>
+                            <Button
+                                onClick={() => setCurrentTab("quarter")}
+                                extraClass={cls.info__div__avatar__box__panel__quarter}
+                            >
+                               Chorakni ko'rish
+                            </Button>
+
+
+                        </div>
+                        <div className={cls.info__div__avatar__box__source}>
+                            <div title={"Telefon raqami"} className={cls.info__div__avatar__box__source__each}>
+                                <i style={{color: "#16A34A", fontSize: "2.5rem"}} className="fa-solid fa-phone"></i>
+                                <h1>{data?.phone}</h1>
+                            </div>
+                            <div title={"Yoshi"} className={cls.info__div__avatar__box__source__each}>
+                                <i style={{color: "#2563EA", fontSize: "2.5rem"}} className="fa-solid fa-id-card"></i>
+                                <h1>{data?.age}</h1>
+                            </div>
+                            <div title={"Tug'ilgan yili"} className={cls.info__div__avatar__box__source__each}>
+                                <i style={{color: "#A453F6", fontSize: "2.5rem"}}
+                                   className="fa-solid fa-cake-candles"></i>
+                                <h1>{data?.birth_date}</h1>
+                            </div>
+                            {
+                                charity && charity.charity_sum
+                                    ? (
+                                        <div title="Chegirma" className={cls.info__div__avatar__box__source__each}>
+                                            <i style={{color: "#A453F6", fontSize: "2.5rem"}}
+                                               className="fa-solid fa-handshake"></i>
+                                            <h1>{Number(charity.charity_sum).toLocaleString()}</h1>
+                                        </div>
+                                    )
+                                    : null
+                            }
+                            <div className={cls.info__div__avatar__box__source__payment}>
+                                <span onClick={() => setActive("balanceIn")} title={"To'lov qilish"}
+                                      className={cls.info__div__avatar__box__source__payment__clicker}></span>
+                                <h1 title={"To'lovlar ro'yxati"} onClick={() => setActive("balance")}
+                                    className={cls.info__div__avatar__box__source__payment__text}>{formattedNumber} so'm</h1>
+                                <img draggable="false" className={cls.info__div__avatar__box__source__payment__img}
+                                     src={visa} alt=""/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
+            <Modal active={activeChangeUsername} setActive={setActiveChangeUsername}>
+                <h2>Change username</h2>
+
+
+                <div style={{marginTop: "20px"}}>
+                    {activeErr ? <h2 style={{color: "red" , marginTop: "5px"}}>Username mavjud</h2> : ""}
+                    <Input register={register} name={"username"}/>
+                    <Button onClick={handleSubmit(onChangeUsername)} extraClass={cls.info__addInfo}>Click</Button>
+                </div>
+
+
+            </Modal>
+
+
+            <Modal active={activeChangePassword} setActive={setActiveChangePassword}>
+                <h2>Change password</h2>
+
+                <div style={{marginTop: "20px"}}>
+                    <Input register={register} name={"password"} type={"password"}/>
+
+                    <Button onClick={handleSubmit(onChangePassword)} extraClass={cls.info__addInfo}>Click</Button>
+                </div>
+
+
+            </Modal>
+
             </div>
 
-            <EditableCard
-                extraClass={cls.info__balance}
-                onClick={() => setActive("balance")}
-            >
-                <h2>Balans</h2>
-                <p>Umumiy qarzi</p>
-                <div className={cls.info__money}>
-                    <h2 onClick={() => setActive("balanceIn")}>$ {formattedNumber}</h2>
-                </div>
-            </EditableCard>
         </EditableCard>
     );
 });

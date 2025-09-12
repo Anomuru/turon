@@ -190,7 +190,7 @@ export const AccountingPageMain = () => {
                                 >
                                     Filter
                                 </Button>
-                                <Link to={`../inkasatsiya`}>
+                                <Link to={`../inkasatsiya/studentsPayments`}>
                                     <Button>
                                         Inkasatsiya
                                         {/*Harajatlar to’plami*/}

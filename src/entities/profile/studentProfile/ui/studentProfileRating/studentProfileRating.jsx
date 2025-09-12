@@ -11,7 +11,7 @@ export const StudentProfileRating = memo(({setActive}) => {
             onClick={() => setActive("rating")}
         >
             <div className={cls.rating__title}>
-                <h1>Rating</h1>
+                <h2>Rating</h2>
                 <p>1 Oylik rating</p>
             </div>
             <div className={cls.rating__inner}>

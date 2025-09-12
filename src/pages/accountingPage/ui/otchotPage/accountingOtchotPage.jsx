@@ -50,7 +50,7 @@ export const AccountingOtchotPage = () => {
 
                     <div className={cls.wrapper__middle}>
                         <div className={cls.typeExpenses}>
-                            <Link to={`../inkasatsiya/${id}`}>
+                            <Link to={`../inkasatsiya/studentsPayments`}>
                                 <Button>
                                     Inkasatsiya
                                 </Button></Link>

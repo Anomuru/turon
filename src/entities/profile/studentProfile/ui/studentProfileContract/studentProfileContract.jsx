@@ -72,21 +72,32 @@ export const StudentProfileContract = memo(({ setActive, active }) => {
     };
 
     return (
-        <EditableCard titleType={"cross"} extraClass={classNames(cls.contractMain, {
+        <EditableCard titleType={""} extraClass={classNames(cls.contractMain, {
             [cls.active]: active === "contract"
         })}
                       onClick={() => setActive(!"contract")}>
             <div className={cls.form}>
-                <Form extraClassname={cls.btn} onSubmit={handleSubmit(handleAddContract)}>
-                    <Input extraClassName={cls.input} {...register("name")} title={"Ism"} onChange={(e) => setName(e.target.value)} />
-                    <Input {...register("surname")} title={"Familiya"} required onChange={(e) => setSurname(e.target.value)} />
-                    <Input {...register("father_name")} title={"Otasining ismi"} required onChange={(e) => setFatherName(e.target.value)} />
-                    <Input {...register("passport_number")} title={"Passport seriyasi"} defaultValue={"AD"} required onChange={(e) => setPassportNum(e.target.value)} />
-                    <Input {...register("give_time")} title={"Berilgan vaqti"} required onChange={(e) => setGiveTime(e.target.value)} type={"time"} defaultValue={Date.now} />
-                    <Input {...register("giveLocation")} title={"Berilgan joyi"} required onChange={(e) => setGiveLocation(e.target.value)} />
-                    <Input {...register("location")} title={"Manzil"} required onChange={(e) => setLocation(e.target.value)} />
-                    <Input {...register("fromDate")} title={"Dan"} required type={"date"} onChange={(e) => setFromDate(e.target.value)} />
-                    <Input {...register("untile_date")} title={"Gacha"} type={"date"} required onChange={(e) => setUnitlDate(e.target.value)} />
+                <Form typeSubmit={""} extraClassname={cls.btn} onSubmit={handleSubmit(handleAddContract)}>
+                    <div className={cls.btn__box}>
+                        <div className={cls.btn__box__wrapper}>
+                            <Input extraClassName={cls.input} {...register("name")} title={"Ism"} onChange={(e) => setName(e.target.value)} />
+                            <Input {...register("surname")} title={"Familiya"} required onChange={(e) => setSurname(e.target.value)} />
+                            <Input {...register("father_name")} title={"Otasining ismi"} required onChange={(e) => setFatherName(e.target.value)} />
+                        </div>
+                        <div className={cls.btn__box__wrapper}>
+                            <Input {...register("passport_number")} title={"Passport seriyasi"} defaultValue={"AD"} required onChange={(e) => setPassportNum(e.target.value)} />
+                            <Input {...register("give_time")} title={"Berilgan vaqti"} required onChange={(e) => setGiveTime(e.target.value)} type={"time"} defaultValue={Date.now} />
+                            <Input {...register("giveLocation")} title={"Berilgan joyi"} required onChange={(e) => setGiveLocation(e.target.value)} />
+                        </div>
+                        <div className={cls.btn__box__wrapper}>
+                            <Input {...register("location")} title={"Manzil"} required onChange={(e) => setLocation(e.target.value)} />
+                            <Input {...register("fromDate")} title={"Dan"} required type={"date"} onChange={(e) => setFromDate(e.target.value)} />
+                            <Input {...register("untile_date")} title={"Gacha"} type={"date"} required onChange={(e) => setUnitlDate(e.target.value)} />
+                        </div>
+                    </div>
+                    <Button extraClass={cls.btn__button}>Tasdiqlash</Button>
+
+
                 </Form>
 
                 {contractLink && (
@@ -100,7 +111,7 @@ export const StudentProfileContract = memo(({ setActive, active }) => {
                     </div>
                 )}
 
-                <Form extraclassName={cls.fileDrop} onSubmit={handleSubmit(handleUploadfile)}>
+                <Form typeSubmit={""} extraClassname={cls.btn} onSubmit={handleSubmit(handleUploadfile)}>
                     <FileUploader
                         handleChange={handleFileChange}
                         name="file"
@@ -108,6 +119,7 @@ export const StudentProfileContract = memo(({ setActive, active }) => {
                         classes={cls.fileUploader}
                         label="Pdf fayl kiriting yoki bu yerga tortib qo'ying"
                     />
+                    <Button extraClass={cls.fileDrop__button}>Yuklash</Button>
                 </Form>
 
             </div>

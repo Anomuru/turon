@@ -1,10 +1,15 @@
-import {ClassTable} from "entities/class";
+import {classReducer, ClassTable} from "entities/class";
 import {ClassFilter} from "entities/class"
 import {useState} from "react";
 import {useDispatch} from "react-redux";
 import {useHttp} from "shared/api/base";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
-export const ClassPage = ({setEdit, edit, setActiveEdit, activeMenu, setActiveMenu, classes,branch}) => {
+
+const reducers ={
+    classSlice: classReducer
+}
+export const  ClassPage = ({setEdit, edit, setActiveEdit, activeMenu, setActiveMenu, classes,branch}) => {
 
     const {request} = useHttp()
     const [selectBox, setSelectBox] = useState([])
@@ -19,7 +24,7 @@ export const ClassPage = ({setEdit, edit, setActiveEdit, activeMenu, setActiveMe
 
 
     return (
-        <>
+        <DynamicModuleLoader reducers={reducers}>
             <ClassFilter
                 classesType={classes}
                 setActiveEdit={setActiveEdit}
@@ -42,6 +47,6 @@ export const ClassPage = ({setEdit, edit, setActiveEdit, activeMenu, setActiveMe
                 />
             {/*}*/}
             {/*<Button onClick={onClick}>Tastiqlash</Button>*/}
-        </>
+        </DynamicModuleLoader>
     )
 }

@@ -22,8 +22,8 @@ export const getEmployerPage = (id) => `employer/*`
 export const getEmployerProfile = (id) => `teacher/employerProfile/${id}`;
 
 export const getTeacherSalary = (id) => `teacher/teacherProfile/:id/teacherSalaryPage/${id}`
-export const getEmployerSalary = (id) => `employer/employerProfile/:id/employerSalaryPage/${id}`
-export const getEmployerSalaryInsideSource = (id, permission) => `employer/employerProfile/:id/employerSalaryPage/:id/giveSalaryPage/${id}/${permission}`
+export const getEmployerSalary = (id) => `teacher/employerProfile/:id/employerSalaryPage/${id}`
+export const getEmployerSalaryInsideSource = (id, permission) => `teacher/employerProfile/:id/employerSalaryPage/:id/giveSalaryPage/${id}/${permission}`
 export const getTeacherSalaryInsideSource = (id) => `teacher/teacherProfile/:id/teacherSalaryPage/:id/giveTeacherSalaryPage/${id}`
 
 export const getClass = () => `class/*`
@@ -51,7 +51,9 @@ export const getEducation = (id) => `education/${id}`
 
 
 export const getAccounting = (id) => `accounting/*`
+export const getGroupQuarter = (id) => `groups/quarter`
 
+export const getGroupQuarterShow = (id) => `groups/groupInfo/${id}/quarter/${id}`
 export const getInkasatsiya = (id) => `inkasatsiya/*`
 
 
