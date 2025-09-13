@@ -59,6 +59,31 @@ export const GroupProfileAttendanceForm = memo(
         const [absentStudents, setAbsentStudents] = useState({});
 
 
+        const hideConfirmRow = (() => {
+            const firstThreeDays = attendanceList?.students
+                ? Object.keys(attendanceList.students[0]?.days || {}).slice(0, 3)
+                : selectedDays.slice(0, 3);
+
+            const filledCount = firstThreeDays.filter((d) =>
+                attendanceList?.students
+                    ? attendanceList.students.some((st) => st.days?.[d]?.id || st.days?.[d]?.status !== null)
+                    : false
+            ).length;
+
+            if (filledCount === 3) return true;
+
+            if (
+                filledCount === 2 &&
+                absentStudents?.date &&
+                firstThreeDays.includes(String(absentStudents.date))
+            ) {
+                return true;
+            }
+
+            return false;
+        })();
+
+
         const formatDayString = useCallback(
             (year, month, day) =>
                 `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
@@ -451,79 +476,84 @@ export const GroupProfileAttendanceForm = memo(
 
                             <tbody>
                             {renderAttendance()}
-                            <tr>
-                                <td/>
-                                <td/>
-                                {
-                                    attendanceList?.students
+                            {(!hideConfirmRow || attendance) && (
+                                <tr>
+                                    <td/>
+                                    <td/>
+                                    {attendanceList?.students
                                         ? Object.keys(attendanceList.students[0]?.days || {}).map((day, index) => {
-                                            const statusDay = attendanceList?.students?.filter(st => st.days[day].id)
-                                            return (index >= 3 && !attendance) ? null : (absentStudents && +absentStudents.date === +day) || !!statusDay.length
-                                                ? <td/>
-                                                : (
-                                                    <td className={cls.btn}>
-                                                        <Button
-                                                            extraClass={cls.btn__inner}
-                                                            onClick={() => {
-                                                                const payload = {
-                                                                    day: formatDayString(selectedYear, selectedMonth, day),
-                                                                    group_id: id,
-                                                                    absent_students: []
-                                                                }
-                                                                dispatch(loadingAttendance())
-                                                                request(
-                                                                    `${API_URL}Attendance/attendance/create-list/`,
-                                                                    "POST",
-                                                                    JSON.stringify(payload),
-                                                                    headers()
-                                                                ).then((res) => {
-                                                                    dispatch(createAttendance(res));
-                                                                });
-                                                            }}
-                                                        >
-                                                            Tasdiqlash
-                                                        </Button>
-                                                    </td>
-                                                )
+                                            if (index >= 3 && !attendance) return null;
+
+                                            const statusDay = attendanceList?.students?.filter((st) => st.days[day].id);
+                                            return (absentStudents && +absentStudents.date === +day) || !!statusDay.length ? (
+                                                <td key={day}/>
+                                            ) : (
+                                                <td className={cls.btn} key={day}>
+                                                    <Button
+                                                        extraClass={cls.btn__inner}
+                                                        onClick={() => {
+                                                            const payload = {
+                                                                day: formatDayString(selectedYear, selectedMonth, day),
+                                                                group_id: id,
+                                                                absent_students: [],
+                                                            };
+                                                            dispatch(loadingAttendance());
+                                                            request(
+                                                                `${API_URL}Attendance/attendance/create-list/`,
+                                                                "POST",
+                                                                JSON.stringify(payload),
+                                                                headers()
+                                                            ).then((res) => {
+                                                                dispatch(createAttendance(res));
+                                                            });
+                                                        }}
+                                                    >
+                                                        Tasdiqlash
+                                                    </Button>
+                                                </td>
+                                            );
                                         })
                                         : selectedDays.map((day, index) => {
-                                            return (index >= 3 && !attendance) ? null : (absentStudents && absentStudents.date === day)
-                                                ? <td/>
-                                                : (
-                                                    <td className={cls.btn}>
-                                                        <Button
-                                                            extraClass={cls.btn__inner}
-                                                            onClick={() => {
-                                                                const payload = {
-                                                                    day: formatDayString(selectedYear, selectedMonth, day),
-                                                                    group_id: id,
-                                                                    absent_students: []
-                                                                }
-                                                                dispatch(loadingAttendance())
-                                                                request(
-                                                                    `${API_URL}Attendance/attendance/create-list/`,
-                                                                    "POST",
-                                                                    JSON.stringify(payload),
-                                                                    headers()
-                                                                ).then((res) => {
-                                                                    dispatch(
-                                                                        getSchoolAttendanceList({
-                                                                            group_id: id,
-                                                                            year: selectedYear,
-                                                                            month: selectedMonth,
-                                                                        })
-                                                                    );
-                                                                });
-                                                            }}
-                                                        >
-                                                            Tasdiqlash
-                                                        </Button>
-                                                    </td>
-                                                )
-                                        })
-                                }
-                            </tr>
+                                            if (index >= 3 && !attendance) return null;
+
+                                            return absentStudents && absentStudents.date === day ? (
+                                                <td key={day}/>
+                                            ) : (
+                                                <td className={cls.btn} key={day}>
+                                                    <Button
+                                                        extraClass={cls.btn__inner}
+                                                        onClick={() => {
+                                                            const payload = {
+                                                                day: formatDayString(selectedYear, selectedMonth, day),
+                                                                group_id: id,
+                                                                absent_students: [],
+                                                            };
+                                                            dispatch(loadingAttendance());
+                                                            request(
+                                                                `${API_URL}Attendance/attendance/create-list/`,
+                                                                "POST",
+                                                                JSON.stringify(payload),
+                                                                headers()
+                                                            ).then(() => {
+                                                                dispatch(
+                                                                    getSchoolAttendanceList({
+                                                                        group_id: id,
+                                                                        year: selectedYear,
+                                                                        month: selectedMonth,
+                                                                    })
+                                                                );
+                                                            });
+                                                        }}
+                                                    >
+                                                        Tasdiqlash
+                                                    </Button>
+                                                </td>
+                                            );
+                                        })}
+                                </tr>
+                            )}
                             </tbody>
+
                         </Table>
                     </div>
 
