@@ -447,7 +447,7 @@ export const GroupProfileAttendanceForm = memo(
 
                     <div className={classNames(cls.attendance__container, {[cls.active]: attendance})}>
                         <Table>
-                            <thead>
+                            <thead style={{top: 0}}>
                             <tr>
                                 <th>№</th>
                                 <th>Ism Familya</th>
@@ -475,9 +475,8 @@ export const GroupProfileAttendanceForm = memo(
                             </thead>
 
                             <tbody>
-                            {renderAttendance()}
                             {(!hideConfirmRow || attendance) && (
-                                <tr>
+                                <tr className={cls.bottom}>
                                     <td/>
                                     <td/>
                                     {attendanceList?.students
@@ -552,6 +551,7 @@ export const GroupProfileAttendanceForm = memo(
                                         })}
                                 </tr>
                             )}
+                            {renderAttendance()}
                             </tbody>
 
                         </Table>
