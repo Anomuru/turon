@@ -1,0 +1,47 @@
+.container
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  &__wrapper
+    box-shadow:  0 0 5px 0
+    padding: 1.5rem
+    border-radius: 10px
+    display: flex
+    flex-direction: column
+    //gap: 2rem
+.header
+  display: flex
+  justify-content: space-between
+  width: 100%
+  font-size: 1.6rem
+  //color: grey
+  & > span
+    font-size: 1.6rem
+.table
+  width: 100%
+  border-collapse: collapse
+  margin-top: 8px
+  &__wrapper
+    max-height: 25rem
+    overflow: auto
+
+  th, td
+    border: 1px solid #ddd
+    padding: 8px
+    text-align: left
+    font-size: 1.5rem
+    color: #7a6868
+  td
+    font-size: 1.4rem
+    font-weight: 500
+
+  th
+    background: #f0f0f0
+    font-weight: 600
+.input
+  width: 10rem!important
+  outline: none!important
+
+.tableStudent
+  max-height: 50rem
+  overflow: auto

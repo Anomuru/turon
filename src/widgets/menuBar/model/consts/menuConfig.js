@@ -161,6 +161,12 @@ export const menuConfig = [
         name: "Web-Sayt",
         roles: [ROLES.smm]
     },
+    {
+        to: "statistics",
+        name: "Statistika",
+        icon: "fa-chart-line",
+        roles: [ROLES.admin ,ROLES.director,ROLES.programmer],
+    },
 
 
 
