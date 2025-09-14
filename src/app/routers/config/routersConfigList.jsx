@@ -44,6 +44,7 @@ const CalendarPage = lazyPage(() => import("pages/calendarPage"), "CalendarPage"
 const TimeTableTuronPage = lazyPage(() => import("pages/timeTable"), "TimeTableTuronPage");
 const ClassMain = lazyPage(() => import("pages/classPage/ui/classMain"), "ClassMain");
 const Settings = lazyPage(() => import("pages/settings"), "Settings");
+const StatisticsPage = lazyPage(() => import("pages/statisticsPage"), "StatisticsPage");
 
 export const routersConfigList = [
     {
@@ -162,6 +163,11 @@ export const routersConfigList = [
         name: "settings",
         path: `settings/*`,
         element: <Settings/>,
+    },
+    {
+        name: "Statistics",
+        path: `Statistics/`,
+        element: <StatisticsPage/>,
     },
 
 ]
