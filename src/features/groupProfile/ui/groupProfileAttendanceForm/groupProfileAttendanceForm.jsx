@@ -76,7 +76,7 @@ export const GroupProfileAttendanceForm = memo(
             }
 
             return entries.slice(todayIndex, todayIndex + 3);
-        }, [attendanceList, todayDay]);
+        }, [attendanceList, todayDay, attendance]);
 
 
         const getSelectedDays = useCallback(() => {
