@@ -61,30 +61,37 @@ export const GroupProfileAttendanceForm = memo(
         const today = new Date();
         const todayDay = today.getDate();
 
-        const getAttendanceDays = useCallback((data ) => {
+        const getAttendanceDays = useCallback((data) => {
             if (!attendanceList?.students?.length) return [];
-            if (!!data && attendance) return Object.entries(data)
-            if (attendance) return attendanceList.days;
-            if (!!data) {
-                const days = Object.entries(data);
-                return days.filter((d) => +d[0] >= todayDay);
+
+            const daysObj = data || {};
+
+            const entries = Object.entries(daysObj).map(([key, value]) => [Number(key), value]);
+            if (attendance) return entries
+
+            const todayIndex = entries.findIndex(([day]) => day === todayDay);
+
+            if (todayIndex === -1) {
+                return entries.slice(-3);
             }
-            const days = Object.keys(attendanceList.students[0]?.days || {}).map(Number);
-            return days.filter((d) => d >= todayDay); // начиная с сегодняшнего дня
-        }, [attendanceList, todayDay, attendance]);
+
+            return entries.slice(todayIndex, todayIndex + 3);
+        }, [attendanceList, todayDay]);
+
 
         const getSelectedDays = useCallback(() => {
-            if (!selectedDays?.length) return [];
-            if (attendance) return selectedDays;
-            const start = todayDay - 2;
-            return selectedDays.filter((d) => d >= start);
-        }, [selectedDays, todayDay, attendance]);
+            if (!attendanceList?.days?.length) return [];
+            if (attendance) return attendanceList?.days;
+            const todayIndex = attendanceList?.days.findIndex((d) => d === todayDay);
+            if (todayIndex === -1) {
+                return attendanceList?.days.slice(-3);
+            }
+            return attendanceList?.days.slice(todayIndex, todayIndex + 3);
+        }, [attendanceList, todayDay, attendance]);
 
 
         const hideConfirmRow = (() => {
-            const firstThreeDays = attendanceList?.students
-                ? getAttendanceDays().slice(0, 3)
-                : getSelectedDays().slice(0, 3);
+            const firstThreeDays = getSelectedDays().slice(0, 3);
 
             const filledCount = firstThreeDays.filter((d) =>
                 attendanceList?.students
@@ -309,13 +316,13 @@ export const GroupProfileAttendanceForm = memo(
                         ? getAttendanceDays(item.days).map(([day, i], idx) => {
                             const isAbsent =
                                 absentStudents?.students?.some((st) => st.id === item?.student?.id) &&
-                                day === String(absentStudents?.date);
+                                String(day) === String(absentStudents?.date);
 
                             if (idx >= limit && !attendance) return null;
 
                             const finalStatus = (() => {
                                 const override = absentStudents?.students?.find(
-                                    (st) => st.id === item?.student?.id && absentStudents?.date === String(day)
+                                    (st) => st.id === item?.student?.id && String(absentStudents?.date) === String(day)
                                 );
                                 if (override) return override.status;
                                 return i?.status;
@@ -326,13 +333,13 @@ export const GroupProfileAttendanceForm = memo(
                                     key={day}
                                     className={classNames(cls.day, {
                                         [cls.active]:
-                                        (active?.student === item?.student?.id && day === active?.day) ||
+                                        (active?.student === item?.student?.id && String(day) === String(active?.day)) ||
                                         isAbsent,
                                     })}
                                     onClick={() => {
                                         if (i?.status === null) {
                                             if (!isAbsent) {
-                                                if (absentStudents?.date && day !== String(absentStudents?.date)) {
+                                                if (absentStudents?.date && String(day) !== String(absentStudents?.date)) {
                                                     dispatch(
                                                         onAddAlertOptions({
                                                             type: "error",
@@ -403,14 +410,14 @@ export const GroupProfileAttendanceForm = memo(
                         : getSelectedDays().map((day, idx) => {
                             const isAbsent =
                                 absentStudents?.students?.some((st) => st.id === item?.id)
-                                && day === absentStudents?.date;
+                                && String(day) === String(absentStudents?.date);
                             if (idx >= limit && !attendance) return null;
                             return (
                                 <td
                                     key={day}
                                     className={classNames(cls.day, {
                                         [cls.active]:
-                                        (active?.student === item?.id && day === active?.day) || isAbsent
+                                        (active?.student === item?.id && String(day) === String(active?.day)) || isAbsent
                                     })}
                                     onClick={() => {
                                         if (isAbsent) {
@@ -474,17 +481,8 @@ export const GroupProfileAttendanceForm = memo(
                                 <th>№</th>
                                 <th>Ism Familya</th>
 
-                                {attendanceList?.students
-                                    ? getAttendanceDays().map((day, index) =>
-                                        index >= 3 && !attendance ? null : (
-                                            <th key={day}>
-                                                <div className={cls.days}>
-                                                    <h2>{day}</h2>
-                                                </div>
-                                            </th>
-                                        )
-                                    )
-                                    : getSelectedDays().map((day, index) =>
+                                {
+                                    getSelectedDays().map((day, index) =>
                                         index >= 3 && !attendance ? null : (
                                             <th key={day}>
                                                 <div className={cls.days}>
@@ -502,12 +500,19 @@ export const GroupProfileAttendanceForm = memo(
                                 <tr className={cls.bottom}>
                                     <td/>
                                     <td/>
-                                    {attendanceList?.students
-                                        ? getAttendanceDays().map((day, index) => {
+                                    {
+                                        getSelectedDays().map((day, index) => {
                                             if (index >= 3 && !attendance) return null;
 
-                                            const statusDay = attendanceList?.students?.filter((st) => st.days[day].id);
-                                            return (absentStudents && +absentStudents.date === +day) || !!statusDay.length ? (
+                                            const statusDay = attendanceList?.students
+                                                ? attendanceList.students.filter((st) => st.days[day]?.id)
+                                                : [];
+
+                                            const shouldDisable =
+                                                (absentStudents && +absentStudents.date === +day) ||
+                                                !!statusDay.length;
+
+                                            return shouldDisable ? (
                                                 <td key={day}/>
                                             ) : (
                                                 <td className={cls.btn} key={day}>
@@ -519,14 +524,26 @@ export const GroupProfileAttendanceForm = memo(
                                                                 group_id: id,
                                                                 absent_students: [],
                                                             };
+
                                                             dispatch(loadingAttendance());
+
                                                             request(
                                                                 `${API_URL}Attendance/attendance/create-list/`,
                                                                 "POST",
                                                                 JSON.stringify(payload),
                                                                 headers()
                                                             ).then((res) => {
-                                                                dispatch(createAttendance(res));
+                                                                if (attendanceList?.students) {
+                                                                    dispatch(createAttendance(res));
+                                                                } else {
+                                                                    dispatch(
+                                                                        getSchoolAttendanceList({
+                                                                            group_id: id,
+                                                                            year: selectedYear,
+                                                                            month: selectedMonth,
+                                                                        })
+                                                                    );
+                                                                }
                                                             });
                                                         }}
                                                     >
@@ -535,43 +552,7 @@ export const GroupProfileAttendanceForm = memo(
                                                 </td>
                                             );
                                         })
-                                        : getSelectedDays().map((day, index) => {
-                                            if (index >= 3 && !attendance) return null;
-
-                                            return absentStudents && absentStudents.date === day ? (
-                                                <td key={day}/>
-                                            ) : (
-                                                <td className={cls.btn} key={day}>
-                                                    <Button
-                                                        extraClass={cls.btn__inner}
-                                                        onClick={() => {
-                                                            const payload = {
-                                                                day: formatDayString(selectedYear, selectedMonth, day),
-                                                                group_id: id,
-                                                                absent_students: [],
-                                                            };
-                                                            dispatch(loadingAttendance());
-                                                            request(
-                                                                `${API_URL}Attendance/attendance/create-list/`,
-                                                                "POST",
-                                                                JSON.stringify(payload),
-                                                                headers()
-                                                            ).then(() => {
-                                                                dispatch(
-                                                                    getSchoolAttendanceList({
-                                                                        group_id: id,
-                                                                        year: selectedYear,
-                                                                        month: selectedMonth,
-                                                                    })
-                                                                );
-                                                            });
-                                                        }}
-                                                    >
-                                                        Tasdiqlash
-                                                    </Button>
-                                                </td>
-                                            );
-                                        })}
+                                    }
                                 </tr>
                             )}
                             {renderAttendance()}
