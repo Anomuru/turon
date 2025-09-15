@@ -58,11 +58,33 @@ export const GroupProfileAttendanceForm = memo(
         const [status, setStatus] = useState(true);
         const [absentStudents, setAbsentStudents] = useState({});
 
+        const today = new Date();
+        const todayDay = today.getDate();
+
+        const getAttendanceDays = useCallback((data ) => {
+            if (!attendanceList?.students?.length) return [];
+            if (!!data && attendance) return Object.entries(data)
+            if (attendance) return attendanceList.days;
+            if (!!data) {
+                const days = Object.entries(data);
+                return days.filter((d) => +d[0] >= todayDay);
+            }
+            const days = Object.keys(attendanceList.students[0]?.days || {}).map(Number);
+            return days.filter((d) => d >= todayDay); // начиная с сегодняшнего дня
+        }, [attendanceList, todayDay, attendance]);
+
+        const getSelectedDays = useCallback(() => {
+            if (!selectedDays?.length) return [];
+            if (attendance) return selectedDays;
+            const start = todayDay - 2;
+            return selectedDays.filter((d) => d >= start);
+        }, [selectedDays, todayDay, attendance]);
+
 
         const hideConfirmRow = (() => {
             const firstThreeDays = attendanceList?.students
-                ? Object.keys(attendanceList.students[0]?.days || {}).slice(0, 3)
-                : selectedDays.slice(0, 3);
+                ? getAttendanceDays().slice(0, 3)
+                : getSelectedDays().slice(0, 3);
 
             const filledCount = firstThreeDays.filter((d) =>
                 attendanceList?.students
@@ -284,7 +306,7 @@ export const GroupProfileAttendanceForm = memo(
                     </td>
 
                     {isAttendance
-                        ? Object.entries(item?.days).map(([day, i], idx) => {
+                        ? getAttendanceDays(item.days).map(([day, i], idx) => {
                             const isAbsent =
                                 absentStudents?.students?.some((st) => st.id === item?.student?.id) &&
                                 day === String(absentStudents?.date);
@@ -378,7 +400,7 @@ export const GroupProfileAttendanceForm = memo(
                                 </td>
                             );
                         })
-                        : selectedDays.map((day, idx) => {
+                        : getSelectedDays().map((day, idx) => {
                             const isAbsent =
                                 absentStudents?.students?.some((st) => st.id === item?.id)
                                 && day === absentStudents?.date;
@@ -453,7 +475,7 @@ export const GroupProfileAttendanceForm = memo(
                                 <th>Ism Familya</th>
 
                                 {attendanceList?.students
-                                    ? Object.keys(attendanceList.students[0]?.days || {}).map((day, index) =>
+                                    ? getAttendanceDays().map((day, index) =>
                                         index >= 3 && !attendance ? null : (
                                             <th key={day}>
                                                 <div className={cls.days}>
@@ -462,7 +484,7 @@ export const GroupProfileAttendanceForm = memo(
                                             </th>
                                         )
                                     )
-                                    : selectedDays.map((day, index) =>
+                                    : getSelectedDays().map((day, index) =>
                                         index >= 3 && !attendance ? null : (
                                             <th key={day}>
                                                 <div className={cls.days}>
@@ -470,7 +492,8 @@ export const GroupProfileAttendanceForm = memo(
                                                 </div>
                                             </th>
                                         )
-                                    )}
+                                    )
+                                }
                             </tr>
                             </thead>
 
@@ -480,7 +503,7 @@ export const GroupProfileAttendanceForm = memo(
                                     <td/>
                                     <td/>
                                     {attendanceList?.students
-                                        ? Object.keys(attendanceList.students[0]?.days || {}).map((day, index) => {
+                                        ? getAttendanceDays().map((day, index) => {
                                             if (index >= 3 && !attendance) return null;
 
                                             const statusDay = attendanceList?.students?.filter((st) => st.days[day].id);
@@ -512,7 +535,7 @@ export const GroupProfileAttendanceForm = memo(
                                                 </td>
                                             );
                                         })
-                                        : selectedDays.map((day, index) => {
+                                        : getSelectedDays().map((day, index) => {
                                             if (index >= 3 && !attendance) return null;
 
                                             return absentStudents && absentStudents.date === day ? (
