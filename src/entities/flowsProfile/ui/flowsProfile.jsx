@@ -84,10 +84,12 @@ export const FlowProfileNavigators = memo(() => {
             }))
     }, [userBranchId, data])
 
+    console.log(data , "data")
     useEffect(() => {
         if (data) {
             setValue("name", data?.name)
             setValue("level", data?.level?.id)
+            setValue("order_by", data?.order_by)
         }
     }, [data])
 
@@ -158,6 +160,7 @@ export const FlowProfileNavigators = memo(() => {
                     {
                         !data?.activity ?
                             <>
+
                                 <div
                                     className={cls.navigatorsItem}
                                     style={{borderColor: "#3B82F6"}}
@@ -282,6 +285,14 @@ export const FlowProfileNavigators = memo(() => {
                             register={register}
                             name={"name"}
                             required
+                        />
+                        <Input
+                            extraClassName={cls.form__input}
+                            placeholder={"Tartib raqami"}
+                            register={register}
+                            name={"order_by"}
+                            required
+                            type={"number"}
                         />
                         {/*<Select*/}
                         {/*    extraClass={cls.form__input}*/}
