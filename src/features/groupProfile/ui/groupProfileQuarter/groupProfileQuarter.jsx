@@ -19,41 +19,26 @@ import {API_URL, headers, useHttp} from "shared/api/base.js";
 import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 import {Table} from "shared/ui/table/index.js";
-import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
-
+import {DefaultLoader} from "shared/ui/defaultLoader/index.js";
 
 const reducers = {
     groupQuarterSlice: groupQuarterReducer
 }
 
-
 // optimizatsiya qilaman  (sardor)
-
 export const GroupProfileQuarter = () => {
-    //data accardion
     const data = useSelector(getTermData)
-    //term select
     const term = useSelector(getTerm)
     const [selectedTerm, setSelectedTerm] = useState(null)
-    //modal create test
+
     const [active, setActive] = useState(false)
-    //fanni gruh || sinf lani id sini saqlash uchun
     const [activeItems, setActiveItems] = useState({})
-
-
-
-
     const branchId = localStorage.getItem("branchId")
 
-    //bu create uchun
     const {reset, register, handleSubmit} = useForm()
     const [assignments, setAssignments] = useState([]);
-
-
-    //student geti
     const [viewActive, setViewActive] = useState(false)
     const [viewTest, setViewTest] = useState(null)
-
     const [loading, setLoading] = useState(false)
 
     const {request} = useHttp()
@@ -63,10 +48,8 @@ export const GroupProfileQuarter = () => {
     useEffect(() => {
         if (quarterYear) {
             setQuarterYearSelected(quarterYear[0]?.academic_year)
-
         }
     }, [quarterYear])
-
 
     useEffect(() => {
         request(`${API_URL}terms/education-years/`, "GET", null, headers())
@@ -74,7 +57,6 @@ export const GroupProfileQuarter = () => {
                 setQuarterYear(res)
             })
     }, [])
-
 
     useEffect(() => {
         if (term) {
@@ -86,17 +68,14 @@ export const GroupProfileQuarter = () => {
 
     useEffect(() => {
         if (quarterYearSelected){
-             dispatch(fetchTerm(quarterYearSelected))
-
+            dispatch(fetchTerm(quarterYearSelected))
         }
     }, [quarterYearSelected])
 
     useEffect(() => {
-
         if (selectedTerm && branchId) {
             dispatch(fetchTermData({termId: selectedTerm, branchId}))
         }
-
     }, [selectedTerm])
 
     useEffect(() => {
@@ -104,7 +83,7 @@ export const GroupProfileQuarter = () => {
             setAssignments(
                 viewTest.data.map(item => ({
                     student_id: item.id,
-                    percentage: Number(item.assignment) || 0,
+                    percentage: item.assignment?.percentage ?? item.assignment ?? 0,
                     test_id: viewTest.id,
                 }))
             );
@@ -114,25 +93,15 @@ export const GroupProfileQuarter = () => {
     useEffect(() => {
         if (viewActive === false) {
             setViewTest(null)
-
         }
     }, [viewActive])
-    // fanni id && gruh ili sinf ni id sini olish uchun
+
     const onClick = (item, path) => {
-
         setActive(true);
-
-
-        setActiveItems(
-            path
-        );
+        setActiveItems(path);
     };
 
-
-    // fanni ichida testni create qilish uchun
-
     const onPostTerm = (data) => {
-
         const res = {
             ...data,
             term: selectedTerm,
@@ -141,12 +110,11 @@ export const GroupProfileQuarter = () => {
             [activeItems[2]?.type]: activeItems[2]?.id,
         };
 
-
         request(`${API_URL}terms/create-test/`, "POST", JSON.stringify(res), headers())
             .then(res => {
                 dispatch(addTest({
-                    path: activeItems, // activeItems dagi id la
-                    test: res     // shahzod dan kegan res
+                    path: activeItems,
+                    test: res
                 }));
                 dispatch(onAddAlertOptions({
                     status: true,
@@ -157,11 +125,7 @@ export const GroupProfileQuarter = () => {
                 reset()
             })
             .catch(err => console.log(err))
-
     }
-
-
-
 
     const onViewTest = (path, row) => {
         const groupId = path.find(p => p.type === "group")?.id;
@@ -170,7 +134,7 @@ export const GroupProfileQuarter = () => {
             .then(res => {
                 setViewTest({
                     id: row.id,
-                    weight: row.weight,  // testning weight sini saqlab qo'yamiz
+                    weight: row.weight,
                     data: res
                 });
                 setLoading(false)
@@ -178,7 +142,6 @@ export const GroupProfileQuarter = () => {
             })
             .catch(err => console.log(err));
     };
-
 
     const onSubmitAssignments = () => {
         request(`${API_URL}terms/assignment-create/`, "POST", JSON.stringify(assignments), headers())
@@ -193,13 +156,8 @@ export const GroupProfileQuarter = () => {
             .catch(err => console.log(err));
     };
 
-
-
-    console.log(assignments , "assignments")
-
     return (
         <DynamicModuleLoader reducers={reducers}>
-
             {loading ? <DefaultLoader/> : null}
             <div className={styles.quarter}>
                 <div style={{alignSelf: "flex-end" , display: "flex" , gap: "2rem"}}>
@@ -209,23 +167,20 @@ export const GroupProfileQuarter = () => {
                 </div>
                 <Accordion selectedTerm={selectedTerm} onClick={onClick} items={data}  onViewTest={onViewTest}/>
             </div>
+
+            {/* Create Modal */}
             <Modal setActive={setActive} active={active}>
                 <div style={{padding: "2rem"}}>
                     <Input name={"name"} placeholder={"Nomi"} register={register}/>
-
                     <Input name={"weight"} type={"number"} register={register} placeholder={"Foiz % "}/>
                     <Input name={"date"} type={"date"} register={register}/>
                     <Button onClick={handleSubmit(onPostTerm)}>Create</Button>
                 </div>
-
-
             </Modal>
 
-
-
+            {/* View Test Modal */}
             <Modal typeIcon={true} setActive={setViewActive} active={viewActive}>
                 {viewTest ? (
-
                     <div>
                         <div className={styles.tableStudent}>
                             <Table>
@@ -238,14 +193,16 @@ export const GroupProfileQuarter = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-
                                 {viewTest?.data?.map((item, i) => {
                                     const assignmentItem = assignments.find(a => a.student_id === item.id);
 
-                                    // Agar mavjud bo‘lsa, assignments dan olamiz, yo‘q bo‘lsa item.assignment, undan ham bo‘masa 0
-                                    const value = assignmentItem?.percentage ?? item.assignment ?? 0;
+                                    const percentage =
+                                        assignmentItem?.percentage ??
+                                        item.assignment?.percentage ??
+                                        item.assignment ??
+                                        0;
 
-                                    const result = (value * viewTest.weight) / 100;
+                                    const result = (percentage * viewTest.weight) / 100;
 
                                     return (
                                         <tr key={i}>
@@ -255,13 +212,9 @@ export const GroupProfileQuarter = () => {
                                                 <Input
                                                     extraClassName={styles.input}
                                                     type="number"
-                                                    value={
-                                                        assignmentItem?.percentage ??
-                                                        item.assignment?.percentage ?? // <-- muhim
-                                                        0
-                                                    }
+                                                    value={percentage === 0 ? "" : Number(percentage)} // <-- nol oldini oladi
                                                     onChange={(e) => {
-                                                        const newValue = Number(e.target.value);
+                                                        const newValue = e.target.value === "" ? 0 : Number(e.target.value);
 
                                                         setAssignments((prev) => {
                                                             const existingIndex = prev.findIndex((a) => a.student_id === item.id);
@@ -291,21 +244,19 @@ export const GroupProfileQuarter = () => {
                                         </tr>
                                     );
                                 })}
-
                                 </tbody>
                             </Table>
                         </div>
                         <Button onClick={onSubmitAssignments}>Boholash</Button>
                     </div>
-
                 ) : (
                     <p>Loading...</p>
                 )}
             </Modal>
-
         </DynamicModuleLoader>
     );
 }
+
 
 function Accordion({items, onClick, parentId = null, path = [], onDeleteId, onViewTest ,selectedTerm}) {
     return (
@@ -331,21 +282,13 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
     const hasTable = !!item?.tableData;
     const {request} = useHttp()
 
-
-
     const [editActive, setEditActive] = useState(false);
     const [editItem, setEditItem] = useState(null);
-
-    // delete confirm state
     const [deleteActive, setDeleteActive] = useState(false);
 
     const dispatch = useDispatch();
-
     const {register, handleSubmit, reset} = useForm();
 
-
-
-    // pen bosilganda
     const onEditId = (row) => {
         setEditItem({path, ...row});
         reset({
@@ -356,17 +299,12 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
         setEditActive(true);
     };
 
-    // update test
-    console.log(selectedTerm)
     const onUpdateTest = (data) => {
-
         const res = {
-
             group: path.find(p => p.type === "group")?.id,
             subject: path.find(p => p.type === "subject")?.id,
             name: data.name,
             weight: data.weight,
-
             date: data.date,
         };
 
@@ -374,7 +312,7 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
             .then((res) => {
                 dispatch(updateTest({
                     path: editItem.path,
-                    test: res, // backend qaytargan yangilangan test
+                    test: res,
                 }));
                 dispatch(onAddAlertOptions({
                     status: true,
@@ -387,7 +325,6 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
             .catch((err) => console.log(err));
     };
 
-    // delete test
     const onDeleteFromEdit = () => {
         setDeleteActive(true);
     };
@@ -452,7 +389,6 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
                                 <th>ID</th>
                                 <th>Nomi</th>
                                 <th>Foiz %</th>
-
                                 <th>Delete</th>
                             </tr>
                             </thead>
@@ -476,7 +412,6 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
                                             className="fa fa-pen"
                                         />
                                     </td>
-
                                 </tr>
                             ))}
                             </tbody>
@@ -496,7 +431,6 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
                 </div>
             )}
 
-
             <Modal setActive={setEditActive} active={editActive}>
                 <div style={{padding: "2rem", display: "flex", flexDirection: "column", gap: "1rem"}}>
                     <Input name="name" placeholder="Nomi" register={register}/>
@@ -512,13 +446,10 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
                 </div>
             </Modal>
 
-
             <ConfirmModal
                 active={deleteActive}
                 setActive={setDeleteActive}
                 onClick={onDeleteTest}
-
-
             />
         </div>
     );
