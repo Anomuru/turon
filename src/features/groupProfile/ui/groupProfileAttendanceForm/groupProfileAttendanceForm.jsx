@@ -119,7 +119,6 @@ export const GroupProfileAttendanceForm = memo(
             []
         );
 
-
         const upsertAbsentStudent = useCallback(
             ({studentId, day, newStatus, formReason = undefined, sourceStatus = undefined}) => {
                 const dayString = formatDayString(selectedYear, selectedMonth, day);
