@@ -18,6 +18,7 @@ import {
     fetchAcademicYear
 } from "features/groupProfile/model/showQuarter/groupQuarterThunk.jsx";
 import {useParams} from "react-router";
+import {API_URL, useHttp} from "shared/api/base.js";
 
 
 const reducers = {
@@ -34,6 +35,25 @@ export const GroupQuarterShow = () => {
     const [selectQuarter, setSelectQuarter] = useState(null)
     const dispatch = useDispatch()
     const {id} = useParams()
+    const [subject, setSubject] = useState()
+    const [subjectSelect, setSubjectSelect] = useState()
+    const {request} = useHttp()
+    useEffect(() => {
+        request(`${API_URL}terms/group-subjects/${id}/`)
+            .then(res => {
+                setSubject(res)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [])
+
+    useEffect(() => {
+        if (subject){
+            setSubjectSelect(subject[0].id)
+        }
+    } , [subject])
+
 
     useEffect(() => {
         dispatch(fetchAcademicYear())
@@ -46,7 +66,7 @@ export const GroupQuarterShow = () => {
     }, [academicYear])
 
     useEffect(() => {
-        if (selectAcademicYear){
+        if (selectAcademicYear) {
             dispatch(fetchAcademicTerm(selectAcademicYear))
         }
 
@@ -60,11 +80,10 @@ export const GroupQuarterShow = () => {
     }, [academicYear && quarter])
 
     useEffect(() => {
-        if (selectQuarter && id){
-            dispatch(fetchAcademicData({termId: selectQuarter , academicYear , groupId: id}))
+        if (selectQuarter && id && subjectSelect) {
+            dispatch(fetchAcademicData({termId: selectQuarter, academicYear, groupId: id , subject:subjectSelect  }))
         }
-    } , [selectQuarter , selectAcademicYear])
-
+    }, [selectQuarter, selectAcademicYear , subjectSelect])
 
 
     return (
@@ -77,11 +96,12 @@ export const GroupQuarterShow = () => {
                             options={academicYear}/>
 
                     <Select defaultValue={selectQuarter} onChangeOption={setSelectQuarter} options={quarter}/>
+                    <Select defaultValue={subjectSelect} onChangeOption={setSubjectSelect} options={subject && [...subject , {name: "Hammasi" , id: "all"}]}/>
                 </div>
 
                 <div className={cls.quarter__table}>
                     {loading ? <DefaultPageLoader/> :
-                        <GroupQuarterTable data={data}/>}
+                        <GroupQuarterTable selectedSubject={subjectSelect} data={data}/>}
                 </div>
 
             </div>

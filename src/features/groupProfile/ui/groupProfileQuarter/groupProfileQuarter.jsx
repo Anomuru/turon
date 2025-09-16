@@ -102,11 +102,10 @@ export const GroupProfileQuarter = () => {
     useEffect(() => {
         if (viewTest) {
             setAssignments(
-                viewTest?.data?.map((item) => ({
+                viewTest.data.map(item => ({
                     student_id: item.id,
-                    percentage: Number(item.assignment) ?? 0,
-                    test_id: viewTest.id
-                    // score: item.assignment ?? 0,
+                    percentage: Number(item.assignment) || 0,
+                    test_id: viewTest.id,
                 }))
             );
         }
@@ -171,6 +170,7 @@ export const GroupProfileQuarter = () => {
             .then(res => {
                 setViewTest({
                     id: row.id,
+                    weight: row.weight,  // testning weight sini saqlab qo'yamiz
                     data: res
                 });
                 setLoading(false)
@@ -180,12 +180,7 @@ export const GroupProfileQuarter = () => {
     };
 
 
-
     const onSubmitAssignments = () => {
-
-
-        console.log(assignments)
-        //
         request(`${API_URL}terms/assignment-create/`, "POST", JSON.stringify(assignments), headers())
             .then(() => {
                 dispatch(onAddAlertOptions({
@@ -197,6 +192,10 @@ export const GroupProfileQuarter = () => {
             })
             .catch(err => console.log(err));
     };
+
+
+
+    console.log(assignments , "assignments")
 
     return (
         <DynamicModuleLoader reducers={reducers}>
@@ -235,31 +234,64 @@ export const GroupProfileQuarter = () => {
                                     <th>ID</th>
                                     <th>Ism Familya</th>
                                     <th>Foiz %</th>
+                                    <th>Natija</th>
                                 </tr>
                                 </thead>
                                 <tbody>
 
-                                {viewTest?.data?.map((item, i) => (
-                                    <tr key={i}>
-                                        <td>{i + 1}</td>
-                                        <td>{item.name} {item.surname}</td>
-                                        <td>
-                                            <Input
-                                                extraClassName={styles.input}
-                                                type="number"
-                                                defaultValue={item?.assignment !== null ? item?.assignment?.percentage : 0}
-                                                onChange={(e) => {
-                                                    const newValue = e.target.value;
-                                                    setAssignments((prev) =>
-                                                        prev.map((a, idx) =>
-                                                            idx === i ? {...a, percentage: Number(newValue)} : a
-                                                        )
-                                                    );
-                                                }}
-                                            />
-                                        </td>
-                                    </tr>
-                                ))}
+                                {viewTest?.data?.map((item, i) => {
+                                    const assignmentItem = assignments.find(a => a.student_id === item.id);
+
+                                    // Agar mavjud bo‘lsa, assignments dan olamiz, yo‘q bo‘lsa item.assignment, undan ham bo‘masa 0
+                                    const value = assignmentItem?.percentage ?? item.assignment ?? 0;
+
+                                    const result = (value * viewTest.weight) / 100;
+
+                                    return (
+                                        <tr key={i}>
+                                            <td>{i + 1}</td>
+                                            <td>{item.name} {item.surname}</td>
+                                            <td>
+                                                <Input
+                                                    extraClassName={styles.input}
+                                                    type="number"
+                                                    value={
+                                                        assignmentItem?.percentage ??
+                                                        item.assignment?.percentage ?? // <-- muhim
+                                                        0
+                                                    }
+                                                    onChange={(e) => {
+                                                        const newValue = Number(e.target.value);
+
+                                                        setAssignments((prev) => {
+                                                            const existingIndex = prev.findIndex((a) => a.student_id === item.id);
+
+                                                            if (existingIndex >= 0) {
+                                                                const updated = [...prev];
+                                                                updated[existingIndex] = {
+                                                                    ...updated[existingIndex],
+                                                                    percentage: newValue,
+                                                                };
+                                                                return updated;
+                                                            }
+
+                                                            return [
+                                                                ...prev,
+                                                                {
+                                                                    student_id: item.id,
+                                                                    test_id: viewTest.id,
+                                                                    percentage: newValue,
+                                                                },
+                                                            ];
+                                                        });
+                                                    }}
+                                                />
+                                            </td>
+                                            <td>{isNaN(result) ? 0 : result.toFixed(2)}</td>
+                                        </tr>
+                                    );
+                                })}
+
                                 </tbody>
                             </Table>
                         </div>
@@ -267,7 +299,7 @@ export const GroupProfileQuarter = () => {
                     </div>
 
                 ) : (
-                    <p>Yuklanmoqda...</p>
+                    <p>Loading...</p>
                 )}
             </Modal>
 
@@ -286,7 +318,7 @@ function Accordion({items, onClick, parentId = null, path = [], onDeleteId, onVi
                     parentId={parentId}
                     path={[...path, {id: item?.id, title: item?.title, type: item.type}]}
                     onClick={onClick}
-                    onViewTest={onViewTest} // ✅ props forward
+                    onViewTest={onViewTest}
                 />
             ))}
         </div>
@@ -381,18 +413,30 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
 
     return (
         <div className={styles.item}>
-            <div className={styles.header}>
+            <div
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen(!open);
+                }}
+                className={styles.header}
+            >
                 <h3>{item.type === "group" ? "Sinf" : "Fan"} - {item?.title}</h3>
                 <div style={{display: "flex", gap: "1rem"}}>
                     {hasTable && (
                         <i
-                            onClick={() => onClick(item, path)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onClick(item, path);
+                            }}
                             style={{fontSize: "1.6rem", cursor: "pointer"}}
                             className="fa fa-plus"
                         />
                     )}
                     <i
-                        onClick={() => setOpen(!open)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setOpen(!open);
+                        }}
                         style={{fontSize: "1.6rem", cursor: "pointer"}}
                         className={open ? "fa fa-chevron-down" : "fa fa-chevron-right"}
                     />
@@ -408,6 +452,7 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
                                 <th>ID</th>
                                 <th>Nomi</th>
                                 <th>Foiz %</th>
+
                                 <th>Delete</th>
                             </tr>
                             </thead>
@@ -431,6 +476,7 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
                                             className="fa fa-pen"
                                         />
                                     </td>
+
                                 </tr>
                             ))}
                             </tbody>

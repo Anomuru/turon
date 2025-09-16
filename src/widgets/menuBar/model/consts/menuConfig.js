@@ -20,6 +20,12 @@ export const menuConfig = [
         roles: [ROLES.operator],
     },
     {
+        to: "statistics",
+        name: "Statistika",
+        icon: "fa-chart-line",
+        roles: [ROLES.admin ,ROLES.director,ROLES.programmer],
+    },
+    {
         to: "adminTaskManager",
         name: "Operator Tasks",
         icon: "fa-tasks",
@@ -161,12 +167,7 @@ export const menuConfig = [
         name: "Web-Sayt",
         roles: [ROLES.smm]
     },
-    {
-        to: "statistics",
-        name: "Statistika",
-        icon: "fa-chart-line",
-        roles: [ROLES.admin ,ROLES.director,ROLES.programmer],
-    },
+
 
 
 
