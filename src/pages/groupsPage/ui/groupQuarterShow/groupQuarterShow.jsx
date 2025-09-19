@@ -50,7 +50,7 @@ export const GroupQuarterShow = () => {
 
     useEffect(() => {
         if (subject){
-            setSubjectSelect(subject[0].id)
+            setSubjectSelect(subject[0]?.id)
         }
     } , [subject])
 

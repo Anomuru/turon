@@ -110,7 +110,7 @@ export const StudentProfileQuarter = ({group_id}) => {
 
 
                 <h2>Umumiy natija: {data?.total_result}</h2>
-                <h2>O'rtanatija: {data?.average_result}</h2>
+                {/*<h2>O'rtanatija: {data?.average_result}</h2>*/}
 
                 {loading ? <DefaultPageLoader/> :
                     <Table>

@@ -1,0 +1,1 @@
+export {AccountingPageNew} from "./ui/accountingPage2.0.jsx"

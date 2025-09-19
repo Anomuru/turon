@@ -319,10 +319,20 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                                 <Input
                                     {...register("amount")}
                                     placeholder={"Summa"}
+                                    type="number"
                                     value={paymentSum || selectPrice.price}
-                                    onChange={(e) => setPaymentSum(e.target.value)}
-                                    type={"number"}
-
+                                    onChange={(e) => {
+                                        const val = Number(e.target.value);
+                                        if (val > selectPrice.price) {
+                                            setPaymentSum(selectPrice.price); // limitdan katta bo‘lsa max qiymatni oladi
+                                        } else if (val < 0) {
+                                            setPaymentSum(0); // manfiy bo‘lmasin
+                                        } else {
+                                            setPaymentSum(val);
+                                        }
+                                    }}
+                                    max={selectPrice.price}
+                                    min={0}
                                 />
                                 {/*<Input*/}
                                 {/*    extraClassName={cls.form__inout}*/}

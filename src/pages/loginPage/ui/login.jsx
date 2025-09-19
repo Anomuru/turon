@@ -2,16 +2,18 @@ import React, {useState} from "react";
 import {useNavigate} from "react-router";
 import {useDispatch} from "react-redux";
 import {set, useForm} from "react-hook-form";
-
+import cls from "./login.module.sass"
 import {Button} from "shared/ui/button";
 import {Input} from "shared/ui/input";
 import {MiniLoader} from "shared/ui/miniLoader";
-import cls from "./login.module.sass"
-import gennisImg from "shared/assets/images/logo.svg"
-import loginAside from "shared/assets/images/login-page-4468581-3783954 1.svg"
+
+
 import {API_URL, useHttp} from "shared/api/base";
 import {getUserData} from "../model/loginSlice";
 
+import gennisImg from "shared/assets/images/logo.svg"
+import loginAside from "shared/assets/images/login-page-4468581-3783954-1.svg"
+import "./login.sass"
 
 export const Login = () => {
 
@@ -90,28 +92,28 @@ export const Login = () => {
 
     }
     return (
-        <div className={cls.container}>
+        <div className={"container"}>
 
 
-            <div className={cls.login__logo}>
+            <div className={"login__logo"}>
                 <img src={gennisImg} alt=""/>
             </div>
 
-            <div className={cls.login}>
+            <div className={"login"}>
 
-                <div className={cls.login__boxes}>
+                <div className={"login__boxes"}>
 
-                    <div className={cls.login__box}>
+                    <div className={"login__box"}>
 
-                        <div className={cls.box__header_img}>
+                        <div className={"box__header_img"}>
                             <img src={gennisImg} alt=""/>
                         </div>
                         <h1 className={cls.box__header_title}>
                             login
                         </h1>
                         {error && error ?
-                            <div className={cls.login__error}>Username yoki Parol noto'g'ri !</div> : null}
-                        <div className={cls.box__form}>
+                            <div className={"login__error"}>Username yoki Parol noto'g'ri !</div> : null}
+                        <div className={"box__form"}>
                             <form onSubmit={handleSubmit(onClick)}>
                                 {loading ?
                                     <>
@@ -155,13 +157,13 @@ export const Login = () => {
                                 {/*       checkboxTitle={"Remember me"}/>*/}
                                 {/*<Button extraClass={cls.login__btn}>Login</Button>*/}
                                 {loading ?
-                                    <Button extraClass={cls.login__btn}>Login</Button> :
+                                    <Button extraClass={"login__btn"}>Login</Button> :
                                     <MiniLoader/>}
                                 {/*{loading ? null : <DefaultLoader/>}*/}
                             </form>
                         </div>
                     </div>
-                    <div className={cls.login__aside}>
+                    <div className={"login__aside"}>
                         <img src={loginAside} alt=""/>
                     </div>
                 </div>

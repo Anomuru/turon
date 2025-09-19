@@ -1,0 +1,1 @@
+export {AccountingPageNewHeader} from "./ui/accountingPageNewHeader/accountingPageNewHeader.jsx"
