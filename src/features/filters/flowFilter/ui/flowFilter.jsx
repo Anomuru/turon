@@ -27,7 +27,7 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
     const [selectedSubject, setSelectedSubject] = useState(subject || "all");
     const [selectedTeacher, setSelectedTeacher] = useState(teacher || "all");
     const [initialApplied, setInitialApplied] = useState(false);
-    console.log(selectedTeacher, 'ss')
+
 
     const search  = useSelector(getSearchValue)
 
