@@ -32,18 +32,19 @@ export const RoomsFilter = React.memo(({active, setActive, currentPage, pageSize
     const dispatch = useDispatch();
 
     const userBranchId = useSelector(getUserBranchId)
+    const saved = getSavedFilters()["roomsFilter"];
+    const [from, to] = saved.selectedSeat?.split("-") || ["", ""];
 
-    const [selectedSeatFrom, setSelectedSeatFrom] = useState("");
-    const [selectedSeatTo, setSelectedSeatTo] = useState("");
+    const [selectedSeatFrom, setSelectedSeatFrom] = useState(from || "");
+    const [selectedSeatTo, setSelectedSeatTo] = useState(to || "");
     // const [selectedSeat, setSelectedSeat] = useState("")
-    const [switchOn, setSwitchOn] = useState("all");
+    const [switchOn, setSwitchOn] = useState(saved.switchOn || "all");
     const [initialApplied, setInitialApplied] = useState(false);
 
     useEffect(() => {
-        const saved = getSavedFilters()["roomsFilter"];
+
         if (userBranchId && pageSize) {
             if (saved && !initialApplied) {
-                const [from, to] = saved.selectedSeat?.split("-") || ["", ""];
                 setSelectedSeatFrom(from);
                 setSelectedSeatTo(to);
                 // setSelectedSeat(saved.selectedSeat);

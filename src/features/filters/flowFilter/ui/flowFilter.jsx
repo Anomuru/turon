@@ -21,10 +21,13 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
     const subjects = useSelector(getSubjectsData);
     const teachers = useSelector(getTeacherData) ?? [];
     const id = useSelector(getUserBranchId)
+    const saved = getSavedFilters()["flowFilter"] ?? {};
+    const {selectedSubject: subject, selectedTeacher: teacher} = saved;
 
-    const [selectedSubject, setSelectedSubject] = useState("all");
-    const [selectedTeacher, setSelectedTeacher] = useState("all");
+    const [selectedSubject, setSelectedSubject] = useState(subject || "all");
+    const [selectedTeacher, setSelectedTeacher] = useState(teacher || "all");
     const [initialApplied, setInitialApplied] = useState(false);
+
 
     const search  = useSelector(getSearchValue)
 
@@ -59,11 +62,9 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
     }, [id]);
 
     useEffect(() => {
-        const saved = getSavedFilters()["flowFilter"];
+
         if (id && pageSize) {
             if (!initialApplied && saved) {
-                const {selectedSubject: subject, selectedTeacher: teacher} = saved;
-
                 setSelectedSubject(subject || "all");
                 setSelectedTeacher(teacher || "all");
 
