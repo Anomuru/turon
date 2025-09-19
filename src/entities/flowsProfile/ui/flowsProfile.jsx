@@ -290,6 +290,7 @@ export const FlowProfileNavigators = memo(() => {
                             extraClassName={cls.form__input}
                             placeholder={"Tartib raqami"}
                             register={register}
+                            defaultValue={data?.order_by}
                             name={"order_by"}
                             required
                             type={"number"}

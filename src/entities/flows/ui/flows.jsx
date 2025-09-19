@@ -84,7 +84,7 @@ export const Flows = ({
 
 
     const renderFlowData = () => {
-        return currentTableData && [...currentTableData]?.sort(compareById)?.map((item, i) => {
+        return currentTableData?.map((item, i) => {
             return (
                 <tr onClick={() => navigate(`./flowsProfile/${item?.id}`)}>
                     <td>{i + 1}</td>

@@ -22,10 +22,10 @@ export const fetchAcademicTerm = createAsyncThunk(
 )
 export const fetchAcademicData = createAsyncThunk(
     "groupQuarterShowSlice/fetchAcademicData",
-    async ({termId , academicYear , groupId}) => {
+    async ({termId , academicYear , groupId , subject}) => {
 
         const {request} = useHttp()
 
-        return await request(`${API_URL}terms/terms-by-group/${groupId}/${termId}/` , "GET" , null , headers())
+        return await request(`${API_URL}terms/terms-by-group/${groupId}/${termId}/${subject === "all" ? "" : subject + "/"}` , "GET" , null , headers())
     }
 )

@@ -69,7 +69,7 @@ export const StudentProfilePage = () => {
     const languages = useSelector(getLanguagesData)
     const charity = useSelector(getCharity)
 
-    console.log(charity, 'charity')
+    console.log(userData, 'charity')
 
 
 
@@ -153,6 +153,7 @@ export const StudentProfilePage = () => {
 
 
 
+
     return (
         <div
             className={classNames(cls.profile)}
@@ -206,7 +207,7 @@ export const StudentProfilePage = () => {
                 )}
 
                 {currentTab === "quarter" && (
-                    <StudentProfileQuarter/>
+                    <StudentProfileQuarter group_id={group_id}/>
                 )}
 
             </div>
