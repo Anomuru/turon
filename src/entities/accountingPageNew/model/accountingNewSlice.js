@@ -1,4 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
+import {fetchAccountingData} from "entities/accountingPageNew/model/accountingNewThunk.js";
 
 
 const initialState = {
@@ -17,6 +18,8 @@ const initialState = {
 
 
     ],
+    data: [],
+
 
 
 
@@ -27,7 +30,30 @@ const initialState = {
 const accountingNewSlice = createSlice({
     name: "accountingNewSlice",
     initialState,
-    reducers: {}
-})
+    reducers: {
+        onAddData: (state, action) => {
+            state.data.results.data = [...state.data.results.data , action.payload]
+        }
 
+    },
+    extraReducers: builder =>
+        builder
+            .addCase(fetchAccountingData.pending , state => {
+                state.loading = true
+                state.error = false
+            })
+            .addCase(fetchAccountingData.fulfilled , (state, action) => {
+                state.data = action.payload
+                state.totalCount = action?.payload?.results?.totalCount
+                console.log(action.payload)
+
+                state.loading = false
+                state.error= false
+            })
+            .addCase(fetchAccountingData.rejected , state => {
+                state.loading = false
+                state.error= true
+            })
+})
+export const {onAddData} = accountingNewSlice.actions
 export const {reducer: accountingNewReducer} = accountingNewSlice

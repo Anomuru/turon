@@ -5,6 +5,19 @@ import {Button} from "shared/ui/button/index.js";
 import {useEffect, useState} from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import {API_URL, headers, useHttp} from "shared/api/base.js";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchAccountingData} from "entities/accountingPageNew/model/accountingNewThunk.js";
+import {Modal} from "shared/ui/modal/index.js";
+import {Form} from "shared/ui/form/index.js";
+import {Radio} from "shared/ui/radio/index.js";
+import {Select} from "shared/ui/select/index.js";
+import {getCapitalTypes} from "entities/capital/index.js";
+import {useForm} from "react-hook-form";
+import {getPaymentType} from "entities/capital/model/thunk/capitalThunk.js";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
+import {onAddCapital} from "entities/accounting/model/slice/capital.js";
+import {onAddData} from "entities/accountingPageNew/model/accountingNewSlice.js";
 
 const paymentType = [
     {id: 1, name: "cash"},
@@ -14,23 +27,24 @@ const paymentType = [
 
 
 const payments = [
-    { id: 1, name: "Nuraulet Jorabekov", amount: 2700000, date: "2025-10-09", paymentType: "Click", status: "completed" },
-    { id: 2, name: "Mironshox Aytach", amount: 1980000, date: "2025-09-15", paymentType: "Click", status: "completed" },
-    { id: 3, name: "Iymona Mirxasilova", amount: 1300000, date: "2025-09-15", paymentType: "Click", status: "completed" },
-    { id: 4, name: "Ramziddin Mirzayev", amount: 3000000, date: "2025-09-12", paymentType: "Click", status: "completed" },
+    {id: 1, name: "Nuraulet Jorabekov", amount: 2700000, date: "2025-10-09", paymentType: "Click", status: "completed"},
+    {id: 2, name: "Mironshox Aytach", amount: 1980000, date: "2025-09-15", paymentType: "Click", status: "completed"},
+    {id: 3, name: "Iymona Mirxasilova", amount: 1300000, date: "2025-09-15", paymentType: "Click", status: "completed"},
+    {id: 4, name: "Ramziddin Mirzayev", amount: 3000000, date: "2025-09-12", paymentType: "Click", status: "completed"},
 ];
 
-export const AccountingNewFilter = ({selectType}) => {
+export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, currentPage, pageSize}) => {
 
 
-    const [activeFilter, setActiveFilter] = useState(false)
-
-
-    const [range, setRange] = useState([0, 500000000]);
+    const [range, setRange] = useState([0, 10000000]);
     const [selectedPayment, setSelectedPayment] = useState([])
     const [from, setFrom] = useState(null)
     const [to, setTo] = useState(null)
-
+    const branchId = localStorage.getItem("branchId")
+    const [active, setActive] = useState("")
+    const paymentTypes = useSelector(getCapitalTypes)
+    const {register, handleSubmit, setValue} = useForm()
+    const [radio, setRadio] = useState({})
 
     const fromToAmount = {
         from: range[0],
@@ -38,7 +52,18 @@ export const AccountingNewFilter = ({selectType}) => {
     }
 
 
-    console.log(selectedPayment, selectType, fromToAmount, from, to)
+    const {request} = useHttp()
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+
+        dispatch(fetchAccountingData({branchId, pageSize, currentPage, selectedPayment, selectType, range, from, to}))
+
+    }, [currentPage, selectedPayment, selectType, from, to, range])
+
+    useEffect(() => {
+        dispatch(getPaymentType())
+    }, [])
 
     const formatSalary = (value) => {
         return value
@@ -56,19 +81,55 @@ export const AccountingNewFilter = ({selectType}) => {
         if (from && to) count++;
 
         // pul oralig'i defaultdan farq qilsa
-        if (range[0] !== 0 || range[1] !== 500000000) count++;
+        if (range[0] !== 0 || range[1] !== 10000000) count++;
 
         return count;
     };
 
+    const onAdd = (data) => {
+
+        const res = {
+            branch: branchId,
+            payment_type: radio.id,
+
+            ...data
+        }
+
+        request(`${API_URL}Capital/old_capital_create/`, "POST", JSON.stringify(res), headers())
+            .then(res => {
+
+                setActive("")
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: res.msg
+                }))
+                // const data = {
+                //     ...res,
+                //     payment_type: res.payment.name
+                // }
+                //
+                dispatch(onAddData(res))
+                setValue("name", "")
+                setValue("price", "")
+            })
+            .catch(err => {
+                console.log(err)
+
+            })
+    }
 
     return (
         <div className={cls.accounting}>
             <div className={cls.accounting__header}>
                 <SearchInput extraClass={cls.accounting__search}/>
-                <Button onClick={() => setActiveFilter(!activeFilter)} type={'filter'} status={"filter"}>
-                    Qo'shimcha filter {activeFiltersCount() > 0 && <span>({activeFiltersCount()})</span>}
-                </Button>
+                <div style={{display: "flex ", gap: "1rem"}}>
+                    <Button onClick={() => setActiveFilter(!activeFilter)} type={'filter'} status={"filter"}>
+                        Qo'shimcha filter {activeFiltersCount() > 0 && <span>({activeFiltersCount()})</span>}
+                    </Button>
+                    {selectType === "capital" || selectType === "overhead" ?
+                        <Button onClick={() => setActive(selectType)}> Qo'shish</Button> : ""}
+                </div>
             </div>
 
             {activeFilter && <div className={cls.accounting__filter}>
@@ -122,16 +183,16 @@ export const AccountingNewFilter = ({selectType}) => {
                     <Slider
                         range
                         min={0}
-                        max={500000000}
+                        max={10000000}
                         step={1000}
                         value={range} // <-- controlled
                         onChange={setRange}
-                        trackStyle={[{ backgroundColor: "purple" }]}
+                        trackStyle={[{backgroundColor: "purple"}]}
                         handleStyle={[
-                            { borderColor: "purple" },
-                            { borderColor: "purple" }
+                            {borderColor: "purple"},
+                            {borderColor: "purple"}
                         ]}
-                        style={{ width: "26rem" }}
+                        style={{width: "26rem"}}
                     />
                     <div className={cls.accounting__filter_amount_number}>
                         <span>{formatSalary(range[0])}</span>
@@ -143,7 +204,37 @@ export const AccountingNewFilter = ({selectType}) => {
             </div>
             }
 
+            <Modal setActive={setActive} active={active === "capital"}>
+                <div className={cls.modal}>
+                    <Form onSubmit={handleSubmit(onAdd)}>
+                        <Input register={register} name={"added_date"} type={"date"}/>
+                        <Input register={register} name={"name"}/>
+                        <Input register={register} name={"price"} type={"number"}/>
+                        <div style={{display: "flex", gap: "2rem", justifyContent: 'center', marginBottom: "2rem"}}>
+                            {paymentTypes?.map(item => (
+                                <Radio
+                                    onChange={() => setRadio({
+                                        name: item.name,
+                                        id: item.id
+                                    })}
+                                    children={item.name}
+                                    checked={radio?.name === item.name}
+                                    value={radio === item.name}
+
+                                />
+                            ))}
+                        </div>
+
+
+                        {/*<Select title={"Oy"} options={monthDay} onChangeOption={setMonth}/>*/}
+                        {/*<Select title={"sana"} options={monthDay?.filter(item => item?.value === month)[0]?.days}*/}
+                        {/*        onChangeOption={setDay}/>*/}
+                    </Form>
+                </div>
+            </Modal>
 
         </div>
+
+
     );
 };

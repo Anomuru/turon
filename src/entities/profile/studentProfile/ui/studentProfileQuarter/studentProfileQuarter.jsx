@@ -51,7 +51,7 @@ export const StudentProfileQuarter = ({group_id}) => {
 
     useEffect(() => {
         if (subject) {
-            setSubjectSelect(subject[0].id)
+            setSubjectSelect(subject[0]?.id)
         }
     }, [subject])
     useEffect(() => {

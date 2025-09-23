@@ -225,8 +225,8 @@ export const routersConfigProfile = [
     {
         name: "accounting",
         path: getAccounting(":id"),
-        // element: <AccountingPageNew/>,
-        element: <AccountingPageMainIndex/>,
+        element: <AccountingPageNew/>,
+        // element: <AccountingPageMainIndex/>,
         isMultiPage: true
     },
     {

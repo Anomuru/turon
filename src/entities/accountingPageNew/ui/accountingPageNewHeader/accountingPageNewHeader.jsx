@@ -16,8 +16,7 @@ export const AccountingPageNewHeader = ({selectType , setSelectType}) => {
     const totalCount = useSelector(getAccountingNewPageTotalCount)
 
 
-
-
+    console.log(totalCount , "totalCount")
     useEffect(() => {
         if (pageType) {
             setSelectType(pageType[0]?.label)
