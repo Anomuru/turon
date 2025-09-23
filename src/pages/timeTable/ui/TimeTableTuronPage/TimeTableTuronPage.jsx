@@ -657,7 +657,6 @@ export const TimeTableTuronPage = () => {
         setActiveEvent({})
         if (isActiveCanSet) {
             setIsActiveCanSet(false)
-            // setActiveCanSet({})
         }
     }
 
