@@ -1,7 +1,7 @@
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import {FlowFilter} from "features/filters/flowFilter";
 import {Table} from "shared/ui/table";
@@ -12,11 +12,14 @@ import {Select} from "shared/ui/select";
 import {Textarea} from "shared/ui/textArea";
 import {Form} from "shared/ui/form";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
-import {useHttp} from "shared/api/base";
+import {API_URL, headers, useHttp} from "shared/api/base";
 
 import cls from "pages/flowsPage/ui/flowsPage.module.sass";
 import {FlowAddForm} from "features/flow/index.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {ConfirmModal} from "shared/ui/confirmModal/index.js";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
+import {deleteFlow} from "entities/flows/model/slice/flowsSlice.js";
 
 function compareById(a, b) {
     return a.id - b.id;
@@ -49,6 +52,7 @@ export const Flows = ({
     // const [filter, setFilter] = useState(false)
     const [selectedSubjects, setSelectedSubjects] = useState([])
     const [isPostTeacher, setIsPostTeacher] = useState(false)
+    const [isDeleted, setIsDeleted] = useState(false)
 
     const dispatch = useDispatch()
     const {request} = useHttp()
@@ -82,13 +86,35 @@ export const Flows = ({
         }
     }, [selectedSubjects])
 
+    const onSubmitDelete = () => {
+        request(`${API_URL}Flow/flow-delete/${isDeleted}`, "DELETE", null, headers())
+            .then(res => {
+                // navigate(-1)
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: res?.msg
+                }))
+                dispatch(deleteFlow(isDeleted))
+                setIsDeleted(false)
+            })
+            .catch(err => {
+                dispatch(onAddAlertOptions({
+                    type: "error",
+                    status: true,
+                    msg: "Databazada hatolik yuzberdi"
+                }))
+            })
+        // dispatch(deleteGroupProfile({id}))
+    }
+
 
     const renderFlowData = () => {
         return currentTableData && [...currentTableData]?.sort(compareById)?.map((item, i) => {
             return (
-                <tr onClick={() => navigate(`./flowsProfile/${item?.id}`)}>
+                <tr>
                     <td>{i + 1}</td>
-                    <td>{item?.name}</td>
+                    <td onClick={() => navigate(`./flowsProfile/${item?.id}`)}>{item?.name}</td>
                     {
                         !item?.activity ? <td>
                             {item?.subject_name}
@@ -99,6 +125,7 @@ export const Flows = ({
                     }
                     <td>{item?.student_count}</td>
                     {!item?.activity ? <td>{`${item?.teacher_name} ${item?.teacher_surname}`}</td> : <td/>}
+                    <td onClick={() => setIsDeleted(item?.id)}><i className="fas fa-times"/></td>
                 </tr>
             )
         })
@@ -138,6 +165,7 @@ export const Flows = ({
                         <th>Fan Level</th>
                         <th>O'quvchi soni</th>
                         <th>O'qituvchisi</th>
+                        <th/>
                     </tr>
                     </thead>
                     {
@@ -231,6 +259,13 @@ export const Flows = ({
                 userBranchId={userBranchId}
                 active={active}
                 setActive={setActive}
+            />
+
+            <ConfirmModal
+                type={"danger"}
+                active={isDeleted}
+                setActive={setIsDeleted}
+                onClick={onSubmitDelete}
             />
         </div>
     );
