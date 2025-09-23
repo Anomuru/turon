@@ -1,6 +1,10 @@
 import cls from "./statistics.module.sass"
 import {useRef, useState} from "react";
 
+const formatSum = (sum) => {
+    return sum.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ")
+}
+
 export const Statistics = ({data}) => {
     return (
         <div className={cls.container}>
@@ -35,7 +39,7 @@ const New_groups = ({data}) => {
                     <tr key={i}>
                         <td>{i + 1}</td>
                         <td>{item.name || "—"}</td>
-                        <td>{item.price ?? "—"}</td>
+                        <td>{formatSum(item.price) ?? "—"}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -134,7 +138,7 @@ const Overhead_payments = ({data}) => (
                 <tr key={i}>
                     <td>{i + 1}</td>
                     <td>{item.name} {item.surname}</td>
-                    <td>{item.payment_sum}</td>
+                    <td>{formatSum(item.payment_sum)}</td>
                     <td>{item.payment}</td>
                 </tr>
             ))}
@@ -159,7 +163,7 @@ const Student_payments = ({data}) => (
                 <tr key={i}>
                     <td>{i + 1}</td>
                     <td>{item.name} {item.surname}</td>
-                    <td>{item.payment_sum}</td>
+                    <td>{formatSum(item.payment_sum)}</td>
                     <td>{item.payment}</td>
                 </tr>
             ))}
@@ -212,7 +216,7 @@ const User_salaries = ({data}) => (
                 <tr key={i}>
                     <td>{i + 1}</td>
                     <td>{item.name} {item.surname}</td>
-                    <td>{item.salary}</td>
+                    <td>{formatSum(item.salary)}</td>
                     <td>{item.payment}</td>
                     <td>{item.comment}</td>
                 </tr>

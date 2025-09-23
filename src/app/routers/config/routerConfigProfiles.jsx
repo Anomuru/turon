@@ -31,6 +31,7 @@ import {
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
 import {AccountingPageMainIndex} from "pages/accountingPage/index.js";
+const AccountingPageNew = lazyPage(() => import("pages/accountingPage2.0") , "AccountingPageNew");
 // import {GroupQuarterShow} from "pages/groupsPage/index.js";
 
 
@@ -224,7 +225,8 @@ export const routersConfigProfile = [
     {
         name: "accounting",
         path: getAccounting(":id"),
-        element: <AccountingPageMainIndex/>,
+        element: <AccountingPageNew/>,
+        // element: <AccountingPageMainIndex/>,
         isMultiPage: true
     },
     {

@@ -110,7 +110,7 @@ export const Flows = ({
 
 
     const renderFlowData = () => {
-        return currentTableData && [...currentTableData]?.sort(compareById)?.map((item, i) => {
+        return currentTableData?.map((item, i) => {
             return (
                 <tr>
                     <td>{i + 1}</td>

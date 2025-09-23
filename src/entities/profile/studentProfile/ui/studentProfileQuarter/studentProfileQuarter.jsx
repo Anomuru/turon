@@ -18,12 +18,13 @@ import {
     fetchAcademicYear
 } from "entities/profile/studentProfile/model/thunk/studentProfileQuarterThunk.js";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {API_URL, useHttp} from "shared/api/base.js";
 
-const reducers ={
-    studentQuarterShowSlice : studentQuarterShowReducer
+const reducers = {
+    studentQuarterShowSlice: studentQuarterShowReducer
 }
 
-export const StudentProfileQuarter = () => {
+export const StudentProfileQuarter = ({group_id}) => {
 
     const quarter = useSelector(getStudentTerm)
     const academicYear = useSelector(getStudentAcademicYear)
@@ -33,7 +34,26 @@ export const StudentProfileQuarter = () => {
     const [selectQuarter, setSelectQuarter] = useState(null)
     const dispatch = useDispatch()
     const {id} = useParams()
+    const [subject, setSubject] = useState()
+    const [subjectSelect, setSubjectSelect] = useState()
+    const {request} = useHttp()
+    useEffect(() => {
+        if (group_id[0].id) {
+            request(`${API_URL}terms/group-subjects/${group_id[0]?.id}/`)
+                .then(res => {
+                    setSubject(res)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        }
+    }, [])
 
+    useEffect(() => {
+        if (subject) {
+            setSubjectSelect(subject[0]?.id)
+        }
+    }, [subject])
     useEffect(() => {
         dispatch(fetchAcademicYear())
     }, [])
@@ -44,7 +64,7 @@ export const StudentProfileQuarter = () => {
     }, [academicYear])
 
     useEffect(() => {
-        if (selectAcademicYear){
+        if (selectAcademicYear) {
             dispatch(fetchAcademicTerm(selectAcademicYear))
         }
 
@@ -58,12 +78,22 @@ export const StudentProfileQuarter = () => {
     }, [academicYear && quarter])
 
     useEffect(() => {
-        if (selectQuarter && id){
-            dispatch(fetchAcademicData({termId: selectQuarter , academicYear , groupId: id}))
+        if (selectQuarter && id) {
+            dispatch(fetchAcademicData({termId: selectQuarter, academicYear, groupId: id, subject: subjectSelect}))
         }
-    } , [selectQuarter , selectAcademicYear])
+    }, [selectQuarter, selectAcademicYear  , subjectSelect])
 
-    console.log(data)
+    const allTests = [];
+
+    if (data) {
+        data?.subjects?.forEach(subject => {
+            subject?.assignments?.forEach(assignment => {
+                if (!allTests.includes(assignment.test_name)) {
+                    allTests.push(assignment.test_name);
+                }
+            });
+        });
+    }
 
     return (
         <DynamicModuleLoader reducers={reducers}>
@@ -74,40 +104,41 @@ export const StudentProfileQuarter = () => {
                             options={academicYear}/>
 
                     <Select defaultValue={selectQuarter} onChangeOption={setSelectQuarter} options={quarter}/>
+                    <Select defaultValue={subjectSelect} onChangeOption={setSubjectSelect}
+                            options={subject && [...subject, {name: "Hammasi", id: "all"}]}/>
                 </div>
 
 
-                <h2>
-                    Umumiy natija : {data?.total_result}
-                </h2>
-                <h2>O'rtanatija : {data?.average_result}</h2>
+                <h2>Umumiy natija: {data?.total_result}</h2>
+                {/*<h2>O'rtanatija: {data?.average_result}</h2>*/}
 
                 {loading ? <DefaultPageLoader/> :
-                <Table>
-                    <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Fan nomi</th>
-                        <th>Test nomi</th>
-                        <th>Ball </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    { data &&
-                        data?.assignments?.map((item , i) => (
-                            <tr>
-
-                                <td>{i + 1}</td>
-                                <td>{item.subject_name}</td>
-                                <td>{item.test_name}</td>
-                                <td>{item.calculated_result}</td>
-
+                    <Table>
+                        <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Fan nomi</th>
+                            {allTests.map(test => (
+                                <th key={test}>Test nomi-{test}</th>
+                            ))}
+                            <th>Ball</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {data && data?.subjects?.map((subject, index) => (
+                            <tr key={subject?.subject_name}>
+                                <td>{index + 1}</td>
+                                <td>{subject?.subject_name}</td>
+                                {allTests?.map(testName => {
+                                    const assignment = subject?.assignments?.find(a => a.test_name === testName);
+                                    return <td key={testName}>{assignment ? assignment?.calculated_result : "-"}</td>;
+                                })}
+                                <td>{subject?.average_result}</td>
                             </tr>
-                        ))
-                    }
-                    </tbody>
+                        ))}
+                        </tbody>
 
-                </Table> }
+                    </Table>}
 
             </div>
         </DynamicModuleLoader>

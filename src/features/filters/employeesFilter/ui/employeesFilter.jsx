@@ -25,12 +25,17 @@ export const EmployeesFilter = React.memo(({active, setActive, currentPage, page
     const languages = useSelector(getLanguagesData);
     const jobsData = useSelector(getVacancyData);
     const branch = useSelector(getUserBranchId);
-
+    const saved = getSavedFilters()["employeesFilter"] ?? {};
+    const {
+        selectedJob: job,
+        selectedLanguage: lang,
+        switchOn
+    } = saved;
     const [selectedAgeFrom, setSelectedAgeFrom] = useState('');
     const [selectedAgeTo, setSelectedAgeTo] = useState('');
     const [selectedAge, setSelectedAge] = useState('');
-    const [selectedJob, setSelectedJob] = useState('all');
-    const [selectedLanguage, setSelectedLanguage] = useState('all');
+    const [selectedJob, setSelectedJob] = useState(job || 'all');
+    const [selectedLanguage, setSelectedLanguage] = useState(lang || 'all');
     const [activeSwitch, setActiveSwitch] = useState(false);
     const [initialApplied, setInitialApplied] = useState(false);
 
@@ -71,15 +76,9 @@ export const EmployeesFilter = React.memo(({active, setActive, currentPage, page
     }, [dispatch]);
 
     useEffect(() => {
-        const saved = getSavedFilters()["employeesFilter"];
         if (branch && pageSize) {
             if (!initialApplied && saved) {
-                const {
-                    selectedAge,
-                    selectedJob: job,
-                    selectedLanguage: lang,
-                    switchOn
-                } = saved;
+
 
                 const [from, to] = selectedAge?.split("-") || ["", ""];
 
