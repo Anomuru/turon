@@ -2,7 +2,7 @@ import cls from "./accountingNew.module.sass"
 import {Input} from "shared/ui/input/index.js";
 import {SearchInput} from "shared/ui/searchInput/index.js";
 import {Button} from "shared/ui/button/index.js";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import {API_URL, headers, useHttp} from "shared/api/base.js";
@@ -13,11 +13,14 @@ import {Form} from "shared/ui/form/index.js";
 import {Radio} from "shared/ui/radio/index.js";
 import {Select} from "shared/ui/select/index.js";
 import {getCapitalTypes} from "entities/capital/index.js";
-import {useForm} from "react-hook-form";
+import {set, useForm} from "react-hook-form";
 import {getPaymentType} from "entities/capital/model/thunk/capitalThunk.js";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 import {onAddCapital} from "entities/accounting/model/slice/capital.js";
 import {onAddData} from "entities/accountingPageNew/model/accountingNewSlice.js";
+import {getOverHeadType} from "entities/accounting/index.js";
+import {getOverheadType} from "entities/accounting/model/thunk/additionalCosts.js";
+import {onAddOverhead} from "entities/accounting/model/slice/additionalCosts.js";
 
 const paymentType = [
     {id: 1, name: "cash"},
@@ -45,12 +48,27 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
     const paymentTypes = useSelector(getCapitalTypes)
     const {register, handleSubmit, setValue} = useForm()
     const [radio, setRadio] = useState({})
+    const [showAdditionalFields, setShowAdditionalFields] = useState(false);
+    const overHeadType = useSelector(getOverHeadType)
+    const [select, setSelect] = useState({})
+
 
     const fromToAmount = {
         from: range[0],
         to: range[1],
     }
+    const onChange = (value) => {
+        setSelect(value)
+        //
+        const {id} = value
+        //
+        if (overHeadType.filter(item => item.id === +id)[0]?.name === "Boshqa") {
+            setShowAdditionalFields(true)
 
+        } else {
+            setShowAdditionalFields(false)
+        }
+    }
 
     const {request} = useHttp()
     const dispatch = useDispatch()
@@ -62,6 +80,7 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
     }, [currentPage, selectedPayment, selectType, from, to, range])
 
     useEffect(() => {
+        dispatch(getOverheadType())
         dispatch(getPaymentType())
     }, [])
 
@@ -111,12 +130,45 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
                 //
                 dispatch(onAddData(res))
                 setValue("name", "")
+                setValue("added_date", "")
+                setRadio({})
                 setValue("price", "")
             })
             .catch(err => {
                 console.log(err)
 
             })
+    }
+    const onAddOverhead =(data) => {
+        const res = {
+            type: select.id,
+            branch: branchId,
+            payment: radio.id,
+            ...data
+        }
+
+        request(`${API_URL}Overhead/overheads/create/`, "POST", JSON.stringify(res), headers())
+            .then(res => {
+                setActive("")
+                setValue("name", "")
+                setValue("price", "")
+                setValue("created" , "")
+
+
+
+                dispatch(onAddData(res))
+
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: res.msg
+                }))
+
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
     }
 
     return (
@@ -232,6 +284,45 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
                     </Form>
                 </div>
             </Modal>
+
+
+            <Modal setActive={setActive} active={active === "overhead"}>
+
+                <Form extraClassname={cls.form} onSubmit={handleSubmit(onAddOverhead)}>
+                    <Input register={register} name={"created"} type={"date"} title={"Kun"}/>
+                    <Select options={overHeadType}
+                            // defaultValue={select}
+                            onChangeOption={(e) => {
+                        onChange({
+                            name: e,
+                            id: e
+                        })
+                    }}
+                    />
+                    {showAdditionalFields ?
+                        <Input name={"name"} register={register} placeholder={"Narsa turi"}/> : null}
+
+                    <Input register={register} name={"price"} type={"number"} placeholder={"Narxi"}/>
+
+                    <div style={{display: "flex", justifyContent: "center", gap: "2rem"}}>
+                        {paymentTypes?.map(item => (
+                            <Radio
+                                onChange={() => setRadio({
+                                    name: item.name,
+                                    id: item.id
+                                })}
+                                children={item.name}
+                                checked={radio?.name === item.name}
+                                value={radio === item.name}
+
+                            />
+                        ))}
+                    </div>
+
+
+                </Form>
+            </Modal>
+
 
         </div>
 

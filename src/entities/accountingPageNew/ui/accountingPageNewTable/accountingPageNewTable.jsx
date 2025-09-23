@@ -4,7 +4,7 @@ import {useSelector} from "react-redux";
 import {getAccountingNewPageLoading} from "entities/accountingPageNew/model/accountingNewSelector.js";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
-export const AccountingPageNewTable = ({activeFilter, data}) => {
+export const AccountingPageNewTable = ({activeFilter, data , selectType}) => {
     const [sortConfig, setSortConfig] = useState({
         key: "date",
         direction: "desc",
@@ -91,7 +91,7 @@ export const AccountingPageNewTable = ({activeFilter, data}) => {
                     <tr>
                         <th>#</th>
                         <th onClick={() => requestSort("name")}>
-                            Ism Familiya {getArrow("name")}
+                            {selectType === "overhead" || selectType === "capital" ? "Nomi"  :"Ism Familiya"} {getArrow("name")}
                         </th>
                         <th onClick={() => requestSort("payment_sum")}>
                             Summa {getArrow("payment_sum")}
@@ -112,7 +112,7 @@ export const AccountingPageNewTable = ({activeFilter, data}) => {
                         <tr key={p.id}>
                             <td>{idx + 1}</td>
                             <td>
-                                {p.name} {p.surname ? ` ${p.surname}` : ""}
+                                {selectType === "capital"  ? p.capital : p.name} {!p.capital ? p.surname ? p.surname : "" : ""}
                             </td>
                             <td>{formatAmount(p.payment_sum)}</td>
                             <td>

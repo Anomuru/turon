@@ -31,7 +31,7 @@ const renderRoute = (selectType) => {
         case "employeesSalary":
             return `Users/salaries/`;
         case "overhead":
-            return `Overhead/overhead_list/`;
+            return `Overhead/overheads/`;
         case "capital":
             return `Capital/old_capital_list/`;
         default:

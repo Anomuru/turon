@@ -45,8 +45,6 @@ const accountingNewSlice = createSlice({
             .addCase(fetchAccountingData.fulfilled , (state, action) => {
                 state.data = action.payload
                 state.totalCount = action?.payload?.results?.totalCount
-                console.log(action.payload)
-
                 state.loading = false
                 state.error= false
             })
