@@ -65,7 +65,7 @@ export const GroupsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
 
-    const [pageSwitch, setPageSwitch] = useState(false)
+    const [pageSwitch, setPageSwitch] = useState(localStorage.getItem("activePage") === "true")
 
 
 
@@ -92,6 +92,10 @@ export const GroupsPage = () => {
         setDeletedGroups(deletedGroupsData)
     }, [deletedGroupsData])
     const {request} = useHttp()
+
+    useEffect(() => {
+        localStorage.setItem("activePage", pageSwitch);
+    }, [pageSwitch]);
 
     const navigate = useNavigate()
 

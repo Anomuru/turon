@@ -47,7 +47,7 @@ export const TeachersPage = () => {
     const [activeModal, setActiveModal] = useState(false)
     const [isFilter, setIsFilter] = useState(false)
 
-    const [employerSwitch, setEmployerSwitch] = useState(false)
+    const [employerSwitch, setEmployerSwitch] = useState(localStorage.getItem("userPage") === "true")
 
     const {request} = useHttp()
     const employersData = useSelector(getEmployersData)
@@ -58,6 +58,11 @@ export const TeachersPage = () => {
             setCurrentPage(1)
 
     }, [employerSwitch])
+
+    useEffect(() => {
+        localStorage.setItem("userPage", employerSwitch);
+    }, [employerSwitch]);
+
 
     const onClick = () => {
         const id = activeDelete.id
