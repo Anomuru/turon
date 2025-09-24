@@ -11,16 +11,20 @@ import {
     getAccountingNewPageTotalData
 } from "entities/accountingPageNew/model/accountingNewSelector.js";
 import {capitalReducer} from "entities/capital/index.js";
+import {overHeadReducer} from "entities/accounting/index.js";
 
 const reducers = {
 
     accountingNewSlice: accountingNewReducer,
     CapitalSlice: capitalReducer,
+    overHeadSlice: overHeadReducer,
 }
 
 export const AccountingPageNew = () => {
+    const pageTypeLocal = localStorage.getItem("pageType");
+    const [selectType , setSelectType] = useState(pageTypeLocal)
 
-    const [selectType , setSelectType] = useState()
+
 
     const [activeFilter, setActiveFilter] = useState(false)
     let PageSize = useMemo(() => 50, [])
@@ -34,7 +38,7 @@ export const AccountingPageNew = () => {
            <div className={cls.accounting}>
                <AccountingPageNewHeader setSelectType={setSelectType} selectType={selectType}/>
                 <AccountingNewFilter pageSize={PageSize} currentPage={currentPage} selectType={selectType} setActiveFilter={setActiveFilter} activeFilter={activeFilter}/>
-               <AccountingPageNewTable data={data} activeFilter={activeFilter}/>
+               <AccountingPageNewTable selectType={selectType} data={data} activeFilter={activeFilter}/>
                <Pagination
                    className={cls.pagination}
                    setCurrentPage={setCurrentPage}

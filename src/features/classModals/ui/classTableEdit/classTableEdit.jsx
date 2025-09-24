@@ -220,6 +220,7 @@ export const ClassTableEdit = ({
                         <div>
 
                             <Input
+                                required
                                 name={"price"}
                                 register={register}
                                 value={changedItem.price}
@@ -242,7 +243,8 @@ export const ClassTableEdit = ({
                                     return (
                                         <div className={cls.inputs__item}>
                                             <Input
-                                                value={item.hours || 0}
+                                                required
+                                                value={item.hours}
                                                 type={"number"}
                                                 title={item.label}
                                                 onChange={

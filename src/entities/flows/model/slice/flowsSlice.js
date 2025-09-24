@@ -9,90 +9,90 @@ const initialState = {
     flowsSelect: [],
     flowList: [
         {
-            className : "1blue",
+            className: "1blue",
             status: true,
             data: [
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
             ]
         },
         {
-            className : "2blue",
+            className: "2blue",
             data: [
-                {name: "dewdewde" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardeedwedor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "dewde" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
+                {name: "dewdewde", surname: "ikromov", number: "432423", status: true},
+                {name: "sardeedwedor", surname: "ikromov", number: "432423", status: true},
+                {name: "dewde", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
             ]
         },
         {
-            className : "3blue",
+            className: "3blue",
             data: [
-                {name: "sardor" , surname: "dewdew" , number: "432423" , status: true},
-                {name: "dewdewd" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "dewdewded" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikrodewdewdmov" , number: "432423" , status: true},
+                {name: "sardor", surname: "dewdew", number: "432423", status: true},
+                {name: "dewdewd", surname: "ikromov", number: "432423", status: true},
+                {name: "dewdewded", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikrodewdewdmov", number: "432423", status: true},
             ]
         },
         {
-            className : "2blue",
+            className: "2blue",
             data: [
-                {name: "dewdewde" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardeedwedor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "dewde" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
+                {name: "dewdewde", surname: "ikromov", number: "432423", status: true},
+                {name: "sardeedwedor", surname: "ikromov", number: "432423", status: true},
+                {name: "dewde", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
             ]
         },
         {
-            className : "3blue",
+            className: "3blue",
             data: [
-                {name: "sardor" , surname: "dewdew" , number: "432423" , status: true},
-                {name: "dewdewd" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "dewdewded" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikrodewdewdmov" , number: "432423" , status: true},
+                {name: "sardor", surname: "dewdew", number: "432423", status: true},
+                {name: "dewdewd", surname: "ikromov", number: "432423", status: true},
+                {name: "dewdewded", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikrodewdewdmov", number: "432423", status: true},
             ]
         },
         {
-            className : "2blue",
+            className: "2blue",
             data: [
-                {name: "dewdewde" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardeedwedor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "dewde" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
+                {name: "dewdewde", surname: "ikromov", number: "432423", status: true},
+                {name: "sardeedwedor", surname: "ikromov", number: "432423", status: true},
+                {name: "dewde", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
             ]
         },
         {
-            className : "3blue",
+            className: "3blue",
             data: [
-                {name: "sardor" , surname: "dewdew" , number: "432423" , status: true},
-                {name: "dewdewd" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "dewdewded" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikrodewdewdmov" , number: "432423" , status: true},
+                {name: "sardor", surname: "dewdew", number: "432423", status: true},
+                {name: "dewdewd", surname: "ikromov", number: "432423", status: true},
+                {name: "dewdewded", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikrodewdewdmov", number: "432423", status: true},
             ]
         },
         {
-            className : "2blue",
+            className: "2blue",
             data: [
-                {name: "dewdewde" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardeedwedor" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "dewde" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikromov" , number: "432423" , status: true},
+                {name: "dewdewde", surname: "ikromov", number: "432423", status: true},
+                {name: "sardeedwedor", surname: "ikromov", number: "432423", status: true},
+                {name: "dewde", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikromov", number: "432423", status: true},
             ]
         },
         {
-            className : "3blue",
+            className: "3blue",
             data: [
-                {name: "sardor" , surname: "dewdew" , number: "432423" , status: true},
-                {name: "dewdewd" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "dewdewded" , surname: "ikromov" , number: "432423" , status: true},
-                {name: "sardor" , surname: "ikrodewdewdmov" , number: "432423" , status: true},
+                {name: "sardor", surname: "dewdew", number: "432423", status: true},
+                {name: "dewdewd", surname: "ikromov", number: "432423", status: true},
+                {name: "dewdewded", surname: "ikromov", number: "432423", status: true},
+                {name: "sardor", surname: "ikrodewdewdmov", number: "432423", status: true},
             ]
         }
 
@@ -105,7 +105,11 @@ const initialState = {
 export const flowsSlice = createSlice({
     name: "flowsSlice",
     initialState,
-    reducers: {},
+    reducers: {
+        deleteFlow: (state, action) => {
+            state.flows = state.flows?.filter(item => item?.id !== action.payload)
+        }
+    },
     extraReducers: builder => {
         builder
             .addCase(fetchFlows.pending, state => {
@@ -149,15 +153,17 @@ export const flowsSlice = createSlice({
             .addCase(flowListThunk.pending, state => {
                 state.flowsStatus = "loading"
             })
-            .addCase(flowListThunk.fulfilled , (state , action) => {
+            .addCase(flowListThunk.fulfilled, (state, action) => {
                 state.flowList = action.payload
                 state.flowsStatus = "success"
             })
-            .addCase(flowListThunk.rejected , (state , action) => {
+            .addCase(flowListThunk.rejected, (state, action) => {
                 state.flowsStatus = "error"
             })
     }
 })
 export default flowsSlice.reducer
-export const {reducer: flowsReducer} = flowsSlice
+export const {reducer: flowsReducer, actions: flowsActions} = flowsSlice
+export const {deleteFlow} = flowsActions
+
 

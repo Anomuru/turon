@@ -598,7 +598,7 @@ export const GroupProfileAttendanceForm = memo(
                             {/*<Button btnType="button" type="danger" onClick={() => setIsDelete(true)}>*/}
                             {/*    O'chirish*/}
                             {/*</Button>*/}
-                            <Button>O'zgартириш</Button>
+                            <Button>O'zgartirish</Button>
                         </div>
                     </Form>
                 </Modal>
