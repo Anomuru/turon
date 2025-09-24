@@ -42,10 +42,10 @@ export const StudentProfileInfo = memo(({
 
 
     useEffect(() => {
-        setValue("username" , userDataUsername)
-    } , [])
+        setValue("username", userDataUsername)
+    }, [])
     const {request} = useHttp()
-    const [activeErr , setActiveErr] = useState("")
+    const [activeErr, setActiveErr] = useState("")
 
     const onChangePassword = (data) => {
         console.log(data)
@@ -120,32 +120,74 @@ export const StudentProfileInfo = memo(({
                                 onClick={() => setCurrentTab("quarter")}
                                 extraClass={cls.info__div__avatar__box__panel__quarter}
                             >
-                               Chorakni ko'rish
+                                Chorakni ko'rish
                             </Button>
 
 
                         </div>
                         <div className={cls.info__div__avatar__box__source}>
-                            <div title={"Telefon raqami"} className={cls.info__div__avatar__box__source__each}>
-                                <i style={{color: "#16A34A", fontSize: "2.5rem"}} className="fa-solid fa-phone"></i>
-                                <h1>{data?.phone}</h1>
+                            <div className={cls.info__div__avatar__box__source__each}>
+                                <span className={cls.info__div__avatar__box__source__each__iconBox}>
+
+                                    <i style={{textShadow: "0 0 0 #fff", fontSize: "2rem", color: "transparent"}}
+                                       className="fa-solid fa-phone"></i>
+                                </span>
+                                <div className={cls.info__div__avatar__box__source__each__info}>
+                                    <h2>Tel raqami</h2>
+                                    <h1>{data?.phone}</h1>
+                                </div>
+
+
                             </div>
-                            <div title={"Yoshi"} className={cls.info__div__avatar__box__source__each}>
-                                <i style={{color: "#2563EA", fontSize: "2.5rem"}} className="fa-solid fa-id-card"></i>
-                                <h1>{data?.age}</h1>
+                            <div className={cls.info__div__avatar__box__source__each}>
+                                <span style={{background: "#2563EA"}}
+                                      className={cls.info__div__avatar__box__source__each__iconBox}>
+                                        <i style={{color: "#fff", fontSize: "2rem"}}
+                                           className="fa-solid fa-id-card"></i>
+                                </span>
+                                <div className={cls.info__div__avatar__box__source__each__info}>
+                                    <h2>Yoshi</h2>
+                                    <h1>{data?.age}</h1>
+                                </div>
                             </div>
-                            <div title={"Tug'ilgan yili"} className={cls.info__div__avatar__box__source__each}>
-                                <i style={{color: "#A453F6", fontSize: "2.5rem"}}
-                                   className="fa-solid fa-cake-candles"></i>
-                                <h1>{data?.birth_date}</h1>
+                            <div className={cls.info__div__avatar__box__source__each}>
+                                 <span style={{background: "#A453F6"}}
+                                       className={cls.info__div__avatar__box__source__each__iconBox}>
+                                     <i style={{color: "#fff", fontSize: "2rem"}}
+                                        className="fa-solid fa-cake-candles"></i>
+                                </span>
+                                <div className={cls.info__div__avatar__box__source__each__info}>
+                                    <h2>Tug'ilgan sanasi</h2>
+                                    <h1>{data?.birth_date}</h1>
+                                </div>
+
+                            </div>
+                            <div className={cls.info__div__avatar__box__source__each}>
+                                 <span style={{background: "#3B82F6"}}
+                                       className={cls.info__div__avatar__box__source__each__iconBox}>
+                                     <i style={{color: "#fff", fontSize: "2rem"}}
+                                        className="fa-solid fa-calendar"></i>
+                                </span>
+                                <div className={cls.info__div__avatar__box__source__each__info}>
+                                    <h2>Reg. sanasi</h2>
+                                    <h1>{data?.registered_date}</h1>
+                                </div>
+
                             </div>
                             {
                                 charity && charity.charity_sum
                                     ? (
-                                        <div title="Chegirma" className={cls.info__div__avatar__box__source__each}>
-                                            <i style={{color: "#A453F6", fontSize: "2.5rem"}}
-                                               className="fa-solid fa-handshake"></i>
-                                            <h1>{Number(charity.charity_sum).toLocaleString()}</h1>
+                                        <div className={cls.info__div__avatar__box__source__each}>
+                                            <span style={{background: "#F97316"}}
+                                                  className={cls.info__div__avatar__box__source__each__iconBox}>
+                                                <i style={{color: "#fff", fontSize: "2rem"}}
+                                                   className="fa-solid fa-handshake"></i>
+                                            </span>
+                                            <div className={cls.info__div__avatar__box__source__each__info}>
+                                                <h2>Chegirma</h2>
+                                                <h1>{Number(charity.charity_sum).toLocaleString()}</h1>
+                                            </div>
+
                                         </div>
                                     )
                                     : null
@@ -163,31 +205,31 @@ export const StudentProfileInfo = memo(({
                 </div>
 
 
-            <Modal active={activeChangeUsername} setActive={setActiveChangeUsername}>
-                <h2>Change username</h2>
+                <Modal active={activeChangeUsername} setActive={setActiveChangeUsername}>
+                    <h2>Change username</h2>
 
 
-                <div style={{marginTop: "20px"}}>
-                    {activeErr ? <h2 style={{color: "red" , marginTop: "5px"}}>Username mavjud</h2> : ""}
-                    <Input register={register} name={"username"}/>
-                    <Button onClick={handleSubmit(onChangeUsername)} extraClass={cls.info__addInfo}>Click</Button>
-                </div>
+                    <div style={{marginTop: "20px"}}>
+                        {activeErr ? <h2 style={{color: "red", marginTop: "5px"}}>Username mavjud</h2> : ""}
+                        <Input register={register} name={"username"}/>
+                        <Button onClick={handleSubmit(onChangeUsername)} extraClass={cls.info__addInfo}>Click</Button>
+                    </div>
 
 
-            </Modal>
+                </Modal>
 
 
-            <Modal active={activeChangePassword} setActive={setActiveChangePassword}>
-                <h2>Change password</h2>
+                <Modal active={activeChangePassword} setActive={setActiveChangePassword}>
+                    <h2>Change password</h2>
 
-                <div style={{marginTop: "20px"}}>
-                    <Input register={register} name={"password"} type={"password"}/>
+                    <div style={{marginTop: "20px"}}>
+                        <Input register={register} name={"password"} type={"password"}/>
 
-                    <Button onClick={handleSubmit(onChangePassword)} extraClass={cls.info__addInfo}>Click</Button>
-                </div>
+                        <Button onClick={handleSubmit(onChangePassword)} extraClass={cls.info__addInfo}>Click</Button>
+                    </div>
 
 
-            </Modal>
+                </Modal>
 
             </div>
 
