@@ -112,6 +112,8 @@ export const TimeTableTuronPage = () => {
     const [rooms, setRooms] = useState([])
     const [activeUpdate, setActiveUpdate] = useState(false)
     const [activeEvent, setActiveEvent] = useState({})
+    const [isActiveCanSet, setIsActiveCanSet] = useState(false)
+    const [activeCanSet, setActiveCanSet] = useState({})
 
 
     const color = useSelector(getTimeTableTuronColor)
@@ -178,10 +180,12 @@ export const TimeTableTuronPage = () => {
             dispatch(fetchTimeTableSubject(selectedGroup))
         }
 
-        dispatch(fetchTimeTableStudents({
-            time_table_id: selectedContainerTimeTableId,
-            // subject_id
-        }))
+        if (selectedContainerTimeTableId) {
+            dispatch(fetchTimeTableStudents({
+                time_table_id: selectedContainerTimeTableId,
+                // subject_id
+            }))
+        }
 
 
     }, [selectedGroup,selectedContainerTimeTableId,selectedType])
@@ -651,6 +655,9 @@ export const TimeTableTuronPage = () => {
         setCanDisabled(false)
         setActiveUpdate(false)
         setActiveEvent({})
+        if (isActiveCanSet) {
+            setIsActiveCanSet(false)
+        }
     }
 
 
@@ -860,7 +867,17 @@ export const TimeTableTuronPage = () => {
                             setActiveUpdate(true)
                             setActiveEvent(event)
                         } else {
-                            handleDragEnd(event)
+                            let {active, over} = event
+                            let {active: lastActive, over: lastOver} = activeCanSet;
+                            console.log(lastOver, "lastOver")
+                            console.log(over, "over")
+                            if (lastActive && lastActive?.id !== active?.id && lastOver?.id === over?.id) {
+                                setIsActiveCanSet(true)
+                                setActiveEvent(event)
+                            } else {
+                                setActiveCanSet(event)
+                                handleDragEnd(event)
+                            }
                         }
                     }}
                     // modifiers={[restrictToFirstScrollableAncestor]}
@@ -960,6 +977,14 @@ export const TimeTableTuronPage = () => {
                 <ConfirmModal
                     setActive={setActiveUpdate}
                     active={activeUpdate}
+                    title={"Rostanham o'zgartirmoqchimisiz"}
+                    type={"success"}
+                    onClick={() => handleDragEnd(false)}
+                />
+
+                <ConfirmModal
+                    setActive={setIsActiveCanSet}
+                    active={isActiveCanSet}
                     title={"Rostanham o'zgartirmoqchimisiz"}
                     type={"success"}
                     onClick={() => handleDragEnd(false)}

@@ -28,7 +28,6 @@ const paymentType = [
     {id: 3, name: "bank"},
 ]
 
-
 const payments = [
     {id: 1, name: "Nuraulet Jorabekov", amount: 2700000, date: "2025-10-09", paymentType: "Click", status: "completed"},
     {id: 2, name: "Mironshox Aytach", amount: 1980000, date: "2025-09-15", paymentType: "Click", status: "completed"},
