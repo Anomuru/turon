@@ -36,7 +36,7 @@ export const AnimatedMulti = React.memo(({ options, onChange, value, extraClass,
             closeMenuOnSelect={false}
             components={{
                 ...animatedComponents,
-                MultiValueRemove: () => null,
+                MultiValueRemove: animatedComponents.MultiValueRemove,
             }}
             isMulti
             options={options}
