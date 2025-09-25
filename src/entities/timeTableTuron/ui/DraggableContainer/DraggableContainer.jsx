@@ -1,14 +1,17 @@
 import cls from "./DraggableContainer.module.sass";
-import React from "react";
+import React, {useState} from "react";
 import {useDraggable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 
 
 import Grip from "shared/assets/icons/grip-vertical-solid.svg"
 import classNames from "classnames";
+import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 
 
 export const DraggableContainer = (props) => {
+
+    const [isDelete, setIsDelete] = useState(false)
 
 
     const {item, type, onDoubleClick, onDelete, canChange = true} = props
@@ -57,7 +60,13 @@ export const DraggableContainer = (props) => {
                     }
 
                     <i
-                        onClick={() => onDelete(item.room, item.dndId, item.id)}
+                        onClick={() => {
+                            if (item.id) {
+                                setIsDelete(true)
+                            } else {
+                                onDelete(item.room, item.dndId, item.id)
+                            }
+                        }}
                         className={classNames("fa-solid  fa-times", cls.trash, {
                             [cls.isNotTeacher]: !item?.teacher?.name
                         })}
@@ -78,6 +87,12 @@ export const DraggableContainer = (props) => {
                     }
                 </div>
             }
+            <ConfirmModal
+                active={isDelete}
+                setActive={setIsDelete}
+                onClick={() => onDelete(item.room, item.dndId, item.id)}
+                type={"danger"}
+            />
 
         </div>
     )

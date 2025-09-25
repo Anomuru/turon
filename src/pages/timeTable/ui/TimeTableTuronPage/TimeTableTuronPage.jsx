@@ -737,10 +737,15 @@ export const TimeTableTuronPage = () => {
 
 
     const onDeleteContainer = (room, dndId, id) => {
+        console.log(dndId, "dndId")
         setRooms(rooms => rooms.map(item => {
             if (item.id === room) {
 
                 const newLessons = item.lessons.map(container => {
+                    let {active: lastActive, over: lastOver} = activeCanSet;
+                    if (lastOver?.data?.current?.room === room && lastOver?.id  === dndId) {
+                        setActiveCanSet({})
+                    }
                     if (container.dndId === dndId) {
                         if (container.id) {
                             request(`${API_URL}SchoolTimeTable/timetable-list-delete/${id}`, "DELETE", null, headers())
@@ -869,8 +874,6 @@ export const TimeTableTuronPage = () => {
                         } else {
                             let {active, over} = event
                             let {active: lastActive, over: lastOver} = activeCanSet;
-                            console.log(lastOver, "lastOver")
-                            console.log(over, "over")
                             if (lastActive && lastActive?.id !== active?.id && lastOver?.id === over?.id) {
                                 setIsActiveCanSet(true)
                                 setActiveEvent(event)
