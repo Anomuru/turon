@@ -737,7 +737,6 @@ export const TimeTableTuronPage = () => {
 
 
     const onDeleteContainer = (room, dndId, id) => {
-        console.log(dndId, "dndId")
         setRooms(rooms => rooms.map(item => {
             if (item.id === room) {
 
