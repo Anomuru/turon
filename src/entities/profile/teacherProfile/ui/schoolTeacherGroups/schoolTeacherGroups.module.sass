@@ -62,13 +62,17 @@
       .groupImage
         width: 125px
 .groupsContainer
-  width: 110rem
+  width: 100%
   display: flex
   flex-wrap: wrap
   //flex-direction: column
   //display: grid
   grid-gap: 2rem
-//background: red
+  &__header
+    width: 100%
+    display: flex
+    gap: 2rem
+    justify-content: space-between
 .info__role
   border: 1px solid #86EFAC
   background-color: #DCFCE7
@@ -82,10 +86,67 @@
   background: #22C55E
   border-radius: 50%
 .classProfile
-  width: 340px
+  width: 50% !important
+  height: 100% !important
+  max-height: 40rem !important
   display: flex
-  flex-direction: column
-  align-items: center
+  overflow: hidden
+  overflow-y: auto
+  gap: 1rem
+  &__notFound
+    margin-top: 1rem
+    align-self: center
+    padding: 8rem
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 1rem
+  &__card
+    width: 60rem
+    margin-top: 1rem
+    height: 100px
+    background: #FDFEFE
+    border: 2px solid #e8e8e8
+    border-radius: 2rem
+    display: flex
+    align-items: center
+    transition: .4s
+    &:hover
+      box-shadow: rgba(149, 157, 165, 0.2) 0 8px 24px
+      transform: scale(1.03)
+      cursor: pointer
+    &__left
+      width: 50%
+      display: flex
+      padding: 2rem
+      align-items: center
+      gap: 2rem
+      &__span
+        width: 7rem
+        padding: 2.4rem
+        display: flex
+        align-items: center
+        justify-content: center
+        font-size: 2rem
+        background: linear-gradient(35deg, #B552E4, #DB4CB2)
+        border-radius: 1rem
+        color: white
+        font-weight: bold
+        font-family: "Montserrat", sans-serif
+      h2
+        font-size: 2rem
+        font-family: "Montserrat", sans-serif
+        color: black
+    &__right
+      width: 50%
+      padding: 2rem
+      display: flex
+      align-items: center
+      justify-content: end
+      span
+        font-size: 2.5rem
+        color: #6B7280
+        font-family: "Montserrat", sans-serif
 .theadBody
   position: sticky
   top: -30px
@@ -96,7 +157,7 @@
   max-height: 50rem
   overflow: auto
 .flowList
-  width: 100%
+  width: 50%
 
   height: fit-content
   max-height: 50rem

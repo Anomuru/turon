@@ -61,7 +61,7 @@ export const GroupProfilePage = () => {
     const branch = useSelector(getUserBranchId)
     const [active, setActive] = useState(false)
     const [attendance, setAttendance] = useState(false)
-    const [activeSwitch, setActiveSwitch] = useState(true)
+    const [activeSwitch, setActiveSwitch] = useState("info")
     useEffect(() => {
         dispatch(fetchGroupProfile({id}))
 
@@ -158,31 +158,23 @@ export const GroupProfilePage = () => {
 
                 <div className={cls.profile}>
 
-                    <GroupProfileInfoForm branch={branch}/>
-                    {/*<GroupProfileInfo/>*/}
+                    <GroupProfileInfoForm branch={branch} setCurrentTab={setActiveSwitch} currentTab={activeSwitch}/>
                     <div
                         className={classNames(cls.profile__mainContent, {
                             [cls.active]: active,
                             [cls.attendance]: attendance
                         })}
                     >
-                        <div className={cls.header}>
-                            <h2>{activeSwitch ? "Ma'lumotlar" : "Time Table"}</h2>
-                            <Switch
-                                activeSwitch={activeSwitch}
-                                onChangeSwitch={setActiveSwitch}
-                            />
-                        </div>
                         {
-                            activeSwitch ? <>
+                            activeSwitch === "info" ? <>
 
                                 {
                                     attendance ? null
-                                        : <>
+                                        : <div className={cls.profile__mainContent__box}>
                                             <GroupProfileModalTeachers branch={branch}/>
                                             <GroupProfileDeleteForm branch={branch}/>
 
-                                        </>
+                                        </div>
                                 }
                                 {/*<GroupProfileTeacher setActive={setActiveModal}/>*/}
                                 {/*<GroupProfileStudents/>*/}
@@ -192,7 +184,7 @@ export const GroupProfilePage = () => {
                                     setAttendance={setAttendance}
                                     attendance={attendance}
                                 />
-                            </> : <TeacherProfileTimeTable/>
+                            </> : activeSwitch === "time" ? <TeacherProfileTimeTable/> : null
                         }
                         {/*<GroupProfileAttendance/>*/}
                         {/*<StudentProfileTimeTable/>*/}

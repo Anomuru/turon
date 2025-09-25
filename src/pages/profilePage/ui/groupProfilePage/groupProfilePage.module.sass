@@ -2,17 +2,22 @@
   width: 100%
   height: fit-content
   padding: 3rem
-  display: grid
-  grid-gap: 2rem
-  grid-template-areas: "info outlet"
-  grid-template-columns: 380px auto
+  display: flex
+  gap: 2rem
+  background: #F3F4FF
+  flex-direction: column
 
   &__mainContent
-    display: grid
-    grid-gap: 2rem
-    grid-template-areas: "header header header" "teacher students students" "rating attendance attendance" "subjectList subjectList more" "timeTable timeTable timeTable"
-    grid-template-columns: 45.5rem auto auto
-    grid-template-rows: min-content min-content min-content
+    display: flex
+    flex-direction: column
+    align-items: center
+    gap: 2rem
+    &__box
+      width: 100%
+      display: flex
+      align-items: center
+      gap: 2rem
+      //justify-content: space-between
     &.attendance
       grid-template-areas: "header header header" "attendance attendance attendance" "attendance attendance attendance"
     .header

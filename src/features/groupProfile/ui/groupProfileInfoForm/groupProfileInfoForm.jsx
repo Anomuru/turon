@@ -33,9 +33,10 @@ import defaultUserImg from "shared/assets/images/user_image.png";
 import {ConfirmModal} from "../../../../shared/ui/confirmModal";
 import {getBranch} from "../../../branchSwitcher";
 import {API_URL, headers, useHttp} from "shared/api/base.js";
+import classNames from "classnames";
 
 
-export const GroupProfileInfoForm = memo(({}) => {
+export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
 
     const {
         register,
@@ -81,7 +82,7 @@ export const GroupProfileInfoForm = memo(({}) => {
         }))
     }
     const {request} = useHttp()
-
+    console.log(nextLesson, 'ssss')
 
     const onDelete = () => {
 
@@ -118,69 +119,104 @@ export const GroupProfileInfoForm = memo(({}) => {
                 title={<i className="fas fa-edit"/>}
                 onClick={() => setActive(true)}
             >
-                <div className={cls.info__avatar}>
-                    <img
-                        // onClick={() => setActiveModal("changeImage")}
-                        className={cls.info__image}
-                        src={data?.profile_img ?? defaultUserImg}
-                        alt=""
-                    />
-                    <h1>{data?.name}</h1>
-                    <h2 className={cls.info__role}>Group</h2>
+                <span className={cls.info__circleBg}></span>
+                <span className={cls.info__circleBg2}></span>
+                <div className={cls.info__left}>
+                    <span style={{background: `${data?.color}`}} className={cls.info__left__box}>
+                        <h1>{data?.class_number}</h1>
+                    </span>
                 </div>
-                <div className={cls.info__text}>
-                    <p>O'qitish tili: <span className={cls.info__name}>
-                    {
-                        data?.language?.name.length > 16 ?
-                            `${data?.language?.name.slice(0, 16)}...` :
-                            data?.language?.name
-                    }
-                </span></p>
-                    <p className={cls.info__hoverName}>
-                        {data?.language?.name}
-                    </p>
-                    {
-                        data?.course_types?.name ? <p>Kurs turi: <span>{data?.course_types?.name}</span></p> : null
-                    }
-                    {
-                        data?.level?.name ? <p>Level: <span>{data?.level?.name}</span></p> : null
-                    }
-                    {
-                        data?.class_number?.number ?
-                            <p>Sinf raqami: <span>{data?.class_number?.number}</span></p> : null
-                    }
-
-                    <p>Guruh narxi: <span>{data?.price}</span></p>
-                    <p>Studentlar soni: <span>{data?.students.length}</span></p>
-                    <div style={{alignSelf: "start"}}>
-                        <Button onClick={() => navigate(`quarter/${id}`)}>Chorak Baholarni kurish</Button>
+                <div className={cls.info__right}>
+                    <div className={cls.info__right__header}>
+                        <h1>{data?.name}</h1>
+                        <Button onClick={() => setCurrentTab("info")} extraClass={classNames(cls.info__right__header__status, { [cls.active]: currentTab === "info" })}>
+                            <i style={{fontSize: "1.9rem"}} className="fa-solid fa-graduation-cap"></i>
+                            <h2>Sinf ma'lumotlari</h2>
+                        </Button>
+                        <Button onClick={() => navigate(`quarter/${id}`)} extraClass={cls.info__right__header__balance}>
+                            <i style={{fontSize: "1.9rem"}} className="fa-solid fa-bars-progress"></i>
+                            <h2>Chorak baholarni ko'rish</h2>
+                        </Button>
+                        <Button onClick={() => setCurrentTab("time")} extraClass={classNames(cls.info__right__header__time, { [cls.active]: currentTab === "time" })}>
+                            <i style={{fontSize: "1.9rem"}} className="fa-solid fa-table"></i>
+                            <h2>Time table</h2>
+                        </Button>
                     </div>
-
-                    <div className={cls.info__addInfo}>
-                        <i className="fas fa-plus"/>
+                    <div className={cls.info__right__footer}>
+                        <div style={{background: "#FFEFDA", border: "2px solid #FED7AA"}} className={cls.info__right__footer__card}>
+                                <span style={{background: "#F97316"}}>
+                                    <i className="fa-regular fa-user"></i>
+                                </span>
+                            <div className={cls.info__right__footer__card__arounder}>
+                                <h2 style={{color: "#F97316"}}>Sinf rahbari</h2>
+                                <h1 style={{color: "#9A3412"}}>{data?.teacher}</h1>
+                            </div>
+                        </div>
+                        <div style={{background: "#E3EFFE", border: "2px solid #3B82F6"}} className={cls.info__right__footer__card}>
+                                <span style={{background: "#3B82F6"}}>
+                                    <i className="fa-solid fa-globe"></i>
+                                </span>
+                            <div className={cls.info__right__footer__card__arounder}>
+                                <h2 style={{color: "#4A63EB"}}>Sinf tili</h2>
+                                <h1 style={{color: "#1E40AF"}}>{data?.language?.name}</h1>
+                            </div>
+                        </div>
+                        <div style={{background: "#F5ECFF", border: "2px solid #9675F1"}} className={cls.info__right__footer__card}>
+                                <span style={{background: "#A855F7"}}>
+                                    <i className="fa-solid fa-users"></i>
+                                </span>
+                            <div className={cls.info__right__footer__card__arounder}>
+                                <h2 style={{color: "#9675F1"}}>O'quvchilar soni</h2>
+                                <h1 style={{color: "#6B21A8"}}>{data?.count}-ta</h1>
+                            </div>
+                        </div>
+                        <div style={{background: "#E2FDEB", border: "2px solid #22C55E"}} className={cls.info__right__footer__card}>
+                                <span style={{background: "#22C55E"}}>
+                                    <i className="fa-solid fa-dollar"></i>
+                                </span>
+                            <div className={cls.info__right__footer__card__arounder}>
+                                <h2 style={{color: "#16A384"}}>Sinf narxi</h2>
+                                <h1 style={{color: "#166534"}}>{data?.price.toLocaleString()} uzs</h1>
+                            </div>
+                        </div>
                     </div>
-
-
                 </div>
-                <EditableCard
-                    extraClass={cls.info__balance}
-                    // onClick={() => setActive("balance")}
-                    title={""}
-                    titleType={""}
-                >
-                    <div className={cls.info__title}>
-                        <h1>Next <br/> Lesson</h1>
-                        {
-                            nextLesson?.msg ? <p>
-                                {nextLesson?.msg}
-                            </p> : <p>{nextLesson?.day} <br/> {nextLesson?.hour} <br/> {nextLesson?.room}</p>
-                        }
 
-                    </div>
-                    <div>
-                        <img src={nextImage} alt=""/>
-                    </div>
-                </EditableCard>
+                {/*<div className={cls.info__text}>*/}
+                {/*    <p>O'qitish tili: <span className={cls.info__name}>*/}
+                {/*    {*/}
+                {/*        data?.language?.name.length > 16 ?*/}
+                {/*            `${data?.language?.name.slice(0, 16)}...` :*/}
+                {/*            data?.language?.name*/}
+                {/*    }*/}
+                {/*</span></p>*/}
+                {/*    <p className={cls.info__hoverName}>*/}
+                {/*        {data?.language?.name}*/}
+                {/*    </p>*/}
+                {/*    {*/}
+                {/*        data?.course_types?.name ? <p>Kurs turi: <span>{data?.course_types?.name}</span></p> : null*/}
+                {/*    }*/}
+                {/*    {*/}
+                {/*        data?.level?.name ? <p>Level: <span>{data?.level?.name}</span></p> : null*/}
+                {/*    }*/}
+                {/*    {*/}
+                {/*        data?.class_number?.number ?*/}
+                {/*            <p>Sinf raqami: <span>{data?.class_number?.number}</span></p> : null*/}
+                {/*    }*/}
+
+                {/*    <p>Guruh narxi: <span>{data?.price}</span></p>*/}
+                {/*    <p>Studentlar soni: <span>{data?.students.length}</span></p>*/}
+                {/*    <div style={{alignSelf: "start"}}>*/}
+                {/*        <Button onClick={() => navigate(`quarter/${id}`)}>Chorak Baholarni kurish</Button>*/}
+                {/*    </div>*/}
+
+                {/*    <div className={cls.info__addInfo}>*/}
+                {/*        <i className="fas fa-plus"/>*/}
+                {/*    </div>*/}
+
+
+                {/*</div>*/}
+
             </EditableCard>
             <Modal
                 extraClass={cls.infoModal}

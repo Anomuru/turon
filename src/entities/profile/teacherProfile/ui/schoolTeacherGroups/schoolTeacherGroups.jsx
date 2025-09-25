@@ -1,6 +1,6 @@
 import {getStudentLoading, getTeacherStudent} from "entities/teachers/model/selector/teacherIdSelector";
 import {fetchDropStudents} from "entities/teachers/model/teacherParseThunk";
-import React, {memo, useEffect} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 
@@ -36,7 +36,7 @@ function getWeekdayUz(dateInput) {
     return daysUz[date.getDay()];
 }
 
-export const SchoolTeacherGroups = memo(({activeSwitch}) => {
+export const SchoolTeacherGroups = memo(({currentTab}) => {
 
     // const {id} = useParams()
     const id = useSelector(getUserBranchId)
@@ -76,68 +76,71 @@ export const SchoolTeacherGroups = memo(({activeSwitch}) => {
     }
 
     const render = renderStudents()
-    const renderStudentsFlow = () => {
-        return schoolTeacherFlows?.map((item, index) => {
-            return (
-                <tr>
-                    <td>{index + 1}</td>
-                    <td
-                        onClick={() => navigation(`../students/profile/${item?.id}`)}
-                    >
-                        {`${item?.name}`}
-                    </td>
-                    <td>{item?.subject?.name}</td>
-                </tr>
-            )
-        })
-    }
-
-    const renderFlow = renderStudentsFlow()
-    return activeSwitch
+    return currentTab === "info"
         ? <div className={cls.groupsContainer}>
-            {
-                schoolTeacherGroups?.length === 0 ?
-                    <EditableCard>
-                        <h1>O'qituvchida guruhi yo'q</h1>
-                    </EditableCard>
-                    :
-                    schoolTeacherGroups?.map((item, index) => (
-                        <EditableCard extraClass={cls.classProfile} titleType="">
-                            <h1>Sinfi</h1>
+            <div className={cls.groupsContainer__header}>
+                <EditableCard extraClass={cls.classProfile}>
+                    <h1>Sinflar</h1>
+                    {
+                        schoolTeacherGroups?.length === 0 ?
+                            <div className={cls.classProfile__notFound}>
+                                <i style={{fontSize: "4rem", color: "#D1D5DB"}} className="fa-solid fa-face-smile"></i>
+                                <h1 style={{color: "#D1D5DB"}}>O'qituvchida sinf yo'q</h1>
+                            </div> :
+                            schoolTeacherGroups?.map((item, index) => (
+                                <div onClick={() => navigation(`../groups/groupInfo/${item?.id}`)} key={index}
+                                     className={cls.classProfile__card}>
+                                    <div className={cls.classProfile__card__left}>
+                                <span className={cls.classProfile__card__left__span}>
+                                    {item?.class_number?.number}
+                                </span>
+                                        <h2>{item?.class_number?.number}-{item?.color?.name}</h2>
+                                    </div>
+                                    <div className={cls.classProfile__card__right}>
+                                <span>
+                                    <i className="fa-solid fa-chevron-circle-right"></i>
+                                </span>
+                                    </div>
+                                </div>
+                            ))
+                    }
 
-                            <div
-                                onClick={() => navigation(`../groups/groupInfo/${item?.id}`)}
-                                className={cls.classColor}
-                            />
 
-                            <h1>{item?.class_number?.number}-{item?.color?.name}</h1>
+                </EditableCard>
 
-                            {/*<h2 className={cls.info__role}>{item?.color?.name}</h2>*/}
-                        </EditableCard>
-                    ))
-            }
 
-            <EditableCard extraClass={cls.flowList}>
-                <h1>Flows </h1>
-                {
+                <EditableCard extraClass={cls.classProfile}>
+                    <h1>Flows </h1>
+                    {
 
-                    studentsLoading ? <DefaultPageLoader/>
-                        : <Table>
-                            <thead className={cls.theadBody}>
-                            <tr>
-                                <th>№</th>
-                                <th>Nomi</th>
-                                <th>Fan</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {renderFlow}
-                            </tbody>
-                        </Table>
+                        studentsLoading ? <DefaultPageLoader/>
+                            : schoolTeacherFlows?.length === 0 ?
+                                <div className={cls.classProfile__notFound}>
+                                    <i style={{fontSize: "4rem", color: "#D1D5DB"}} className="fa-solid fa-face-smile"></i>
+                                    <h1 style={{color: "#D1D5DB"}}>O'qituvchida sinf yo'q</h1>
+                                </div> :
+                                schoolTeacherFlows?.map((item, index) => (
+                                    <div onClick={() => navigation(`../students/profile/${item?.id}`)} key={index}
+                                         className={cls.classProfile__card}>
+                                        <div className={cls.classProfile__card__left}>
+                                <span style={{background: "linear-gradient(35deg, #417EF5, #5D69F1)"}} className={cls.classProfile__card__left__span}>
+                                    <i className="fa-solid fa-user-group"></i>
+                                </span>
+                                            <h2>{item?.name}-{item?.subject?.name}</h2>
+                                        </div>
+                                        <div className={cls.classProfile__card__right}>
+                                <span>
+                                    <i className="fa-solid fa-chevron-circle-right"></i>
+                                </span>
+                                        </div>
+                                    </div>
+                                ))
 
-                }
+                    }
 
-            </EditableCard>
+                </EditableCard>
+            </div>
+
             <EditableCard extraClass={cls.classList}>
                 <h1>O'quvchilar ro'yxati</h1>
                 {
@@ -171,5 +174,5 @@ export const SchoolTeacherGroups = memo(({activeSwitch}) => {
 
             </EditableCard>
         </div>
-        : <TeacherProfileTimeTable/>
+        :  currentTab === "time" ? <TeacherProfileTimeTable/> : null
 });

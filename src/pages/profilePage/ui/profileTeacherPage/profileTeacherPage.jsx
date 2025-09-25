@@ -27,7 +27,6 @@ export const ProfileTeacherPage = () => {
 
     const date = new Date().toLocaleDateString('en-CA')
     const [active, setActive] = useState(false)
-    const [activeSwitch, setActiveSwitch] = useState(true)
     const dispatch = useDispatch()
     const {id} = useParams()
     // const {id} = useSelector(getBranch)
@@ -35,6 +34,7 @@ export const ProfileTeacherPage = () => {
     const branch = useSelector(getUserBranchId)
     const [activeModal, setActiveModal] = useState("")
     const [newImage, setNewImage] = useState("")
+    const [currentTab, setCurrentTab] = useState("info");
 
     const loading = useSelector(getLoading)
     const teacherLoading = useSelector(getStudentLoading)
@@ -77,6 +77,8 @@ export const ProfileTeacherPage = () => {
                     active={active}
                     setActiveModal={setActiveModal}
                     newImage={newImage}
+                    currentTab={currentTab}
+                    setCurrentTab={setCurrentTab}
                 />
 
                 {/*// actives={actives}*/}
@@ -91,15 +93,8 @@ export const ProfileTeacherPage = () => {
                         [cls.active]: active
                     })}
                 >
-                    <div className={cls.header}>
-                        <h2>{activeSwitch ? "Ma'lumotlar" : "Time Table"}</h2>
-                        <Switch
-                            activeSwitch={activeSwitch}
-                            onChangeSwitch={setActiveSwitch}
-                        />
-                    </div>
 
-                    <SchoolTeacherGroups activeSwitch={activeSwitch}/>
+                    <SchoolTeacherGroups currentTab={currentTab}/>
 
                 </div>
                 <ImageCrop
