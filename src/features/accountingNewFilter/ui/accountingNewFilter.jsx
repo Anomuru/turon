@@ -28,7 +28,6 @@ const paymentType = [
     {id: 3, name: "bank"},
 ]
 
-
 const payments = [
     {id: 1, name: "Nuraulet Jorabekov", amount: 2700000, date: "2025-10-09", paymentType: "Click", status: "completed"},
     {id: 2, name: "Mironshox Aytach", amount: 1980000, date: "2025-09-15", paymentType: "Click", status: "completed"},
@@ -51,7 +50,15 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
     const [showAdditionalFields, setShowAdditionalFields] = useState(false);
     const overHeadType = useSelector(getOverHeadType)
     const [select, setSelect] = useState({})
+    const [selectOverheadType, setSelectOverheadType] = useState()
 
+    useEffect(() => {
+        if (overHeadType) {
+            setSelectOverheadType("all")
+        }
+    }, [overHeadType])
+
+    const [search, setSearch] = useState("")
 
     const fromToAmount = {
         from: range[0],
@@ -75,9 +82,20 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
 
     useEffect(() => {
 
-        dispatch(fetchAccountingData({branchId, pageSize, currentPage, selectedPayment, selectType, range, from, to}))
+        dispatch(fetchAccountingData({
+            branchId,
+            pageSize,
+            currentPage,
+            selectedPayment,
+            selectType,
+            range,
+            from,
+            to,
+            search,
+            selectOverheadType
+        }))
 
-    }, [currentPage, selectedPayment, selectType, from, to, range])
+    }, [currentPage, selectedPayment, selectType, from, to, range, search, selectOverheadType])
 
     useEffect(() => {
         dispatch(getOverheadType())
@@ -139,7 +157,7 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
 
             })
     }
-    const onAddOverhead =(data) => {
+    const onAddOverhead = (data) => {
         const res = {
             type: select.id,
             branch: branchId,
@@ -152,8 +170,7 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
                 setActive("")
                 setValue("name", "")
                 setValue("price", "")
-                setValue("created" , "")
-
+                setValue("created", "")
 
 
                 dispatch(onAddData(res))
@@ -171,16 +188,23 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
 
     }
 
+
     return (
         <div className={cls.accounting}>
             <div className={cls.accounting__header}>
-                <SearchInput extraClass={cls.accounting__search}/>
-                <div style={{display: "flex ", gap: "1rem"}}>
+                <SearchInput search={search} setSearch={setSearch} extraClass={cls.accounting__search}/>
+                <div style={{display: "flex ", gap: "1rem", alignItems: "center"}}>
                     <Button onClick={() => setActiveFilter(!activeFilter)} type={'filter'} status={"filter"}>
                         Qo'shimcha filter {activeFiltersCount() > 0 && <span>({activeFiltersCount()})</span>}
                     </Button>
                     {selectType === "capital" || selectType === "overhead" ?
-                        <Button onClick={() => setActive(selectType)}> Qo'shish</Button> : ""}
+                        <>
+                            { selectType === "overhead" && overHeadType &&
+                                <Select onChangeOption={setSelectOverheadType} defaultValue={selectOverheadType}
+                                        options={[{name: "Hammasi", id: "all"}, ...overHeadType]}/>}
+                            <Button onClick={() => setActive(selectType)}> Qo'shish</Button>
+
+                        </> : ""}
                 </div>
             </div>
 
@@ -290,14 +314,14 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
 
                 <Form extraClassname={cls.form} onSubmit={handleSubmit(onAddOverhead)}>
                     <Input register={register} name={"created"} type={"date"} title={"Kun"}/>
-                    <Select options={overHeadType}
-                            // defaultValue={select}
+                    <Select defaultValue={selectOverheadType} options={overHeadType}
+                        // defaultValue={select}
                             onChangeOption={(e) => {
-                        onChange({
-                            name: e,
-                            id: e
-                        })
-                    }}
+                                onChange({
+                                    name: e,
+                                    id: e
+                                })
+                            }}
                     />
                     {showAdditionalFields ?
                         <Input name={"name"} register={register} placeholder={"Narsa turi"}/> : null}

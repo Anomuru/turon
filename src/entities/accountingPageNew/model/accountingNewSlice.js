@@ -33,6 +33,9 @@ const accountingNewSlice = createSlice({
     reducers: {
         onAddData: (state, action) => {
             state.data.results.data = [...state.data.results.data , action.payload]
+        },
+        onDeleteData: (state, action) => {
+            state.data.results.data = state.data.results.data.filter(item => item.id !== action.payload)
         }
 
     },
@@ -53,5 +56,5 @@ const accountingNewSlice = createSlice({
                 state.error= true
             })
 })
-export const {onAddData} = accountingNewSlice.actions
+export const {onAddData , onDeleteData} = accountingNewSlice.actions
 export const {reducer: accountingNewReducer} = accountingNewSlice
