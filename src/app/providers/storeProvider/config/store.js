@@ -28,6 +28,7 @@ import {studentProfileReducer} from "pages/profilePage/model/slice/studentProfil
 import {AlertReducer} from "features/alert/model/slice/alertSlice.js";
 import {timeTableTuronReducer} from "pages/timeTable/model/slice/timeTableTuronSlice.js";
 import {filterLeadsReducers} from "entities/filteredLeadsList/model/filteredLeadsListSlice.js";
+import {quarterMasterReducer} from "pages/quarterMasterPage/model/quarterMasterSlice.js";
 
 
 export function createReduxStore(
@@ -61,7 +62,8 @@ export function createReduxStore(
         studentPaymentSlice: studentPaymentReducer,
         studentProfileSlice: studentProfileReducer,
         timeTableTuronSlice: timeTableTuronReducer,
-        filteredLeadsListSlice: filterLeadsReducers
+        filteredLeadsListSlice: filterLeadsReducers,
+        quarterMasterSlice: quarterMasterReducer,
 
 
 
