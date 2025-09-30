@@ -37,8 +37,7 @@ function getWeekdayUz(dateInput) {
 }
 
 export const SchoolTeacherGroups = memo(({currentTab}) => {
-
-    // const {id} = useParams()
+    
     const id = useSelector(getUserBranchId)
 
     const dispatch = useDispatch()
@@ -50,11 +49,13 @@ export const SchoolTeacherGroups = memo(({currentTab}) => {
     const data = useSelector(getTimeTableTuronForShow)
     const schoolTeacherGroups = teacherData?.group
     const schoolTeacherFlows = teacherData?.flow
+    const teachId = teacherData?.id
+
 
     useEffect(() => {
-        if (id)
-            dispatch(fetchDropStudents({id}))
-    }, [id])
+        if (teachId)
+            dispatch(fetchDropStudents(teachId))
+    }, [teachId])
 
 
     const renderStudents = () => {

@@ -29,7 +29,7 @@ export const changeTeacherProfileImage = createAsyncThunk(
 
 export const fetchDropStudents = createAsyncThunk (
     "teacherEditSlice/fetchDropStudents",
-    async ({id}) => {
+    async (id) => {
         const {request} = useHttp();
         return await request(`${API_URL}Teachers/group-student/${id}/`, "GET", null, headers())
     }

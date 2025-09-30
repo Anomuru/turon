@@ -23,7 +23,7 @@ export const menuConfig = [
         to: "statistics",
         name: "Statistika",
         icon: "fa-chart-line",
-        roles: [ROLES.admin ,ROLES.director,ROLES.programmer],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
     },
     {
         to: "adminTaskManager",
@@ -42,14 +42,14 @@ export const menuConfig = [
         to: "calendar",
         name: "Kalendar",
         icon: "fas fa-calendar-times",
-        roles: [ROLES.director,ROLES.admin],
+        roles: [ROLES.director, ROLES.admin],
 
     },
     {
         to: "students",
         name: "O'quvchilar",
         icon: "fa-user-graduate",
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
         branches: true
     },
     // {
@@ -66,7 +66,7 @@ export const menuConfig = [
         to: "teacher",
         name: "O'qituvchilar",
         icon: "fa-user-tie",
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
         branches: true
 
     },
@@ -74,7 +74,7 @@ export const menuConfig = [
         to: "groups",
         name: "Sinflar",
         icon: "fa-users",
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer, ROLES.teacher],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.teacher],
         branches: true
 
     },
@@ -82,7 +82,7 @@ export const menuConfig = [
         to: "vacancyPage",
         name: "Vakansiyalar",
         icon: "fa-tasks", // Bu element director uchun filtrlanadi
-        roles: [ROLES.director,ROLES.programmer],
+        roles: [ROLES.director, ROLES.programmer],
         branches: true
     },
     // {
@@ -98,7 +98,7 @@ export const menuConfig = [
         to: "time",
         name: "Time Table",
         icon: "fa-clock",
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
         branches: true
     },
     // {
@@ -140,7 +140,7 @@ export const menuConfig = [
         name: "Capital",
         icon: "fa-book",
 
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer,ROLES.accountant],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.accountant],
         branches: true
 
     },
@@ -148,9 +148,17 @@ export const menuConfig = [
         to: "accounting/studentsPayments",
         name: "Buxgalteriya ",
         icon: "fa-calculator",
-        roles: [ROLES.admin,ROLES.director,ROLES.programmer],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
         branches: true,
         multi: true
+
+    },
+    {
+        to: "quarterMaster",
+        name: "Zavxoz profile",
+        icon: "fa-toolbox",
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+        branches: true
 
     },
     // {
@@ -167,8 +175,6 @@ export const menuConfig = [
         name: "Web-Sayt",
         roles: [ROLES.smm]
     },
-
-
 
 
 ];
