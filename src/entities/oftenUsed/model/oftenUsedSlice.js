@@ -49,6 +49,7 @@ const initialState = {
     operatorsError: null,
 
     vacancy: [],
+    systems: [],
     vacancyLoading: false,
     vacancyError: null,
 
@@ -225,6 +226,7 @@ const oftenUsedSlice = createSlice({
             })
             .addCase(fetchVacancyData.fulfilled, (state, action) => {
                 state.vacancy = action.payload?.jobs
+                state.systems = action.payload?.systems
                 state.vacancyLoading = false
                 state.vacancyError = null
             })
