@@ -1,11 +1,16 @@
 import cls from "./statistics.module.sass"
 import {useRef, useState} from "react";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 const formatSum = (sum) => {
-    return sum.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ")
+    return sum?.toString()?.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ")
 }
 
-export const Statistics = ({data}) => {
+export const Statistics = ({data, loading}) => {
+
+    if (loading === true) {
+        return <DefaultPageLoader/>
+    }
     return (
         <div className={cls.container}>
             {data?.new_students?.data?.length > 0 && (<New_students data={data.new_students}/>)}
@@ -25,7 +30,7 @@ export const Statistics = ({data}) => {
 const New_groups = ({data}) => {
 
     return (
-        <AccordionWrapper title="Yangi guruhlar" count={data?.count}>
+        <AccordionWrapper title="Yangi guruhlar" count={data?.count} total={data?.total}>
             <table className={cls.table}>
                 <thead>
                 <tr>
@@ -49,10 +54,8 @@ const New_groups = ({data}) => {
 };
 
 
-
-
 const New_leads = ({data}) => (
-    <AccordionWrapper title="Yangi leadlar" count={data?.count}>
+    <AccordionWrapper title="Yangi leadlar" count={data?.count} total={data?.total}>
         <table className={cls.table}>
             <thead>
             <tr>
@@ -77,7 +80,7 @@ const New_leads = ({data}) => (
 );
 
 const New_students = ({data}) => (
-    <AccordionWrapper title="Yangi o'quvchilar" count={data?.count}>
+    <AccordionWrapper title="Yangi o'quvchilar" count={data?.count} total={data?.total}>
         <table className={cls.table}>
             <thead>
             <tr>
@@ -100,7 +103,7 @@ const New_students = ({data}) => (
 );
 
 const New_studying_students = ({data}) => (
-    <AccordionWrapper title="Yangi guruhga qo'shilgan o'quvchilar" count={data?.count}>
+    <AccordionWrapper title="Yangi guruhga qo'shilgan o'quvchilar" count={data?.count} total={data?.total}>
         <table className={cls.table}>
             <thead>
             <tr>
@@ -123,7 +126,7 @@ const New_studying_students = ({data}) => (
 );
 
 const Overhead_payments = ({data}) => (
-    <AccordionWrapper title="Overhead Payments" count={data?.count}>
+    <AccordionWrapper title="Overhead Payments" count={data?.count} total={data?.total}>
         <table className={cls.table}>
             <thead>
             <tr>
@@ -148,7 +151,7 @@ const Overhead_payments = ({data}) => (
 );
 
 const Student_payments = ({data}) => (
-    <AccordionWrapper title="O'quvchi to'lovlari" count={data?.count}>
+    <AccordionWrapper title="O'quvchi to'lovlari" count={data?.count} total={data?.total}>
         <table className={cls.table}>
             <thead>
             <tr>
@@ -173,7 +176,7 @@ const Student_payments = ({data}) => (
 );
 
 const Teacher_salaries = ({data}) => (
-    <AccordionWrapper title="O'qituvchilar oyliklari" count={data?.count}>
+    <AccordionWrapper title="O'qituvchilar oyliklari" count={data?.count} total={data?.total}>
         <table className={cls.table}>
             <thead>
             <tr>
@@ -200,7 +203,7 @@ const Teacher_salaries = ({data}) => (
 );
 
 const User_salaries = ({data}) => (
-    <AccordionWrapper title="Ishchilar oyliklari" count={data?.count}>
+    <AccordionWrapper title="Ishchilar oyliklari" count={data?.count} total={data?.total}>
         <table className={cls.table}>
             <thead>
             <tr>
@@ -227,9 +230,7 @@ const User_salaries = ({data}) => (
 );
 
 
-
-
-const AccordionWrapper = ({title, count, children}) => {
+const AccordionWrapper = ({title, count, children , total}) => {
     const [open, setOpen] = useState(false);
     const contentRef = useRef(null);
 
@@ -241,7 +242,8 @@ const AccordionWrapper = ({title, count, children}) => {
                 style={{cursor: "pointer"}}
             >
                 {title} {count}
-                <div>
+                <div style={{display: "flex" , gap: "1rem"}}>
+                    {total ?  <span>Umumiy summa : {formatSum(total)}</span> : ""}
                     <i className={`fa fa-angle-${open ? "up" : "down"}`}/>
                 </div>
             </h2>
