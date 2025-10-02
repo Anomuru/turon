@@ -15,6 +15,7 @@ import defaultUserImg from "shared/assets/images/user_image.png";
 import {Button} from "shared/ui/button/index.js";
 import classNames from "classnames";
 import {TeacherEdit} from "features/profileEdits/teacherEdit/index.js";
+import { useNavigate } from 'react-router';
 
 const reducers = {
     employerParseSlice: employerParseReducer
@@ -24,6 +25,7 @@ export const EmployerProfileInfo = memo(({active, setActive, setActiveModal, new
 
     const loading = useSelector(getEmployerLoading)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     // const {employerId} = useParams()
     const employerId = useSelector(getEmployerId)
     const [localTeacherData, setLocalTeacherData] = useState({});

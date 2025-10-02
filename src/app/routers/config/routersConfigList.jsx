@@ -17,17 +17,14 @@ import {
     getRouteCalendar,
     getRouteMain,
     getRouteRegister,
+    getQuarterMaster
 
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import Register from "pages/registerPage/index.js";
 
 
-
-
-
 const StudentsPage = lazyPage(() => import("pages/studentsPage"), "StudentsPage");
-
 
 
 const GroupsPage = lazyPage(() => import("pages/groupsPage"), "GroupsPage");
@@ -45,6 +42,7 @@ const TimeTableTuronPage = lazyPage(() => import("pages/timeTable"), "TimeTableT
 const ClassMain = lazyPage(() => import("pages/classPage/ui/classMain"), "ClassMain");
 const Settings = lazyPage(() => import("pages/settings"), "Settings");
 const StatisticsPage = lazyPage(() => import("pages/statisticsPage"), "StatisticsPage");
+const QuarterMaster = lazyPage(() => import("pages/quarterMasterPage"), "QuarterMasterPage");
 
 export const routersConfigList = [
     {
@@ -117,6 +115,11 @@ export const routersConfigList = [
         name: "Honalar",
         path: getRouteRooms(":id"),
         element: <Rooms/>,
+    },
+    {
+        name: "Zavxoz",
+        path: getQuarterMaster(),
+        element: <QuarterMaster/>
     },
 
     {

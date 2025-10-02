@@ -34,8 +34,6 @@ export const VacancyList = memo(({ currentTableData, currentPage, PageSize, edit
                     <td className={cls.otClick}>{item.group.name}</td>
                 </Link>
 
-                <td>
-                </td>
                 {!editMode && (
                     <td>
                         <Button

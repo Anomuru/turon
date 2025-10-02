@@ -1,0 +1,1 @@
+export const quarterMasterSelector = (state) => state.quarterMasterSlice?.quarterMasters;

@@ -63,12 +63,13 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
 
     const handleEditTeacher = () => {
         if (!employerID) return;
+        const empMoney = employerID?.group?.name === "Investor" ? {share: money} : {money}
         const updateEmployer = {
             name: name,
             surname: surname,
             phone: phone,
             birth_date: age,
-            money: money,
+            ...empMoney,
             profession: +selectedJob
 
         };
