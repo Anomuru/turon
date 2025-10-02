@@ -141,6 +141,12 @@ export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
                             <i style={{fontSize: "1.9rem"}} className="fa-solid fa-table"></i>
                             <h2>Time table</h2>
                         </Button>
+                        <Button
+                            onClick={() => navigate(`observe`)}
+                            extraClass={classNames(cls.info__right__header__observed,)}>
+                            <i style={{fontSize: "1.9rem"}} className="fa-solid fa-table"></i>
+                            <h2>Observe Lesson</h2>
+                        </Button>
                     </div>
                     <div className={cls.info__right__footer}>
                         <div style={{background: "#FFEFDA", border: "2px solid #FED7AA"}} className={cls.info__right__footer__card}>
@@ -176,7 +182,7 @@ export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
                                 </span>
                             <div className={cls.info__right__footer__card__arounder}>
                                 <h2 style={{color: "#16A384"}}>Sinf narxi</h2>
-                                <h1 style={{color: "#166534"}}>{data?.price.toLocaleString()} uzs</h1>
+                                <h1 style={{color: "#166534"}}>{data?.price?.toLocaleString()} uzs</h1>
                             </div>
                         </div>
                     </div>

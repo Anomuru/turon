@@ -239,7 +239,7 @@ export const ClassProfileStudentsForm = memo(() => {
                 </Button>
             </Modal>
 
-            <ConfirmModal setActive={setDeleteId} active={deleteId} onClick={onSubmitDelete} title={`Rostanham ${deleteId.user} ni o'chirmoqchimisiz `}   type={"danger"}/>
+            <ConfirmModal setActive={setDeleteId} active={deleteId} onClick={onSubmitDelete} title={`Rostanham ${deleteId?.user} ni o'chirmoqchimisiz `}   type={"danger"}/>
             {/*<YesNo*/}
             {/*    activeDelete={deleteId}*/}
             {/*    setActiveDelete={setDeleteId}*/}

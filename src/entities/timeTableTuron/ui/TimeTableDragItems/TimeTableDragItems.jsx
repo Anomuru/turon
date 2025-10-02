@@ -42,13 +42,14 @@ export const TimeTableDragItems = (props) => {
                 return <h1 style={{color: 'red'}}>{type} yoq</h1>
             }
             return filteredColors()?.map(item => {
-                return <TimeTableDragItem color={item.type === "group" ? item?.color?.value : ""} typeItem={type}
+                return <TimeTableDragItem  color={item.type === "group" ? item?.color?.value : ""} typeItem={type}
                                           item={item}>
                     <p style={{textAlign: "center"}}>{item?.class_name || item?.name}</p>
                     <p style={{textAlign: "center"}}>
                         {
                             type === "flow" &&
                             <>
+
                                 {item?.subject_info?.name}
                                 <br/>
                                 {item.teacher_info?.name} -

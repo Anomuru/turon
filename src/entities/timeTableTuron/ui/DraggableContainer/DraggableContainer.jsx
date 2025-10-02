@@ -7,6 +7,7 @@ import {CSS} from "@dnd-kit/utilities";
 import Grip from "shared/assets/icons/grip-vertical-solid.svg"
 import classNames from "classnames";
 import {ConfirmModal} from "shared/ui/confirmModal/index.js";
+import {useNavigate} from "react-router";
 
 
 export const DraggableContainer = (props) => {
@@ -41,8 +42,10 @@ export const DraggableContainer = (props) => {
         };
 
 
+    const navigate = useNavigate()
     return (
         <div
+            onClick={() => navigate(`observe/${item.id}`)}
             style={newStyle}
             className={classNames(cls.draggableContainer, {
                 [cls.selected]: item.isSelected

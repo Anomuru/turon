@@ -13,6 +13,7 @@ import {useHttp, API_URL, headers} from "../../../../shared/api/base";
 import {getFilteredAll} from "../../model/slice/otchotAccountingSlice";
 import cls from "./allTable.module.sass";
 import classNames from "classnames";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 
 const types = [
@@ -44,38 +45,23 @@ function capitalizeFirstLetter(str) {
 }
 
 export const AllTable = () => {
-
-
     const {request} = useHttp()
     const dispatch = useDispatch()
     const branchId = useSelector(getUserBranchId)
     const allTable = useSelector(getAllSelector)
 
-    // const option = allTable?.payment_results?.map(item => ({
-    //     name: item.payment_type
-    // }))
+    const today = new Date()
+    const currentYear = today.getFullYear()
+    const currentMonth = today.getMonth() + 1 // JS-da 0-11 bo'ladi
+
     const [activeType, setActiveType] = useState("students")
-    const [selectedYear, setSelectedYear] = useState(null)
-    const [selectedMonth, setSelectedMonth] = useState(null)
-    // const renderPayment = () => {
-    //     switch (selected) {
-    //         // case "cash" :
-    //         //     return <h1>hello</h1>
-    //         //
-    //         case "click" :
-    //             return <TableClick alltable={allTable}/>
-    //         case "bank" :
-    //             return <TableBank alltable={allTable}/>
-    //         default:
-    //             return <TableCash alltable={allTable}/>
-    //     }
-    // }
+    const [selectedYear, setSelectedYear] = useState(currentYear)
+    const [selectedMonth, setSelectedMonth] = useState(currentMonth)
+    const [loading ,setLoading] = useState(false)
+
 
     const renderTypeData = () => {
-
-
         if (!activeType && !allTable?.summary) return;
-
         return <TableCash
             resultData={allTable?.payment_results}
             data={allTable?.summary?.[activeType]}
@@ -84,52 +70,36 @@ export const AllTable = () => {
     }
 
     useEffect(() => {
-        if (branchId) {
-            if (selectedMonth && selectedYear) {
-                const res = {
-                    year: selectedYear,
-                    month: selectedMonth
-                }
-                request(`${API_URL}Encashment/encashment_school/`, "POST", JSON.stringify({branch: branchId, ...res}), headers())
-                    .then(res => {
-                        dispatch(getFilteredAll(res))
-                    })
+        if (branchId && selectedMonth && selectedYear) {
+            const res = {
+                year: selectedYear,
+                month: selectedMonth
             }
+            setLoading(true)
+            request(`${API_URL}Encashment/encashment_school/`, "POST",
+                JSON.stringify({branch: branchId, ...res}), headers()
+            ).then(res => {
+                dispatch(getFilteredAll(res))
+                setLoading(false)
+            })
         }
     }, [branchId, selectedYear, selectedMonth])
 
-
     const onChangeYear = (year) => {
-
-
         setSelectedYear(year)
         setSelectedMonth(null)
     }
 
     return (
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem"
-            }}
-        >
-            <div
-                style={{
-                    display: "flex",
-                    gap: "2rem"
-                }}
-            >
+        <div style={{display: "flex", flexDirection: "column", gap: "1rem"}}>
+            <div style={{display: "flex", gap: "2rem"}}>
                 <Select
                     options={allTable?.dates?.map(item => ({
                         name: item?.year,
                         id: item?.year,
                     }))}
                     onChangeOption={onChangeYear}
-                    defaultValue={allTable && allTable?.dates?.map(item => ({
-                        name: item?.year,
-                        id: item?.year,
-                    }))[0]?.id}
+                    defaultValue={currentYear} // 🔥 joriy yil
                 />
                 {selectedYear && <Select
                     options={
@@ -137,25 +107,11 @@ export const AllTable = () => {
                             ?.filter(item => item.year === +selectedYear)[0]?.months
                     }
                     onChangeOption={setSelectedMonth}
-                    defaultValue={allTable && allTable?.dates
-                        ?.filter(item => item.year === +selectedYear)[0]?.months[0]}
+                    defaultValue={currentMonth} // 🔥 joriy oy
                 />}
             </div>
 
             <div className={cls.header}>
-                {/*{*/}
-                {/*    types.map(item => (*/}
-                {/*        <div*/}
-                {/*            className={classNames(cls.header__item, {*/}
-                {/*                [cls.active]: item.value === activeType*/}
-                {/*            })}*/}
-                {/*            onClick={() => setActiveType(item.value)}*/}
-                {/*            key={item.value}*/}
-                {/*        >*/}
-                {/*            {item.name}*/}
-                {/*        </div>*/}
-                {/*    ))*/}
-                {/*}*/}
                 {
                     allTable?.payment_results && Object.keys(allTable?.payment_results[0]).map(item => {
                         if (item === "payment_total" || item === "payment_type") return null
@@ -173,11 +129,10 @@ export const AllTable = () => {
                     })
                 }
             </div>
-            {renderTypeData()}
-            {/*{renderPayment()}*/}
+            {loading === true ? <DefaultPageLoader/> : renderTypeData()}
         </div>
-    );
-};
+    )
+}
 
 
 const TableCash = ({data, resultData, activeType}) => {

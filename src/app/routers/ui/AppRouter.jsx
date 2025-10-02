@@ -66,7 +66,9 @@ export const AppRouter = () => {
                     <Target/>
                 </LayoutTarget>}/>
 
-                <Route element={<RequireAuth/>}>
+                <Route
+                    element={<RequireAuth/>}
+                >
 
                     <Route path={"platform/*"} element={<Layout/>}>
                         <Route element={<RequireHeader/>}>

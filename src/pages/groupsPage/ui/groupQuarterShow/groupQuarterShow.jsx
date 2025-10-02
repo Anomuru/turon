@@ -50,7 +50,7 @@ export const GroupQuarterShow = () => {
 
     useEffect(() => {
         if (subject){
-            setSubjectSelect(subject[0]?.id)
+            setSubjectSelect("all")
         }
     } , [subject])
 
@@ -96,7 +96,7 @@ export const GroupQuarterShow = () => {
                             options={academicYear}/>
 
                     <Select defaultValue={selectQuarter} onChangeOption={setSelectQuarter} options={quarter}/>
-                    <Select defaultValue={subjectSelect} onChangeOption={setSubjectSelect} options={subject && [...subject , {name: "Hammasi" , id: "all"}]}/>
+                    <Select defaultValue={subjectSelect} onChangeOption={setSubjectSelect} options={subject && [{name: "Hammasi" , id: "all"}  ,...subject ]}/>
                 </div>
 
                 <div className={cls.quarter__table}>

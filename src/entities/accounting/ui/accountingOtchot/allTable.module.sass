@@ -63,9 +63,44 @@
     &.active
       border-bottom: 2px solid $color-main-dark
 
-.table
-  height: calc(100vh - 30rem)
-  overflow: auto
-  thead
-    top: 0 !important
+//.table
+//  width: 100%
+//  border-collapse: collapse
+//  margin-top: 8px
+//  &__wrapper
+//    max-height: 25rem
+//    overflow: auto
+//
+//  th, td
+//    border: 1px solid #ddd
+//    padding: 8px
+//    text-align: left
+//    font-size: 1.5rem
+//    //color: #625959
+//  td
+//    font-size: 1.4rem
+//    font-weight: 500
+//
+//  th
+//    background: none!important
+//    font-weight: 600
+.tableWrapper
+  max-height: 500px   // kerakli balandlik
+  overflow-y: auto
 
+.table
+  width: 100%
+  border-collapse: collapse
+
+  th
+    position: sticky
+    top: -1px
+    background: #fff  // orqa fon bo‘lmasa text aralashib ketadi
+    z-index: 2
+    padding: 8px
+    height: 5rem
+    text-align: left
+
+  td
+    padding: 8px
+    border-top: 1px solid #ddd
