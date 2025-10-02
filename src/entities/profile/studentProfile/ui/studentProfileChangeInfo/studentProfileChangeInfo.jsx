@@ -23,6 +23,7 @@ export const StudentProfileChangeInfo = memo((props) => {
     } = props
 
 
+    console.log(currentData,  "currentData")
     return (
         <Modal
             setActive={setActive}
@@ -57,6 +58,12 @@ export const StudentProfileChangeInfo = memo((props) => {
                         name={"phone"}
                         register={register}
                         value={currentData?.user?.phone}
+                        required
+                    /><Input
+                        placeholder={"Ota-onasining telefon raqami"}
+                        name={"parents_number"}
+                        register={register}
+                        value={currentData?.parents_number}
                         required
                     />
                     <Input
