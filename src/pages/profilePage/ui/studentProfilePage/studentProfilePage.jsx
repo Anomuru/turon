@@ -127,6 +127,7 @@ export const StudentProfilePage = () => {
                 language: +changeSelectedLang,
 
             },
+            parents_number: data.parents_number,
             class_number: changeSelectedClass,
             parents_fullname: data.parents_fullname,
             old_school: data.old_school,

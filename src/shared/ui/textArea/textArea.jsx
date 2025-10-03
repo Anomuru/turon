@@ -70,7 +70,7 @@ export const Textarea = React.memo((
                 required={required}
                 defaultValue={defaultValue}
                 placeholder={placeholder}
-                onChange={setSilk}
+                onChange={e => onChange(e.target.value)}
             />
         </label>
     );

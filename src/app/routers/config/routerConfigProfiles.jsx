@@ -26,7 +26,7 @@ import {
     getRouteTaskManager,
     getRouteFilteredLeads,
     getAccounting,
-    getGroupQuarter, getGroupQuarterShow
+    getGroupQuarter, getGroupQuarterShow, getGroupObserve
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
@@ -79,7 +79,7 @@ const FilteredLeadsPage = lazyPage(() => import("pages/filteredLeadsPage"), "Fil
 const GroupProfileQuarter = lazyPage(() => import("features/groupProfile"), "GroupProfileQuarter");
 
 // const GroupProfileQuarter = lazyPage(() => import("features/groupProfile/ui/groupProfileQuarter"))
-
+const GroupObservePage = lazyPage(() => import("pages/groupsPage/ui/groupObserve/groupObserve.jsx"), "GroupObservePage");
 
 export const routersConfigProfile = [
     {
@@ -239,6 +239,12 @@ export const routersConfigProfile = [
         path: getGroupQuarterShow(":id"),
         element: <GroupQuarterShow/>,
     },
+    {
+        name: "GroupObserve",
+        path: getGroupObserve(":id"),
+        element: <GroupObservePage/>
+    },
+
 
     // {
     //     name: "capital category profile",

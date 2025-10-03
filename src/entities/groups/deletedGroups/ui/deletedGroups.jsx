@@ -26,7 +26,6 @@ export const DeletedGroups = ({currentTableData}) => {
                     <tbody>
                     {currentTableData.map((item, i) => {
                         return (
-
                             <tr onClick={() => navigate(`groupInfo/${item?.id}`)}>
                                 <td>{i + 1}</td>
                                 <td>{item?.name}</td>

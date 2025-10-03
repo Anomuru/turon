@@ -6,3 +6,6 @@ export {GroupProfileInfoForm} from "./ui/groupProfileInfoForm/groupProfileInfoFo
 export {GroupProfileDeleteForm} from "./ui/groupProfileDeleteForm/groupProfileDeleteForm";
 export {GroupProfileQuarter} from "./ui/groupProfileQuarter/groupProfileQuarter"
 export {GroupQuarterTable} from "./ui/groupQuarterTable/groupQuarterTable.jsx"
+export {GroupObserve} from "./ui/groupObserve/groupObserve.jsx"
+export {GroupLessonPlan} from "./ui/groupLessonPlan/groupLessonPlan.jsx"
+export {ObservedDates} from "./ui/observedDates/observedDates.jsx"
