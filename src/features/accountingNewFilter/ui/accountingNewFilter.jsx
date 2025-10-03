@@ -21,6 +21,7 @@ import {onAddData} from "entities/accountingPageNew/model/accountingNewSlice.js"
 import {getOverHeadType} from "entities/accounting/index.js";
 import {getOverheadType} from "entities/accounting/model/thunk/additionalCosts.js";
 import {onAddOverhead} from "entities/accounting/model/slice/additionalCosts.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 const paymentType = [
     {id: 1, name: "cash"},
@@ -43,6 +44,8 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
     const [from, setFrom] = useState(null)
     const [to, setTo] = useState(null)
     const branchId = localStorage.getItem("branchId")
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
     const [active, setActive] = useState("")
     const paymentTypes = useSelector(getCapitalTypes)
     const {register, handleSubmit, setValue} = useForm()
@@ -83,7 +86,7 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
     useEffect(() => {
 
         dispatch(fetchAccountingData({
-            branchId,
+            branchId: branchForFilter,
             pageSize,
             currentPage,
             selectedPayment,
@@ -95,7 +98,7 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
             selectOverheadType
         }))
 
-    }, [currentPage, selectedPayment, selectType, from, to, range, search, selectOverheadType])
+    }, [currentPage, selectedPayment, selectType, from, to, range, search, selectOverheadType, branchForFilter])
 
     useEffect(() => {
         dispatch(getOverheadType())

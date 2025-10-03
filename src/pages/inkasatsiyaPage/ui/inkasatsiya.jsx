@@ -20,6 +20,7 @@ import cls from "./inkasatsiya.module.module.sass"
 import {getBranch} from "../../../features/branchSwitcher";
 import {CapitalSlice} from "entities/capital/model/slice/capitalSlice.js";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 const filter = [
     {name: 'studentsPayments', label: "student payment"},
@@ -52,6 +53,8 @@ export const Inkasatsiya = () => {
 
 
     const branchId = useSelector(getUserBranchId)
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
 
     console.log(paymentType, "paymentType")
     useEffect(() => {
@@ -61,9 +64,9 @@ export const Inkasatsiya = () => {
                 do: to,
                 ot: ot,
                 payment_type: radio,
-                branch: branchId
+                branch: branchForFilter
             }
-            dispatch(inkasatsiyaThunk({res, branchId}))
+            dispatch(inkasatsiyaThunk({res, branchId: branchForFilter}))
         }
 
         dispatch(getPaymentType())

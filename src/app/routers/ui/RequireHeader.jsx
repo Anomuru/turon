@@ -3,13 +3,22 @@ import {Header} from "widgets/header";
 import {Outlet} from "react-router";
 
 import BackButton from "shared/ui/backButton/backButton";
-import {fetchLocationsThunk, getSelectedLocations} from "features/locations";
+import {fetchLocationsThunk, getLocations, getSelectedLocations} from "features/locations";
 import {fetchBranchesByLocationsThunk} from "features/branchSwitcher";
 import {useDispatch, useSelector} from "react-redux";
 
 const RequireHeader = ({header = true, back}) => {
 
     // const selectedLocations = useSelector(getSelectedLocations)
+    const dispatch = useDispatch();
+    const locations = useSelector(getLocations)
+    console.log(locations, 'locs')
+
+    useEffect(() => {
+        dispatch(fetchLocationsThunk())
+    }, []);
+
+
     // const dispatch = useDispatch()
     //
     //

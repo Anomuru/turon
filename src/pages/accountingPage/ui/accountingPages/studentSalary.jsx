@@ -18,6 +18,7 @@ import {API_URL, headers, useHttp} from "shared/api/base";
 import {ConfirmModal} from "shared/ui/confirmModal";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import {getSearchValue} from "features/searchInput/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 const reducers = {
     studentSlice: studentReducer
@@ -31,6 +32,8 @@ export const StudentSalary = ({deleted, setDeleted}) => {
     const studentData = useSelector(getStudentPaymentes)
     const loading = useSelector(getLoadingStudent)
     const branchID = useSelector(getUserBranchId)
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
     const deletedStudentPayment = useSelector(getDeletedStudent)
 
     const [activeDelete, setActiveDelete] = useState(false)
@@ -42,14 +45,14 @@ export const StudentSalary = ({deleted, setDeleted}) => {
     const search  = useSelector(getSearchValue)
 
     useEffect(() => {
-        if (branchID && currentPage)
+        if (branchForFilter && currentPage)
             dispatch(getStudentPayment({
-                branch: branchID,
+                branch: branchForFilter,
                 limit: PageSize,
                 offset: (currentPage - 1) * PageSize,
                 search
             }))
-    }, [branchID, currentPage , search])
+    }, [branchForFilter, currentPage , search])
 
 
     const formatSalary = (payment_sum) => {

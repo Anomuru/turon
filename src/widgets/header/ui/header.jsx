@@ -20,7 +20,7 @@ import {getUserProfileData} from "entities/profile/userProfile/index.js";
 
 export const Header = () => {
 
-
+    const userRole = localStorage.getItem("job")
     const dispatch = useDispatch();
 
     // const {pathname, search} = useLocation();
@@ -120,6 +120,10 @@ export const Header = () => {
                        defaultSearch={savedSearch}
                        onSearch={onChange}
                    />
+                   {
+                       userRole === "director" ? <Location/> : null
+                   }
+
                    <i onClick={() => {
                        navigate(`settings`)
                    }} className="fa-solid fa-gear"/>

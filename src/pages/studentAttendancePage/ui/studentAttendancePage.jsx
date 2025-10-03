@@ -14,6 +14,7 @@ import {Select} from "shared/ui/select";
 import cls from "./studentAttendancePage.module.sass";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Table} from "shared/ui/table/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 const reducers = {
     groupProfileSlice: groupProfileReducer
@@ -26,8 +27,8 @@ export const StudentAttendancePage = () => {
     const attendanceListForDay = useSelector(getAttendanceListForDay)
     const attendanceAllForDay = useSelector(getAttendanceAllForDay)
     const attendanceDates = useSelector(getAttendanceAll)
-    const branch = useSelector(getUserBranchId)
-
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branch = selectedBranch?.id;
     const [attendanceYears, setAttendanceYears] = useState([])
     const [selectedYear, setSelectedYear] = useState(null)
     const [attendanceMonth, setAttendanceMonth] = useState([])

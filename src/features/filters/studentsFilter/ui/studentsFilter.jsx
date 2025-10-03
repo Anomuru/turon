@@ -19,6 +19,8 @@ import {fetchDeletedNewStudentsThunk} from "entities/students";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Button} from "shared/ui/button/index.js";
 import {getSearchValue} from "features/searchInput/index.js";
+import {BRANCH} from "shared/const/roles.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 export const StudentsFilter = React.memo(({active, setActive, activePage, pageSize, currentPage}) => {
 
@@ -39,6 +41,8 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
     localStorage.setItem("ageTo", selectedAgeTo)
     localStorage.setItem("studentSwitch", `${isSwitch}`)
     const userBranchId = localStorage.getItem("branchId")
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
 
 
 
@@ -49,7 +53,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
             dispatch(fetchOnlyStudyingStudentsData({
                 language: lang,
                 age: `${selectedAgeFrom}-${selectedAgeTo}`,
-                branch: userBranchId,
+                branch: branchForFilter,
                 offset: search ? 0 : (currentPage - 1) * pageSize,
                 limit: pageSize,
                 search: search === null ? "" : search,
@@ -61,7 +65,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                     language: lang,
                     age: `${selectedAgeFrom}-${selectedAgeTo}`,
                     // untilAge: selectedAgeTo,
-                    branch: userBranchId,
+                    branch: branchForFilter,
                     offset: search ? 0 : (currentPage - 1) * pageSize,
                     limit: pageSize,
                     search: search === null ? "" : search,
@@ -71,7 +75,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
                 dispatch(fetchOnlyNewStudentsData({
                     language: lang,
                     age: `${selectedAgeFrom}-${selectedAgeTo}`,
-                    branch: userBranchId,
+                    branch: branchForFilter,
                     offset: search ? 0 : (currentPage - 1) * pageSize,
                     limit: pageSize,
                     search: search === null ? "" : search,
@@ -81,13 +85,13 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
             dispatch(fetchOnlyDeletedStudentsData({
                 language: lang,
                 age: `${selectedAgeFrom}-${selectedAgeTo}`,
-                branch: userBranchId,
+                branch: branchForFilter,
                 offset: search ? 0 : (currentPage - 1) * pageSize,
                 limit: pageSize,
                 search: search === null ? "" : search,
             }))
         }
-    }, [selectedLang, selectedAgeTo, selectedAgeFrom, activePage, isSwitch, currentPage, search])
+    }, [selectedLang, selectedAgeTo, selectedAgeFrom, activePage, isSwitch, currentPage, search, branchForFilter])
 
 
     const handleAgeFromBlur = (e) => {

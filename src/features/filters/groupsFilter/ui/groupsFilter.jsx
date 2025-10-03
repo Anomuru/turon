@@ -17,6 +17,7 @@ import {fetchTeachersDataWithFilter} from "entities/teachers/model/teacherThunk"
 
 import cls from "../../filters.module.sass";
 import {getSearchValue} from "features/searchInput/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 export const GroupsFilter = React.memo(({active, setActive, setIsFilter , activeSwitch , setActiveSwitch , currentPage , pageSize}) => {
 
@@ -30,6 +31,8 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
 
     const dispatch = useDispatch()
     const userBranchId = localStorage.getItem("branchId")
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
     const types = useSelector(getGroupTypes)
 
     localStorage.setItem("selectedTeacher" , selectedTeacher)
@@ -40,23 +43,23 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
     useEffect(() => {
         dispatch(fetchGroupsDataWithFilter({
             teacherId: selectedTeacher,
-            userBranchId,
+            userBranchId: branchForFilter,
             deleted:activeSwitch,
             pageSize,
             currentPage,
             search
         }))
         setIsFilter(true)
-    } , [selectedTeacher , activeSwitch, currentPage , search])
+    } , [selectedTeacher , activeSwitch, currentPage , search, branchForFilter])
 
     // function fetchGroups(teacher, type, subject) {
     //
     // }
 
     useEffect(() => {
-        if (userBranchId)
-            dispatch(fetchTeachersData({userBranchId}))
-    }, [userBranchId])
+        if (branchForFilter)
+            dispatch(fetchTeachersData({userBranchId: branchForFilter}))
+    }, [branchForFilter])
 
     useEffect(() => {
         // dispatch(fetchSubjects());

@@ -10,7 +10,7 @@ import {
     getLocationLoading,
     getLocations,
     getSelectedLocations,
-    getSelectedLocationsByIds
+    // getSelectedLocationsByIds
 } from "../model/selector/locationsSelector";
 import {MiniLoader} from "shared/ui/miniLoader";
 
@@ -30,16 +30,21 @@ export const Location = () => {
     const dispatch = useDispatch();
 
 
+    useEffect(() => {
+        dispatch(fetchLocationsThunk())
+    }, []);
 
 
+
+    //
     // useEffect(() => {
     //
-    //     if (selectedLocationsById.length === 0 && locations.length > 1 && !isLocal) {
+    //     if (selectedLocationsById?.length === 0 && locations?.length > 1 && !isLocal) {
     //         const localstorageLocs = JSON.parse(localStorage.getItem("selectedLocations"))
     //
     //         setIsSetLocal(true)
     //
-    //         if (localstorageLocs && localstorageLocs.length > 0) {
+    //         if (localstorageLocs && localstorageLocs?.length > 0) {
     //
     //             for (let i = 0; i < localstorageLocs?.length; i++) {
     //                 dispatch(addSelectedLocations(localstorageLocs[i]?.id))
@@ -67,19 +72,18 @@ export const Location = () => {
 
 
             {
-                locations.length > 1 ?
+                // locations.length > 1 ?
                     <Select
-                        // title={"Location"}
                         onChangeOption={changeSelectedLocation}
                         options={locations}
-                        defaultValue={selectedLocations.length === 1 ? "clear" : ""}
+
                     />
-                    :
-                    selectedLocations[0]?.name ?
-                    <div className={cls.location}>
-                        <span>Location:</span>
-                        <span>{selectedLocations[0]?.name}</span>
-                    </div> : null
+                    // :
+                    // selectedLocations[0]?.name ?
+                    // <div className={cls.location}>
+                    //     <span>Location:</span>
+                    //     <span>{selectedLocations[0]?.name}</span>
+                    // </div> : null
             }
 
         </div>
