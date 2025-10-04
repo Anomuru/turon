@@ -13,6 +13,7 @@ import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/f
 
 import cls from "../../filters.module.sass";
 import {getSearchValue} from "features/searchInput/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
 
@@ -21,6 +22,8 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
     const subjects = useSelector(getSubjectsData);
     const teachers = useSelector(getTeacherData) ?? [];
     const id = useSelector(getUserBranchId)
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
     const saved = getSavedFilters()["flowFilter"] ?? {};
     const {selectedSubject: subject, selectedTeacher: teacher} = saved;
 
@@ -33,7 +36,7 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
 
     const fetchFlowsData = (subject, teacher, offset, limit) => {
         dispatch(fetchFlows({
-            branch: id,
+            branch: branchForFilter,
             subject,
             teacher,
             limit,
@@ -42,9 +45,9 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
     };
 
     useEffect(() => {
-        if (currentPage && pageSize && id) {
+        if (currentPage && pageSize && branchForFilter) {
             dispatch(fetchFlows({
-                branch: id,
+                branch: branchForFilter,
                 subject: selectedSubject,
                 teacher: selectedTeacher,
                 limit: pageSize,
@@ -52,18 +55,18 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
                 search
             }));
         }
-    }, [currentPage, pageSize, id , search])
+    }, [currentPage, pageSize, branchForFilter , search])
 
     useEffect(() => {
-        if (id) {
+        if (branchForFilter) {
             dispatch(fetchSubjectsData());
-            dispatch(fetchTeachersData(id));
+            dispatch(fetchTeachersData(branchForFilter));
         }
-    }, [id]);
+    }, [branchForFilter]);
 
     useEffect(() => {
 
-        if (id && pageSize) {
+        if (branchForFilter && pageSize) {
             if (!initialApplied && saved) {
                 setSelectedSubject(subject || "all");
                 setSelectedTeacher(teacher || "all");
@@ -75,7 +78,7 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
                 setInitialApplied(true);
             }
         }
-    }, [initialApplied, id, pageSize]);
+    }, [initialApplied, branchForFilter, pageSize]);
 
     const onFilter = () => {
         fetchFlowsData(selectedSubject, selectedTeacher, 0, pageSize);

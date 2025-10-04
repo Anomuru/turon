@@ -8,9 +8,14 @@ import {Input} from "shared/ui/input/index.js";
 import cls from "./statisticsPage.module.sass"
 import {useEffect, useState} from "react";
 import {fetchStatistics} from "entities/statistics/model/statisticsThunk.js";
+import {getPaymentType} from "entities/capital/model/thunk/capitalThunk.js";
+import {capitalReducer, getCapitalTypes} from "entities/capital/index.js";
+import {Radio} from "shared/ui/radio/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 const reducers = {
-    statisticsSlice: statisticsReducer
+    statisticsSlice: statisticsReducer,
+    CapitalSlice: capitalReducer,
 };
 
 export const StatisticsPage = () => {
@@ -18,22 +23,38 @@ export const StatisticsPage = () => {
     const data = useSelector(getStatistics);
     const loading = useSelector(getStatisticsLoading);
 
-    const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD" format
+    const today = new Date().toISOString().slice(0, 10);
     const [from, setFrom] = useState(today);
     const [to, setTo] = useState(today);
 
     const branchId = localStorage.getItem("branchId");
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
+    const paymentType = useSelector(getCapitalTypes)
+
+    const [activePayment , setActivePayment] = useState()
+
 
     useEffect(() => {
-        if (from && to) {
+        if (paymentType) {
+            setActivePayment(paymentType[0]?.name)
+        }
+    } , [paymentType])
+
+    console.log(paymentType, "paymentType")
+    useEffect(() => {
+        dispatch(getPaymentType())
+    }, [])
+    useEffect(() => {
+        if (from && to && activePayment) {
             const data = {
                 from_date: from,
                 to_date: to,
-                branch: branchId
+                branch: branchForFilter,
             };
-            dispatch(fetchStatistics(data));
+            dispatch(fetchStatistics({data ,  activePayment}));
         }
-    }, [from, to]);
+    }, [from, to , activePayment, branchForFilter]);
 
     return (
         <DynamicModuleLoader reducers={reducers}>
@@ -51,8 +72,19 @@ export const StatisticsPage = () => {
                     type="date"
                 />
             </div>
+            <div className={cls.statistics__payment}>
+                {paymentType?.map(item => (
+                    <Radio
+                        key={item.id}
+                        onChange={() => setActivePayment(item.name)}
+                        checked={activePayment === item.name}
+                    >
+                        {item.name}
+                    </Radio>
+                ))}
+            </div>
             <div className={cls.statistics__container}>
-                <Statistics data={data} loading={loading} />
+                <Statistics data={data} loading={loading}/>
             </div>
         </DynamicModuleLoader>
     );

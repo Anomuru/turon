@@ -42,25 +42,26 @@ export const AccountingOtchotPage = () => {
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.accounting}>
                 <div className={cls.accounting__wrapper}>
-                    <div className={cls.wrapper__filter}>
-                        {/*<Button type={"filter"} status={"filter"} onClick={() => setActive(!active)}>Filter</Button>*/}
-                        <Select defaultValue={getAccountingPage && getAccountingPage[0]?.value} options={getAccountingPage} onChangeOption={setPage}/>
+                    <div className={cls.typeExpenses}>
+                        <Link to={`../inkasatsiya/studentsPayments`}>
+                            <Button>
+                                Inkasatsiya
+                            </Button></Link>
+                        <Link to={"../accounting"}>
+                            <Button type={"filter"}>
+                                buxgalteriya
+                            </Button>
+                        </Link>
                     </div>
+                    {/*<Button type={"filter"} status={"filter"} onClick={() => setActive(!active)}>Filter</Button>*/}
+                    <Select defaultValue={getAccountingPage && getAccountingPage[0]?.value} options={getAccountingPage}
+                            onChangeOption={setPage}/>
 
 
-                    <div className={cls.wrapper__middle}>
-                        <div className={cls.typeExpenses}>
-                            <Link to={`../inkasatsiya/studentsPayments`}>
-                                <Button>
-                                    Inkasatsiya
-                                </Button></Link>
-                            <Link to={"../accounting"}>
-                                <Button  type={"filter"}>
-                                    buxgalteriya
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
+
+                    {/*<div className={cls.wrapper__middle}>*/}
+
+                    {/*</div>*/}
                 </div>
 
                 <Routes>

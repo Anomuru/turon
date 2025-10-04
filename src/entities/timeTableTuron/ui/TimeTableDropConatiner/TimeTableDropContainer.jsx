@@ -29,6 +29,7 @@ export const TimeTableDropContainer = (props) => {
         <div
             className={cls.tableTuron}
         >
+
             <div className={cls.wrapper}>
                 <div className={cls.header}>
                     {

@@ -65,6 +65,7 @@ import {Table} from "shared/ui/table/index.js";
 import {classTypeNumber} from "entities/class/model/selector/classSelector.js";
 import {Button} from "shared/ui/button/index.js";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
+import {BRANCH} from "shared/const/roles.js";
 
 const studentsFilter = [
     {name: "new_students", label: "New Students"},

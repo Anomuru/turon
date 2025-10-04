@@ -19,12 +19,15 @@ import {Button} from "shared/ui/button";
 import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/filterStorage/filterStorage";
 
 import cls from "../../filters.module.sass";
+import {getSelectedLocations} from "features/locations/index.js";
 
 export const EmployeesFilter = React.memo(({active, setActive, currentPage, pageSize}) => {
     const dispatch = useDispatch();
     const languages = useSelector(getLanguagesData);
     const jobsData = useSelector(getVacancyData);
     const branch = useSelector(getUserBranchId);
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
     const saved = getSavedFilters()["employeesFilter"] ?? {};
     const {
         selectedJob: job,
@@ -47,7 +50,7 @@ export const EmployeesFilter = React.memo(({active, setActive, currentPage, page
     function fetchEmployees(job, lang, ageRange, isDeleted, offset, limit) {
         dispatch(fetchEmployersData({
             job,
-            branch,
+            branch: branchForFilter,
             language: lang,
             age: ageRange,
             deleted: isDeleted ? "True" : "False",
@@ -57,10 +60,10 @@ export const EmployeesFilter = React.memo(({active, setActive, currentPage, page
     }
 
     useEffect(() => {
-        if (pageSize && currentPage && branch) {
+        if (pageSize && currentPage && branchForFilter) {
             dispatch(fetchEmployersData({
                 job: selectedJob,
-                branch,
+                branch: branchForFilter,
                 language: selectedLanguage,
                 age: selectedAge,
                 deleted: activeSwitch ? "True" : "False",
@@ -68,7 +71,7 @@ export const EmployeesFilter = React.memo(({active, setActive, currentPage, page
                 limit: pageSize
             }));
         }
-    }, [pageSize, currentPage, branch])
+    }, [pageSize, currentPage, branchForFilter])
 
     useEffect(() => {
         dispatch(fetchVacancyData());

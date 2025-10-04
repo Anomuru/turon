@@ -1,4 +1,4 @@
-
+export const BRANCH = localStorage.getItem("selectedLocation");
 
 
 export const ROLES = {

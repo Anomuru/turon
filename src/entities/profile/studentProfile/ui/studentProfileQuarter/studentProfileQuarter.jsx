@@ -102,10 +102,9 @@ export const StudentProfileQuarter = ({group_id}) => {
                 <div className={cls.quarter__select}>
                     <Select defaultValue={selectAcademicYear} onChangeOption={setSelectAcademicYear}
                             options={academicYear}/>
-
                     <Select defaultValue={selectQuarter} onChangeOption={setSelectQuarter} options={quarter}/>
                     <Select defaultValue={subjectSelect} onChangeOption={setSubjectSelect}
-                            options={subject && [...subject, {name: "Hammasi", id: "all"}]}/>
+                            options={subject && [{name: "Hammasi", id: "all"} , ...subject]}/>
                 </div>
 
 
