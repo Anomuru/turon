@@ -94,6 +94,8 @@ export const getOperatorsError = (state) =>
 
 export const getVacancyData = (state) =>
     state.oftenUsedSlice.vacancy
+export const getSystemsData = (state) =>
+    state.oftenUsedSlice.systems
 export const getVacancyLoading = (state) =>
     state.oftenUsedSlice.loading
 export const getVacancyError = (state) =>

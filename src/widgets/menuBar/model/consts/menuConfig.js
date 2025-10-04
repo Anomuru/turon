@@ -11,7 +11,7 @@ export const menuConfig = [
         to: "register",
         name: "Registratsiya",
         icon: "fa-edit",
-        roles: true
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
     },
     {
         to: "taskManager",
@@ -157,7 +157,7 @@ export const menuConfig = [
         to: "quarterMaster",
         name: "Zavxoz profile",
         icon: "fa-toolbox",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.zavxos],
         branches: true
 
     },

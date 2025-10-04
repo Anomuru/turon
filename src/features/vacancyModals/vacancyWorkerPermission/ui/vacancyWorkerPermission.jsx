@@ -24,7 +24,7 @@ export const VacancyWorkerPermission = React.memo(({active, setActive, onAddVaca
 
     const permissionData = useSelector(getPermissionTables);
     const {request} = useHttp()
-    const userId = selectedJobID.job?.length ? Number(selectedJobID.job[0].id) : null;
+    const userId = selectedJobID?.job?.length ? Number(selectedJobID.job[0].id) : null;
 
 
     useEffect(() => {
@@ -101,7 +101,7 @@ export const VacancyWorkerPermission = React.memo(({active, setActive, onAddVaca
                         title={"Ish turi"}
                         extraClass={cls.filter__select}
                         onChangeOption={onChangeWorkName}
-                        options={permissionData.tables}
+                        options={permissionData?.tables}
                         required
                         value={selectedWorkName}
                     />

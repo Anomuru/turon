@@ -69,10 +69,10 @@ export const VacancyPageEdit = React.memo(({modal, setModal, vacancy, onSave}) =
                         value={selectedSubject}
                         onChange={(e) => setSelectedSubject(e.target.value)}
                     />
-                    <Select
+                    {/* <Select
                         onChangeOption={setSelectedType}
                         defaultValue={selectedType}
-                    />
+                    /> */}
 
 
                     <div style={{display: "flex"}}>

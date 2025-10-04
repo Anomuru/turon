@@ -12,13 +12,16 @@ import {getUserBranchId} from "entities/profile/userProfile/index.js";
 
 export const VacancyWorkList = ({ currentTableData, currentPage, PageSize, editMode, onEditClick, selectedItems, setSelectedItems }) => {
 
-    // const {id} = useParams()
-    const id = useSelector(getUserBranchId)
+    const {id} = useParams()
+    // const id = useSelector(getUserBranchId)
 
     const dispatch = useDispatch()
     const workerID = useSelector(getWorkerId)
-    const userName = workerID.job?.map(item => item.group.name)
+    const userName = workerID?.job?.map(item => item.group.name)
     const loadingDef = useSelector(getWorkerLoading)
+
+    console.log(workerID, "workerID");
+    
 
     useEffect(() => {
         if (id)
@@ -51,7 +54,7 @@ export const VacancyWorkList = ({ currentTableData, currentPage, PageSize, editM
             return <DefaultLoader />;
         }
 
-        return workerID.job?.map((item, index) => {
+        return workerID?.job?.map((item, index) => {
             const permissions = item.group.permissions || [];
 
             return (

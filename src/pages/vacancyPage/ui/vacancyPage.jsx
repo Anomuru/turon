@@ -6,7 +6,6 @@ import {Button} from "shared/ui/button";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import cls from "./vacancyPage.module.sass";
 import {VacancyList} from "entities/vacancy/ui/vacancyList";
-import {vacancyPageList} from "entities/vacancy/model";
 import {VacancyPageEdit} from "features/vacancyModals/vacancyPageEdit";
 import {VacancyAdd} from "entities/vacancy/ui/vacancyAdd";
 import {useDispatch, useSelector} from "react-redux";
@@ -93,7 +92,7 @@ export const VacancyPage = () => {
             </div>
             <div className={cls.mainContainer_tablePanelBox}>
                 <VacancyList
-                    currentTableData={currentTableData}
+                    currentTableData={searchedUsers}
                     editMode={!editMode}
                     onEditClick={handleEditClick}
                 />
