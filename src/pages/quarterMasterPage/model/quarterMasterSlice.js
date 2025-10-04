@@ -1,76 +1,8 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {roomsSlice} from "entities/rooms/model/roomsSlice.js";
-
-const data = [
-    {
-        id: 1,
-        name: "Gulnora Aliyeva",
-        subject: "Matematika",
-        date: "2025-10-01",
-        eqiupments: [
-            {
-                id: 1,
-                name: "Kompyuter",
-                quantity: 2
-            },
-            {
-                id: 2,
-                name: "Proektor",
-                quantity: 1
-            },
-            {
-                id: 3,
-                name: "Printer",
-                quantity: 3
-            }
-        ]
-    },
-    {
-        id: 2,
-        name: "Ahmadjon Ismoilov",
-        subject: "Fizika",
-        date: "2025-09-15",
-        eqiupments: [
-            {
-                id: 1,
-                name: "Kompyuter",
-                quantity: 1
-            },
-            {
-                id: 2,
-                name: "Proektor",
-                quantity: 1
-            },
-            {
-                id: 4,
-                name: "Laboratoriya to'plami",
-                quantity: 5
-            }
-        ]
-    },
-    {
-        id: 3,
-        name: "Dilshod Karimov",
-        subject: "Kimyo",
-        date: "2025-11-20",
-        eqiupments: [
-            {
-                id: 1,
-                name: "Kompyuter",
-                quantity: 3
-            },
-            {
-                id: 2,
-                name: "Proektor",
-                quantity: 2
-            }
-        ]
-    }
-]
-
+import { fetchQuarterMasterData } from "./quarterMasterThunk";
 
 const initialState = {
-    quarterMasters: data,
+    quarterMasters: [],
     loading: false,
     error: null
 }
@@ -78,10 +10,41 @@ const initialState = {
 export const quarterMasterSlice = createSlice({
     name: "quarterMasterSlice",
     initialState,
-    reducers: {},
-
+    reducers: {
+        updateLoading: (state) => {
+            state.loading = true
+        },
+        updateQuarter: (state, action) => {
+            state.loading = false
+            state.quarterMasters = state.quarterMasters.map(item => {
+                if (item.id === action.payload.id) {
+                    return action.payload
+                } else return item
+            })
+        }
+    },
+    extraReducers: builder =>
+        builder
+            .addCase(fetchQuarterMasterData.pending, (state, action) => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(fetchQuarterMasterData.fulfilled, (state, action) => {
+                state.quarterMasters = action.payload
+                state.loading = false
+                state.error = null
+            })
+            .addCase(fetchQuarterMasterData.rejected, (state) => {
+                state.error = "error"
+                state.loading = false
+            })
 })
 
-export const {reducer: quarterMasterReducer} = quarterMasterSlice
+export const {reducer: quarterMasterReducer, actions: quarterMasterActions} = quarterMasterSlice
 
+export const {
+    updateLoading,
+    updateQuarter
+
+} = quarterMasterActions
 export default quarterMasterSlice.reducer
