@@ -42,10 +42,10 @@ export const DraggableContainer = (props) => {
         };
 
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     return (
         <div
-            onClick={() => navigate(`observe/${item.id}`)}
+            // onClick={() => navigate(`observe/${item.id}`)}
             style={newStyle}
             className={classNames(cls.draggableContainer, {
                 [cls.selected]: item.isSelected
