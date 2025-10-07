@@ -70,3 +70,4 @@ export const getQuarterMaster = () => `quarterMaster`
 
 export const getGroupObserve = (id) => `time/observe/${id}`
 
+

@@ -11,6 +11,7 @@ import {fetchStatistics} from "entities/statistics/model/statisticsThunk.js";
 import {getPaymentType} from "entities/capital/model/thunk/capitalThunk.js";
 import {capitalReducer, getCapitalTypes} from "entities/capital/index.js";
 import {Radio} from "shared/ui/radio/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 const reducers = {
     statisticsSlice: statisticsReducer,
@@ -27,6 +28,8 @@ export const StatisticsPage = () => {
     const [to, setTo] = useState(today);
 
     const branchId = localStorage.getItem("branchId");
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
     const paymentType = useSelector(getCapitalTypes)
 
     const [activePayment , setActivePayment] = useState()
@@ -47,11 +50,11 @@ export const StatisticsPage = () => {
             const data = {
                 from_date: from,
                 to_date: to,
-                branch: branchId,
+                branch: branchForFilter,
             };
             dispatch(fetchStatistics({data ,  activePayment}));
         }
-    }, [from, to , activePayment]);
+    }, [from, to , activePayment, branchForFilter]);
 
     return (
         <DynamicModuleLoader reducers={reducers}>

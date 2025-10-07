@@ -10,7 +10,7 @@ export const fetchLocationsThunk = createAsyncThunk(
 
 
             const response = await request(
-                `${API_URL}Permissions/user_locations/${selectedSystemIds}/`,
+                `${API_URL}Permissions/user_locations/2/`,
                 "GET",
                 null,
                 headers()

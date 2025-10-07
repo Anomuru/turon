@@ -10,7 +10,6 @@ import {Button} from 'shared/ui/button';
 
 import cls from './header.module.sass';
 import logo from 'shared/assets/logo/turonNew.svg';
-import {deleteSelectedLocations} from "features/locations";
 import {BranchSwitcher} from "features/branchSwitcher";
 import BackButton from "shared/ui/backButton/backButton";
 import {getUserData, getUserRoles} from "entities/user/index.js";
@@ -20,7 +19,7 @@ import {getUserProfileData} from "entities/profile/userProfile/index.js";
 
 export const Header = () => {
 
-
+    const userRole = localStorage.getItem("job")
     const dispatch = useDispatch();
 
     // const {pathname, search} = useLocation();
@@ -120,6 +119,10 @@ export const Header = () => {
                        defaultSearch={savedSearch}
                        onSearch={onChange}
                    />
+                   {
+                       userRole === "director" ? <Location/> : null
+                   }
+
                    <i onClick={() => {
                        navigate(`settings`)
                    }} className="fa-solid fa-gear"/>

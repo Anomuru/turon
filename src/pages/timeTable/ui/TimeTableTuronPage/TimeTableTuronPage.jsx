@@ -62,6 +62,7 @@ import {onRemoveStudents, timeTableTuronReducer} from "pages/timeTable/model/sli
 import {fetchTeachersForSelect} from "entities/oftenUsed/index.js";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {ConfirmModal} from "shared/ui/confirmModal/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 
 
@@ -137,6 +138,8 @@ export const TimeTableTuronPage = () => {
 
 
     const branch = useSelector(getUserBranchId)
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
 
 
     const dispatch = useDispatch()
@@ -148,31 +151,31 @@ export const TimeTableTuronPage = () => {
     }, [])
 
     useEffect(() => {
-        if (branch) {
-            dispatch(fetchTeachersForSelect(branch))
+        if (branchForFilter) {
+            dispatch(fetchTeachersForSelect(branchForFilter))
         }
-    }, [branch])
+    }, [branchForFilter])
 
     useEffect(() => {
-        if (isDataStatus === "week" && weekDay && branch) {
-            dispatch(fetchTimeTableData({week: weekDay, branch, teacher: filteredTeacher }))
-        } else if (isDataStatus === "date" && date && branch) {
-            dispatch(fetchTimeTableData({date, branch, teacher: filteredTeacher}))
+        if (isDataStatus === "week" && weekDay && branchForFilter) {
+            dispatch(fetchTimeTableData({week: weekDay, branch: branchForFilter, teacher: filteredTeacher }))
+        } else if (isDataStatus === "date" && date && branchForFilter) {
+            dispatch(fetchTimeTableData({date, branch: branchForFilter, teacher: filteredTeacher}))
         }
-    }, [isDataStatus, date, weekDay, branch, filteredTeacher])
+    }, [isDataStatus, date, weekDay, branchForFilter, filteredTeacher])
 
     useEffect(() => {
-        if (isDataStatus === "week" && weekDay && branch && classView) {
-            dispatch(fetchTimeTableClassView({week: weekDay, branch}))
-        } else if (isDataStatus === "date" && date && branch && classView) {
-            dispatch(fetchTimeTableClassView({date, branch}))
+        if (isDataStatus === "week" && weekDay && branchForFilter && classView) {
+            dispatch(fetchTimeTableClassView({week: weekDay, branch: branchForFilter}))
+        } else if (isDataStatus === "date" && date && branchForFilter && classView) {
+            dispatch(fetchTimeTableClassView({date, branch: branchForFilter}))
         }
-    }, [isDataStatus, data, weekDay, branch, classView])
+    }, [isDataStatus, data, weekDay, branchForFilter, classView])
 
 
     useEffect(() => {
-        if (type && branch) dispatch(fetchTimeTableTypesData({type, branch}))
-    }, [type, branch])
+        if (type && branchForFilter) dispatch(fetchTimeTableTypesData({type, branch: branchForFilter}))
+    }, [type, branchForFilter])
 
 
     useEffect(() => {

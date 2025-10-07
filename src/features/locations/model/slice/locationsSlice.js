@@ -1,115 +1,91 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {fetchLocationsThunk} from "features/locations/model/thunk/locationsThunk";
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchLocationsThunk } from "features/locations/model/thunk/locationsThunk";
 
 const initialState = {
     locations: [],
-    selectedLocations: [],
+    selectedLocations: {},
     loading: false,
     fetchStatus: "idle",
-    error: null
-}
+    error: null,
+};
 
 const locationsSlice = createSlice({
     name: "ChangeLocationSlice",
     initialState,
     reducers: {
-        addSelectedLocations: (state,action) => {
-            const filteredLocation = state.locations.filter(item => item?.id === +action.payload)[0]
-            localStorage.setItem("selectedLocations", JSON.stringify([...state.selectedLocations,filteredLocation]))
-            state.selectedLocations = [...state.selectedLocations,filteredLocation]
+        addSelectedLocations: (state, action) => {
+            const filteredLocation = state.locations.find(
+                (item) => item?.id === +action.payload
+            );
 
-            state.locations = state.locations.map(item => {
-                if (item.id === +action.payload) {
-                    return {
-                        ...item,
-                        disabled: true
-                    }
+            if (!filteredLocation) return;
 
-                }
-                return item
+            const userRole = localStorage.getItem("job");
+            const storageKey = `selectedLocation_${userRole}`;
 
-            })
+
+            if (userRole === "director") {
+                localStorage.setItem(storageKey, JSON.stringify(filteredLocation));
+            }
+
+
+            state.selectedLocations = filteredLocation;
+
+            state.locations = state.locations.map((item) =>
+                item.id === +action.payload
+                    ? { ...item, disabled: true }
+                    : { ...item, disabled: false }
+            );
         },
 
-        deleteSelectedLocations: (state,action) => {
-            localStorage.setItem("selectedLocations", JSON.stringify(state.selectedLocations.filter(item => item.id !== +action.payload)))
-            state.selectedLocations = state.selectedLocations.filter(item => item.id !== +action.payload)
-            state.locations = state.locations.map(item => {
-                if (item.id === +action.payload) {
-                    return {
-                        ...item,
-                        disabled: false
-                    }
-                }
-
-                return item
-            })
-
+        clearSelectedLocations: (state) => {
+            state.selectedLocations = {};
         },
-
-
-        clearSelectedLocations: (state,action) => {
-            state.selectedLocations = []
-
-
-        }
     },
-    extraReducers: builder =>
+
+    extraReducers: (builder) =>
         builder
-            .addCase(fetchLocationsThunk.pending, state => {
-                state.loading = true
-                state.error = null
-                state.fetchStatus = "pending"
+            .addCase(fetchLocationsThunk.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.fetchStatus = "pending";
             })
             .addCase(fetchLocationsThunk.fulfilled, (state, action) => {
+                const userRole = localStorage.getItem("job");
+                const storageKey = `selectedLocation_${userRole}`;
+                const savedLocation = JSON.parse(localStorage.getItem(storageKey));
 
-
-
-                const localstorageLocs = JSON.parse(localStorage.getItem("selectedLocations"))
-
-
-                if (localstorageLocs && localstorageLocs.length > 0) {
-                    state.selectedLocations = localstorageLocs
-                    state.locations = action.payload.list.map(item => {
-
-                        const isHave = localstorageLocs.some(loc => loc?.id === item.id)
-
-                        if (isHave) {
-                            return {
-                                ...item,
-                                disabled: true
-                            }
-                        }
-                        return item
-                    })
+                if (savedLocation) {
+                    state.selectedLocations = savedLocation;
+                    state.locations = action.payload.list.map((item) =>
+                        item.id === savedLocation.id
+                            ? { ...item, disabled: true }
+                            : { ...item, disabled: false }
+                    );
                 } else {
+                    const first = action.payload.list[0];
+                    state.selectedLocations = first;
 
-                    localStorage.setItem("selectedLocations", JSON.stringify( [action.payload.list[0]]))
-                    state.selectedLocations = [action.payload.list[0]]
-                    state.locations = action.payload.list.map((item,index) => {
-                        if (index === 0) {
-                            return {
-                                ...item,
-                                disabled: true
-                            }
-                        }
-                        return item
-                    })
+
+                    if (userRole === "director") {
+                        localStorage.setItem(storageKey, JSON.stringify(first));
+                    }
+
+                    state.locations = action.payload.list.map((item, i) =>
+                        i === 0 ? { ...item, disabled: true } : item
+                    );
                 }
 
-                state.loading = false
-                state.error = null
-                state.fetchStatus = "success"
+                state.loading = false;
+                state.error = null;
+                state.fetchStatus = "success";
             })
             .addCase(fetchLocationsThunk.rejected, (state, action) => {
-                state.loading = false
-                state.error = action.payload ?? null
-                state.fetchStatus = "error"
+                state.loading = false;
+                state.error = action.payload ?? null;
+                state.fetchStatus = "error";
+            }),
+});
 
-            })
-
-
-})
-
-export default locationsSlice.reducer
-export const {deleteSelectedLocations,addSelectedLocations,clearSelectedLocations} = locationsSlice.actions
+export const { reducer: locationsReducer } = locationsSlice;
+export const { addSelectedLocations, clearSelectedLocations } = locationsSlice.actions;

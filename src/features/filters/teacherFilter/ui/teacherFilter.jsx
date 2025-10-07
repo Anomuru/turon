@@ -18,6 +18,7 @@ import {fetchDeletedTeachersData, fetchTeachersDataWithFilter} from "entities/te
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Button} from "shared/ui/button/index.js";
 import {getSearchValue} from "features/searchInput/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setActiveSwitch , activeSwitch , currentPage , pageSize}) => {
     const search = useSelector(getSearchValue);
@@ -37,6 +38,8 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
     const [selectedLanguage, setSelectedLanguage] = useState(teacherLanguage)
     const {"*": id} = useParams()
     const branchId = localStorage.getItem("branchId")
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
 
 
     //
@@ -67,14 +70,14 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
             langId: selectedLanguage,
             untilAge: selectedAgeTo,
             fromAge: selectedAgeFrom,
-            userBranchId: branchId,
+            userBranchId: branchForFilter,
             switchItem: activeSwitch,
             currentPage ,
             pageSize,
             search: search === null ? "" : search
         }))
         setIsFilter(true)
-    } , [selectedSubject , selectedAgeFrom , selectedAgeTo , selectedLanguage , activeSwitch , currentPage , search])
+    } , [selectedSubject , selectedAgeFrom , selectedAgeTo , selectedLanguage , activeSwitch , currentPage , search, branchForFilter])
 
     const onSelectSubject = (value) => {
         if (value !== selectedSubject) {

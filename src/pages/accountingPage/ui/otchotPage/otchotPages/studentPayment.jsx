@@ -12,6 +12,7 @@ import {API_URL, headers, useHttp} from "../../../../../shared/api/base";
 import {useForm} from "react-hook-form";
 import {onAddAlertOptions} from "../../../../../features/alert/model/slice/alertSlice";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 export const StudentPayment = ({formatSalary}) => {
     const {request} = useHttp();
@@ -21,7 +22,8 @@ export const StudentPayment = ({formatSalary}) => {
     const classes = useSelector(getClasses);
     const classesLoading = useSelector(getClassesLoading);
     const branchID = useSelector(getUserBranchId);
-
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
     const [month, setMonths] = useState(null);
     const [year, setYear] = useState(null);
     const [res, setRes] = useState(null);
@@ -33,10 +35,10 @@ export const StudentPayment = ({formatSalary}) => {
 
     // Branch bo‘yicha payment olish
     useEffect(() => {
-        if (branchID) {
-            dispatch(getStudentPayment(branchID));
+        if (branchForFilter) {
+            dispatch(getStudentPayment(branchForFilter));
         }
-    }, [branchID]);
+    }, [branchForFilter]);
 
     // Default qilib shu yil va shu oyni set qilish
     useEffect(() => {
@@ -64,12 +66,12 @@ export const StudentPayment = ({formatSalary}) => {
 
     // Serverdan filterlangan malumot olish
     useEffect(() => {
-        if (branchID && year && month) {
+        if (branchForFilter && year && month) {
 
 
             setLoading(true)
             request(
-                `${API_URL}Encashment/student_payments/?branch=${branchID}`,
+                `${API_URL}Encashment/student_payments/?branch=${branchForFilter}`,
                 "POST",
                 JSON.stringify({year, month}),
                 headers()
@@ -89,7 +91,7 @@ export const StudentPayment = ({formatSalary}) => {
                     );
                 });
         }
-    }, [year, month, branchID]);
+    }, [year, month, branchForFilter]);
 
     return (
         <div>

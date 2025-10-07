@@ -29,6 +29,7 @@ import {AlertReducer} from "features/alert/model/slice/alertSlice.js";
 import {timeTableTuronReducer} from "pages/timeTable/model/slice/timeTableTuronSlice.js";
 import {filterLeadsReducers} from "entities/filteredLeadsList/model/filteredLeadsListSlice.js";
 import {quarterMasterReducer} from "pages/quarterMasterPage/model/quarterMasterSlice.js";
+import {locationsReducer} from "features/locations/model/slice/locationsSlice.js";
 
 
 export function createReduxStore(
@@ -64,6 +65,7 @@ export function createReduxStore(
         timeTableTuronSlice: timeTableTuronReducer,
         filteredLeadsListSlice: filterLeadsReducers,
         quarterMasterSlice: quarterMasterReducer,
+        locationsSlice: locationsReducer
 
 
 

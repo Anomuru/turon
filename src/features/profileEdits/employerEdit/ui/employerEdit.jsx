@@ -51,12 +51,14 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
     }, [data])
 
     useEffect(() => {
+        console.log(employerID?.group?.name === "Investor");
+        
         if (employerID) {
             setName(employerID?.user?.name)
             setSurname(employerID?.user?.surname)
             setNumber(employerID?.user?.phone)
             setAge(employerID?.user?.birth_date)
-            setMoney(employerID?.salary)
+            setMoney(employerID?.group?.name === "Investor" ? employerID?.share : employerID?.salary)
             setSelectedJob(employerID?.group?.id)
         }
     }, [employerID])

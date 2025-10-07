@@ -20,6 +20,7 @@ import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 import {Table} from "shared/ui/table/index.js";
 import {DefaultLoader} from "shared/ui/defaultLoader/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 const reducers = {
     groupQuarterSlice: groupQuarterReducer
@@ -34,6 +35,8 @@ export const GroupProfileQuarter = () => {
     const [active, setActive] = useState(false)
     const [activeItems, setActiveItems] = useState({})
     const branchId = localStorage.getItem("branchId")
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id;
 
     const {reset, register, handleSubmit} = useForm()
     const [assignments, setAssignments] = useState([]);
@@ -74,9 +77,9 @@ export const GroupProfileQuarter = () => {
 
     useEffect(() => {
         if (selectedTerm && branchId) {
-            dispatch(fetchTermData({termId: selectedTerm, branchId}))
+            dispatch(fetchTermData({termId: selectedTerm, branchId: branchForFilter}))
         }
-    }, [selectedTerm])
+    }, [selectedTerm, branchForFilter])
 
     useEffect(() => {
         if (viewTest) {
