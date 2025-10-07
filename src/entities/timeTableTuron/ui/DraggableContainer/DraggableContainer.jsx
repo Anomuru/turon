@@ -40,12 +40,13 @@ export const DraggableContainer = (props) => {
             backgroundColor:  item?.isFilteredColor ? "#642626" : item.group?.color?.value || null,
             ...style
         };
+
     const navigate = useNavigate()
 
-
+    // const navigate = useNavigate()
     return (
         <div
-            //
+            // onClick={() => navigate(`observe/${item.id}`)}
             style={newStyle}
             className={classNames(cls.draggableContainer, {
                 [cls.selected]: item.isSelected

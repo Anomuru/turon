@@ -54,7 +54,7 @@ export const Inkasatsiya = () => {
 
     const branchId = useSelector(getUserBranchId)
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id;
+    const branchForFilter = selectedBranch?.id ?? branchId;
 
     console.log(paymentType, "paymentType")
     useEffect(() => {

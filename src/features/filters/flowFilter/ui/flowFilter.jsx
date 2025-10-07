@@ -23,7 +23,7 @@ export const FlowFilter = memo(({active, setActive, currentPage, pageSize}) => {
     const teachers = useSelector(getTeacherData) ?? [];
     const id = useSelector(getUserBranchId)
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id;
+   const branchForFilter = selectedBranch?.id ?? id;
     const saved = getSavedFilters()["flowFilter"] ?? {};
     const {selectedSubject: subject, selectedTeacher: teacher} = saved;
 

@@ -21,6 +21,10 @@ export const quarterMasterSlice = createSlice({
                     return action.payload
                 } else return item
             })
+        },
+        deleteQuarter: (state, action) => {
+            state.loading = false
+            state.quarterMasters = state.quarterMasters.filter(item => item.id !== action.payload)
         }
     },
     extraReducers: builder =>
@@ -44,7 +48,8 @@ export const {reducer: quarterMasterReducer, actions: quarterMasterActions} = qu
 
 export const {
     updateLoading,
-    updateQuarter
+    updateQuarter,
+    deleteQuarter
 
 } = quarterMasterActions
 export default quarterMasterSlice.reducer

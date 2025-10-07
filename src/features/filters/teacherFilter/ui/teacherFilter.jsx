@@ -32,6 +32,7 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
     const dispatch = useDispatch()
     const languages = useSelector(getLanguagesData)
     const subjects = useSelector(getSubjectsData)
+    const userBranchId = useSelector(getUserBranchId)
     const [selectedAgeFrom, setSelectedAgeFrom] = useState(teacherAgeFrom)
     const [selectedAgeTo, setSelectedAgeTo] = useState(teacherAgeTo)
     const [selectedSubject, setSelectedSubject] = useState(teacherSubject)
@@ -39,7 +40,7 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
     const {"*": id} = useParams()
     const branchId = localStorage.getItem("branchId")
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id;
+    const branchForFilter = selectedBranch?.id ?? userBranchId;
 
 
     //

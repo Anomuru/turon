@@ -39,65 +39,74 @@ const CommentIcon = () => (
     </svg>
 )
 
-export function QuarterMaster({ order, onChange, statuses }) {
-  const { quantity, itemName } = parseText(order.text)
+export function QuarterMaster({ order, onChange,onDelete, statuses, isDelete }) {
+  const { quantity, itemName } = parseText(order?.text)
 
   return (
     <div className={styles.card}>
-        <div className={styles.cardTop}>
-            <div className={styles.userInfo}>
-                <div className={styles.avatar}>
-                    <UserIcon />
-                </div>
-                <div className={styles.userDetails}>
-                    <div className={styles.userName}>{order.teacher_name}</div>
-                    <div className={styles.branchName}>{order.branch_name}</div>
-                </div>
-            </div>
-            <div onClick={onChange} className={`${styles.status} ${styles[order.status]}`}>{statuses?.filter(item => item.id === order.status)[0]?.name}</div>
-        </div>
-
-        <div className={styles.orderDetails}>
-            <div className={styles.quantity}>
-                <div className={styles.quantityNumber}>{quantity}</div>
-                <div className={styles.quantityUnit}>Soni</div>
-            </div>
-            <div className={styles.itemInfo}>
-                <div className={styles.itemLabel}>Nomi</div>
-                <div className={styles.itemName}>{itemName}</div>
-            </div>
-        </div>
-        <div className={styles.priceLocation}>
-          <div>
-            <p>Narxi</p>
-            <p>{order.price.toLocaleString("ru-RU")} so'm</p>
+      <div className={styles.cardTop}>
+        <div className={styles.userInfo}>
+          <div className={styles.avatar}>
+              <UserIcon />
           </div>
-          <div>
-            <p>Addres</p>
-            <p>{order.address}</p>
+          <div className={styles.userDetails}>
+              <div className={styles.userName}>{order?.teacher_name}</div>
+              <div className={styles.branchName}>{order?.branch_name}</div>
           </div>
         </div>
+        {
+          !isDelete &&
+          <div className={styles.cardTop__edit}>
+            <div onClick={onChange} className={`${styles.status} ${styles[order?.status]}`}>{statuses?.filter(item => item.id === order?.status)[0]?.name}</div>
+            <i 
+              className="fas fa-trash"
+              onClick={onDelete}
+            />
+          </div>
+        }
+      </div>
 
-        <div className={styles.commentBox}>
-            <CommentIcon/>
-            <div>
-                <p className={styles.title}>Koment</p>
-                <p className={styles.text}>{order.comment}</p>
-            </div>
+      <div className={styles.orderDetails}>
+          <div className={styles.quantity}>
+            <div className={styles.quantityNumber}>{quantity}</div>
+            <div className={styles.quantityUnit}>Soni</div>
+          </div>
+          <div className={styles.itemInfo}>
+            <div className={styles.itemLabel}>Nomi</div>
+            <div className={styles.itemName}>{itemName}</div>
+          </div>
+      </div>
+      <div className={styles.priceLocation}>
+        <div>
+          <p>Narxi</p>
+          <p>{order?.price?.toLocaleString("ru-RU")} so'm</p>
         </div>
+        <div>
+          <p>Addres</p>
+          <p>{order?.address}</p>
+        </div>
+      </div>
 
-        <div className={styles.dates}>
-            <div className={styles.dateItem}>
-                <CalendarIcon />
-                <span className={styles.dateLabel}>Yaratilgan:</span>
-                <span className={styles.dateValue}>{new Date(order.created_at).toLocaleDateString("ru-RU")}</span>
-            </div>
-            <div className={styles.dateItem}>
-                <CalendarIcon />
-                <span className={styles.dateLabel}>Yangilangan:</span>
-                <span className={styles.dateValue}>{new Date(order.updated_at).toLocaleDateString("ru-RU")}</span>
-            </div>
-        </div>
+      <div className={styles.commentBox}>
+          <CommentIcon/>
+          <div>
+              <p className={styles.title}>Koment</p>
+              <p className={styles.text}>{order?.comment}</p>
+          </div>
+      </div>
+
+      <div className={styles.dates}>
+          <div className={styles.dateItem}>
+              <CalendarIcon />
+              <span className={styles.dateLabel}>Yaratilgan:</span>
+              <span className={styles.dateValue}>{new Date(order?.created_at).toLocaleDateString("ru-RU")}</span>
+          </div>
+          <div className={styles.dateItem}>
+              <CalendarIcon />
+              <span className={styles.dateLabel}>Yangilangan:</span>
+              <span className={styles.dateValue}>{new Date(order?.updated_at).toLocaleDateString("ru-RU")}</span>
+          </div>
+      </div>
     </div>
   )
 }
