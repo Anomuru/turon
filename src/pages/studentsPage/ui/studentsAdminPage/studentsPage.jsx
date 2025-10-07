@@ -384,7 +384,7 @@ export const StudentsPage = () => {
                     <Form
                         onSubmit={handleSubmit(onSubmit)}
                         extraClassname={cls.modal__form}
-                        typeSubmit={activeFormBtn ? "" : "inside"}
+                        // typeSubmit={activeFormBtn ? "" : "inside"}
                     >
                         <Select
                             required
