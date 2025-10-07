@@ -33,7 +33,7 @@ export const StudentSalary = ({deleted, setDeleted}) => {
     const loading = useSelector(getLoadingStudent)
     const branchID = useSelector(getUserBranchId)
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id;
+    const branchForFilter = selectedBranch?.id ?? branchID;
     const deletedStudentPayment = useSelector(getDeletedStudent)
 
     const [activeDelete, setActiveDelete] = useState(false)

@@ -36,7 +36,7 @@ export const GroupProfileQuarter = () => {
     const [activeItems, setActiveItems] = useState({})
     const branchId = localStorage.getItem("branchId")
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id;
+   const branchForFilter = selectedBranch?.id ?? branchId;
 
     const {reset, register, handleSubmit} = useForm()
     const [assignments, setAssignments] = useState([]);

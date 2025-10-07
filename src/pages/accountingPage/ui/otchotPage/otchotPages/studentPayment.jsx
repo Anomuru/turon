@@ -23,7 +23,7 @@ export const StudentPayment = ({formatSalary}) => {
     const classesLoading = useSelector(getClassesLoading);
     const branchID = useSelector(getUserBranchId);
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id;
+    const branchForFilter = selectedBranch?.id ?? branchID;
     const [month, setMonths] = useState(null);
     const [year, setYear] = useState(null);
     const [res, setRes] = useState(null);

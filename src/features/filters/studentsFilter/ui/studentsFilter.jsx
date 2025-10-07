@@ -42,7 +42,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
     localStorage.setItem("studentSwitch", `${isSwitch}`)
     const userBranchId = localStorage.getItem("branchId")
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id;
+    const branchForFilter = selectedBranch?.id ?? userBranchId;
 
 
 

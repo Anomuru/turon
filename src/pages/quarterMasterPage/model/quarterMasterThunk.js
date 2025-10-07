@@ -3,9 +3,9 @@ import { API_URL, headers, ParamUrl, useHttp } from "shared/api/base";
 
 export const fetchQuarterMasterData = createAsyncThunk(
     "quarterMasterSlice/fetchQuarterMasterData",
-    ({branch_id, status}) => {
+    ({branch_id, status, deleted}) => {
         const {request} = useHttp()
-        return request(`${API_URL}Teachers/teacher-requests/?${ParamUrl({branch_id, status})}`, "GET", null, headers())
+        return request(`${API_URL}Teachers/teacher-requests/?${ParamUrl({branch_id, status, deleted})}`, "GET", null, headers())
     }
 )
 

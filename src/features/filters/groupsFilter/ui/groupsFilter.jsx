@@ -32,7 +32,7 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
     const dispatch = useDispatch()
     const userBranchId = localStorage.getItem("branchId")
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id;
+    const branchForFilter = selectedBranch?.id ?? userBranchId;
     const types = useSelector(getGroupTypes)
 
     localStorage.setItem("selectedTeacher" , selectedTeacher)

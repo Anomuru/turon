@@ -27,7 +27,7 @@ export const EmployeesFilter = React.memo(({active, setActive, currentPage, page
     const jobsData = useSelector(getVacancyData);
     const branch = useSelector(getUserBranchId);
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id;
+    const branchForFilter = selectedBranch?.id ?? branch;
     const saved = getSavedFilters()["employeesFilter"] ?? {};
     const {
         selectedJob: job,

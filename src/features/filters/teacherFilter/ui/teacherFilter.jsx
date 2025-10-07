@@ -39,7 +39,7 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
     const {"*": id} = useParams()
     const branchId = localStorage.getItem("branchId")
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id;
+    const branchForFilter = selectedBranch?.id ?? id;
 
 
     //
