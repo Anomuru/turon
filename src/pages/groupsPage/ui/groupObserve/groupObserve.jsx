@@ -14,37 +14,55 @@ const observeItem = [
     {name: "observe", label: "Observe", icon: "fa fa-user-check"},
     {name: "lessonPlan", label: "Lesson plan", icon: "fa fa-list-ul"},
     {name: "observedDates", label: "Observed dates", icon: "fa fa-list-ul"},
-]
+];
+
 const reducers = {
     groupObserveSlice: groupObserveReducer
-}
+};
+
 export const GroupObservePage = () => {
-    const [active, setActive] = useState(observeItem[0].name)
 
+    const [active, setActive] = useState(localStorage.getItem("activeObserveTab") || observeItem[0].name);
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchGroupObserve())
-        dispatch(fetchGroupObserveOption())
-    } , [])
+        dispatch(fetchGroupObserve());
+        dispatch(fetchGroupObserveOption());
+    }, [dispatch]);
+
+
+    useEffect(() => {
+        localStorage.setItem("activeObserveTab", active);
+    }, [active]);
+
     return (
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.observe}>
                 <div className={cls.observe__header}>
                     {observeItem.map(item => (
-                        <div onClick={() => setActive(item.name)}
-                             className={classNames(cls.observe__header_item, {[cls.active]: active === item.name})}>
+                        <div
+                            key={item.name}
+                            onClick={() => setActive(item.name)}
+                            className={classNames(
+                                cls.observe__header_item,
+                                { [cls.active]: active === item.name }
+                            )}
+                        >
                             {item.label}
                             <i className={item.icon}/>
                         </div>
                     ))}
                 </div>
 
-                {active === "observe" ? <GroupObserve/> : active === "lessonPlan" ? <GroupLessonPlan/> : <ObservedDates/>}
+                {active === "observe" ? (
+                    <GroupObserve/>
+                ) : active === "lessonPlan" ? (
+                    <GroupLessonPlan/>
+                ) : (
+                    <ObservedDates/>
+                )}
             </div>
-
         </DynamicModuleLoader>
     );
 };
-

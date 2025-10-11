@@ -36,7 +36,7 @@ const payments = [
     {id: 4, name: "Ramziddin Mirzayev", amount: 3000000, date: "2025-09-12", paymentType: "Click", status: "completed"},
 ];
 
-export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, currentPage, pageSize}) => {
+export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, currentPage, pageSize , setCurrentPage}) => {
 
 
     const [range, setRange] = useState([0, 10000000]);
@@ -82,6 +82,13 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
 
     const {request} = useHttp()
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (selectedPayment || selectType || from || to || range || search || selectOverheadType || branchForFilter) {
+            setCurrentPage(1)
+        }
+
+    } , [selectedPayment, selectType, from, to, range, search, selectOverheadType, branchForFilter])
 
     useEffect(() => {
 

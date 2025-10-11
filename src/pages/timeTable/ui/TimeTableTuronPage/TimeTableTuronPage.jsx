@@ -141,6 +141,7 @@ export const TimeTableTuronPage = () => {
     const selectedBranch = useSelector(getSelectedLocations);
     const branchForFilter = selectedBranch?.id ?? branch;
 
+    console.log(branchForFilter , "branchForFilter")
 
     const dispatch = useDispatch()
 
