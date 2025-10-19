@@ -32,6 +32,7 @@ export const Input = React.memo(({
 
 
 
+
     return register ? (
         <label style={style} className={cls.inputLabel} htmlFor={name}>
             {title || subTitle   ? (
