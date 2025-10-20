@@ -8,6 +8,10 @@ import {API_URL, headers, useHttp} from "shared/api/base.js";
 import {useParams} from "react-router-dom";
 import {Button} from "shared/ui/button/index.js";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
+import {
+    fetchGroupObserve,
+    fetchGroupObserveOption
+} from "features/groupProfile/model/groupObserve/groupObserveThunk.js";
 
 export const GroupObserve = () => {
 
@@ -26,6 +30,11 @@ export const GroupObserve = () => {
             setFields(observe?.map(item => ({...item, value: "1"})))
         }
     }, [observe])
+
+    useEffect(() => {
+        dispatch(fetchGroupObserve());
+        dispatch(fetchGroupObserveOption());
+    }, [dispatch]);
 
 
     useEffect(() => {

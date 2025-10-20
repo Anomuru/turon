@@ -24,12 +24,6 @@ export const GroupObservePage = () => {
 
     const [active, setActive] = useState(localStorage.getItem("activeObserveTab") || observeItem[0].name);
 
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(fetchGroupObserve());
-        dispatch(fetchGroupObserveOption());
-    }, [dispatch]);
 
 
     useEffect(() => {
