@@ -71,6 +71,8 @@ export const StudentProfileInfo = memo(({
             })
     }
 
+    console.log(charity, "charity")
+
     return (
         <EditableCard
             onClick={() => {

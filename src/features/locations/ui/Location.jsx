@@ -1,18 +1,19 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Select } from 'shared/ui/select';
 import cls from './Location.module.sass';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
-import {addSelectedLocations} from "../model/slice/locationsSlice";
-import {fetchLocationsThunk} from "../model/thunk/locationsThunk";
+import { addSelectedLocations } from "../model/slice/locationsSlice";
+import { fetchLocationsThunk } from "../model/thunk/locationsThunk";
 import {
     getLocationLoading,
     getLocations,
     getSelectedLocations,
     // getSelectedLocationsByIds
 } from "../model/selector/locationsSelector";
-import {MiniLoader} from "shared/ui/miniLoader";
+import { MiniLoader } from "shared/ui/miniLoader";
+import { getUserId } from 'pages/loginPage';
 
 
 export const Location = () => {
@@ -22,17 +23,19 @@ export const Location = () => {
     // const selectedLocationsById = useSelector(getSelectedLocationsByIds)
     const selectedLocations = useSelector(getSelectedLocations)
     const loading = useSelector(getLocationLoading)
+    const userId = useSelector(getUserId)
 
 
-    const [isLocal,setIsSetLocal] = useState(false)
+    const [isLocal, setIsSetLocal] = useState(false)
 
 
     const dispatch = useDispatch();
 
 
     useEffect(() => {
-        dispatch(fetchLocationsThunk())
-    }, []);
+        if (userId)
+            dispatch(fetchLocationsThunk(userId))
+    }, [userId]);
 
 
 
@@ -54,14 +57,14 @@ export const Location = () => {
     // },[selectedLocationsById?.length, locations?.length,isLocal])
 
 
-    const changeSelectedLocation = useCallback( (id) => {
+    const changeSelectedLocation = useCallback((id) => {
         dispatch(addSelectedLocations(id))
-    },[]);
+    }, []);
 
     if (loading) {
         return (
             <div className={cls.loader}>
-                <MiniLoader/>
+                <MiniLoader />
             </div>
         )
     }
@@ -73,17 +76,17 @@ export const Location = () => {
 
             {
                 // locations.length > 1 ?
-                    <Select
-                        onChangeOption={changeSelectedLocation}
-                        options={locations}
+                <Select
+                    onChangeOption={changeSelectedLocation}
+                    options={locations}
 
-                    />
-                    // :
-                    // selectedLocations[0]?.name ?
-                    // <div className={cls.location}>
-                    //     <span>Location:</span>
-                    //     <span>{selectedLocations[0]?.name}</span>
-                    // </div> : null
+                />
+                // :
+                // selectedLocations[0]?.name ?
+                // <div className={cls.location}>
+                //     <span>Location:</span>
+                //     <span>{selectedLocations[0]?.name}</span>
+                // </div> : null
             }
 
         </div>

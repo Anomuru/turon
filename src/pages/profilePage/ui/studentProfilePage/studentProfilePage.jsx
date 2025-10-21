@@ -204,7 +204,7 @@ export const StudentProfilePage = () => {
                 )}
 
                 {currentTab === "timetable" && (
-                    <StudentProfileTimeTable />
+                    <TeacherProfileTimeTable />
                 )}
 
                 {currentTab === "quarter" && (

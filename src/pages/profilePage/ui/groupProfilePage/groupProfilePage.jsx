@@ -44,7 +44,7 @@ import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/Dyn
 import {StudentProfileTimeTable} from "entities/profile/studentProfile/index.js";
 import {fetchTimeTableForShow} from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
 import {Switch} from "shared/ui/switch/index.js";
-import {TeacherProfileTimeTable} from "entities/profile/teacherProfile/index.js";
+import {TeacherProfileTimeTable} from "entities/profile/teacherProfile";
 
 const reducers = {
     groupProfileSlice: groupProfileReducer
