@@ -28,7 +28,8 @@ export const StudentAttendancePage = () => {
     const attendanceAllForDay = useSelector(getAttendanceAllForDay)
     const attendanceDates = useSelector(getAttendanceAll)
     const selectedBranch = useSelector(getSelectedLocations);
-    const branch = selectedBranch?.id;
+    const userBranchId = useSelector(getUserBranchId)
+    const branch = selectedBranch?.id || userBranchId; 
     const [attendanceYears, setAttendanceYears] = useState([])
     const [selectedYear, setSelectedYear] = useState(null)
     const [attendanceMonth, setAttendanceMonth] = useState([])

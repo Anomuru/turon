@@ -49,7 +49,7 @@ export const menuConfig = [
         to: "students",
         name: "O'quvchilar",
         icon: "fa-user-graduate",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.zavuch],
         branches: true
     },
     // {
@@ -74,7 +74,7 @@ export const menuConfig = [
         to: "groups",
         name: "Sinflar",
         icon: "fa-users",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.teacher],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.teacher, ROLES.zavuch],
         branches: true
 
     },
@@ -98,7 +98,7 @@ export const menuConfig = [
         to: "time",
         name: "Time Table",
         icon: "fa-clock",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.zavuch],
         branches: true
     },
     // {

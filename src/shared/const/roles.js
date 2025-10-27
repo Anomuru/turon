@@ -13,5 +13,6 @@ export const ROLES = {
     muxarir : "muxarir",
     accountant : "accountant",
     operator : "operator",
-    zavxos: "Zavxos"
+    zavxos: "Zavxos",
+    zavuch: "Zavuch"
 }

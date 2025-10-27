@@ -37,7 +37,10 @@ export default defineConfig({
             },
         }),
     ],
-
+    server: {
+        host: true, // ← это разрешает доступ извне
+        port: 5173, // можно указать другой порт, если нужно
+    },
     resolve: {
         alias: {
             src: path.resolve(__dirname, './src'),
