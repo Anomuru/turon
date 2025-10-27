@@ -17,18 +17,12 @@ export const Employers = ({currentTableData, loading}) => {
     const loadingDef = useSelector(getEmployerLoading)
     const filteredEmployer = useSelector(getEmployerDataWithFilter)
     const [activeModal, setActiveModal] = useState(false)
-    const [changingUser,setChangingUser] = useState()
+    const [changingUser, setChangingUser] = useState()
 
 
     const renderEmployers = () => {
 
-        if (loadingDef) {
-            return (
-                <tr>
-                    <td colSpan="6">Yuklanmoqda...</td>
-                </tr>
-            )
-        }
+
         const employerToRender = filteredEmployer && filteredEmployer.length > 0 ? filteredEmployer : currentTableData
 
         // if (!employerToRender || employerToRender.length === 0)
@@ -112,6 +106,9 @@ export const Employers = ({currentTableData, loading}) => {
     return (
         <div className={cls.employer}>
             <div className={cls.table}>
+
+
+
                 <Table>
                     <thead className={cls.thead}>
                     <tr>
@@ -124,20 +121,18 @@ export const Employers = ({currentTableData, loading}) => {
                         <th></th>
                     </tr>
                     </thead>
-                    {
-                        loadingDef ? <DefaultPageLoader/>
-                            :
-                            <tbody>
-                            {renderData}
-                            </tbody>
-                    }
+
+                    {loadingDef ? <DefaultPageLoader/> :  <tbody>
+                    {renderData}
+                    </tbody>}
+
 
                 </Table>
 
 
                 <ConfirmModal
                     type={"danger"}
-                    title={ "O'chirmoq" }
+                    title={"O'chirmoq"}
                     text={`${changingUser?.name} o'chirishni hohlaysizmi`}
                     active={activeModal}
                     setActive={setActiveModal}

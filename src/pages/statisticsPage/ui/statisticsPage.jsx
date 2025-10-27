@@ -29,7 +29,7 @@ export const StatisticsPage = () => {
 
     const branchId = localStorage.getItem("branchId");
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id ?? id;
+    const branchForFilter = selectedBranch?.id ?? branchId;
     const paymentType = useSelector(getCapitalTypes)
 
     const [activePayment , setActivePayment] = useState()

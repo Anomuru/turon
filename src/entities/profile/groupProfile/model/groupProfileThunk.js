@@ -156,6 +156,7 @@ export const getGroupStudyYears = createAsyncThunk(
 export const getGroupStudyMonth = createAsyncThunk(
     "groupProfileSlice/getGroupStudyMonth",
     ({id, res}) => {
+        console.log(id , "id")
         const {request} = useHttp()
         return request(`${API_URL}Attendance/attendance_year_list/${id}/`, "POST", JSON.stringify({year: res}), headers())
     }

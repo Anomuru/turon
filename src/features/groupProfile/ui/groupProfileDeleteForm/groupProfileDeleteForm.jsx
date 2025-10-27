@@ -67,7 +67,8 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
 
     const {
         register,
-        handleSubmit
+        handleSubmit,
+        setValue
     } = useForm()
     const {request} = useHttp()
 
@@ -122,6 +123,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
     const [currentTeachersData, setCurrentTeachersData] = useState([])
 
 
+
     const searched = useMemo(() => {
         if (!students) return []
 
@@ -167,30 +169,28 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
     const onSubmitMove = (data) => {
         let msg;
 
-            const res = {
-                ...data,
-                students: select
-            }
+        const res = {
+            ...data,
+            students: select
+        }
 
 
+        request(`${API_URL}Group/filtered_students_move_to_class/?branch=${branch}&group=${id}`, "POST", JSON.stringify(res), headers())
+            .then((res) => {
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: "O'quvchilar sinfga o'tqazildi"
 
-            request(`${API_URL}Group/filtered_students_move_to_class/?branch=${branch}&group=${id}`, "POST", JSON.stringify(res), headers())
-               .then((res) =>{
-                   dispatch(onAddAlertOptions({
-                       type: "success",
-                       status: true,
-                       msg: "O'quvchilar sinfga o'tqazildi"
-
-                   }))
-                   dispatch(onMoveToGroup(select));
-                   setSelect([])
-                   setActive(false)
-                   setActiveModal("")
-               })
-
+                }))
+                dispatch(onMoveToGroup(select));
+                setSelect([])
+                setActive(false)
+                setActiveModal("")
+            })
 
 
-            // dispatch(moveToClass({branch, id, res}))
+        // dispatch(moveToClass({branch, id, res}))
         dispatch(onAddAlertOptions({
             type: "success",
             status: true,
@@ -252,12 +252,13 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
         dispatch(getGroupDebtStudents({id: data?.id, res: {year: selectedYearId, month: monthId}}))
     }, [selectedYearId])
 
-    const changeYearId = useCallback((id) => {
+    console.log(data, "data")
+    const changeYearId = (id) => {
         setSelectedYearId(id)
         setSelectedMonthId(null)
         dispatch(getGroupStudyMonth({id: data?.id, res: id}))
         // request(`${API_URL}/${id}`, "POST")
-    }, [])
+    }
 
     const onFilterGroups = (id) => {
         dispatch(fetchFilteredGroups({id, group_id: data?.id}))
@@ -464,7 +465,9 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
     const renderAmountService = renderAmountServiceTypes()
     const render = renderStudents()
     const renderStudent = renderStudentsData()
-
+    useEffect(() => {
+        setValue("total_debt", selectedChange?.total_debt)
+    }, [selectedChange])
     return (
         <>
             <EditableCard
@@ -568,7 +571,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                 >
                     <Select
                         extraClass={cls.deleteForm__select}
-                        options={ schoolTeachers}
+                        options={schoolTeachers}
                         title={"Teacher"}
                         onChangeOption={onFilterGroups}
                         // register={register}
@@ -706,7 +709,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                             <th/>
                             <th>Ism</th>
                             <th>Familya</th>
-                                <th>Sinf</th>
+                            <th>Sinf</th>
 
                             <th>Status</th>
                         </tr>
@@ -786,7 +789,8 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                     <h1>Oylik qarz o'zgartirish</h1>
                     <Input
                         extraClassName={cls.changeModal__input}
-                        value={selectedChange?.total_debt}
+                        // value={selectedChange?.total_debt}
+                        // defaultValue={selectedChange?.total_debt}
                         register={register}
                         name={"total_debt"}
                     />

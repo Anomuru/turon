@@ -40,7 +40,7 @@ export const Accordion = ({title, subtitle, children, backOpen, setBackOpen, cla
             <div  className={cls.header}>
                 <div className={cls.info}>
 
-                        <span>{number}</span>
+                    {number && <span>{number}</span>}
                     {
                         title ? <div className={cls.title}>{title}</div> : null
                     }

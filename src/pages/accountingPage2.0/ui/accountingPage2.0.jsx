@@ -37,7 +37,7 @@ export const AccountingPageNew = () => {
        <DynamicModuleLoader reducers={reducers}>
            <div className={cls.accounting}>
                <AccountingPageNewHeader setSelectType={setSelectType} selectType={selectType}/>
-                <AccountingNewFilter pageSize={PageSize} currentPage={currentPage} selectType={selectType} setActiveFilter={setActiveFilter} activeFilter={activeFilter}/>
+                <AccountingNewFilter setCurrentPage={setCurrentPage} pageSize={PageSize} currentPage={currentPage} selectType={selectType} setActiveFilter={setActiveFilter} activeFilter={activeFilter}/>
                <AccountingPageNewTable selectType={selectType} data={data} activeFilter={activeFilter}/>
                <Pagination
                    className={cls.pagination}

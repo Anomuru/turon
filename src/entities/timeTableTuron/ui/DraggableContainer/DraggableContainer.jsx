@@ -41,6 +41,7 @@ export const DraggableContainer = (props) => {
             ...style
         };
 
+    const navigate = useNavigate()
 
     // const navigate = useNavigate()
     return (
@@ -61,7 +62,12 @@ export const DraggableContainer = (props) => {
                         !!item?.teacher?.name &&
                         <img src={Grip} alt="grip" {...listeners} className={cls.handle} />
                     }
-
+                    <i
+                        onClick={() => navigate(`observe/${item.id}`)}
+                        className={"fa fa-list-ul"}
+                        style={{fontSize: "1.4rem" , color: "white" , position: "absolute" , right: "6px" , bottom: "5px"}}
+                         // className={cls.handle}
+                    />
                     <i
                         onClick={() => {
                             if (item.id) {
@@ -76,6 +82,7 @@ export const DraggableContainer = (props) => {
                     >
 
                     </i>
+
                 </>
             }
 

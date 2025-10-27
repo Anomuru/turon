@@ -235,8 +235,9 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
         request(`${API_URL}Attendance/attendance_per_month_delete/${changedData.id}/`, "PUT", JSON.stringify(data), headers())
             .then(res => {
                 dispatch(fetchStudentDebtorData(id))
+                setCanChange(false)
+
             })
-        setCanChange(false)
     }
 
 
@@ -251,6 +252,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
         setCanChange(false)
     }
 
+    console.log(changedData, "changedData")
     return (
         <EditableCard
             extraClass={classNames(cls.path, {

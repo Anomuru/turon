@@ -1,0 +1,55 @@
+.lessonPlan
+  padding-top: 2rem
+  display: flex
+  flex-direction: column
+  gap: 1.6rem
+  &__header
+    &_info
+      display: flex
+      justify-content: space-between
+    &_selects
+      display: flex
+      gap: 2rem
+      &_select
+        min-width: 15rem!important
+  &__middle
+    &_items
+      display: flex
+      gap: 0 1rem
+      flex-wrap: wrap
+  &__list
+
+    display: flex
+    gap: 2rem
+    flex-wrap: wrap
+    max-height: 28rem
+    height: 28rem
+    overflow: auto
+    padding: 1rem
+    &_user
+      padding: 2rem
+      box-shadow:  0 0 5px 0
+      width: 50rem
+      border-radius: 10px
+      height: fit-content
+      &_info
+        display: flex
+        align-items: center
+        gap: 1rem
+        &  >img
+          width: 5rem
+          height: 5rem
+      &  > h2
+        max-height: 10rem
+        overflow: auto
+        padding: 1rem 0 0 1rem
+  &__btn
+    align-self: flex-end
+.modal__list
+  padding-top: 1rem
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  max-height: 50rem
+  overflow: auto
+  padding: 2rem

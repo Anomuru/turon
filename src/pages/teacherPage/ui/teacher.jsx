@@ -123,7 +123,7 @@ export const TeachersPage = () => {
                     {activeCategory ?
                         <EmployerCategoryPage extraClass={cls.categoryItem}/>
                         :
-                        employerSwitch ? <Employers
+                        employerSwitch ?  <Employers
                             currentTableData={employersData}
                         /> : activeSwitch === true ?
                             <DeletedTeachers

@@ -1,4 +1,5 @@
 import {useDroppable} from "@dnd-kit/core";
+import {useNavigate} from "react-router";
 
 export function Droppable({id, children, extraClass,overStyle,disabled,data,...props}) {
 
@@ -13,6 +14,7 @@ export function Droppable({id, children, extraClass,overStyle,disabled,data,...p
 
     return (
         <div
+
             key={id}
             ref={setNodeRef}
             style={isOver  ? overStyle : null}
