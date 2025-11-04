@@ -3,7 +3,9 @@ import {
     getFilteredGroups,
     getGroupProfileFilteredStudents,
     getGroupProfileFilteredTeachers,
+    getLoadingStudent,
     getReasons,
+    getStudentsLoading,
     getStudyMonths
 } from "entities/profile/groupProfile/model/groupProfileSelector";
 import {
@@ -14,41 +16,41 @@ import {
     getGroupStudyYears,
     moveGroup
 } from "entities/profile/groupProfile/model/groupProfileThunk";
-import {fetchTeachersData, getTeachers} from "entities/teachers";
-import {getUserBranchId} from "entities/profile/userProfile/model/userProfileSelector";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import { fetchTeachersData, getTeachers } from "entities/teachers";
+import { getUserBranchId } from "entities/profile/userProfile/model/userProfileSelector";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import classNames from "classnames";
-import {useForm} from "react-hook-form";
-import {useDispatch, useSelector} from "react-redux";
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
     changeDebtStudent,
-    changeGroupProfile,
     deleteDebtStudent,
     getGroupProfileData,
     getStudyYears
 } from "entities/profile/groupProfile";
-import {amountService, amountTypes} from "entities/profile/studentProfile";
-import {useNavigate, useParams} from "react-router";
-import {useTheme} from "shared/lib/hooks/useTheme";
-import {ConfirmModal} from "shared/ui/confirmModal";
-import {EditableCard} from "shared/ui/editableCard";
-import {Modal} from "shared/ui/modal";
-import {Form} from "shared/ui/form";
-import {Button} from "shared/ui/button";
-import {Input} from "shared/ui/input";
-import {Radio} from "shared/ui/radio";
-import {Select} from "shared/ui/select";
-import {Table} from "shared/ui/table";
+import { amountService, amountTypes } from "entities/profile/studentProfile";
+import { useNavigate, useParams } from "react-router";
+import { useTheme } from "shared/lib/hooks/useTheme";
+import { ConfirmModal } from "shared/ui/confirmModal";
+import { EditableCard } from "shared/ui/editableCard";
+import { Modal } from "shared/ui/modal";
+import { Form } from "shared/ui/form";
+import { Button } from "shared/ui/button";
+import { Input } from "shared/ui/input";
+import { Radio } from "shared/ui/radio";
+import { Select } from "shared/ui/select";
+import { Table } from "shared/ui/table";
 
 import cls from "./groupProfileDeleteForm.module.sass";
 import defaultUserImg from "shared/assets/images/user_image.png";
 import bank from "shared/assets/images/Bank.png";
 import creditCard from "shared/assets/images/CreditCard.png";
 import money from "shared/assets/images/Money.png";
-import {API_URL, headers, useHttp} from "../../../../shared/api/base";
-import {onMoveToGroup} from "entities/profile/groupProfile/model/groupProfileSlice";
+import { API_URL, headers, useHttp } from "../../../../shared/api/base";
+import { addStudent, deleteStudent, loadingStudent, onMoveToGroup } from "entities/profile/groupProfile/model/groupProfileSlice";
+import { DefaultPageLoader } from "shared/ui/defaultLoader";
 
 const listPretcent = [-1, 34.8, 70.4]
 
@@ -63,17 +65,17 @@ const deleteTypeList = [
     }
 ]
 
-export const GroupProfileDeleteForm = memo(({branch}) => {
+export const GroupProfileDeleteForm = memo(({ branch }) => {
 
     const {
         register,
         handleSubmit,
         setValue
     } = useForm()
-    const {request} = useHttp()
+    const { request } = useHttp()
 
-    const {theme} = useTheme()
-    const {id} = useParams()
+    const { theme } = useTheme()
+    const { id } = useParams()
     // const {id} = useSelector(getBranch)
     const dispatch = useDispatch()
     const navigation = useNavigate()
@@ -87,6 +89,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
     const studyYears = useSelector(getStudyYears)
     const studyMonths = useSelector(getStudyMonths)
     const debtStudents = useSelector(getDebtStudents)
+    const loading = useSelector(getStudentsLoading)
 
     const [isDeleted, setIsDeleted] = useState(false)
     const [dataDeleted, setDataDeleted] = useState(null)
@@ -96,10 +99,10 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
             dispatch(filteredStudents({
                 userBranchId: branch,
                 group_id: data?.id,
-                res: {ignore_students: data?.students.map(item => item.id)}
+                res: { ignore_students: data?.students.map(item => item.id) }
             }))
-            dispatch(fetchTeachersData({userBranchId: branch}))
-            dispatch(getGroupStudyYears({id: data?.id}))
+            dispatch(fetchTeachersData({ userBranchId: branch }))
+            dispatch(getGroupStudyYears({ id: data?.id }))
         }
     }, [data, branch])
     const [active, setActive] = useState(false)
@@ -141,24 +144,35 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
 
 
     const onSubmitDelete = () => {
+        dispatch(loadingStudent())
         const place = "sinf"
         const selectedStudent = data?.students?.filter(item => item.id === selectDeleteId)[0]?.user
-        const res = {
+        const patch = {
             ...dataDeleted,
             students: [selectDeleteId],
-            update_method: "remove_students"
-        }
-        dispatch(changeGroupProfile({
-            id,
-            data: res,
+            update_method: "remove_students",
             group_type: "school"
-        }))
-        dispatch(onAddAlertOptions({
-            type: "success",
-            status: true,
-            msg: `${selectedStudent?.name} ${selectedStudent?.surname} ${place}dan o'chirildi`
-        }))
-        setIsDeleted(false)
+        }
+
+        request(`${API_URL}Group/groups/profile/${id}/`, "PATCH", JSON.stringify(patch), headers())
+            .then(res => {
+                dispatch(deleteStudent(res?.students))
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: `${selectedStudent?.name} ${selectedStudent?.surname} ${place}dan o'chirildi`
+                }))
+                setIsDeleted(false)
+                setActiveModal("")
+                setDataDeleted(null)
+            })
+
+        // dispatch(changeGroupProfile({
+        //     id,
+        //     data: res,
+        //     group_type: "school"
+        // }))
+
     }
 
     const onDelete = (data) => {
@@ -191,35 +205,48 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
 
 
         // dispatch(moveToClass({branch, id, res}))
-        dispatch(onAddAlertOptions({
-            type: "success",
-            status: true,
-            msg: msg
-        }))
+        // dispatch(onAddAlertOptions({
+        //     type: "success",
+        //     status: true,
+        //     msg: msg
+        // }))
     }
 
     const onSubmitAddStudents = () => {
+        dispatch(loadingStudent())
 
         const place = "sinf"
-        dispatch(changeGroupProfile({
-            data: {
-                students: selectedId,
-                update_method: "add_students"
-            },
-            id,
+
+        const patch = {
+            students: selectedId,
+            update_method: "add_students",
             group_type: "school"
-        }))
-        dispatch(onAddAlertOptions({
-            type: "success",
-            status: true,
-            msg: `O'quvchilar ${place}ga qo'shildi`
-        }))
+        }
+
+        request(`${API_URL}Group/groups/profile/${id}/`, "PATCH", JSON.stringify(patch), headers())
+            .then(res => {
+                dispatch(addStudent(res?.students))
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: `O'quvchilar ${place}ga qo'shildi`
+                }))
+            })
+        // dispatch(changeGroupProfile({
+        //     data: {
+        //         students: selectedId,
+        //         update_method: "add_students"
+        //     },
+        //     id,
+        //     group_type: "school"
+        // }))
+
     }
 
     const onChangePaymentMonth = (data) => {
         request(`${API_URL}Attendance/attendance_per_month_delete/${selectedChange?.attendance_id}/`, "PUT", JSON.stringify(data), headers())
             .then(res => {
-                dispatch(changeDebtStudent({id: selectedChange.id, res}))
+                dispatch(changeDebtStudent({ id: selectedChange.id, res }))
                 dispatch(onAddAlertOptions({
                     type: "success",
                     status: true,
@@ -249,19 +276,19 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
 
     const changeMonthId = useCallback((monthId) => {
         setSelectedMonthId(monthId)
-        dispatch(getGroupDebtStudents({id: data?.id, res: {year: selectedYearId, month: monthId}}))
+        dispatch(getGroupDebtStudents({ id: data?.id, res: { year: selectedYearId, month: monthId } }))
     }, [selectedYearId])
 
     console.log(data, "data")
     const changeYearId = (id) => {
         setSelectedYearId(id)
         setSelectedMonthId(null)
-        dispatch(getGroupStudyMonth({id: data?.id, res: id}))
+        dispatch(getGroupStudyMonth({ id: data?.id, res: id }))
         // request(`${API_URL}/${id}`, "POST")
     }
 
     const onFilterGroups = (id) => {
-        dispatch(fetchFilteredGroups({id, group_id: data?.id}))
+        dispatch(fetchFilteredGroups({ id, group_id: data?.id }))
     }
 
 
@@ -272,12 +299,12 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                     <tr>
                         <td>{i + 1}</td>
                         <td
-                            // onClick={() => {
-                            //     setValue("payment_sum", item.discount_sum)
-                            //     setValue("reason", item.discount_reason)
-                            //     setActiveModal(true)
-                            //     setItemChange(item.discount_id)
-                            // }}
+                        // onClick={() => {
+                        //     setValue("payment_sum", item.discount_sum)
+                        //     setValue("reason", item.discount_reason)
+                        //     setActiveModal(true)
+                        //     setItemChange(item.discount_id)
+                        // }}
                         >
                             {item?.name} {item?.surname}
                         </td>
@@ -344,7 +371,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                 <td>
                     <div
                         className={cls.students__upper}
-                        style={{backgroundColor: item.status}}
+                        style={{ backgroundColor: item.status }}
                     />
                 </td>
                 <td>
@@ -434,13 +461,14 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                                     return prev.filter(i => i !== item.id)
                                 } else return [...prev, item.id]
                             })}
+                            checked={selectedId.includes(item?.id)}
                         />
                         <div className={classNames(cls.status, {
                             [cls.active]: item?.extra_info?.status
                         })}>
                             <div className={classNames(cls.status__inner, {
                                 [cls.active]: item?.extra_info?.status
-                            })}/>
+                            })} />
                         </div>
                     </div>
                 </td>
@@ -472,7 +500,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
         <>
             <EditableCard
                 extraClass={cls.students}
-                title={<i className="fas fa-edit"/>}
+                title={<i className="fas fa-edit" />}
                 onClick={() => setActive(!active)}
             >
                 <div className={cls.students__title}>
@@ -505,11 +533,15 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                     </div>
                 </div>
                 <div className={cls.students__list}>
-                    <Table>
-                        <tbody>
-                        {render}
-                        </tbody>
-                    </Table>
+                    {
+                        loading
+                            ? <DefaultPageLoader />
+                            : <Table>
+                                <tbody>
+                                    {render}
+                                </tbody>
+                            </Table>
+                    }
                 </div>
             </EditableCard>
             <Modal
@@ -547,7 +579,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                     {
                         reasons?.results?.filter(item =>
                             item?.id === +selectOptId)[0]?.name === "Boshqa" ||
-                        selectOpt !== "deleted" ? <Input
+                            selectOpt !== "deleted" ? <Input
                             extraClassName={cls.deleteForm__input}
                             placeholder={"Sabab"}
                             register={register}
@@ -574,8 +606,8 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                         options={schoolTeachers}
                         title={"Teacher"}
                         onChangeOption={onFilterGroups}
-                        // register={register}
-                        // name={"teacher"}
+                    // register={register}
+                    // name={"teacher"}
                     />
                     <Select
                         extraClass={cls.deleteForm__select}
@@ -602,15 +634,15 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                     <h1>Umumiy Hisob</h1>
                     <div className={cls.items}>
                         <div className={cls.items__inner}>
-                            <img src={money} alt=""/>
+                            <img src={money} alt="" />
                             <p>12 000 000</p>
                         </div>
                         <div className={cls.items__inner}>
-                            <img src={creditCard} alt=""/>
+                            <img src={creditCard} alt="" />
                             <p>11 000 000</p>
                         </div>
                         <div className={cls.items__inner}>
-                            <img src={bank} alt=""/>
+                            <img src={bank} alt="" />
                             <p>11 000 000</p>
                         </div>
                     </div>
@@ -633,13 +665,13 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                                                     onClick={() => setActivePaymentType(index)}
                                                 >
                                                     <p>{item.name}</p>
-                                                    <img src={item.image} alt=""/>
+                                                    <img src={item.image} alt="" />
                                                 </div>
                                             )
                                         }
                                         <div
                                             className={cls.items__active}
-                                            style={{left: `${listPretcent[activePaymentType]}%`}}
+                                            style={{ left: `${listPretcent[activePaymentType]}%` }}
                                         />
                                     </div>
                                     <Form onSubmit={handleSubmit()}>
@@ -705,23 +737,24 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                 <div className={cls.addModal__container}>
                     <Table>
                         <thead>
-                        <tr>
-                            <th/>
-                            <th>Ism</th>
-                            <th>Familya</th>
-                            <th>Sinf</th>
+                            <tr>
+                                <th />
+                                <th>Ism</th>
+                                <th>Familya</th>
+                                <th>Sinf</th>
 
-                            <th>Status</th>
-                        </tr>
+                                <th>Status</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {renderStudent}
+                            {renderStudent}
                         </tbody>
                     </Table>
                 </div>
                 <Button
                     extraClass={cls.addModal__btn}
                     onClick={onSubmitAddStudents}
+                    type={loading ? "disabled" : ""}
                 >
                     Add
                 </Button>
@@ -755,22 +788,22 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
                 <div className={cls.tableDebt}>
                     <Table>
                         <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Full name</th>
-                            <th>Umumiy qarz</th>
-                            <th>Qolgan qarz</th>
-                            <th>Xayriya</th>
-                            <th>Chegirma</th>
-                            <th>Chegirma sababi</th>
-                            {/*<th>Cash</th>*/}
-                            {/*<th>Click</th>*/}
-                            {/*<th>Bank</th>*/}
-                            {/*<th></th>*/}
-                        </tr>
+                            <tr>
+                                <th>No</th>
+                                <th>Full name</th>
+                                <th>Umumiy qarz</th>
+                                <th>Qolgan qarz</th>
+                                <th>Xayriya</th>
+                                <th>Chegirma</th>
+                                <th>Chegirma sababi</th>
+                                {/*<th>Cash</th>*/}
+                                {/*<th>Click</th>*/}
+                                {/*<th>Bank</th>*/}
+                                {/*<th></th>*/}
+                            </tr>
                         </thead>
                         <tbody>
-                        {renderDebtorData()}
+                            {renderDebtorData()}
                         </tbody>
                     </Table>
                 </div>
@@ -779,7 +812,7 @@ export const GroupProfileDeleteForm = memo(({branch}) => {
             <Modal
                 active={activeDebt}
                 setActive={setActiveDebt}
-                // extraClass={cls.changeModal}
+            // extraClass={cls.changeModal}
             >
                 <Form
                     onSubmit={handleSubmit(onChangePaymentMonth)}

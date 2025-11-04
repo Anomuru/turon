@@ -1,7 +1,6 @@
 import classNames from "classnames";
 // import {fetchGroupsData, getGroupsListData} from "entities/groups";
 import {
-    changeGroupProfile,
     fetchFilteredStudentsAndTeachers,
     fetchGroupProfile, fetchGroupProfileTimeTable,
     getGroupProfileData, getGroupProfileLoading,
@@ -11,27 +10,27 @@ import {
     getGroupProfileFilteredStudents,
     getLoadingStudent
 } from "entities/profile/groupProfile/model/groupProfileSelector";
-import {filteredStudents} from "entities/profile/groupProfile/model/groupProfileThunk";
-import {fetchTeachersData} from "entities/teachers";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import React, {memo, useEffect, useMemo, useState} from 'react';
-import {useForm} from "react-hook-form";
-import {useDispatch, useSelector} from "react-redux";
-import {API_URL, headers, useHttp} from "shared/api/base";
+import { filteredStudents } from "entities/profile/groupProfile/model/groupProfileThunk";
+import { fetchTeachersData } from "entities/teachers";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { API_URL, headers, useHttp } from "shared/api/base";
 import defaultUserImg from "shared/assets/images/user_image.png";
-import {Input} from "shared/ui/input";
-import {MiniLoader} from "shared/ui/miniLoader";
+import { Input } from "shared/ui/input";
+import { MiniLoader } from "shared/ui/miniLoader";
 
-import {Select} from "shared/ui/select";
-import {Button} from "shared/ui/button";
-import {Modal} from "shared/ui/modal";
-import {Form} from "shared/ui/form";
-import {Table} from "shared/ui/table";
+import { Select } from "shared/ui/select";
+import { Button } from "shared/ui/button";
+import { Modal } from "shared/ui/modal";
+import { Form } from "shared/ui/form";
+import { Table } from "shared/ui/table";
 
 import cls from "./classAddForm.module.sass";
-import {fetchGroupsForSelect} from "entities/oftenUsed/model/oftenUsedThunk";
-import {getGroupsSelect} from "entities/oftenUsed/model/oftenUsedSelector";
-import {getFilteredStudents} from "entities/students/index.js";
+import { fetchGroupsForSelect } from "entities/oftenUsed/model/oftenUsedThunk";
+import { getGroupsSelect } from "entities/oftenUsed/model/oftenUsedSelector";
+import { getFilteredStudents } from "entities/students/index.js";
 
 
 
@@ -43,7 +42,7 @@ export const ClassAddForm = memo((props) => {
         branch
     } = props
 
-    const {request} = useHttp()
+    const { request } = useHttp()
     const dispatch = useDispatch()
     const {
         register,
@@ -61,10 +60,10 @@ export const ClassAddForm = memo((props) => {
     const [selectedId, setSelectedId] = useState([])
     const [searchValue, setSearchValue] = useState("")
 
-    const [loadingAdd , setLoadingAdd] = useState(false)
+    const [loadingAdd, setLoadingAdd] = useState(false)
 
     const onSubmit = (data) => {
-        dispatch(fetchGroupProfile({id: data?.class}))
+        dispatch(fetchGroupProfile({ id: data?.class }))
         setActiveModal(true)
     }
 
@@ -126,9 +125,9 @@ export const ClassAddForm = memo((props) => {
             dispatch(filteredStudents({
                 userBranchId: branch,
                 group_id: data?.id,
-                res: {ignore_students: data?.students.map(item => item.id)}
+                res: { ignore_students: data?.students.map(item => item.id) }
             }))
-            dispatch(fetchTeachersData({userBranchId: branch}))
+            dispatch(fetchTeachersData({ userBranchId: branch }))
         }
     }, [data, branch])
 
@@ -146,7 +145,7 @@ export const ClassAddForm = memo((props) => {
         return searched?.map(item =>
             <tr>
                 <td>
-                    <img src={defaultUserImg} alt=""/>
+                    <img src={defaultUserImg} alt="" />
                 </td>
                 <td>{item?.user?.name}</td>
                 <td>{item?.user?.surname}</td>
@@ -180,7 +179,7 @@ export const ClassAddForm = memo((props) => {
                         })}>
                             <div className={classNames(cls.status__inner, {
                                 [cls.active]: item?.extra_info?.status
-                            })}/>
+                            })} />
                         </div>
                     </div>
                 </td>
@@ -191,7 +190,7 @@ export const ClassAddForm = memo((props) => {
     const renderStudent = renderStudentsData()
 
 
-    console.log(loading , "loading")
+    console.log(loading, "loading")
     return (
         <>
             <Modal
@@ -230,21 +229,21 @@ export const ClassAddForm = memo((props) => {
                     defaultValue={searchValue}
                 />
                 {
-                    loading === true ? <MiniLoader/>
+                    loading === true ? <MiniLoader />
                         :
                         <div className={cls.addModal__container}>
                             <Table>
                                 <thead>
-                                <tr>
-                                    <th/>
-                                    <th>Ism</th>
-                                    <th>Familya</th>
-                                    <th>Fanlar</th>
-                                    <th>Status</th>
-                                </tr>
+                                    <tr>
+                                        <th />
+                                        <th>Ism</th>
+                                        <th>Familya</th>
+                                        <th>Fanlar</th>
+                                        <th>Status</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {renderStudent}
+                                    {renderStudent}
                                 </tbody>
                             </Table>
                         </div>
@@ -257,7 +256,7 @@ export const ClassAddForm = memo((props) => {
                     disabled={selectedId.length === 0 ? "disabled" : ""}
                 >
                     Add
-                </Button> : <MiniLoader/>}
+                </Button> : <MiniLoader />}
             </Modal>
         </>
     )

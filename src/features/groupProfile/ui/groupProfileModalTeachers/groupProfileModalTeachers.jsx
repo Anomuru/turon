@@ -1,63 +1,73 @@
 import classNames from "classnames";
-import {getGroupProfileFilteredTeachers} from "entities/profile/groupProfile/model/groupProfileSelector";
-import {changeGroupProfile, fetchFilteredTeachers} from "entities/profile/groupProfile/model/groupProfileThunk";
-import {fetchTeachersData, getTeachers} from "entities/teachers";
-import {getUserBranchId} from "entities/profile/userProfile";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate, useParams} from "react-router";
-import {useTheme} from "shared/lib/hooks/useTheme";
+import { getGroupProfileFilteredTeachers } from "entities/profile/groupProfile/model/groupProfileSelector";
+import { fetchFilteredTeachers } from "entities/profile/groupProfile/model/groupProfileThunk";
+import { fetchTeachersData, getTeachers } from "entities/teachers";
+import { getUserBranchId } from "entities/profile/userProfile";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router";
+import { useTheme } from "shared/lib/hooks/useTheme";
 
-import {EditableCard} from "shared/ui/editableCard";
-import {Input} from "shared/ui/input";
-import {Table} from "shared/ui/table";
-import {Modal} from "shared/ui/modal";
-import {Switch} from "shared/ui/switch";
-import {getGroupProfileData} from "entities/profile/groupProfile";
+import { EditableCard } from "shared/ui/editableCard";
+import { Input } from "shared/ui/input";
+import { Table } from "shared/ui/table";
+import { Modal } from "shared/ui/modal";
+import { Switch } from "shared/ui/switch";
+import { getGroupProfileData } from "entities/profile/groupProfile";
 
 import cls from "./groupProfileModalTeachers.module.sass";
 import defaultUserImg from "shared/assets/images/user_image.png";
-import {getBranch} from "../../../branchSwitcher";
+import { getBranch } from "../../../branchSwitcher";
+import { useHttp } from "shared/api/base";
+import { API_URL, headers } from "shared/api/base";
 
-export const GroupProfileModalTeachers = memo(({branch}) => {
+export const GroupProfileModalTeachers = memo(({ branch }) => {
 
     // const branch = localStorage.getItem("selectedBranch")
     const navigation = useNavigate()
     const userBranchId = useSelector(getUserBranchId)
     const dispatch = useDispatch()
-    const {id} = useParams()
+    const { id } = useParams()
+    const { request } = useHttp()
     // const {id} = useSelector(getBranch)
-    const {theme} = useTheme()
+    const { theme } = useTheme()
     const profileData = useSelector(getGroupProfileData)
     const centerTeachers = useSelector(getGroupProfileFilteredTeachers)
     const schoolTeachers = useSelector(getTeachers)
 
     useEffect(() => {
         if (branch)
-            dispatch(fetchTeachersData({userBranchId: branch}))
+            dispatch(fetchTeachersData({ userBranchId: branch }))
     }, [branch])
 
     const [currentTeachersData, setCurrentTeachersData] = useState([])
 
     useEffect(() => {
-            setCurrentTeachersData(schoolTeachers)
-    }, [theme,centerTeachers, schoolTeachers])
+        setCurrentTeachersData(schoolTeachers)
+    }, [theme, centerTeachers, schoolTeachers])
 
     const [active, setActive] = useState(false)
     const [searchValue, setSearchValue] = useState("")
 
 
     const onChangeTeacher = (teacherId) => {
-        dispatch(changeGroupProfile({
-            data: {teacher: [teacherId]},
-            id: id,
-        }))
-        dispatch(onAddAlertOptions({
-            type: "success",
-            status: true,
-            msg: `Guruhni o'qituvchisi o'zgardi`
-        }))
+        const patch = {
+            teacher: [teacherId],
+            group_type: "school"
+        }
+        request(`${API_URL}Group/groups/profile/${id}/`, "PATCH", JSON.stringify(patch), headers())
+            .then(res => {
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: `Guruhni o'qituvchisi o'zgardi`
+                }))
+            })
+        // dispatch(changeGroupProfile({
+        //     data: { teacher: [teacherId] },
+        //     id: id,
+        // }))
     }
 
 
@@ -87,7 +97,7 @@ export const GroupProfileModalTeachers = memo(({branch}) => {
                         {
                             item?.subject?.map(i =>
                                 <div className={cls.teachersModal__subject}>
-                                    {i?.name?.slice(0,16)}
+                                    {i?.name?.slice(0, 16)}
                                 </div>
                             )
                         }
@@ -120,7 +130,7 @@ export const GroupProfileModalTeachers = memo(({branch}) => {
             <EditableCard
                 extraClass={cls.teacher}
                 // titleType={"beetwean"}
-                title={<i className="fas fa-edit"/>}
+                title={<i className="fas fa-edit" />}
                 onClick={() => setActive(true)}
             >
                 <h1>O’qituvchi</h1>
@@ -136,10 +146,10 @@ export const GroupProfileModalTeachers = memo(({branch}) => {
                         />
                         <h2 className={cls.teacher__name}>
                             <span>
-                            {profileData?.teacher[0]?.user?.name ? profileData.teacher[0]?.user?.name : profileData?.teacher}
+                                {profileData?.teacher[0]?.user?.name ? profileData.teacher[0]?.user?.name : profileData?.teacher}
                             </span>
                             <span>
-                            {profileData?.teacher[0]?.user?.surname}
+                                {profileData?.teacher[0]?.user?.surname}
                             </span>
                         </h2>
                     </div>
@@ -165,16 +175,16 @@ export const GroupProfileModalTeachers = memo(({branch}) => {
                 <div className={cls.teachersModal__container}>
                     <Table>
                         <thead>
-                        <tr>
-                            <th/>
-                            <th>Ism</th>
-                            <th>Familya</th>
-                            <th>Fanlar</th>
-                            <th>Status</th>
-                        </tr>
+                            <tr>
+                                <th />
+                                <th>Ism</th>
+                                <th>Familya</th>
+                                <th>Fanlar</th>
+                                <th>Status</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {render}
+                            {render}
                         </tbody>
                     </Table>
                 </div>

@@ -1,28 +1,27 @@
 import classNames from "classnames";
-import {fetchGroupsDataWithFilter, getGroupsListData} from "entities/groups";
+import { fetchGroupsDataWithFilter, getGroupsListData } from "entities/groups";
 import {
-    changeGroupProfile,
     fetchFilteredStudentsAndTeachers,
     fetchGroupProfile, fetchGroupProfileTimeTable,
     getGroupProfileData, getGroupProfileLoading,
     getTimeTable
 } from "entities/profile/groupProfile";
-import {getGroupProfileFilteredStudents} from "entities/profile/groupProfile/model/groupProfileSelector";
-import {getUserBranchId} from "entities/profile/userProfile";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import React, {memo, useEffect, useMemo, useState} from 'react';
-import {useForm} from "react-hook-form";
-import {useDispatch, useSelector} from "react-redux";
-import {API_URL, headers, useHttp} from "shared/api/base";
+import { getGroupProfileFilteredStudents } from "entities/profile/groupProfile/model/groupProfileSelector";
+import { getUserBranchId } from "entities/profile/userProfile";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { API_URL, headers, useHttp } from "shared/api/base";
 import defaultUserImg from "shared/assets/images/user_image.png";
-import {Input} from "shared/ui/input";
-import {MiniLoader} from "shared/ui/miniLoader";
+import { Input } from "shared/ui/input";
+import { MiniLoader } from "shared/ui/miniLoader";
 
-import {Select} from "shared/ui/select";
-import {Button} from "shared/ui/button";
-import {Modal} from "shared/ui/modal";
-import {Form} from "shared/ui/form";
-import {Table} from "shared/ui/table";
+import { Select } from "shared/ui/select";
+import { Button } from "shared/ui/button";
+import { Modal } from "shared/ui/modal";
+import { Form } from "shared/ui/form";
+import { Table } from "shared/ui/table";
 
 import cls from "./groupAddForm.module.sass";
 
@@ -33,7 +32,7 @@ export const GroupAddForm = memo((props) => {
         active
     } = props
 
-    const {request} = useHttp()
+    const { request } = useHttp()
     const dispatch = useDispatch()
     const {
         register,
@@ -51,7 +50,7 @@ export const GroupAddForm = memo((props) => {
     const [searchValue, setSearchValue] = useState("")
 
     const onSubmit = (data) => {
-        dispatch(fetchGroupProfile({id: data?.group}))
+        dispatch(fetchGroupProfile({ id: data?.group }))
         setActiveModal(true)
     }
 
@@ -93,7 +92,7 @@ export const GroupAddForm = memo((props) => {
 
     useEffect(() => {
         if (branchId)
-            dispatch(fetchGroupsDataWithFilter({userBranchId:branchId}))
+            dispatch(fetchGroupsDataWithFilter({ userBranchId: branchId }))
     }, [branchId])
 
     useEffect(() => {
@@ -138,7 +137,7 @@ export const GroupAddForm = memo((props) => {
         return searched?.map(item =>
             <tr>
                 <td>
-                    <img src={defaultUserImg} alt=""/>
+                    <img src={defaultUserImg} alt="" />
                 </td>
                 <td>{item?.user?.name}</td>
                 <td>{item?.user?.surname}</td>
@@ -172,7 +171,7 @@ export const GroupAddForm = memo((props) => {
                         })}>
                             <div className={classNames(cls.status__inner, {
                                 [cls.active]: item?.extra_info?.status
-                            })}/>
+                            })} />
                         </div>
                     </div>
                 </td>
@@ -214,21 +213,21 @@ export const GroupAddForm = memo((props) => {
                     defaultValue={searchValue}
                 />
                 {
-                    loading ? <MiniLoader/>
+                    loading ? <MiniLoader />
                         :
                         <div className={cls.addModal__container}>
                             <Table>
                                 <thead>
-                                <tr>
-                                    <th/>
-                                    <th>Ism</th>
-                                    <th>Familya</th>
-                                    <th>Fanlar</th>
-                                    <th>Status</th>
-                                </tr>
+                                    <tr>
+                                        <th />
+                                        <th>Ism</th>
+                                        <th>Familya</th>
+                                        <th>Fanlar</th>
+                                        <th>Status</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {renderStudent}
+                                    {renderStudent}
                                 </tbody>
                             </Table>
                         </div>

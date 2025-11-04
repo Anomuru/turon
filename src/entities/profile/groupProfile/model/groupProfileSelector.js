@@ -56,3 +56,5 @@ export const getAttendanceAllForDay = (state) =>
 
 export const getLoadingStudent = (state) =>
     state.groupProfileSlice?.loadingStudent
+export const getStudentsLoading = (state) =>
+    state.groupProfileSlice?.studentsLoading
