@@ -1,12 +1,12 @@
-import {memo} from 'react';
+import { memo } from 'react';
 
-import {Modal} from "shared/ui/modal";
-import {Form} from "shared/ui/form";
-import {Input} from "shared/ui/input";
-import {Button} from "shared/ui/button";
+import { Modal } from "shared/ui/modal";
+import { Form } from "shared/ui/form";
+import { Input } from "shared/ui/input";
+import { Button } from "shared/ui/button";
 
 import cls from "./studentProfileChangeInfo.module.sass";
-import {Select} from "shared/ui/select";
+import { Select } from "shared/ui/select";
 
 export const StudentProfileChangeInfo = memo((props) => {
 
@@ -23,7 +23,6 @@ export const StudentProfileChangeInfo = memo((props) => {
     } = props
 
 
-    console.log(currentData,  "currentData")
     return (
         <Modal
             setActive={setActive}
@@ -32,6 +31,14 @@ export const StudentProfileChangeInfo = memo((props) => {
             <div className={cls.changeInfo}>
                 <h1>Malumotni o'zgartirish</h1>
                 <Form onSubmit={onSubmit}>
+                    <Input
+                        // title={"Username"}
+                        placeholder={"Username"}
+                        name={"username"}
+                        register={register}
+                        value={currentData?.user?.username}
+                        required
+                    />
                     <Input
                         placeholder={"Ism"}
                         name={"name"}
@@ -104,7 +111,7 @@ export const StudentProfileChangeInfo = memo((props) => {
                         required
                     />
 
-      
+
 
 
                     <Input
