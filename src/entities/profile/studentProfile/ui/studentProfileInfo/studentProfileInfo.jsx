@@ -88,13 +88,22 @@ export const StudentProfileInfo = memo(({
                         alt=""
                     />
                     <div className={cls.info__div__avatar__box}>
-                        <h1 className={cls.info__div__avatar__box__name}>
-                            <span>{data?.name} {data?.surname} {data?.father_name}</span>
-                            <span className={cls.username}>
-                                <span className={cls.username__inner}>@</span>
-                                {data?.username}
-                            </span>
-                        </h1>
+                        <div className={cls.info__div__avatar__box__name}>
+                            <h1 className={cls.fullName}>
+                                {data?.name} {data?.surname} {data?.father_name}
+                            </h1>
+                            <div className={cls.userMainInfo}>
+                                <span className={cls.username}>
+                                    <span className={cls.username__inner}>@</span>
+                                    {data?.username}
+                                </span>
+                                <span className={cls.faceId}>
+                                    <i class="fa-regular fa-id-card" />
+                                    {data?.face_id ?? "Face Id topilmadi"}
+                                </span>
+                            </div>
+                        </div>
+
                         <div className={cls.info__div__avatar__box__panel}>
                             <Button
                                 extraClass={classNames(cls.info__div__avatar__box__panel__stBtn, {
@@ -239,6 +248,6 @@ export const StudentProfileInfo = memo(({
 
             </div>
 
-        </EditableCard>
+        </EditableCard >
     );
 });

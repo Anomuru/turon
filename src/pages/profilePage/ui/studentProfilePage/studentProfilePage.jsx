@@ -4,13 +4,13 @@ import {
     getClassNumberData,
     getLanguagesData
 } from "entities/oftenUsed";
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import classNames from "classnames";
-import {useParams} from "react-router";
-import {useDispatch, useSelector} from "react-redux";
-import {useForm} from "react-hook-form";
+import { useParams } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
 
-import {ImageCrop} from "features/imageCrop";
+import { ImageCrop } from "features/imageCrop";
 import {
     StudentProfileInfo,
     StudentProfileRating,
@@ -39,21 +39,21 @@ import {
 
 import cls from "./studentProfilePage.module.sass";
 
-import {fetchStudentDebtorData, getMonthDataThunk} from "features/studentPayment/model/studentPaymentThunk.js";
-import {getMonth} from "features/studentPayment/model/selectors/selectors.js";
+import { fetchStudentDebtorData, getMonthDataThunk } from "features/studentPayment/model/studentPaymentThunk.js";
+import { getMonth } from "features/studentPayment/model/selectors/selectors.js";
 
-import {getUserBranchId, getUserJob} from "entities/profile/userProfile";
-import {fetchTimeTableData, fetchTimeTableForShow} from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
-import {Switch} from "shared/ui/switch/index.js";
-import {TeacherProfileTimeTable} from "entities/profile/teacherProfile/index.js";
+import { getUserBranchId, getUserJob } from "entities/profile/userProfile";
+import { fetchTimeTableData, fetchTimeTableForShow } from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
+import { Switch } from "shared/ui/switch/index.js";
+import { TeacherProfileTimeTable } from "entities/profile/teacherProfile/index.js";
 
 export const StudentProfilePage = () => {
 
     const date = new Date().toLocaleDateString('en-CA')
     const formData = new FormData()
-    const {register, handleSubmit} = useForm()
+    const { register, handleSubmit } = useForm()
     const dispatch = useDispatch()
-    const {id} = useParams()
+    const { id } = useParams()
     // const {id} = useSelector(getBranch)
 
     const branch = useSelector(getUserBranchId)
@@ -81,11 +81,11 @@ export const StudentProfilePage = () => {
     const group_id = userData?.group
     const [active, setActive] = useState(false)
     const [activeModal, setActiveModal] = useState("")
-    const [actives,setActives] = useState(false)
+    const [actives, setActives] = useState(false)
     const [newImage, setNewImage] = useState("")
 
-    const [changeSelectedClass,setChangeSelectedClass] = useState(null)
-    const [changeSelectedLang,setChangeSelectedLang] = useState(null)
+    const [changeSelectedClass, setChangeSelectedClass] = useState(null)
+    const [changeSelectedLang, setChangeSelectedLang] = useState(null)
     const [activeSwitch, setActiveSwitch] = useState(false)
     const [currentTab, setCurrentTab] = useState("info");
 
@@ -99,18 +99,18 @@ export const StudentProfilePage = () => {
             dispatch(fetchStudentCharity(id))
             dispatch(fetchStudentDebtorData(id))
             // dispatch(fetchClassNumberListStudentProfile({branch: branch?.id}))
-            dispatch(fetchClassNumberData({branch: branch}))
+            dispatch(fetchClassNumberData({ branch: branch }))
             // dispatch(fetchLanguagesStudentProfile())
             dispatch(fetchLanguagesData())
             dispatch(getMonthDataThunk(id));
 
         }
 
-    }, [id ,branch])
+    }, [id, branch])
 
     useEffect(() => {
         if (id && branch) {
-            dispatch(fetchTimeTableForShow({student: id, branch}))
+            dispatch(fetchTimeTableForShow({ student: id, branch }))
         }
     }, [id, branch])
 
@@ -127,29 +127,30 @@ export const StudentProfilePage = () => {
                 language: +changeSelectedLang,
 
             },
+            face_id: +data.face_id,
             parents_number: data.parents_number,
             class_number: changeSelectedClass,
             parents_fullname: data.parents_fullname,
             old_school: data.old_school,
             parent_region: data.parent_region,
-            district:data.district,
+            district: data.district,
 
 
             parent_seria: data.parent_seria,
             parent_seria_num: data.parent_seria_num,
 
-            region:data.region,
+            region: data.region,
 
             born_date: data.born_date,
-            student_seria_num:data.student_seria_num,
+            student_seria_num: data.student_seria_num,
             student_seria: data.student_seria
         }
-        dispatch(changeStudentProfileData({id, res}))
+        dispatch(changeStudentProfileData({ id, res }))
         setActiveModal(!activeModal)
     }
 
     const onSubmitImage = (data) => {
-        dispatch(changeStudentProfileImage({id: userData?.user?.id, data}))
+        dispatch(changeStudentProfileImage({ id: userData?.user?.id, data }))
     }
 
 
@@ -164,7 +165,7 @@ export const StudentProfilePage = () => {
                     setActive={setActive}
                     active={active}
                     setActiveModal={setActiveModal}
-                    data={userData?.user}
+                    data={{ ...userData?.user, face_id: userData?.face_id }}
                     content={userData}
                     contract={userData}
                     newImage={newImage}
@@ -182,8 +183,8 @@ export const StudentProfilePage = () => {
             >
                 {currentTab === "info" && (
                     <>
-                        <StudentProfileTeachers data={userData?.group}/>
-                        <StudentProfileRating/>
+                        <StudentProfileTeachers data={userData?.group} />
+                        <StudentProfileRating />
                         <StudentProfileSubjects
                             data={userData?.group}
                             onSelectSubject={setSelectedSubject}
@@ -208,7 +209,7 @@ export const StudentProfilePage = () => {
                 )}
 
                 {currentTab === "quarter" && (
-                    <StudentProfileQuarter group_id={group_id}/>
+                    <StudentProfileQuarter group_id={group_id} />
                 )}
 
             </div>
