@@ -108,3 +108,6 @@ export const getTeacherLoading = (state) =>
 export const getTeacherError = (state) =>
     state.oftenUsedSlice.error
 
+export const getStatusList = (state) =>
+    state.oftenUsedSlice.statusList
+

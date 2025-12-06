@@ -3,29 +3,29 @@ import cls from "./input.module.sass";
 import classNames from "classnames";
 
 export const Input = React.memo(({
-                                     type,
-                                     defaultValue,
-                                     value,
-                                     register,
-                                     title = "",
-                                     required,
-                                     pattern,
-                                     name,
-                                     subTitle = "",
-                                     errors,
-                                     placeholder,
-                                     onChange,
-                                     style,
-                                     extraClassName,
-                                     disabled,
-                                     extraValues,
-                                     checkboxTitle,
-                                     checked,
-                                     onBlur,
-                                     titleColor,
+    type,
+    defaultValue,
+    value,
+    register,
+    title = "",
+    required,
+    pattern,
+    name,
+    subTitle = "",
+    errors,
+    placeholder,
+    onChange,
+    style,
+    extraClassName,
+    disabled,
+    extraValues,
+    checkboxTitle,
+    checked,
+    onBlur,
+    titleColor,
 
 
-                                 }) => {
+}) => {
     const [showPassword, setShowPassword] = useState(false);
     const [silk, setSilk] = useState("");
 
@@ -33,7 +33,7 @@ export const Input = React.memo(({
 
     return register ? (
         <label style={style} className={cls.inputLabel} htmlFor={name}>
-            {title || subTitle   ? (
+            {title || subTitle ? (
                 <div className={cls.info}>
                     {(title) && <span className={titleColor} >{title}</span>}
                     {subTitle && <span>{subTitle}</span>}
@@ -72,8 +72,8 @@ export const Input = React.memo(({
                 errors ? <div className={cls.message}>
                     {errors?.[name] && (
                         <span className={cls.message__error}>
-                        {errors[name].message}
-                    </span>
+                            {errors[name].message}
+                        </span>
                     )}
                 </div> : null
             }

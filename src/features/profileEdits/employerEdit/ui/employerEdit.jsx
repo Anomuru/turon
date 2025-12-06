@@ -1,17 +1,17 @@
-import {getUserJob} from "entities/profile/userProfile";
-import {fetchVacancyData, getVacancyJobs} from "features/vacancyModals/vacancyPageAdd";
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {Select} from "shared/ui/select";
-import {editEmployerThunk, fetchEmployerId} from "../../../../entities/profile/employerProfile";
-import {Modal} from "shared/ui/modal";
-import {Input} from "shared/ui/input";
-import {getEmployerId} from "../../../../entities/profile/employerProfile";
+import { getUserJob } from "entities/profile/userProfile";
+import { fetchVacancyData, getVacancyJobs } from "features/vacancyModals/vacancyPageAdd";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { Select } from "shared/ui/select";
+import { editEmployerThunk, fetchEmployerId } from "../../../../entities/profile/employerProfile";
+import { Modal } from "shared/ui/modal";
+import { Input } from "shared/ui/input";
+import { getEmployerId } from "../../../../entities/profile/employerProfile";
 import cls from './employerEdit.module.sass'
-import {Button} from "../../../../shared/ui/button";
-import {onAddAlertOptions} from "../../../alert/model/slice/alertSlice";
+import { Button } from "../../../../shared/ui/button";
+import { onAddAlertOptions } from "../../../alert/model/slice/alertSlice";
 
-export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
+export const EmployerEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
     const dispatch = useDispatch();
     const employerID = useSelector(getEmployerId);
     const data = useSelector(getVacancyJobs)
@@ -23,6 +23,7 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
     const [phone, setNumber] = useState('')
     const [age, setAge] = useState('')
     const [money, setMoney] = useState('')
+    const [level, setLevel] = useState(4)
     const [selectedJob, setSelectedJob] = useState(null)
     const [jobs, setJobs] = useState([])
 
@@ -51,8 +52,7 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
     }, [data])
 
     useEffect(() => {
-        console.log(employerID?.group?.name === "Investor");
-        
+
         if (employerID) {
             setName(employerID?.user?.name)
             setSurname(employerID?.user?.surname)
@@ -60,22 +60,24 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
             setAge(employerID?.user?.birth_date)
             setMoney(employerID?.group?.name === "Investor" ? employerID?.share : employerID?.salary)
             setSelectedJob(employerID?.group?.id)
+            setLevel(employerID?.user?.level)
         }
     }, [employerID])
 
     const handleEditTeacher = () => {
         if (!employerID) return;
-        const empMoney = employerID?.group?.name === "Investor" ? {share: money} : {money}
+        const empMoney = employerID?.group?.name === "Investor" ? { share: money } : { money }
         const updateEmployer = {
             name: name,
             surname: surname,
             phone: phone,
             birth_date: age,
             ...empMoney,
-            profession: +selectedJob
+            profession: +selectedJob,
+            level: +level
 
         };
-        dispatch(editEmployerThunk({id: (employerID.user?.id), updateEmployer}))
+        dispatch(editEmployerThunk({ id: (employerID.user?.id), updateEmployer }))
             .then(() => {
                 // onUpdate(updateEmployer)
                 dispatch(onAddAlertOptions({
@@ -103,7 +105,7 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                         placeholder={"Ism"}
                         onChange={(e) => setName(e.target.value)}
                         value={name}
-                        // value={selectedFrom}
+                    // value={selectedFrom}
                     />
 
                     <div className={cls.filter__age}>
@@ -113,7 +115,7 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Familiya"}
                             onChange={(e) => setSurname(e.target.value)}
                             value={surname}
-                            // value={selectedFrom}
+                        // value={selectedFrom}
                         />
                         <Input
                             type={"number"}
@@ -121,7 +123,7 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Tel raqami"}
                             onChange={(e) => setNumber(e.target.value)}
                             value={phone}
-                            // value={selectedTo}
+                        // value={selectedTo}
                         />
                         <Input
                             type={"date"}
@@ -129,7 +131,7 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Tug'ilgan yili"}
                             onChange={(e) => setAge(e.target.value)}
                             value={age}
-                            // value={selectedFrom}
+                        // value={selectedFrom}
                         />
                         <Input
                             type={"number"}
@@ -137,6 +139,13 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Oylik"}
                             onChange={(e) => setMoney(e.target.value)}
                             value={money}
+                        />
+                        <Input
+                            type={"number"}
+                            extraClassName={cls.inputAge}
+                            placeholder={"Level"}
+                            onChange={(e) => setLevel(e.target.value)}
+                            value={level}
                         />
                         <Select
                             extraClass={cls.inputAge}
@@ -157,7 +166,7 @@ export const EmployerEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                     <div className={cls.filter__switch}>
                         <div></div>
                         <Button extraClass={cls.submitBtn} type={"submit"} children={"Button"}
-                                onClick={handleEditTeacher}/>
+                            onClick={handleEditTeacher} />
                     </div>
 
                 </div>

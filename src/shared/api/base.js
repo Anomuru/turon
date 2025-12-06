@@ -1,10 +1,10 @@
 
-// export const API_URL_DOC = `http://192.168.0.103:8000/`
+export const API_URL_DOC = `http://192.168.0.101:8000/`
 // export const API_URL_DOC = `http://26.196.249.247:8000/`
 // export const API_URL_DOC = `http://26.253.30.50:8000/`//
 // export const API_URL_DOC = `http://26.12.122.72:7622/`
 //
-export const API_URL_DOC = `https://school.gennis.uz/`
+// export const API_URL_DOC = `https://school.gennis.uz/`
 export const API_URL = `${API_URL_DOC}api/`
 
 // export const CLASSROOM_API_URL = `https://classroom.gennis.uz/`

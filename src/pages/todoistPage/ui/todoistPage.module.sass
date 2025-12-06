@@ -1,0 +1,475 @@
+// Variables
+$color-bg: #ffffff
+$color-border: #e5e7eb
+$color-text: #1f2937
+$color-text-muted: #6b7280
+$color-primary: #2563eb
+$color-primary-hover: #1d4ed8
+$color-danger: #ef4444
+$color-success: #10b981
+$color-warning: #f59e0b
+$color-info: #3b82f6
+
+$color-status-gray: #9ca3af
+$color-status-blue: #3b82f6
+$color-status-red: #ef4444
+$color-status-green: #10b981
+
+$transition: all 0.2s ease
+
+// Layout
+.container
+  padding: 2rem 3rem
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  // max-width: 1200px
+  // margin: 0 auto
+
+.header
+  display: flex
+  align-items: center
+  justify-content: space-between
+  // margin-bottom: 2rem
+  padding-bottom: 1rem
+  border-bottom: 1px solid $color-border
+
+.title
+  font-size: 2.6rem
+  font-weight: 700
+  color: $color-text
+  // margin: 0
+
+.createBtn
+  // background: $color-primary
+  // color: white
+  // border: none
+  // padding: 0.75rem 1.5rem
+  // border-radius: 0.5rem
+  // font-size: 1.8rem
+  // font-weight: 500
+  // cursor: pointer
+  transition: $transition
+
+  &:hover
+    // background: $color-primary-hover
+    transform: translateY(-2px)
+    // box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2)
+
+// Filters
+.filters
+  display: flex
+  gap: 1rem
+  // margin-bottom: 2rem
+  flex-wrap: wrap
+
+.filterBtn
+  padding: 0.625rem 1.25rem
+  border: 1px solid $color-border
+  background: white
+  color: $color-text-muted
+  border-radius: 0.5rem
+  font-size: 1.6rem
+  font-weight: 500
+  cursor: pointer
+  transition: $transition
+
+  &:hover
+    border-color: $color-primary
+    color: $color-primary
+
+  &.active
+    background: $color-primary
+    color: white
+    border-color: $color-primary
+
+// Tasks List
+.tasksList
+  padding-top: 1rem
+  display: flex
+  flex-wrap: wrap
+  // display: grid
+  // grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))
+  gap: 1.5rem
+  max-height: 70rem
+  overflow-y: auto
+
+.empty
+  grid-column: 1 / -1
+  text-align: center
+  padding: 3rem 1rem
+  color: $color-text-muted
+
+  p
+    margin: 0
+    font-size: 2rem
+
+// Task Card
+.taskCard
+  background: $color-bg
+  border: 1px solid $color-border
+  border-radius: 0.75rem
+  padding: 1.5rem
+  transition: $transition
+
+  &:hover
+    border-color: $color-primary
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08)
+    transform: translateY(-2px)
+
+.taskHeader
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 1rem
+  margin-bottom: 1rem
+
+.taskTitle
+  font-size: 1.8rem
+  font-weight: 600
+  color: $color-text
+  margin: 0
+  flex: 1
+
+// Status Badge
+.status
+  display: inline-block
+  padding: 0.7rem 1.5rem
+  border-radius: 0.375rem
+  font-size: 1.2rem
+  font-weight: 600
+  white-space: nowrap
+  text-transform: uppercase
+
+.status_notStarted
+  background: #f3f4f6
+  color: $color-status-gray
+
+.status_inProgress
+  background: #dbeafe
+  color: $color-status-blue
+
+.status_blocked
+  background: #fee2e2
+  color: $color-status-red
+
+.status_completed
+  background: #dcfce7
+  color: $color-success
+
+.taskDescription
+  color: $color-text-muted
+  margin: 0 0 1rem 0
+  font-size: 1.4rem
+  line-height: 1.5
+
+// Task Meta
+.taskMeta
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 1rem
+  margin-bottom: 1.5rem
+  padding: 1rem 0
+  border-top: 1px solid $color-border
+  border-bottom: 1px solid $color-border
+
+.metaItem
+  display: flex
+  flex-direction: column
+  gap: 0.25rem
+
+.metaLabel
+  font-size: 1.2rem
+  color: $color-text-muted
+  font-weight: 600
+  text-transform: uppercase
+  white-space: nowrap
+
+.metaValue
+  font-size: 1.6rem
+  color: $color-text
+  font-weight: 500
+  white-space: nowrap
+
+// Task Actions
+.taskActions
+  display: flex
+  gap: 0.5rem
+
+.actionBtn
+  flex: 1
+  padding: 1rem 2rem
+  border: 1px solid $color-border
+  background: white
+  color: $color-text
+  border-radius: 0.375rem
+  font-size: 1.5rem
+  font-weight: 500
+  cursor: pointer
+  transition: $transition
+  white-space: nowrap
+
+  &:hover
+    border-color: $color-primary
+    color: $color-primary
+    background: #f0f9ff
+
+  &.secondary
+    &:hover
+      border-color: $color-info
+      color: $color-info
+
+  &.danger
+    &:hover
+      border-color: $color-danger
+      color: $color-danger
+      background: #fef2f2
+
+// Modal
+.modalOverlay
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: rgba(0, 0, 0, 0.5)
+  display: flex
+  align-items: center
+  justify-content: center
+  z-index: 1000
+  padding: 1rem
+
+.modal
+  background: $color-bg
+  border-radius: 0.75rem
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1)
+  max-width: 500px
+  width: 100%
+  max-height: 90vh
+  overflow-y: auto
+  animation: slideUp 0.3s ease
+
+.confirmModal
+  max-width: 400px
+
+@keyframes slideUp
+  from
+    transform: translateY(20px)
+    opacity: 0
+  to
+    transform: translateY(0)
+    opacity: 1
+
+.modalHeader
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: 1.5rem
+  border-bottom: 1px solid $color-border
+
+.modalTitle
+  margin: 0
+  font-size: 1.25rem
+  font-weight: 600
+  color: $color-text
+
+.closeBtn
+  background: none
+  border: none
+  font-size: 1.5rem
+  color: $color-text-muted
+  cursor: pointer
+  padding: 0
+  display: flex
+  align-items: center
+  justify-content: center
+  transition: $transition
+
+  &:hover
+    color: $color-text
+    transform: scale(1.2)
+
+.modalContent
+  padding: 1.5rem
+
+.modalFooter
+  display: flex
+  gap: 1rem
+  padding: 1.5rem
+  border-top: 1px solid $color-border
+
+// Form
+.formGroup
+  margin-bottom: 1.5rem
+
+.label
+  display: block
+  font-size: 0.875rem
+  font-weight: 600
+  color: $color-text
+  margin-bottom: 0.5rem
+
+.input,
+.select,
+.textarea
+  width: 100%
+  padding: 0.75rem
+  border: 1px solid $color-border
+  border-radius: 0.375rem
+  font-size: 0.9375rem
+  color: $color-text
+  background: white
+  font-family: inherit
+  transition: $transition
+
+  &:focus
+    outline: none
+    border-color: $color-primary
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1)
+
+.textarea
+  resize: vertical
+  min-height: 100px
+
+.formRow
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 1rem
+
+  .formGroup
+    margin-bottom: 0
+
+// Buttons
+.btn
+  padding: 0.75rem 1.5rem
+  border: none
+  border-radius: 0.375rem
+  font-size: 0.9375rem
+  font-weight: 600
+  cursor: pointer
+  transition: $transition
+
+.btn.primary
+  background: $color-primary
+  color: white
+
+  &:hover
+    background: $color-primary-hover
+    transform: translateY(-2px)
+
+.btn.secondary
+  background: white
+  color: $color-text
+  border: 1px solid $color-border
+
+  &:hover
+    border-color: $color-primary
+    color: $color-primary
+
+.btn.danger
+  background: $color-danger
+  color: white
+
+  &:hover
+    background: darken($color-danger, 10%)
+
+// Comments
+.commentsList
+  max-height: 400px
+  overflow-y: auto
+  margin-bottom: 1.5rem
+
+.comment
+  padding: 1rem
+  background: #f9fafb
+  border-radius: 0.375rem
+  margin-bottom: 1rem
+
+  &:last-child
+    margin-bottom: 0
+
+.commentHeader
+  display: flex
+  justify-content: space-between
+  align-items: center
+  margin-bottom: 0.5rem
+
+.commentAuthor
+  font-weight: 600
+  font-size: 0.875rem
+  color: $color-text
+
+.commentTime
+  font-size: 0.75rem
+  color: $color-text-muted
+
+.commentText
+  margin: 0.5rem 0 0 0
+  color: $color-text-muted
+  font-size: 0.9375rem
+
+.emptyComments
+  text-align: center
+  color: $color-text-muted
+  padding: 2rem 1rem
+  margin: 0
+
+.commentInput
+  display: flex
+  flex-direction: column
+  gap: 1rem
+
+// Confirm Modal
+.confirmText
+  padding: 1rem 1.5rem
+  color: $color-text-muted
+  margin: 0
+
+.modalAdd
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  &__form
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    .mainForm
+      width: 100% !important
+    .inputForm
+      margin: 0 !important
+    .formContainer
+      display: flex
+      gap: 1rem
+      flex-direction: row
+      &__form
+        width: 30rem !important
+
+// Responsive
+@media (max-width: 768px)
+  .header
+    flex-direction: column
+    align-items: flex-start
+    gap: 1rem
+
+  .filters
+    gap: 0.25rem
+
+  .filterBtn
+    padding: 0.5rem 0.875rem
+    font-size: 0.8125rem
+
+  .tasksList
+    grid-template-columns: 1fr
+
+  .taskMeta
+    grid-template-columns: 1fr
+    gap: 0.75rem
+
+  .taskActions
+    flex-direction: column
+
+  .formRow
+    grid-template-columns: 1fr
+
+  .modal
+    max-width: 100%
