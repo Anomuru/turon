@@ -215,7 +215,7 @@ export const fetchStudentCharityMonth = createAsyncThunk(
     "studentPaymentSlice/fetchStudentCharityMonth",
     ({years, id}) => {
         const {request} = useHttp()
-        return request(`${API_URL}Students/get_month/?student_id=${id}&year=${years}/` , "GET" , null , headers())
+        return request(`${API_URL}Students/get_month/?student_id=${id}&year=${years}` , "GET" , null , headers())
     }
 )
 

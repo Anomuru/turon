@@ -196,6 +196,7 @@ export const StudentProfileTotalAmount = memo(({ active, setActive, student_id, 
                     msg: res.msg
                 }));
 
+                setValue("payment_sum", "")
                 setDiscount(0);
             })
             .catch(err => {
