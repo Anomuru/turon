@@ -71,6 +71,13 @@ export const menuConfig = [
 
     },
     {
+        to: "parents",
+        name: "Ota-onalar",
+        icon: "fa-users",
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+        branches: true
+    },
+    {
         to: "groups",
         name: "Sinflar",
         icon: "fa-users",
