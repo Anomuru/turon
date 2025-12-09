@@ -1,24 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import {useForm} from 'react-hook-form';
-import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from "react-router-dom";
-import {useTheme} from "shared/lib/hooks/useTheme";
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from "react-router-dom";
+import { useTheme } from "shared/lib/hooks/useTheme";
 import {
     registerUser,
     registerTeacher,
     registerEmployer,
     fetchCategories, registerTeacherImage
 } from "../model/registerThunk";
-import {fetchVacancyData, getVacancyJobs} from "features/vacancyModals/vacancyPageAdd";
-import {Button} from "shared/ui/button";
-import {Input} from 'shared/ui/input';
-import {Textarea} from "shared/ui/textArea";
-import {Select} from "shared/ui/select";
-import {MiniLoader} from "shared/ui/miniLoader";
-import {API_URL, useHttp, headers} from "shared/api/base";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import {getCategories} from "../model/registerSelector";
-import {AnimatedMulti} from "features/workerSelect";
+import { fetchVacancyData, getVacancyJobs } from "features/vacancyModals/vacancyPageAdd";
+import { Button } from "shared/ui/button";
+import { Input } from 'shared/ui/input';
+import { Textarea } from "shared/ui/textArea";
+import { Select } from "shared/ui/select";
+import { MiniLoader } from "shared/ui/miniLoader";
+import { API_URL, useHttp, headers } from "shared/api/base";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import { getCategories } from "../model/registerSelector";
+import { AnimatedMulti } from "features/workerSelect";
 import {
     getSubjectsData,
     getLanguagesData,
@@ -32,22 +32,22 @@ import {
 
 import cls from "./register.module.sass";
 import bg__img from 'shared/assets/images/reg__bg.svg';
-import {getBranch} from "../../../features/branchSwitcher";
-import {getUserProfileData} from "../../../entities/profile/userProfile";
-import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import { getBranch } from "../../../features/branchSwitcher";
+import { getUserProfileData } from "../../../entities/profile/userProfile";
+import { DynamicModuleLoader } from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 
 const userstype = {
     types: [
-        {value: "student", name: "Student"},
-        {value: "teacher", name: "Teacher"},
-        {value: "employer", name: "Employer"}
+        { value: "student", name: "Student" },
+        { value: "teacher", name: "Teacher" },
+        { value: "employer", name: "Employer" }
     ]
 };
 
 const shift = [
-    {id: 1, name: "1 smen"},
-    {id: 2, name: "2 smen"},
-    {id: 3, name: "hamma vaqt"}
+    { id: 1, name: "1 smen" },
+    { id: 2, name: "2 smen" },
+    { id: 3, name: "hamma vaqt" }
 ]
 
 const initialState = {}
@@ -78,7 +78,7 @@ export const Register = () => {
 
 
     const username = watch("username", "");
-    const {theme} = useTheme()
+    const { theme } = useTheme()
     // const classNumbers = useSelector(getSchoolClassNumbers)
     const branch = localStorage.getItem("selectedBranch")
     const categories = useSelector(getCategories)
@@ -92,7 +92,7 @@ export const Register = () => {
     const [selectedClassType, setSelectedClassType] = useState()
     const [selectedCategory, setSelectedCategory] = useState()
     const [loading, setLoading] = useState(false);
-    const {request} = useHttp()
+    const { request } = useHttp()
     const [usernameMessage, setUsernameMessage] = useState('');
     const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
     const safeData = Array.isArray(subjects) ? subjects : [subjects];
@@ -128,8 +128,8 @@ export const Register = () => {
             dispatch(fetchSubjectsData())
 
             // dispatch(getClassTypes(id))
-            dispatch(fetchClassTypeData({branch: branchID}))
-            dispatch(fetchClassNumberData({branch: branchID}))
+            dispatch(fetchClassTypeData({ branch: branchID }))
+            dispatch(fetchClassNumberData({ branch: branchID }))
 
             dispatch(fetchCategories(branchID))
         }
@@ -146,12 +146,12 @@ export const Register = () => {
         if (username) {
             const checkUsername = async () => {
                 try {
-                    const response = await request(`${API_URL}Users/username-check/`, "POST", JSON.stringify({username}), headers());
+                    const response = await request(`${API_URL}Users/username-check/`, "POST", JSON.stringify({ username }), headers());
 
                     const data = await response
                     if (data.exists === true) {
                         setUsernameMessage(<p className={cls.errorMess}>
-                            <i className="fa-solid fa-circle-exclamation" style={{color: "#f15c5c"}}></i>
+                            <i className="fa-solid fa-circle-exclamation" style={{ color: "#f15c5c" }}></i>
                             Username band
                         </p>);
                         setIsUsernameAvailable(false);
@@ -165,7 +165,7 @@ export const Register = () => {
                 } catch (error) {
                     console.error('Error checking username:', error);
                     setUsernameMessage(<p className={cls.successMess}>
-                        <i className="fa-solid fa-circle-exclamation" style={{color: "#f15c5c"}}></i>
+                        <i className="fa-solid fa-circle-exclamation" style={{ color: "#f15c5c" }}></i>
                         Error checking username
                     </p>);
                     setIsUsernameAvailable(false);
@@ -174,7 +174,7 @@ export const Register = () => {
 
             checkUsername();
         } else {
-            setUsernameMessage(<p style={{color: "red"}}>Username kiriting</p>);
+            setUsernameMessage(<p style={{ color: "red" }}>Username kiriting</p>);
             setIsUsernameAvailable(false);
         }
     }, [username]);
@@ -233,7 +233,7 @@ export const Register = () => {
                 teacher_salary_type: selectedCategory,
                 subject: selectedSubject.map(subject => subject.value) || null,
             };
-            registerAction = registerTeacher({res, file: res?.user?.resume})
+            registerAction = registerTeacher({ res, file: res?.user?.resume })
         } else if (registerType === 'employer') {
             res2 = {
                 ...res2,
@@ -244,7 +244,7 @@ export const Register = () => {
 
         if (registerAction) {
             if (registerType === 'teacher') {
-                dispatch(registerTeacherImage({id: res?.user?.username, file: res?.user?.resume}))
+                dispatch(registerTeacherImage({ id: res?.user?.username, file: res?.user?.resume }))
             }
             dispatch(registerAction).then((action) => {
                 setLoading(false);
@@ -334,7 +334,7 @@ export const Register = () => {
                             title={"Til"}
                             onChangeOption={setSelectedLang}
                             options={languages}
-                            // defaultValue={languages[0]?.id}
+                        // defaultValue={languages[0]?.id}
                         />
                         <AnimatedMulti
                             options={subjectOptions}
@@ -357,7 +357,7 @@ export const Register = () => {
                             title={"Sinf turi"}
                         />
                         <div className={cls.resume}>
-                            <h2 style={{textAlign: "left", fontSize: "2rem"}}>Resume</h2>
+                            <h2 style={{ textAlign: "left", fontSize: "2rem" }}>Resume</h2>
                             <Input
                                 type={"file"}
                                 name={"file"}
@@ -386,7 +386,7 @@ export const Register = () => {
                             }
                         />
                         <div className={cls.resume}>
-                            <h2 style={{textAlign: "left", fontSize: "2rem"}}>Resume</h2>
+                            <h2 style={{ textAlign: "left", fontSize: "2rem" }}>Resume</h2>
                             <Input
                                 type={"file"}
                                 name={"resume"}
@@ -444,17 +444,17 @@ export const Register = () => {
                                     <>
                                         <div className={cls.seriya}>
                                             <Input register={register}
-                                                   name={"student_seria"}
-                                                   placeholder={"seriya"}/>
+                                                name={"student_seria"}
+                                                placeholder={"seriya"} />
                                             <Input name={"student_seria_num"} register={register}
-                                                   type={"number"} placeholder={"metrka raqami"}/>
+                                                type={"number"} placeholder={"metrka raqami"} />
                                         </div>
                                         <Input register={register} name={"old_school"}
-                                               placeholder={"kelgan maktabi"}/>
+                                            placeholder={"kelgan maktabi"} />
                                         <Input register={register} name={"region"}
-                                               placeholder={"Xudud nomi"}/>
+                                            placeholder={"Xudud nomi"} />
                                         <Input register={register} name={"district"}
-                                               placeholder={"Tuman shaxar nomi"}/>
+                                            placeholder={"Tuman shaxar nomi"} />
                                     </>
                                     :
                                     null
@@ -499,7 +499,7 @@ export const Register = () => {
                                 {renderFormFields()}
 
                                 {loading ?
-                                    <MiniLoader/> :
+                                    <MiniLoader /> :
                                     <Button
                                         type={!isUsernameAvailable ? "disabled" : "simple"}
                                         extraClass={cls.registerBtn}>
@@ -510,7 +510,7 @@ export const Register = () => {
                         </div>
                     </div>
                     <div className={cls.login__aside}>
-                        <img className={cls.login__aside__img} src={bg__img} alt=""/>
+                        <img className={cls.login__aside__img} src={bg__img} alt="" />
                     </div>
                 </div>
             </div>

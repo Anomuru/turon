@@ -1,475 +1,494 @@
-// Variables
-$color-bg: #ffffff
+$color-bg: #f9fafb
 $color-border: #e5e7eb
 $color-text: #1f2937
-$color-text-muted: #6b7280
-$color-primary: #2563eb
-$color-primary-hover: #1d4ed8
+$color-text-light: #6b7280
+$color-primary: #3b82f6
+$color-primary-hover: #2563eb
 $color-danger: #ef4444
+$color-danger-hover: #dc2626
 $color-success: #10b981
-$color-warning: #f59e0b
-$color-info: #3b82f6
+$color-gray: #999
 
-$color-status-gray: #9ca3af
-$color-status-blue: #3b82f6
-$color-status-red: #ef4444
-$color-status-green: #10b981
-
-$transition: all 0.2s ease
-
-// Layout
 .container
-  padding: 2rem 3rem
-  display: flex
-  flex-direction: column
-  gap: 2rem
-  // max-width: 1200px
-  // margin: 0 auto
+  min-height: 100vh
+  background-color: $color-bg
+  padding: 40px 20px
 
 .header
+  max-width: 1200px
+  margin: 0 auto 40px
   display: flex
-  align-items: center
   justify-content: space-between
-  // margin-bottom: 2rem
-  padding-bottom: 1rem
-  border-bottom: 1px solid $color-border
+  align-items: center
+  gap: 20px
 
 .title
-  font-size: 2.6rem
-  font-weight: 700
+  font-size: 32px
+  font-weight: 600
   color: $color-text
-  // margin: 0
+  margin: 0
 
-.createBtn
-  // background: $color-primary
-  // color: white
-  // border: none
-  // padding: 0.75rem 1.5rem
-  // border-radius: 0.5rem
-  // font-size: 1.8rem
-  // font-weight: 500
-  // cursor: pointer
-  transition: $transition
-
-  &:hover
-    // background: $color-primary-hover
-    transform: translateY(-2px)
-    // box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2)
-
-// Filters
-.filters
+.headerActions
   display: flex
-  gap: 1rem
-  // margin-bottom: 2rem
-  flex-wrap: wrap
+  gap: 12px
 
-.filterBtn
-  padding: 0.625rem 1.25rem
-  border: 1px solid $color-border
+.content
+  max-width: 1200px
+  margin: 0 auto
+
+.section
+  margin-bottom: 60px
+
+.sectionTitle
+  font-size: 20px
+  font-weight: 600
+  color: $color-text
+  margin: 0 0 20px
+  padding-bottom: 12px
+  border-bottom: 2px solid $color-border
+
+.grid
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr))
+  gap: 20px
+
+.card
   background: white
-  color: $color-text-muted
-  border-radius: 0.5rem
-  font-size: 1.6rem
-  font-weight: 500
-  cursor: pointer
-  transition: $transition
-
-  &:hover
-    border-color: $color-primary
-    color: $color-primary
-
-  &.active
-    background: $color-primary
-    color: white
-    border-color: $color-primary
-
-// Tasks List
-.tasksList
-  padding-top: 1rem
-  display: flex
-  flex-wrap: wrap
-  // display: grid
-  // grid-template-columns: repeat(auto-fill, minmax(350px, 1fr))
-  gap: 1.5rem
-  max-height: 70rem
-  overflow-y: auto
-
-.empty
-  grid-column: 1 / -1
-  text-align: center
-  padding: 3rem 1rem
-  color: $color-text-muted
-
-  p
-    margin: 0
-    font-size: 2rem
-
-// Task Card
-.taskCard
-  background: $color-bg
   border: 1px solid $color-border
-  border-radius: 0.75rem
-  padding: 1.5rem
-  transition: $transition
+  border-radius: 8px
+  padding: 20px
+  display: flex
+  flex-direction: column
+  gap: 12px
+  transition: box-shadow 0.2s ease
 
   &:hover
-    border-color: $color-primary
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08)
-    transform: translateY(-2px)
 
-.taskHeader
+.cardHeader
   display: flex
-  align-items: center
   justify-content: space-between
-  gap: 1rem
-  margin-bottom: 1rem
+  align-items: flex-start
+  gap: 12px
 
-.taskTitle
-  font-size: 1.8rem
+.cardTitle
+  font-size: 16px
   font-weight: 600
   color: $color-text
   margin: 0
   flex: 1
 
-// Status Badge
 .status
+  font-size: 12px
+  font-weight: 500
+  padding: 4px 8px
+  background-color: #f3f4f6
+  border-radius: 4px
+  text-transform: capitalize
+
+.cardText
+  font-size: 13px
+  color: $color-text-light
+  margin: 0
+
+.tags
+  display: flex
+  flex-wrap: wrap
+  gap: 6px
+
+.tag
   display: inline-block
-  padding: 0.7rem 1.5rem
-  border-radius: 0.375rem
-  font-size: 1.2rem
-  font-weight: 600
-  white-space: nowrap
-  text-transform: uppercase
+  background-color: #eff6ff
+  color: $color-primary
+  padding: 4px 8px
+  border-radius: 4px
+  font-size: 12px
+  font-weight: 500
 
-.status_notStarted
-  background: #f3f4f6
-  color: $color-status-gray
+.cardActions
+  display: flex
+  gap: 8px
+  margin-top: 8px
 
-.status_inProgress
-  background: #dbeafe
-  color: $color-status-blue
-
-.status_blocked
-  background: #fee2e2
-  color: $color-status-red
-
-.status_completed
-  background: #dcfce7
-  color: $color-success
-
-.taskDescription
-  color: $color-text-muted
-  margin: 0 0 1rem 0
-  font-size: 1.4rem
-  line-height: 1.5
-
-// Task Meta
-.taskMeta
-  display: grid
-  grid-template-columns: 1fr 1fr
-  gap: 1rem
-  margin-bottom: 1.5rem
-  padding: 1rem 0
-  border-top: 1px solid $color-border
-  border-bottom: 1px solid $color-border
-
-.metaItem
+.tagsList
   display: flex
   flex-direction: column
-  gap: 0.25rem
+  gap: 8px
 
-.metaLabel
-  font-size: 1.2rem
-  color: $color-text-muted
-  font-weight: 600
-  text-transform: uppercase
-  white-space: nowrap
-
-.metaValue
-  font-size: 1.6rem
-  color: $color-text
-  font-weight: 500
-  white-space: nowrap
-
-// Task Actions
-.taskActions
-  display: flex
-  gap: 0.5rem
-
-.actionBtn
-  flex: 1
-  padding: 1rem 2rem
-  border: 1px solid $color-border
+.tagItem
   background: white
+  border: 1px solid $color-border
+  border-radius: 6px
+  padding: 12px 16px
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+.tagName
+  font-size: 14px
+  font-weight: 500
   color: $color-text
-  border-radius: 0.375rem
-  font-size: 1.5rem
+
+.tagActions
+  display: flex
+  gap: 8px
+
+// Buttons
+.btnPrimary
+  background-color: $color-primary
+  color: white
+  border: none
+  border-radius: 6px
+  padding: 10px 16px
+  font-size: 14px
   font-weight: 500
   cursor: pointer
-  transition: $transition
-  white-space: nowrap
+  transition: background-color 0.2s ease
 
   &:hover
-    border-color: $color-primary
-    color: $color-primary
-    background: #f0f9ff
+    background-color: $color-primary-hover
 
-  &.secondary
-    &:hover
-      border-color: $color-info
-      color: $color-info
+.btnSecondary
+  background-color: white
+  color: $color-primary
+  border: 1px solid $color-primary
+  border-radius: 6px
+  padding: 10px 16px
+  font-size: 14px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
 
-  &.danger
-    &:hover
-      border-color: $color-danger
-      color: $color-danger
-      background: #fef2f2
+  &:hover
+    background-color: #eff6ff
 
-// Modal
-.modalOverlay
+.btnCancel
+  background-color: #f3f4f6
+  color: $color-text
+  border: 1px solid $color-border
+  border-radius: 6px
+  padding: 8px 14px
+  font-size: 13px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: #e5e7eb
+
+.btnDanger
+  background-color: $color-danger
+  color: white
+  border: none
+  border-radius: 6px
+  padding: 8px 14px
+  font-size: 13px
+  font-weight: 500
+  cursor: pointer
+  transition: background-color 0.2s ease
+
+  &:hover
+    background-color: $color-danger-hover
+
+.btnEdit,
+.btnSmallEdit
+  background-color: #dbeafe
+  color: $color-primary
+  border: none
+  border-radius: 4px
+  padding: 6px 10px
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: #bfdbfe
+
+.btnDelete,
+.btnSmallDelete
+  background-color: #fee2e2
+  color: $color-danger
+  border: none
+  border-radius: 4px
+  padding: 6px 10px
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: #fecaca
+
+.btnView
+  background-color: $color-primary
+  color: white
+  border: none
+  border-radius: 4px
+  padding: 6px 10px
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: background-color 0.2s ease
+
+  &:hover
+    background-color: $color-primary-hover
+
+.btnSmallContainer
+  width: 100%
+  padding: 1.2rem 2rem
+  position: sticky
+  bottom: 0
+  background: white
+
+.btnSmall
+  width: 100%
+  background-color: #f3f4f6
+  color: $color-text
+  border: 1px solid $color-border
+  border-radius: 4px
+  padding: 6px 10px
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.2s ease
+  margin-top: 8px
+
+  &:hover
+    background-color: #e5e7eb
+
+// Modals
+.modalBackdrop
   position: fixed
   top: 0
   left: 0
   right: 0
   bottom: 0
-  background: rgba(0, 0, 0, 0.5)
+  background-color: rgba(0, 0, 0, 0.5)
   display: flex
-  align-items: center
   justify-content: center
+  align-items: center
   z-index: 1000
-  padding: 1rem
 
 .modal
-  background: $color-bg
-  border-radius: 0.75rem
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1)
-  max-width: 500px
+  background: white
+  border-radius: 8px
+  padding: 24px
+  max-width: 600px
   width: 100%
   max-height: 90vh
   overflow-y: auto
-  animation: slideUp 0.3s ease
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15)
+  &__form
+    width: 100%
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    .tags
+      display: flex
+      flex-wrap: wrap
+    .formDual
+      display: flex
+      justify-content: space-between
+      &__item
+        width: 27rem
+    .recurring
+      display: flex
+      align-items: center
+      justify-content: space-between
+      &__item
+        display: flex
+        align-items: flex-end
+        gap: 1rem
+        .title
+          font-size: 1.6rem
+        .input
+          margin: 0
+      &__select
+        width: 15rem !important
+        margin: 0 !important
+        select
+          min-width: 15rem !important
+    .containerForm
+      display: flex
+      gap: 2rem
 
-.confirmModal
-  max-width: 400px
-
-@keyframes slideUp
-  from
-    transform: translateY(20px)
-    opacity: 0
-  to
-    transform: translateY(0)
-    opacity: 1
-
-.modalHeader
-  display: flex
-  align-items: center
-  justify-content: space-between
-  padding: 1.5rem
-  border-bottom: 1px solid $color-border
+.modalLarge
+  background: white
+  border-radius: 8px
+  padding: 24px
+  max-width: 700px
+  width: 90%
+  max-height: 90vh
+  overflow-y: auto
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15)
 
 .modalTitle
-  margin: 0
-  font-size: 1.25rem
+  font-size: 18px
   font-weight: 600
   color: $color-text
+  margin: 0 0 20px
 
-.closeBtn
-  background: none
-  border: none
-  font-size: 1.5rem
-  color: $color-text-muted
-  cursor: pointer
-  padding: 0
-  display: flex
-  align-items: center
-  justify-content: center
-  transition: $transition
+.confirmText
+  font-size: 14px
+  color: $color-text-light
+  margin: 0 0 20px
 
-  &:hover
-    color: $color-text
-    transform: scale(1.2)
-
-.modalContent
-  padding: 1.5rem
-
-.modalFooter
-  display: flex
-  gap: 1rem
-  padding: 1.5rem
-  border-top: 1px solid $color-border
-
-// Form
+// Forms
 .formGroup
-  margin-bottom: 1.5rem
+  display: flex
+  flex-direction: column
+  gap: 6px
+  margin-bottom: 16px
 
-.label
-  display: block
-  font-size: 0.875rem
-  font-weight: 600
-  color: $color-text
-  margin-bottom: 0.5rem
+  &__item
+    width: 100% !important
+    margin: 0 !important
 
-.input,
-.select,
-.textarea
-  width: 100%
-  padding: 0.75rem
-  border: 1px solid $color-border
-  border-radius: 0.375rem
-  font-size: 0.9375rem
-  color: $color-text
-  background: white
-  font-family: inherit
-  transition: $transition
+  label
+    font-size: 13px
+    font-weight: 500
+    color: $color-text
 
-  &:focus
-    outline: none
-    border-color: $color-primary
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1)
+  input,
+  textarea,
+  select
+    resize: none
+    border: 1px solid $color-border
+    border-radius: 6px
+    padding: 8px 12px
+    font-size: 13px
+    font-family: inherit
+    transition: border-color 0.2s ease
 
-.textarea
-  resize: vertical
-  min-height: 100px
+    &:focus
+      outline: none
+      border-color: $color-primary
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1)
+
+  input[type="checkbox"]
+    width: 16px
+    height: 16px
+    cursor: pointer
+    margin-right: 6px
 
 .formRow
   display: grid
   grid-template-columns: 1fr 1fr
-  gap: 1rem
+  gap: 12px
 
-  .formGroup
-    margin-bottom: 0
+.formActions
+  display: flex
+  justify-content: flex-end
+  gap: 12px
+  margin-top: 20px
 
-// Buttons
-.btn
-  padding: 0.75rem 1.5rem
-  border: none
-  border-radius: 0.375rem
-  font-size: 0.9375rem
-  font-weight: 600
-  cursor: pointer
-  transition: $transition
+// View Content
+.viewContent
+  margin: 20px 0
+  display: flex
+  flex-direction: column
+  gap: 20px
 
-.btn.primary
-  background: $color-primary
-  color: white
+.infoGrid
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))
+  gap: 16px
 
-  &:hover
-    background: $color-primary-hover
-    transform: translateY(-2px)
+  div
+    background-color: #f9fafb
+    padding: 12px
+    border-radius: 6px
 
-.btn.secondary
-  background: white
-  color: $color-text
+    strong
+      display: block
+      font-size: 12px
+      color: $color-text-light
+      margin-bottom: 4px
+
+    p
+      font-size: 13px
+      color: $color-text
+      margin: 0
+
+// Collapsibles
+.collapsibleSection
   border: 1px solid $color-border
-
-  &:hover
-    border-color: $color-primary
-    color: $color-primary
-
-.btn.danger
-  background: $color-danger
-  color: white
-
-  &:hover
-    background: darken($color-danger, 10%)
-
-// Comments
-.commentsList
-  max-height: 400px
+  border-radius: 6px
+  overflow: hidden
+  max-height: 30rem
   overflow-y: auto
-  margin-bottom: 1.5rem
+  position: relative
 
-.comment
-  padding: 1rem
-  background: #f9fafb
-  border-radius: 0.375rem
-  margin-bottom: 1rem
-
-  &:last-child
-    margin-bottom: 0
-
-.commentHeader
+.collapsibleHeader
+  background-color: #f9fafb
+  padding: 12px 16px
+  cursor: pointer
   display: flex
   justify-content: space-between
   align-items: center
-  margin-bottom: 0.5rem
-
-.commentAuthor
-  font-weight: 600
-  font-size: 0.875rem
+  font-weight: 500
+  font-size: 13px
   color: $color-text
+  user-select: none
+  transition: background-color 0.2s ease
+  position: sticky
+  top: 0
 
-.commentTime
-  font-size: 0.75rem
-  color: $color-text-muted
+  &:hover
+    background-color: #f3f4f6
 
-.commentText
-  margin: 0.5rem 0 0 0
-  color: $color-text-muted
-  font-size: 0.9375rem
-
-.emptyComments
-  text-align: center
-  color: $color-text-muted
-  padding: 2rem 1rem
-  margin: 0
-
-.commentInput
+.collapsibleContent
+  padding: 12px 16px 0 16px
   display: flex
   flex-direction: column
-  gap: 1rem
+  gap: 12px
 
-// Confirm Modal
-.confirmText
-  padding: 1rem 1.5rem
-  color: $color-text-muted
-  margin: 0
-
-.modalAdd
+.nestedItem
+  background-color: #f9fafb
+  padding: 12px
+  border-radius: 4px
   display: flex
-  flex-direction: column
-  gap: 2rem
-  &__form
-    display: flex
-    flex-direction: column
-    gap: 2rem
-    .mainForm
-      width: 100% !important
-    .inputForm
-      margin: 0 !important
-    .formContainer
-      display: flex
-      gap: 1rem
-      flex-direction: row
-      &__form
-        width: 30rem !important
+  justify-content: space-between
+  align-items: center
+  gap: 12px
 
-// Responsive
+  div
+    flex: 1
+
+  p
+    font-size: 16px
+    color: $color-text
+    margin: 0 0 4px 0
+
+    strong
+      display: block
+
+.nestedFile
+  font-size: 11px
+  color: $color-text-light
+  font-style: italic
+  margin-top: 4px !important
+
+.nestedActions
+  display: flex
+  gap: 6px
+  flex-wrap: wrap
+  justify-content: flex-end
+
 @media (max-width: 768px)
   .header
     flex-direction: column
-    align-items: flex-start
-    gap: 1rem
+    align-items: stretch
 
-  .filters
-    gap: 0.25rem
-
-  .filterBtn
-    padding: 0.5rem 0.875rem
-    font-size: 0.8125rem
-
-  .tasksList
-    grid-template-columns: 1fr
-
-  .taskMeta
-    grid-template-columns: 1fr
-    gap: 0.75rem
-
-  .taskActions
+  .headerActions
     flex-direction: column
+
+  .grid
+    grid-template-columns: 1fr
 
   .formRow
     grid-template-columns: 1fr
 
-  .modal
-    max-width: 100%
+  .infoGrid
+    grid-template-columns: 1fr

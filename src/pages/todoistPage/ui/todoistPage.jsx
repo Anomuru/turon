@@ -1,449 +1,1245 @@
-import { useState, useCallback, useMemo, useEffect } from "react"
-import classNames from "classnames"
-import { useForm } from "react-hook-form"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { useForm } from "react-hook-form"
+import classNames from "classnames"
 
-import { API_URL, headers, headersImg, useHttp } from "shared/api/base"
-import { Button } from "shared/ui/button"
+import { getTaskCategoryList, getTaskLoading, getTaskRecurringTypes, getTasks, getTaskStatusList, getTaskTags, getTaskTagsLoading } from "../model/todoistSelector"
+import { addAttachments, addComments, addProofs, addSubTasks, addTag, addTask, deleteAttachments, deleteSubTasks, deleteTag, editAttachments, editSubTasks, editTag, editTask, taskLoading, taskLoadingStop, taskTagsLoading, taskTagsLoadingStop } from "../model/todoistSlice"
+import { fetchTaskProfile, fetchTasks, fetchTaskTags } from "../model/todoistThunk"
+import { API_URL, headerImg, headers, useHttp } from "shared/api/base"
+import { onAddAlertOptions } from "features/alert"
+import { getUserId } from "pages/loginPage"
 import { Modal } from "shared/ui/modal"
 import { Form } from "shared/ui/form"
-import { Textarea } from "shared/ui/textArea"
 import { Input } from "shared/ui/input"
+import { Textarea } from "shared/ui/textArea"
+import { ConfirmModal } from "shared/ui/confirmModal"
 import { Select } from "shared/ui/select"
-import { getUserBranchId } from "entities/profile/userProfile"
-import { fetchTeachersData, getTeacherData, getStatusList } from "entities/oftenUsed"
-import { fetchEmployersData } from "entities/employer/model/slice/employersThunk"
-import { onAddAlertOptions } from "features/alert/model/slice/alertSlice"
-import { getTasks, getTaskLoading } from "../model/todoistSelector"
+import { MiniLoader } from "shared/ui/miniLoader"
 
 import styles from "./todoistPage.module.sass"
-import { getEmployersData } from "entities/employer/model/selector/employersSelector"
-import { ConfirmModal } from "shared/ui/confirmModal"
+import { fetchTeachersData, getTeacherData } from "entities/oftenUsed"
+import { getUserBranchId } from "entities/profile/userProfile"
+import { AnimatedMulti } from "features/workerSelect"
 
-// Mock users
-const USERS = [
-    { id: "1", name: "Мария Иванова" },
-    { id: "2", name: "Иван Петров" },
-    { id: "3", name: "Анна Сидорова" },
-    { id: "4", name: "Петр Федоров" },
-    { id: "5", name: "Ольга Смирнова" },
-]
-
-// Current user (mock)
-const CURRENT_USER_ID = "1"
-
-// Status configuration
-const STATUS_CONFIG = {
-    notStarted: { label: "Не начато", color: "gray" },
-    inProgress: { label: "В процессе", color: "blue" },
-    blocked: { label: "Блокировано", color: "red" },
-    completed: { label: "Выполнено", color: "green" },
-}
-
-const FILTERS = [
-    { id: "myTasks", label: "Мои задачи" },
-    { id: "created", label: "Созданные мною" },
-    { id: "review", label: "На проверку" },
-    { id: "overdue", label: "Просроченные" },
-    { id: "today", label: "Сегодня" },
-    { id: "week", label: "На этой неделе" },
-]
 
 export const TodoistPage = () => {
 
-    const { register, handleSubmit } = useForm()
+
+    const formDataImg = new FormData()
     const dispatch = useDispatch()
     const { request } = useHttp()
+    const { register, handleSubmit, setValue } = useForm()
 
-    // const { data, statusList, loading } = useSelector(state => state.todoistSlice)
-    // const { id } = useSelector(state => state.me)
-    // const { teachers } = useSelector(state => state.teachers)
-    // const { employees } = useSelector(state => state.employees)
+    const userBranchId = useSelector(getUserBranchId)
+    const userId = useSelector(getUserId)
+    const teachers = useSelector(getTeacherData)
+    const tags = useSelector(getTaskTags)
+    const tagsLoading = useSelector(getTaskTagsLoading)
+    const tasks = useSelector(getTasks)
+    const tasksLoading = useSelector(getTaskLoading)
+    const statusList = useSelector(getTaskStatusList)
+    const categoryList = useSelector(getTaskCategoryList)
+    const recurringTypes = useSelector(getTaskRecurringTypes)
 
-    const getUserBranch = useSelector(getUserBranchId)
-    const getTeachers = useSelector(getTeacherData)
-    const getEmployees = useSelector(getEmployersData)
-    const statusList = useSelector(getStatusList)
-    const tasksList = useSelector(getTasks)
-    const taskLoading = useSelector(getTaskLoading)
+    // State management
 
-    const [tasks, setTasks] = useState([])
-
-    const [updatedTaskId, setUpdatedTaskId] = useState(null)
-    const [activeFilter, setActiveFilter] = useState("myTasks")
-    const [showModal, setShowModal] = useState(false)
-    const [showCommentsModal, setShowCommentsModal] = useState(false)
-    const [confirmModal, setConfirmModal] = useState(true)
-    const [editingTask, setEditingTask] = useState(null)
-    const [selectedTaskForComments, setSelectedTaskForComments] = useState(null)
-    const [commentText, setCommentText] = useState("")
-    const [deleteConfirm, setDeleteConfirm] = useState(null)
-    const [title, setTitle] = useState("")
-    const [description, setDescription] = useState("")
-    const [deadline, setDeadline] = useState("")
-    const [status, setStatus] = useState(null)
-    const [executor, setExecutor] = useState(null)
-    const [reviewer, setReviewer] = useState(null)
-    const [comment, setComment] = useState("")
+    const [modalType, setModalType] = useState(null)
+    const [nestedModalType, setNestedModalType] = useState(null)
+    const [selectedTask, setSelectedTask] = useState(null)
+    const [selectedTag, setSelectedTag] = useState(null)
+    const [activeCollapsibles, setActiveCollapsibles] = useState(new Set())
+    const [isRecurring, setIsRecurring] = useState(false)
+    const [recurringType, setRecurringType] = useState()
     const [teachersList, setTeachersList] = useState([])
-    const [employeesList, setEmployeesList] = useState([])
+    const [tagsList, setTagsList] = useState([])
 
-
-    useEffect(() => {
-
-        request(`${API_URL}Tasks/missions/?`, "GET", null, headers())
-    }, [])
-
-    useEffect(() => {
-        if (getUserBranch) {
-            // dispatch(fetchTeachersByLocationWithoutPagination({ locationId }))
-            // dispatch(fetchEmployeesWithoutPagination({ locationId }))
-            dispatch(fetchTeachersData(getUserBranch))
-            dispatch(fetchEmployersData({ branch: getUserBranch }))
-        }
-        // dispatch()
-    }, [getUserBranch])
+    // Form state
+    const [formData, setFormData] = useState({})
+    const [tagFormData, setTagFormData] = useState(null)
+    const [nestedFormData, setNestedFormData] = useState({})
 
     useEffect(() => {
-        if (getTeachers) {
-            setTeachersList(getTeachers.map(item => ({
-                name: `${item.name} ${item.surname} (${item.subject[0]})`,
-                id: item.user_id
-            })))
+        if (userBranchId) {
+            dispatch(fetchTaskTags())
+            dispatch(fetchTeachersData(userBranchId))
         }
-    }, [getTeachers])
+    }, [userBranchId])
 
     useEffect(() => {
-        if (getEmployees) {
-            setEmployeesList(getEmployees.map(item => ({
-                name: `${item.name} ${item.surname} (${item.job})`,
-                id: item.user_id
-            })))
+        if (userId) {
+            dispatch(fetchTasks({ creator: userId }))
         }
-    }, [getEmployees])
+    }, [userId])
+
+    useEffect(() => {
+        if (teachers)
+            setTeachersList(teachers.map(item => ({ id: item.user_id, name: `${item.name} ${item.surname} (${item.subject[0]?.name})` })))
+    }, [teachers])
+
+    useEffect(() => {
+        if (tags) {
+            setTagsList(
+                tags.map(item =>
+                    ({ value: item.id, label: item.name })
+                )
+            )
+        }
+    }, [tags])
 
 
-    const CreateTask = (createData) => {
-        let URL;
-        let METHOD;
+    // Modal handlers
+    const openCreateTaskModal = () => {
+        setFormData({
+            title: "",
+            description: "",
+            executor: "",
+            reviewer: "",
+            creator: userId,
+            category: "admin",
+            tags: [],
+            status: "not_started",
+            deadline: "",
+            is_recurring: false,
+            recurring_type: "daily",
+            repeat_every: 1,
+        })
+        setModalType("createTask")
+    }
 
-        if (updatedTaskId) {
-            URL = `Tasks/missions/${updatedTaskId}/`
-            METHOD = "PATCH"
-        } else {
-            URL = `Tasks/missions/`
-            METHOD = "POST"
+    const openEditTaskModal = (task) => {
+        setSelectedTask(task)
+        setFormData(task)
+        setModalType("editTask")
+    }
+
+    const openViewTaskModal = (task) => {
+        setSelectedTask(task)
+        setModalType("viewTask")
+        setActiveCollapsibles(new Set())
+    }
+
+    const openDeleteTaskModal = (task) => {
+        setSelectedTask(task)
+        setModalType("deleteTask")
+    }
+
+    const openCreateTagModal = () => {
+        setTagFormData(null)
+        setModalType("createTag")
+    }
+
+    const openEditTagModal = (tag) => {
+        setSelectedTag(tag)
+        setModalType("editTag")
+        setTagFormData(tag.name)
+    }
+
+    const openDeleteTagModal = (tag) => {
+        setSelectedTag(tag)
+        setModalType("deleteTag")
+    }
+
+    // Nested CRUD handlers
+    const openNestedModal = (type, item) => {
+        setNestedFormData(item || {})
+        setNestedModalType(type)
+    }
+
+    // Task CRUD operations
+    const handleCreateTask = () => {
+
+        const post = {
+            ...formData,
+            tags: formData.tags.map(item => item.value)
         }
 
-        dispatch(loadingTask())
-
-        const postData = {
-            ...createData,
-            title,
-            description,
-            deadline,
-            status,
-            executor,
-            reviewer,
-            location: locationId,
-            creator: id
-        }
-
-        request(`${BackUrl}${URL}`, METHOD, JSON.stringify(postData), headers())
+        dispatch(taskLoading())
+        request(`${API_URL}Tasks/missions/`, "POST", JSON.stringify(post), headers())
             .then(res => {
-                if (updatedTaskId) {
-                    dispatch(updateTask(res))
-                } else {
-                    dispatch(addTask(res))
-                }
-                // dispatch(onAddAlertOptions({
-                //     type: "success",
-                //     msg: updatedTaskId ? "Task kiritildi" : "Task kiritildi",
-                //     status: true
-                // }))
+                request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
+                    .then(res => {
+                        dispatch(addTask(res))
+                        dispatch(onAddAlertOptions({
+                            status: true,
+                            type: "success",
+                            msg: "Vazifa yaratildi"
+                        }))
+                        setModalType(null)
+                    })
             })
             .catch(err => {
-                // dispatch(onAddAlertOptions({
-                //     type: "error",
-                //     msg: "Xatolik yuz berdi",
-                //     status: true
-                // }))
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "error",
+                    msg: "Xatolik yuz berdi!"
+                }))
+                dispatch(taskLoadingStop())
             })
     }
 
-    const addComment = (commentData) => {
-        dispatch(loadingTask())
+    const handleEditTask = () => {
 
-        const patchData = { comment }
+        const patch = {
+            ...formData,
+            tags: formData.tags.map(item => item.id),
+            creator: formData.creator.id,
+            executor: formData.executor.id,
+            reviewer: formData.reviewer.id
+        }
 
-        request(`${BackUrl}Tasks/missions/${updatedTaskId}/`, "PATCH", JSON.stringify(patchData), headers())
+        dispatch(taskLoading())
+        request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify(patch), headers())
             .then(res => {
-                dispatch(updateTask(res))
+
+                request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
+                    .then(res => {
+                        dispatch(editTask(res))
+                        dispatch(onAddAlertOptions({
+                            status: true,
+                            type: "success",
+                            msg: "Vazifa o`zgartirildi"
+                        }))
+                        setModalType(null)
+                    })
             })
             .catch(err => {
-                // dispatch(onAddAlertOptions({
-                //     type: "error",
-                //     msg: "Xatolik yuz berdi",
-                //     status: true
-                // }))
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "error",
+                    msg: "Xatolik yuz berdi!"
+                }))
+                dispatch(taskLoadingStop())
             })
     }
 
-    const getConfirm = (ans) => {
-        if (ans === "yes") {
-            request(`${BackUrl}Tasks/missions/${updatedTaskId}/`, "DELETE", null, headers())
-                .then(res => {
-                    dispatch(deleteTask(updatedTaskId))
-                    setConfirmModal(false)
-                    setUpdatedTaskId(null)
-                })
-                .catch(err => {
-                    // dispatch(onAddAlertOptions({
-                    //     type: "error",
-                    //     msg: "Xatolik yuz berdi",
-                    //     status: true
-                    // }))
-                })
-        } else {
+    const handleDeleteTask = () => {
+        dispatch(taskLoading())
+        request(`${API_URL}Tasks/missions/${selectedTask.id}/`, "DELETE", null, headers())
+            .then(res => {
+                dispatch(editTask(res))
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "success",
+                    msg: `${selectedTask.title} - Vazifasi o'chirildi`
+                }))
+                setModalType(null)
+            })
+            .catch(err => {
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "error",
+                    msg: "Xatolik yuz berdi!"
+                }))
+                dispatch(taskLoadingStop())
+            })
+    }
 
-            setConfirmModal(false)
-            setUpdatedTaskId(null)
+    // Tag CRUD operations
+    const handleCreateTag = () => {
+        dispatch(taskTagsLoading())
+        request(`${API_URL}Tasks/tags/`, "POST", JSON.stringify({ name: tagFormData }), headers())
+            .then(res => {
+                dispatch(addTag(res))
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "success",
+                    msg: "Teg yaratildi"
+                }))
+                setModalType(null)
+                setTagFormData(null)
+            })
+            .catch(err => {
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "error",
+                    msg: "Bu nomli teg bor yoki xatolik yuz berdi!"
+                }))
+                dispatch(taskTagsLoadingStop())
+                setTagFormData(null)
+            })
+    }
+
+    const handleEditTag = () => {
+        dispatch(taskTagsLoading())
+        request(`${API_URL}Tasks/tags/${selectedTag.id}/`, "PATCH", JSON.stringify({ name: tagFormData }), headers())
+            .then(res => {
+                dispatch(editTag(res))
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "success",
+                    msg: `Tegni nomi "${res.name}"ga o'zgartirildi`
+                }))
+                setModalType(null)
+            })
+            .catch(err => {
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "error",
+                    msg: "Xatolik yuz berdi!"
+                }))
+                dispatch(taskTagsLoadingStop())
+            })
+    }
+
+    const handleDeleteTag = () => {
+        dispatch(taskTagsLoading())
+        request(`${API_URL}Tasks/tags/${selectedTag.id}/`, "DELETE", null, headers())
+            .then(res => {
+                dispatch(deleteTag(selectedTag.id))
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "danger",
+                    msg: `"${selectedTag.name}" - tegi o'chirildi`
+                }))
+                setModalType(null)
+            })
+            .catch(err => {
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "error",
+                    msg: "Xatolik yuz berdi!"
+                }))
+                dispatch(taskTagsLoadingStop())
+            })
+    }
+
+    // Nested CRUD operations
+    const handleCreateSubtask = () => {
+
+        const post = {
+            title: nestedFormData.title,
+            order: nestedFormData.order,
+            mission: selectedTask.id
+        }
+
+        request(`${API_URL}Tasks/subtasks/`, "POST", JSON.stringify(post), headers())
+            .then(res => {
+                dispatch(addSubTasks(res))
+                setSelectedTask(prev => ({
+                    ...prev,
+                    subtasks: [...prev.subtasks, res]
+                }))
+                setNestedModalType(null)
+            })
+            .catch(err => { })
+
+    }
+
+    const handleEditSubtask = () => {
+
+        const patch = {
+            title: nestedFormData.title,
+            order: nestedFormData.order,
+        }
+
+        request(`${API_URL}Tasks/subtasks/${nestedFormData.id}/`, "PATCH", JSON.stringify(patch), headers())
+            .then(res => {
+                dispatch(editSubTasks(res))
+                setSelectedTask({
+                    ...selectedTask,
+                    subtasks: selectedTask.subtasks.map((s) => (s.id === res.id ? res : s)),
+                })
+                setNestedModalType(null)
+            })
+            .catch(err => { })
+
+    }
+
+    const handleDeleteSubtask = () => {
+
+        request(`${API_URL}Tasks/subtasks/${nestedFormData.id}`, "DELETE", null, headers())
+            .then(res => {
+                dispatch(deleteSubTasks({ mission: selectedTask.id, subtask: nestedFormData.id }))
+                setSelectedTask({
+                    ...selectedTask,
+                    subtasks: selectedTask.subtasks.filter((s) => s.id !== nestedFormData.id),
+                })
+                setNestedModalType(null)
+            })
+            .catch(err => { })
+    }
+
+    const handleCreateAttachment = () => {
+
+        formDataImg.append("note", nestedFormData.note)
+        formDataImg.append("file", nestedFormData.file)
+        formDataImg.append("mission", selectedTask.id)
+
+        request(`${API_URL}Tasks/attachments/`, "POST", formDataImg, headerImg())
+            .then(res => {
+                dispatch(addAttachments(res))
+                setSelectedTask(prev => ({
+                    ...prev,
+                    attachments: [...prev.attachments, res]
+                }))
+                setNestedModalType(null)
+                formDataImg.delete("note")
+                formDataImg.delete("file")
+                formDataImg.delete("mission")
+            })
+            .catch(err => { })
+
+    }
+
+    const handleEditAttachment = () => {
+
+        formDataImg.append("note", nestedFormData.note)
+        formDataImg.append("file", nestedFormData.file)
+
+        request(`${API_URL}Tasks/attachments/${nestedFormData.id}/`, "PATCH", formDataImg, headerImg())
+            .then(res => {
+                dispatch(editAttachments(res))
+                setSelectedTask({
+                    ...selectedTask,
+                    attachments: selectedTask.attachments.map((s) => (s.id === res.id ? res : s)),
+                })
+                setNestedModalType(null)
+                formDataImg.delete("note")
+                formDataImg.delete("file")
+            })
+            .catch(err => { })
+
+    }
+
+    const handleDeleteAttachment = () => {
+
+        request(`${API_URL}Tasks/attachments/${nestedFormData.id}`, "DELETE", null, headers())
+            .then(res => {
+                dispatch(deleteAttachments({ mission: selectedTask.id, attachment: nestedFormData.id }))
+                setSelectedTask({
+                    ...selectedTask,
+                    attachments: selectedTask.attachments.filter((s) => s.id !== nestedFormData.id),
+                })
+                setNestedModalType(null)
+            })
+            .catch(err => { })
+
+    }
+
+    const handleCreateComment = () => {
+
+        formDataImg.append("text", selectedTask.text)
+        formDataImg.append("user", 945)
+        formDataImg.append("attachment", nestedFormData.comFile)
+        formDataImg.append("mission", selectedTask.id)
+
+        request(`${API_URL}Tasks/comments/`, "POST", formDataImg, headerImg())
+            .then(res => {
+                dispatch(addComments(res))
+                setSelectedTask(prev => ({
+                    ...prev,
+                    comments: [...prev.comments, res]
+                }))
+                setNestedModalType(null)
+                formDataImg.delete("text")
+                formDataImg.delete("user")
+                formDataImg.delete("attachment")
+                formDataImg.delete("mission")
+            })
+            .catch(err => { })
+
+
+    }
+
+    const handleEditComment = () => {
+        if (selectedTask && nestedFormData.id) {
+            setSelectedTask({
+                ...selectedTask,
+                comments: selectedTask.comments.map((c) => (c.id === nestedFormData.id ? { ...c, ...nestedFormData } : c)),
+            })
+            setNestedModalType(null)
         }
     }
 
-    const formatDate = (dateStr) => {
-        const date = new Date(dateStr)
-        return date.toLocaleDateString("ru-RU", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-        })
+    const handleDeleteComment = () => {
+        if (selectedTask && nestedFormData.id) {
+            setSelectedTask({
+                ...selectedTask,
+                comments: selectedTask.comments.filter((c) => c.id !== nestedFormData.id),
+            })
+            setNestedModalType(null)
+        }
     }
 
-    const formatTime = (timestamp) => {
-        const date = new Date(timestamp)
-        return date.toLocaleTimeString("ru-RU", {
-            hour: "2-digit",
-            minute: "2-digit",
-        })
+    const handleCreateProof = () => {
+
+        formDataImg.append("comment", nestedFormData.comment)
+        formDataImg.append("file", nestedFormData.proofFile)
+        formDataImg.append("mission", selectedTask.id)
+
+        request(`${API_URL}Tasks/proofs/`, "POST", formDataImg, headerImg())
+            .then(res => {
+                dispatch(addProofs(res))
+                setSelectedTask(prev => ({
+                    ...prev,
+                    proofs: [...prev.proofs, res]
+                }))
+                setNestedModalType(null)
+                formDataImg.delete("comment")
+                formDataImg.delete("file")
+                formDataImg.delete("mission")
+            })
+            .catch(err => { })
+
     }
 
-    const render = () => {
-        return tasksList.map((task) => (
-            <div key={task.id} className={styles.taskCard}>
-                <div className={styles.taskHeader}>
-                    <div className={styles.taskTitle}>{task.title}</div>
-                    <div className={`${styles.status} ${styles[`status_${task.status}`]}`}>
-                        {STATUS_CONFIG[task.status].label}
-                    </div>
-                </div>
+    const handleEditProof = () => {
+        if (selectedTask && nestedFormData.id) {
+            setSelectedTask({
+                ...selectedTask,
+                proofs: selectedTask.proofs.map((p) => (p.id === nestedFormData.id ? { ...p, ...nestedFormData } : p)),
+            })
+            setNestedModalType(null)
+        }
+    }
 
-                <p className={styles.taskDescription}>{task.description}</p>
+    const handleDeleteProof = () => {
+        if (selectedTask && nestedFormData.id) {
+            setSelectedTask({
+                ...selectedTask,
+                proofs: selectedTask.proofs.filter((p) => p.id !== nestedFormData.id),
+            })
+            setNestedModalType(null)
+        }
+    }
 
-                <div className={styles.taskMeta}>
-                    <div className={styles.metaItem}>
-                        <span className={styles.metaLabel}>Дедлайн:</span>
-                        <span className={styles.metaValue}>{formatDate(task.deadline)}</span>
-                    </div>
-                    <div className={styles.metaItem}>
-                        <span className={styles.metaLabel}>Исполнитель:</span>
-                        <span className={styles.metaValue}>{ }</span>
-                    </div>
-                    <div className={styles.metaItem}>
-                        <span className={styles.metaLabel}>Проверяющий:</span>
-                        <span className={styles.metaValue}>{ }</span>
-                    </div>
-                </div>
+    const toggleCollapsible = (section) => {
+        const newSet = new Set(activeCollapsibles)
+        if (newSet.has(section)) {
+            newSet.delete(section)
+        } else {
+            newSet.add(section)
+        }
+        setActiveCollapsibles(newSet)
+    }
 
-                <div className={styles.taskActions}>
-                    <button
-                        className={styles.actionBtn}
-                        onClick={() => {
-                            setShowModal(true)
-                            setTitle(task.title)
-                            setDescription(task.description)
-                            setDeadline(task.deadline)
-                            setStatus(task.status)
-                            setExecutor(task.executer.id)
-                            setReviewer(task.reviewer.id)
-                        }}
-                    >
-                        Edit
-                    </button>
-                    <button
-                        className={`${styles.actionBtn} ${styles.secondary}`}
-                        onClick={() => {
-                            setShowCommentsModal(true)
-                            setUpdatedTaskId(task.id)
-                        }}
-                    >
-                        Comment ({task.comments.length})
-                    </button>
-                    <button
-                        className={`${styles.actionBtn} ${styles.danger}`}
-                        onClick={() => {
-                            setConfirmModal(true)
-                            setUpdatedTaskId(task.id)
-                        }}
-                    >
-                        Delete
-                    </button>
-                </div>
-            </div>
-        ))
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "todo":
+                return "#999"
+            case "in-progress":
+                return "#4a90e2"
+            case "done":
+                return "#51cf66"
+            default:
+                return "#999"
+        }
     }
 
     return (
         <div className={styles.container}>
-            {/* Header */}
-            <div className={styles.header}>
-                <h1 className={styles.title}>TaskManager</h1>
-                <Button
-                    extraClass={styles.createBtn}
-                    onClick={() => setShowModal(true)}
-                >
-                    + Создать задачу
-                </Button>
-            </div>
+            <header className={styles.header}>
+                <h1 className={styles.title}>Tasks Admin Panel</h1>
+                <div className={styles.headerActions}>
+                    <button className={styles.btnPrimary} onClick={openCreateTaskModal}>
+                        + New Task
+                    </button>
+                    <button className={styles.btnSecondary} onClick={openCreateTagModal}>
+                        + New Tag
+                    </button>
+                </div>
+            </header>
 
-            {/* Filters */}
-            <div className={styles.filters}>
-                {
-                    FILTERS.map((filter) => (
-                        <button
-                            // type={"simple__add"}
-                            key={filter.id}
-                            className={`${styles.filterBtn} ${activeFilter === filter.id ? styles.active : ""}`}
-                            onClick={() => setActiveFilter(filter.id)}
-                        >
-                            {filter.label}
-                        </button>
-                    ))
-                }
-            </div>
+            <div className={styles.content}>
+                {/* Tasks Section */}
+                <section className={styles.section}>
+                    <h2 className={styles.sectionTitle}>Tasks</h2>
+                    <div className={styles.grid}>
+                        {
+                            tasks.map((task) => (
+                                <div key={task.id} className={styles.card}>
+                                    <div className={styles.cardHeader}>
+                                        <h3 className={styles.cardTitle}>{task.title}</h3>
+                                        <span className={styles.status} style={{ color: getStatusColor(task.status) }}>
+                                            {task.status}
+                                        </span>
+                                    </div>
+                                    <p className={styles.cardText}>
+                                        <strong>Executor:</strong> {task.executor.full_name}
+                                    </p>
+                                    <p className={styles.cardText}>
+                                        <strong>Deadline:</strong> {task.deadline}
+                                    </p>
+                                    <div className={styles.tags}>
+                                        {task.tags.map((tagId) => {
+                                            // const tag = tags.find((t) => t.id === tagId)
+                                            return (
+                                                <span key={tagId.id} className={styles.tag}>
+                                                    {tagId?.name}
+                                                </span>
+                                            )
+                                        })}
+                                    </div>
+                                    <div className={styles.cardActions}>
+                                        <button className={styles.btnView} onClick={() => openViewTaskModal(task)}>
+                                            View More
+                                        </button>
+                                        <button className={styles.btnEdit} onClick={() => openEditTaskModal(task)}>
+                                            Edit
+                                        </button>
+                                        <button className={styles.btnDelete} onClick={() => openDeleteTaskModal(task)}>
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </section>
 
-            {/* Tasks List */}
-            <div className={styles.tasksList}>
-                {
-                    taskLoading
-                        ? <DefaultLoader />
-                        : tasksList.length === 0 ? (
-                            <div className={styles.empty}>
-                                <p>Нет задач в этом разделе</p>
+                {/* Tags Section */}
+                <section className={styles.section}>
+                    <h2 className={styles.sectionTitle}>Tags</h2>
+                    <div className={styles.tagsList}>
+                        {tags.map((tag) => (
+                            <div key={tag.id} className={styles.tagItem}>
+                                <span className={styles.tagName}>{tag.name}</span>
+                                <div className={styles.tagActions}>
+                                    <button className={styles.btnSmallEdit} onClick={() => openEditTagModal(tag)}>
+                                        Edit
+                                    </button>
+                                    <button className={styles.btnSmallDelete} onClick={() => openDeleteTagModal(tag)}>
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
-                        ) : render()
-                }
+                        ))}
+                    </div>
+                </section>
             </div>
 
-            {/* Modal: Create/Edit Task */}
+            {/* Modals */}
 
-            <Modal
-                active={showModal}
-                setActive={
-                    () => {
-                        setShowModal(false)
-                        setUpdatedTaskId(null)
-                    }
-                }
-                extraClass={styles.modalAdd}
-            >
-                <h1>Create Task</h1>
-                <Form
-                    extraClassname={styles.modalAdd__form}
-                    onSubmit={handleSubmit(CreateTask)}
-                >
-                    <Input
-                        clazzLabel={classNames(styles.inputForm, styles.mainForm)}
-                        placeholder={"Title"}
-                        onChange={setTitle}
-                        defaultValue={title}
-                    // register={register}
-                    // name={"title"}
-                    />
-                    <Textarea
-                        clazzLabel={styles.mainForm}
-                        placeholder={"Description"}
-                        onChange={setDescription}
-                        defaultValue={description}
-                    // register={register}
-                    // name={"description"}
-                    />
-                    <div className={styles.formContainer}>
-                        <Input
-                            clazzLabel={classNames(styles.inputForm, styles.formContainer__form)}
-                            title={"Deadline"}
-                            type={"date"}
-                            onChange={setDeadline}
-                            defaultValue={deadline}
-                        // register={register}
-                        // name={"deadline"}
-                        />
-                        <Select
-                            clazzLabel={styles.formContainer__form}
-                            title={"Status"}
-                            onChangeOption={setStatus}
-                            // register={register}
-                            // name={"status"}
-                            options={statusList}
-                            defaultValue={status}
-                        />
+            {/* Create/Edit Task Modal */}
+            {(modalType === "createTask" || modalType === "editTask") && (
+                <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <h2 className={styles.modalTitle}>{modalType === "createTask" ? "Create Task" : "Edit Task"}</h2>
+                        <div className={styles.formGroup}>
+                            <label>Title</label>
+                            <input
+                                type="text"
+                                value={formData.title || ""}
+                                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                placeholder="Task title"
+                                required
+                            />
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label>Description</label>
+                            <textarea
+                                value={formData.description || ""}
+                                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                placeholder="Task description"
+                                rows={3}
+                            />
+                        </div>
+                        <div className={styles.formRow}>
+                            <div className={styles.formGroup}>
+                                <label>Executor</label>
+                                <select
+                                    value={typeof formData.executor === "object" ? formData.executor.id : formData.executor || "none"}
+                                    onChange={(e) => setFormData({ ...formData, executor: e.target.value })}
+                                    required
+                                >
+                                    <option value={"none"}>Select Executor</option>
+                                    {
+                                        [...teachersList].map(item =>
+                                            <option value={item.id}>{item.name}</option>
+                                        )
+                                    }
+                                </select>
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>Reviewer</label>
+                                <select
+                                    value={typeof formData.reviewer === "object" ? formData.reviewer.id : formData.reviewer || "none"}
+                                    onChange={(e) => setFormData({ ...formData, reviewer: e.target.value })}
+                                    required
+                                >
+                                    <option value={"none"}>Select Reviewer</option>
+                                    {
+                                        [...teachersList].map(item =>
+                                            <option value={item.id}>{item.name}</option>
+                                        )
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div className={styles.formRow}>
+                            <div className={styles.formGroup}>
+                                <label>Tags</label>
+                                <AnimatedMulti
+                                    options={tagsList}
+                                    onChange={(e) => setFormData({ ...formData, tags: e })}
+                                    value={
+                                        modalType === "createTask"
+                                            ? formData.tags
+                                            : formData.tags.map(item => ({ value: item.id, label: item.name }))
+                                    }
+                                    fontSize={15}
+                                />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>Category</label>
+                                <select
+                                    value={formData.category || "admin"}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                    required
+                                >
+                                    {
+                                        categoryList.map(item =>
+                                            <option value={item.id}>{item.name}</option>
+                                        )
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div className={styles.formRow}>
+                            <div className={styles.formGroup}>
+                                <label>Status</label>
+                                <select
+                                    value={formData.status || "not_started"}
+                                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                    required
+                                >
+                                    {
+                                        statusList.map(item =>
+                                            <option value={item.id}>{item.name}</option>
+                                        )
+                                    }
+                                </select>
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>Deadline</label>
+                                <input
+                                    type="date"
+                                    value={formData.deadline || ""}
+                                    onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div className={styles.formGroup}>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={formData.is_recurring || false}
+                                    onChange={(e) => setFormData({ ...formData, is_recurring: e.target.checked })}
+                                />
+                                Recurring
+                            </label>
+                        </div>
+                        {formData.is_recurring && (
+                            <div className={styles.formRow}>
+                                <div className={styles.formGroup}>
+                                    <label>Recurring Type</label>
+                                    <select
+                                        value={formData.recurring_type || "daily"}
+                                        onChange={(e) => setFormData({ ...formData, recurring_type: e.target.value })}
+                                    >
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="monthly">Monthly</option>
+                                    </select>
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Repeat Every</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={formData.repeat_every || 1}
+                                        onChange={(e) => setFormData({ ...formData, repeat_every: Number.parseInt(e.target.value) })}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                        <div className={styles.formActions}>
+                            <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                Cancel
+                            </button>
+                            <button
+                                className={styles.btnPrimary}
+                                onClick={modalType === "createTask" ? handleCreateTask : handleEditTask}
+                            >
+                                {modalType === "createTask" ? "Create" : "Update"}
+                            </button>
+                        </div>
                     </div>
-                    <div className={styles.formContainer}>
-                        <Select
-                            clazzLabel={styles.formContainer__form}
-                            title={"Executor"}
-                            onChangeOption={setExecutor}
-                            // register={register}
-                            // name={"executor"}
-                            options={[...employeesList, ...teachersList]}
-                            defaultValue={executor}
-                        />
-                        <Select
-                            clazzLabel={styles.formContainer__form}
-                            title={"Reviewer"}
-                            onChangeOption={setReviewer}
-                            // register={register}
-                            // name={"reviewer"}
-                            options={[...employeesList, ...teachersList]}
-                            defaultValue={reviewer}
-                        />
+                </div>
+            )}
+
+            {/* Delete Task Modal */}
+            {modalType === "deleteTask" && (
+                <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <h2 className={styles.modalTitle}>Delete Task</h2>
+                        <p className={styles.confirmText}>
+                            Are you sure you want to delete "{selectedTask?.title}"? This action cannot be undone.
+                        </p>
+                        <div className={styles.formActions}>
+                            <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                Cancel
+                            </button>
+                            <button className={styles.btnDanger} onClick={handleDeleteTask}>
+                                Delete
+                            </button>
+                        </div>
                     </div>
-                </Form>
-            </Modal>
+                </div>
+            )}
 
-            <Modal
-                active={showCommentsModal}
-                setActive={
-                    () => {
-                        setShowCommentsModal(false)
-                        setUpdatedTaskId(null)
-                    }
-                }
-                extraClass={styles.modalAdd}
-            >
-                <h1>Add comment</h1>
-                <Form
-                    extraClassname={styles.modalAdd__form}
-                    onSubmit={handleSubmit(addComment)}
-                >
-                    <Textarea
-                        clazzLabel={styles.mainForm}
-                        placeholder={"Comment"}
-                        onChange={setComment}
-                    // register={register}
-                    // name={"comment"}
-                    />
-                </Form>
-            </Modal>
+            {/* View Task Modal */}
+            {modalType === "viewTask" && selectedTask && (
+                <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                    <div className={styles.modalLarge} onClick={(e) => e.stopPropagation()}>
+                        <h2 className={styles.modalTitle}>{selectedTask.title}</h2>
 
-            {/* <Modal active={confirmModal} setActiveModal={() => setConfirmModal(false)}> */}
-            <ConfirmModal
-                setActive={setConfirmModal}
-                text={"O'chirilsinmi?"}
-                getConfirm={getConfirm}
-            />
-            {/* </Modal> */}
+                        <div className={styles.viewContent}>
+                            <div className={styles.infoGrid}>
+                                <div>
+                                    <strong>Description:</strong>
+                                    <p>{selectedTask.description}</p>
+                                </div>
+                                <div>
+                                    <strong>Category:</strong>
+                                    <p>{selectedTask.category}</p>
+                                </div>
+                                <div>
+                                    <strong>Creator:</strong>
+                                    <p>{selectedTask.creator.full_name}</p>
+                                </div>
+                                <div>
+                                    <strong>Executor:</strong>
+                                    <p>{selectedTask.executor.full_name}</p>
+                                </div>
+                                <div>
+                                    <strong>Reviewer:</strong>
+                                    <p>{selectedTask.reviewer.full_name}</p>
+                                </div>
+                                <div>
+                                    <strong>Deadline:</strong>
+                                    <p>{selectedTask.deadline}</p>
+                                </div>
+                                <div>
+                                    <strong>Status:</strong>
+                                    <p>{selectedTask.status}</p>
+                                </div>
+                                <div>
+                                    <strong>Created:</strong>
+                                    <p>{selectedTask.created_at}</p>
+                                </div>
+                                <div>
+                                    <strong>Recurring:</strong>
+                                    <p>{selectedTask.is_recurring ? `Yes (${selectedTask.recurring_type})` : "No"}</p>
+                                </div>
+                            </div>
+
+                            {/* Collapsible Sections */}
+                            <div className={styles.collapsibleSection}>
+                                <div className={styles.collapsibleHeader} onClick={() => toggleCollapsible("subtasks")}>
+                                    <span>Subtasks ({selectedTask.subtasks.length})</span>
+                                    <span>{activeCollapsibles.has("subtasks") ? "−" : "+"}</span>
+                                </div>
+                                {activeCollapsibles.has("subtasks") && (
+                                    <>
+                                        <div className={styles.collapsibleContent}>
+                                            {selectedTask.subtasks.map((st) => (
+                                                <div key={st.id} className={styles.nestedItem}>
+                                                    <p>{st.order}. {st.title}</p>
+                                                    <div className={styles.nestedActions}>
+                                                        <button className={styles.btnSmallEdit} onClick={() => openNestedModal("editSubtask", st)}>
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            className={styles.btnSmallDelete}
+                                                            onClick={() => openNestedModal("deleteSubtask", st)}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className={styles.btnSmallContainer}>
+                                            <button className={styles.btnSmall} onClick={() => openNestedModal("createSubtask")}>
+                                                + Add Subtask
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+
+                            <div className={styles.collapsibleSection}>
+                                <div className={styles.collapsibleHeader} onClick={() => toggleCollapsible("attachments")}>
+                                    <span>Attachments ({selectedTask.attachments.length})</span>
+                                    <span>{activeCollapsibles.has("attachments") ? "−" : "+"}</span>
+                                </div>
+                                {activeCollapsibles.has("attachments") && (
+                                    <>
+                                        <div className={styles.collapsibleContent}>
+                                            {selectedTask.attachments.map((att) => (
+                                                <div key={att.id} className={styles.nestedItem}>
+                                                    <div>
+                                                        <p>
+                                                            <strong>{att.file}</strong>
+                                                        </p>
+                                                        <p>{att.note}</p>
+                                                    </div>
+                                                    <div className={styles.nestedActions}>
+                                                        <button
+                                                            className={styles.btnSmallEdit}
+                                                            onClick={() => openNestedModal("editAttachment", att)}
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            className={styles.btnSmallDelete}
+                                                            onClick={() => openNestedModal("deleteAttachment", att)}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className={styles.btnSmallContainer}>
+                                            <button className={styles.btnSmall} onClick={() => openNestedModal("createAttachment")}>
+                                                + Add Attachment
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+
+                            <div className={styles.collapsibleSection}>
+                                <div className={styles.collapsibleHeader} onClick={() => toggleCollapsible("comments")}>
+                                    <span>Comments ({selectedTask.comments.length})</span>
+                                    <span>{activeCollapsibles.has("comments") ? "−" : "+"}</span>
+                                </div>
+                                {activeCollapsibles.has("comments") && (
+                                    <>
+                                        <div className={styles.collapsibleContent}>
+                                            {selectedTask.comments.map((com) => (
+                                                <div key={com.id} className={styles.nestedItem}>
+                                                    <p>{com.text}</p>
+                                                    {com.file && <p className={styles.nestedFile}>{com.file}</p>}
+                                                    <div className={styles.nestedActions}>
+                                                        <button className={styles.btnSmallEdit} onClick={() => openNestedModal("editComment", com)}>
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            className={styles.btnSmallDelete}
+                                                            onClick={() => openNestedModal("deleteComment", com)}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className={styles.btnSmallContainer}>
+                                            <button className={styles.btnSmall} onClick={() => openNestedModal("createComment")}>
+                                                + Add Comment
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+
+                            <div className={styles.collapsibleSection}>
+                                <div className={styles.collapsibleHeader} onClick={() => toggleCollapsible("proofs")}>
+                                    <span>Proofs ({selectedTask.proofs.length})</span>
+                                    <span>{activeCollapsibles.has("proofs") ? "−" : "+"}</span>
+                                </div>
+                                {activeCollapsibles.has("proofs") && (
+                                    <>
+                                        <div className={styles.collapsibleContent}>
+                                            {selectedTask.proofs.map((proof) => (
+                                                <div key={proof.id} className={styles.nestedItem}>
+                                                    <div>
+                                                        <p>
+                                                            <strong>{proof.file}</strong>
+                                                        </p>
+                                                        <p>{proof.comment}</p>
+                                                    </div>
+                                                    <div className={styles.nestedActions}>
+                                                        <button className={styles.btnSmallEdit} onClick={() => openNestedModal("editProof", proof)}>
+                                                            Edit
+                                                        </button>
+                                                        <button
+                                                            className={styles.btnSmallDelete}
+                                                            onClick={() => openNestedModal("deleteProof", proof)}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className={styles.btnSmallContainer}>
+                                            <button className={styles.btnSmall} onClick={() => openNestedModal("createProof")}>
+                                                + Add Proof
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className={styles.formActions}>
+                            <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Nested CRUD Modals */}
+            {nestedModalType && (
+                <div className={styles.modalBackdrop} onClick={() => setNestedModalType(null)}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        {nestedModalType === "createSubtask" || nestedModalType === "editSubtask" ? (
+                            <>
+                                <h2 className={styles.modalTitle}>
+                                    {nestedModalType === "createSubtask" ? "Create Subtask" : "Edit Subtask"}
+                                </h2>
+                                <div className={styles.formGroup}>
+                                    <label>Title</label>
+                                    <input
+                                        type="text"
+                                        value={nestedFormData.title || ""}
+                                        onChange={(e) => setNestedFormData({ ...nestedFormData, title: e.target.value })}
+                                        placeholder="Subtask title"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Order</label>
+                                    <input
+                                        type="number"
+                                        value={nestedFormData.order || ""}
+                                        onChange={(e) => setNestedFormData({ ...nestedFormData, order: e.target.value })}
+                                        placeholder="Subtask order"
+                                    />
+                                </div>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setNestedModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className={styles.btnPrimary}
+                                        onClick={nestedModalType === "createSubtask" ? handleCreateSubtask : handleEditSubtask}
+                                    >
+                                        {nestedModalType === "createSubtask" ? "Create" : "Update"}
+                                    </button>
+                                </div>
+                            </>
+                        ) : nestedModalType === "deleteSubtask" ? (
+                            <>
+                                <h2 className={styles.modalTitle}>Delete Subtask</h2>
+                                <p className={styles.confirmText}>Are you sure?</p>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setNestedModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button className={styles.btnDanger} onClick={handleDeleteSubtask}>
+                                        Delete
+                                    </button>
+                                </div>
+                            </>
+                        ) : nestedModalType === "createAttachment" || nestedModalType === "editAttachment" ? (
+                            <>
+                                <h2 className={styles.modalTitle}>
+                                    {nestedModalType === "createAttachment" ? "Create Attachment" : "Edit Attachment"}
+                                </h2>
+                                <div className={styles.formGroup}>
+                                    <label>Note</label>
+                                    <input
+                                        type="text"
+                                        value={nestedFormData.note || ""}
+                                        onChange={(e) => setNestedFormData({ ...nestedFormData, note: e.target.value })}
+                                        placeholder="Note"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>File</label>
+                                    <input
+                                        type="file"
+                                        onChange={(e) => setNestedFormData({ ...nestedFormData, file: e.target.files[0] })}
+                                        placeholder="Filename"
+                                    />
+                                </div>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setNestedModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className={styles.btnPrimary}
+                                        onClick={nestedModalType === "createAttachment" ? handleCreateAttachment : handleEditAttachment}
+                                    >
+                                        {nestedModalType === "createAttachment" ? "Create" : "Update"}
+                                    </button>
+                                </div>
+                            </>
+                        ) : nestedModalType === "deleteAttachment" ? (
+                            <>
+                                <h2 className={styles.modalTitle}>Delete Attachment</h2>
+                                <p className={styles.confirmText}>Are you sure?</p>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setNestedModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button className={styles.btnDanger} onClick={handleDeleteAttachment}>
+                                        Delete
+                                    </button>
+                                </div>
+                            </>
+                        ) : nestedModalType === "createComment" || nestedModalType === "editComment" ? (
+                            <>
+                                <h2 className={styles.modalTitle}>
+                                    {nestedModalType === "createComment" ? "Create Comment" : "Edit Comment"}
+                                </h2>
+                                <div className={styles.formGroup}>
+                                    <label>Text</label>
+                                    <textarea
+                                        value={nestedFormData.text || ""}
+                                        onChange={(e) => setNestedFormData({ ...nestedFormData, text: e.target.value })}
+                                        placeholder="Comment text"
+                                        rows={3}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>File</label>
+                                    <input
+                                        type="file"
+                                        onChange={(e) => setNestedFormData({ ...nestedFormData, comFile: e.target.files[0] })}
+                                        placeholder="Filename"
+                                    />
+                                </div>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setNestedModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className={styles.btnPrimary}
+                                        onClick={nestedModalType === "createComment" ? handleCreateComment : handleEditComment}
+                                    >
+                                        {nestedModalType === "createComment" ? "Create" : "Update"}
+                                    </button>
+                                </div>
+                            </>
+                        ) : nestedModalType === "deleteComment" ? (
+                            <>
+                                <h2 className={styles.modalTitle}>Delete Comment</h2>
+                                <p className={styles.confirmText}>Are you sure?</p>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setNestedModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button className={styles.btnDanger} onClick={handleDeleteComment}>
+                                        Delete
+                                    </button>
+                                </div>
+                            </>
+                        ) : nestedModalType === "createProof" || nestedModalType === "editProof" ? (
+                            <>
+                                <h2 className={styles.modalTitle}>
+                                    {nestedModalType === "createProof" ? "Create Proof" : "Edit Proof"}
+                                </h2>
+                                <div className={styles.formGroup}>
+                                    <label>Comment</label>
+                                    <textarea
+                                        value={nestedFormData.comment || ""}
+                                        onChange={(e) => setNestedFormData({ ...nestedFormData, comment: e.target.value })}
+                                        placeholder="Proof comment"
+                                        rows={2}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>File</label>
+                                    <input
+                                        type="file"
+                                        onChange={(e) => setNestedFormData({ ...nestedFormData, proofFile: e.target.files[0] })}
+                                        placeholder="Filename"
+                                    />
+                                </div>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setNestedModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button
+                                        className={styles.btnPrimary}
+                                        onClick={nestedModalType === "createProof" ? handleCreateProof : handleEditProof}
+                                    >
+                                        {nestedModalType === "createProof" ? "Create" : "Update"}
+                                    </button>
+                                </div>
+                            </>
+                        ) : nestedModalType === "deleteProof" ? (
+                            <>
+                                <h2 className={styles.modalTitle}>Delete Proof</h2>
+                                <p className={styles.confirmText}>Are you sure?</p>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setNestedModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button className={styles.btnDanger} onClick={handleDeleteProof}>
+                                        Delete
+                                    </button>
+                                </div>
+                            </>
+                        ) : null}
+                    </div>
+                </div>
+            )}
+
+            {/* Create/Edit/Delete Tag Modals */}
+            {(modalType === "createTag" || modalType === "editTag") && (
+                <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <h2 className={styles.modalTitle}>{modalType === "createTag" ? "Create Tag" : "Edit Tag"}</h2>
+                        <div className={styles.formGroup}>
+                            <label>Tag Name</label>
+                            <input
+                                type="text"
+                                value={tagFormData || ""}
+                                onChange={(e) => setTagFormData(e.target.value)}
+                                placeholder="Tag name"
+                            />
+                        </div>
+                        <div className={styles.formActions}>
+                            <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                Cancel
+                            </button>
+                            <button
+                                className={styles.btnPrimary}
+                                onClick={modalType === "createTag" ? handleCreateTag : handleEditTag}
+                            >
+                                {modalType === "createTag" ? "Create" : "Update"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {modalType === "deleteTag" && (
+                <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                    <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                        <h2 className={styles.modalTitle}>Delete Tag</h2>
+                        <p className={styles.confirmText}>Are you sure you want to delete the tag "{selectedTag?.name}"?</p>
+                        <div className={styles.formActions}>
+                            <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                Cancel
+                            </button>
+                            <button className={styles.btnDanger} onClick={handleDeleteTag}>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
-
