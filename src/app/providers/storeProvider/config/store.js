@@ -30,27 +30,6 @@ import { timeTableTuronReducer } from "pages/timeTable/model/slice/timeTableTuro
 import { filterLeadsReducers } from "entities/filteredLeadsList/model/filteredLeadsListSlice.js";
 import { quarterMasterReducer } from "pages/quarterMasterPage/model/quarterMasterSlice.js";
 import { locationsReducer } from "features/locations/model/slice/locationsSlice.js";
-import { todoistReducer } from 'pages/todoistPage';
-import { taskManagerReducer } from "features/taskManager/modal/taskManagerSlice.js";
-import { calendarReducer } from "pages/calendarPage/model/calendarSlice.js";
-import { teacherReducer } from "entities/teachers/model/teacherSlice.js";
-import { groupsReducer } from "entities/groups/model/slice/groupsSlice.js";
-import { groupProfileReducer } from "entities/profile/groupProfile/model/groupProfileSlice.js";
-import { groupAttendanceReducer } from "pages/profilePage/model/slice/groupAttendanceSlice.js";
-import { teacherParseReducer, teacherParseSlice } from "entities/teachers/model/teacherParseSlice.js";
-import { teacherSalaryReducer, teacherSalarySlice } from "entities/teacherSalary/ui/teacherSalarySlice.js";
-import { timeTableReducer } from "pages/timeTableListPage/model/timeTableListSlice/timeTableListSlice.js";
-import { employerCategoryReducer, employerCategorySlice } from "entities/employer/model/slice/employerCategory.js";
-import { searchReducer } from "features/searchInput";
-import { rgbReducer } from "entities/rgbData/model/rgbDataSlice.js";
-import { roomsReducer } from "entities/rooms/index.js";
-import { studentPaymentReducer } from "features/studentPayment/model/studentPaymentSlice.js";
-import { studentProfileReducer } from "pages/profilePage/model/slice/studentProfileSlice.js";
-import { AlertReducer } from "features/alert/model/slice/alertSlice.js";
-import { timeTableTuronReducer } from "pages/timeTable/model/slice/timeTableTuronSlice.js";
-import { filterLeadsReducers } from "entities/filteredLeadsList/model/filteredLeadsListSlice.js";
-import { quarterMasterReducer } from "pages/quarterMasterPage/model/quarterMasterSlice.js";
-import { locationsReducer } from "features/locations/model/slice/locationsSlice.js";
 import { parentReducer } from "../../../../entities/parents/model/parentSlice.js";
 import { todoistReducer } from 'pages/todoistPage';
 
@@ -88,8 +67,7 @@ export function createReduxStore(
         filteredLeadsListSlice: filterLeadsReducers,
         quarterMasterSlice: quarterMasterReducer,
         locationsSlice: locationsReducer,
-        todoistSlice: todoistReducer
-        locationsSlice: locationsReducer,
+        todoistSlice: todoistReducer,
         parentSlice: parentReducer
 
 
