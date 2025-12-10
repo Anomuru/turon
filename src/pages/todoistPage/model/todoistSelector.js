@@ -25,5 +25,11 @@ export const getTaskStatusList = (state) =>
 export const getTaskCategoryList = (state) =>
    state.todoistSlice?.categoryList
 
+export const getTaskNotificationsList = (state) =>
+   state.todoistSlice?.notifications
+
+export const getTaskNotificationLoading = (state) =>
+   state.todoistSlice?.notificationLoading
+
 export const getTaskError = (state) =>
    state.todoistSlice?.error

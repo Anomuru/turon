@@ -36,4 +36,12 @@ export const fetchTaskTags = createAsyncThunk(
    }
 )
 
+export const fetchTaskNotifications = createAsyncThunk(
+   "todoistSlice/fetchTaskNotifications",
+   ({ role, user_id }) => {
+      const { request } = useHttp()
+      return request(`${API_URL}Tasks/notifications/?role=${role}&user_id=${user_id}`, "GET", null, headers())
+   }
+)
+
 

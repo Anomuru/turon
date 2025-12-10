@@ -1,5 +1,5 @@
-import {createSlice} from "@reduxjs/toolkit";
-import {fetchTasks, fetchTaskTags} from "./todoistThunk";
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchTasks, fetchTaskTags, fetchTaskNotifications } from "./todoistThunk";
 
 const initialState = {
     tasks: [],
@@ -10,30 +10,32 @@ const initialState = {
     profileLoading: false,
     error: null,
     recurringTypes: [
-        {id: "daily", name: "Daily", number: 1, disabled: true},
-        {id: "weekly", name: "Weekly", number: 7, disabled: true},
-        {id: "monthly", name: "Monthly", number: 30, disabled: true},
-        {id: "custom", name: "Custom", number: 1, disabled: false},
+        { id: "daily", name: "Daily", number: 1, disabled: true },
+        { id: "weekly", name: "Weekly", number: 7, disabled: true },
+        { id: "monthly", name: "Monthly", number: 30, disabled: true },
+        { id: "custom", name: "Custom", number: 1, disabled: false },
     ],
     statusList: [
-        {id: "not_started", name: "Not Started"},
-        {id: "in_progress", name: "In Progress"},
-        {id: "blocked", name: "Blocked"},
-        {id: "completed", name: "Completed"},
-        {id: "approved", name: "Approved"},
-        {id: "declined", name: "Declined"},
-        {id: "recheck", name: "Re-check"},
+        { id: "not_started", name: "Not Started" },
+        { id: "in_progress", name: "In Progress" },
+        { id: "blocked", name: "Blocked" },
+        { id: "completed", name: "Completed" },
+        { id: "approved", name: "Approved" },
+        { id: "declined", name: "Declined" },
+        { id: "recheck", name: "Re-check" },
     ],
     categoryList: [
-        {id: "academic", name: "Academic"},
-        {id: "admin", name: "Admin"},
-        {id: "student", name: "Student-related"},
-        {id: "report", name: "Report"},
-        {id: "meeting", name: "Meeting/Event"},
-        {id: "marketing", name: "Marketing"},
-        {id: "maintenance", name: "Maintenance"},
-        {id: "finance", name: "Finance"},
-    ]
+        { id: "academic", name: "Academic" },
+        { id: "admin", name: "Admin" },
+        { id: "student", name: "Student-related" },
+        { id: "report", name: "Report" },
+        { id: "meeting", name: "Meeting/Event" },
+        { id: "marketing", name: "Marketing" },
+        { id: "maintenance", name: "Maintenance" },
+        { id: "finance", name: "Finance" },
+    ],
+    notifications: [],
+    notificationLoading: false
 }
 
 const todoistSlice = createSlice({
@@ -49,6 +51,9 @@ const todoistSlice = createSlice({
         taskTagsLoading: (state) => {
             state.tagLoading = true
         },
+        notificationLoading: (state) => {
+            state.notificationLoading = true
+        },
         taskLoadingStop: (state) => {
             state.taskLoading = false
         },
@@ -57,6 +62,9 @@ const todoistSlice = createSlice({
         },
         taskTagsLoadingStop: (state) => {
             state.tagLoading = false
+        },
+        notificationLoadingStop: (state) => {
+            state.notificationLoading = false
         },
         addTask: (state, action) => {
             state.tasks = [action.payload, ...state.tasks]
@@ -220,6 +228,10 @@ const todoistSlice = createSlice({
             })
             state.profileLoading = false
         },
+        editNotification: (state, action) => {
+            state.notifications = state.notifications.map(item => item.id === action.payload.id ? action.payload : item)
+            state.notificationLoading = false
+        }
     },
     extraReducers: builder =>
         builder
@@ -249,17 +261,32 @@ const todoistSlice = createSlice({
                 state.tagLoading = false
                 state.error = "Xatolik yuz berdi"
             })
+            .addCase(fetchTaskNotifications.pending, (state) => {
+                state.notificationLoading = true
+                state.error = null
+            })
+            .addCase(fetchTaskNotifications.fulfilled, (state, action) => {
+                state.notificationLoading = false
+                state.notifications = action.payload
+                state.error = null
+            })
+            .addCase(fetchTaskNotifications.rejected, (state) => {
+                state.notificationLoading = false
+                state.error = "Xatolik yuz berdi"
+            })
 })
 
 
-export const {reducer: todoistReducer} = todoistSlice
+export const { reducer: todoistReducer } = todoistSlice
 export const {
     taskLoading,
     taskLoadingStop,
     taskProfileLoading,
+    notificationLoading,
     taskProfileLoadingStop,
     taskTagsLoading,
     taskTagsLoadingStop,
+    notificationLoadingStop,
     addTask,
     editTask,
     deleteTask,
@@ -277,6 +304,7 @@ export const {
     editComments,
     addProofs,
     deleteProofs,
-    editProofs
+    editProofs,
+    editNotification
 } = todoistSlice.actions
 
