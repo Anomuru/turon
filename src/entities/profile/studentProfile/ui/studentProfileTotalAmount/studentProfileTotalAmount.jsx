@@ -35,7 +35,7 @@ const listPretcent = [-1, 34.8, 70.4];
 
 export const StudentProfileTotalAmount = memo(({ active, setActive, student_id, branch_id, group_id }) => {
 
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, setValue, reset } = useForm();
     const getMonthDate = useSelector(getMonthData);
     const years = useSelector(getCherityYear);
     const monthYear = useSelector(getCherityYearMonth);
@@ -60,13 +60,16 @@ export const StudentProfileTotalAmount = memo(({ active, setActive, student_id, 
     const [year, setYear] = useState(null)
     const [yearMonth, setMonth] = useState(null)
 
-    useEffect(() => {
-        if (getMonthDate) {
-            setGetMonth(getMonthDate[0]?.id)
-            setSelectedMonth(getMonthDate[0]?.id)
-        }
-    }, [getMonthDate])
 
+
+    useEffect(() => {
+        if (yearMonth) {
+            request(`${API_URL}Students/get_month/?student_id=${student_id}&year=${year}&month=${yearMonth}`, "POST", null, headers())
+                .then(res => {
+                    setValue("payment_sum", res.sum)
+                })
+        }
+    }, [yearMonth])
 
     useEffect(() => {
         if (year) {
@@ -196,6 +199,7 @@ export const StudentProfileTotalAmount = memo(({ active, setActive, student_id, 
                     msg: res.msg
                 }));
 
+                setValue("payment_sum", "")
                 setDiscount(0);
             })
             .catch(err => {

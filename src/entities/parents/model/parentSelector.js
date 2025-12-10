@@ -1,0 +1,1 @@
+export const getParentsList = (state) => state.parentSlice.parents

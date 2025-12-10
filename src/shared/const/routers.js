@@ -69,5 +69,6 @@ export const getRouteStudentAttendance = () => `students/attendance/*`
 export const getQuarterMaster = () => `quarterMaster`
 
 export const getGroupObserve = (id) => `time/observe/${id}`
+export const getParentsProfile = (id) => `parents/profile/${id}`
 
 

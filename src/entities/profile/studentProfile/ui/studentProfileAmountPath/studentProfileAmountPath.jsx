@@ -32,7 +32,7 @@ import {Form} from "shared/ui/form";
 import {Input} from "shared/ui/input";
 import {useForm} from "react-hook-form";
 import {onChange, onDeleteDebtorData} from "features/studentPayment/model/studentPaymentSlice";
-import {ConfirmModal} from "../../../../../shared/ui/confirmModal";
+import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 
 
 
@@ -62,8 +62,15 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
     const data = useSelector(getMonth)
 
 
-    const [modalActive, setActiveModal] = useState(false)
-    const [itemChange, setItemChange] = useState({})
+    const [persentage , setPersentage] = useState(false)
+    useEffect(() => {
+        setValue("payment_sum" , changedData?.discount_sum)
+        setValue("reason" , changedData?.discount_reason)
+        setValue("total_debt" , changedData?.remaining_debt)
+        setValue("discount" , changedData?.discount)
+    } , [changedData])
+
+
 
     const {register, handleSubmit, setValue} = useForm()
 
@@ -167,14 +174,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
             return (
                 <tr>
                     <td>{i + 1}</td>
-                    <td
-                        onClick={() => {
-                            setValue("payment_sum", item.discount_sum)
-                            setValue("reason", item.discount_reason)
-                            setActiveModal(true)
-                            setItemChange(item.discount_id)
-                        }}
-                    >
+                    <td>
                         {item?.month}
                     </td>
                     <td>{item?.total_debt}</td>
@@ -218,21 +218,15 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
     const renderDebtor = renderDebtorData()
 
     const {request} = useHttp()
-    const onChangeCharity = (data) => {
-        request(`${API_URL}Students/charity_month/${itemChange}/`, "PUT", JSON.stringify(data), headers())
-            .then(res => {
-                setActiveModal(false)
-                dispatch(onChange({id: itemChange, payment_sum: data.payment_sum, reason: data.reason}))
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
 
     const onChangePaymentMonth = (data) => {
 
+        const res = {
+            ...data ,
+            persentage
+        }
 
-        request(`${API_URL}Attendance/attendance_per_month_delete/${changedData.id}/`, "PUT", JSON.stringify(data), headers())
+        request(`${API_URL}Attendance/attendance_per_month_delete/${changedData.id}/`, "PUT", JSON.stringify(res), headers())
             .then(res => {
                 dispatch(fetchStudentDebtorData(id))
                 setCanChange(false)
@@ -381,11 +375,39 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
 
 
                 <Modal active={canChange} setActive={setCanChange}>
-                    <Form onSubmit={handleSubmitChange(onChangePaymentMonth)} extraClassname={cls.changeModal}
+                    <Form onSubmit={handleSubmit(onChangePaymentMonth)} extraClassname={cls.changeModal}
                           id={"changeForm"} typeSubmit={"outside"}>
                         <h1>Oylik qarz o'zgartirish</h1>
 
-                        <Input value={changedData?.total_debt} register={registerChange} name={"total_debt"}/>
+                        <Input title={"To'lov summasi (qolgan qarzi)"} register={register} name={"total_debt"}/>
+                        <Input
+                            title={"Chegirma summasi"}
+                            register={register}
+                            name={"payment_sum"}
+                            type={"number"}
+                            // value={changedData?.discount_sum}
+                        />
+
+                        <div >
+                            <div style={{display: "flex" , width: "50%" , justifyContent: "space-between"}}>
+                                <h2>Yillik chegirma ( {persentage ? "Foizlik" : "Summalik"} )</h2>
+                                <Input checked={persentage} style={{margin : 0}} onChange={() => setPersentage(!persentage)} type={"checkbox"}/>
+                            </div>
+                            <Input
+
+
+                                register={register}
+                                // value={changedData?.discount_reason}
+                                name={"discount"}
+                            />
+                        </div>
+
+                        <Input
+                            title={"Sababi"}
+                            register={register}
+                            // value={changedData?.discount_reason}
+                            name={"reason"}
+                        />
                         <div className={cls.btns}>
                             <Button
                                 onClick={() => {
@@ -422,23 +444,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
                 studentId={lastId}
             />
 
-            <Modal active={modalActive} setActive={setActiveModal}>
-                <div style={{padding: "3rem"}}>
-                    <Form onSubmit={handleSubmit(onChangeCharity)}>
-                        <Input
-                            register={register}
-                            name={"payment_sum"}
-                            type={"number"}
-                            // value={itemChange.discount_sum}
-                        />
-                        <Input
-                            register={register}
-                            // value={itemChange.discount_reason}
-                            name={"reason"}
-                        />
-                    </Form>
-                </div>
-            </Modal>
+
         </EditableCard>
 
     );

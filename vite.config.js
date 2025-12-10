@@ -1,6 +1,6 @@
-import {defineConfig} from 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import {createHtmlPlugin} from "vite-plugin-html";
+import { createHtmlPlugin } from "vite-plugin-html";
 import tsconfigPaths from 'vite-tsconfig-paths'
 import path from "path"
 import svgr from 'vite-plugin-svgr'
@@ -37,10 +37,6 @@ export default defineConfig({
             },
         }),
     ],
-    server: {
-        host: true, // ← это разрешает доступ извне
-        port: 5173, // можно указать другой порт, если нужно
-    },
     resolve: {
         alias: {
             src: path.resolve(__dirname, './src'),
