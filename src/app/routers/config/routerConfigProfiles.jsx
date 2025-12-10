@@ -26,13 +26,12 @@ import {
     getRouteTaskManager,
     getRouteFilteredLeads,
     getAccounting,
-    getGroupQuarter, getGroupQuarterShow, getGroupObserve, getParentsProfile
+    getGroupQuarter, getGroupQuarterShow, getGroupObserve
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
 import {AccountingPageMainIndex} from "pages/accountingPage/index.js";
-
-const AccountingPageNew = lazyPage(() => import("pages/accountingPage2.0"), "AccountingPageNew");
+const AccountingPageNew = lazyPage(() => import("pages/accountingPage2.0") , "AccountingPageNew");
 // import {GroupQuarterShow} from "pages/groupsPage/index.js";
 
 
@@ -81,7 +80,6 @@ const GroupProfileQuarter = lazyPage(() => import("features/groupProfile"), "Gro
 
 // const GroupProfileQuarter = lazyPage(() => import("features/groupProfile/ui/groupProfileQuarter"))
 const GroupObservePage = lazyPage(() => import("pages/groupsPage/ui/groupObserve/groupObserve.jsx"), "GroupObservePage");
-const ParentsProfile = lazyPage(() => import("features/parentsProfile/index.js"), "ParentsProfile");
 
 export const routersConfigProfile = [
     {
@@ -190,6 +188,7 @@ export const routersConfigProfile = [
     },
 
 
+
     {
         name: "inkasatsiya",
         path: getInkasatsiya(":idBranch"),
@@ -244,11 +243,6 @@ export const routersConfigProfile = [
         name: "GroupObserve",
         path: getGroupObserve(":id"),
         element: <GroupObservePage/>
-    },
-    {
-        name: "parentsProfile",
-        path: getParentsProfile(":id"),
-        element: <ParentsProfile/>
     },
 
 

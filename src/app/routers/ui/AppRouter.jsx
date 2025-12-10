@@ -39,7 +39,7 @@ const StudentsPage = lazyPage(() => import("pages/studentsPage"), "StudentsPage"
 import "app/styles/index.sass";
 import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
 import { DefaultLoader, DefaultPageLoader } from "shared/ui/defaultLoader/index.js";
-import { TodoistPage } from 'pages/todoistPage';
+import {NotificationPage, TodoistPage} from 'pages/todoistPage';
 
 
 export const AppRouter = () => {
@@ -100,6 +100,7 @@ export const AppRouter = () => {
                         <Route element={<RequireHeader header={false} back={false} />}>
 
                             <Route path='todoist' element={<TodoistPage />} />
+                            <Route path='notification' element={<NotificationPage />} />
 
                             {
                                 routersConfigProfile.map((item, index) =>

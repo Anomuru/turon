@@ -40,8 +40,7 @@ const userstype = {
     types: [
         { value: "student", name: "Student" },
         { value: "teacher", name: "Teacher" },
-        { value: "employer", name: "Employer" },
-        { value: "parent", name: "Parent" }
+        { value: "employer", name: "Employer" }
     ]
 };
 
@@ -397,13 +396,6 @@ export const Register = () => {
                         </div>
                     </>
                 );
-            case "parent":
-                return (
-                    <Select
-                        extraClass={cls.extraClasses}
-
-                    />
-                )
         }
     };
 

@@ -43,7 +43,6 @@ const ClassMain = lazyPage(() => import("pages/classPage/ui/classMain"), "ClassM
 const Settings = lazyPage(() => import("pages/settings"), "Settings");
 const StatisticsPage = lazyPage(() => import("pages/statisticsPage"), "StatisticsPage");
 const QuarterMaster = lazyPage(() => import("pages/quarterMasterPage"), "QuarterMasterPage");
-const ParentsPage = lazyPage(() => import("pages/parentsPage/ui/parentsPage.jsx"), "ParentsPage");
 
 export const routersConfigList = [
     {
@@ -172,10 +171,6 @@ export const routersConfigList = [
         name: "Statistics",
         path: `Statistics/`,
         element: <StatisticsPage/>,
-    },
-    {
-        path: `parents`,
-        element: <ParentsPage/>,
     },
 
 ]

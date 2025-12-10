@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {fetchEmployersData} from "./employersThunk";
+import {fetchEmployersData, fetchEmployersDataWithoutPagination} from "./employersThunk";
 
 const initialState = {
     employersData: [],
@@ -20,19 +20,29 @@ export const employersSlice = createSlice({
     },
     extraReducers: builder => {
         builder
-            .addCase(fetchEmployersData.pending, (state) => {state.loading = true})
+            .addCase(fetchEmployersData.pending, (state) => {
+                state.loading = true
+            })
             .addCase(fetchEmployersData.fulfilled, (state, action) => {
-                state.employersData = action.payload?.results
+                state.employersData = action.payload?.results ?? action.payload
                 state.employersCount = action.payload?.count
                 state.loading = false
             })
             .addCase(fetchEmployersData.rejected, (state) => {
-            state.loading = false;
-            state.error = 'error';
-        })
-
-
-
+                state.loading = false;
+                state.error = 'error';
+            })
+            .addCase(fetchEmployersDataWithoutPagination.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(fetchEmployersDataWithoutPagination.fulfilled, (state, action) => {
+                state.employersData = action.payload
+                state.loading = false
+            })
+            .addCase(fetchEmployersDataWithoutPagination.rejected, (state) => {
+                state.loading = false;
+                state.error = 'error';
+            })
 
 
     }

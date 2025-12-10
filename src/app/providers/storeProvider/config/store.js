@@ -30,8 +30,8 @@ import { timeTableTuronReducer } from "pages/timeTable/model/slice/timeTableTuro
 import { filterLeadsReducers } from "entities/filteredLeadsList/model/filteredLeadsListSlice.js";
 import { quarterMasterReducer } from "pages/quarterMasterPage/model/quarterMasterSlice.js";
 import { locationsReducer } from "features/locations/model/slice/locationsSlice.js";
-import { parentReducer } from "../../../../entities/parents/model/parentSlice.js";
 import { todoistReducer } from 'pages/todoistPage';
+
 
 export function createReduxStore(
     initialState,
@@ -67,8 +67,7 @@ export function createReduxStore(
         filteredLeadsListSlice: filterLeadsReducers,
         quarterMasterSlice: quarterMasterReducer,
         locationsSlice: locationsReducer,
-        todoistSlice: todoistReducer,
-        parentSlice: parentReducer
+        todoistSlice: todoistReducer
 
 
 

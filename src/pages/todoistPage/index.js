@@ -1,3 +1,4 @@
-export { TodoistPage } from "./ui/todoistPage";
+export {TodoistPage} from "./ui/todoistPage";
+export {NotificationPage} from "./ui/notificationPage/notificationPage.jsx";
 
-export { todoistReducer } from "./model/todoistSlice";
+export {todoistReducer} from "./model/todoistSlice";
