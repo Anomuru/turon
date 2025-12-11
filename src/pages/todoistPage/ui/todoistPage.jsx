@@ -5,7 +5,7 @@ import classNames from "classnames"
 
 import {
     getTaskCategoryList,
-    getTaskLoading, getTaskNotificationsList, getTaskProfileLoading,
+    getTaskLoading, getTaskNotificationLoading, getTaskNotificationsList, getTaskProfileLoading,
     getTaskRecurringTypes,
     getTasks,
     getTaskStatusList,
@@ -93,10 +93,12 @@ export const TodoistPage = () => {
     const statusList = useSelector(getTaskStatusList)
     const categoryList = useSelector(getTaskCategoryList)
     const recurringTypes = useSelector(getTaskRecurringTypes)
-    const NotificationsList = useSelector(getTaskNotificationsList)
+    const notificationsList = useSelector(getTaskNotificationsList)
+    const notificationsLoading = useSelector(getTaskNotificationLoading)
 
     // State management
 
+    const [isHaveNot, setIsHaveNot] = useState(false)
     const [activePage, setActivePage] = useState("task")
     const [activeTaskType, setActiveTaskType] = useState("myTasks")
     const [activeNotificationType, setActiveNotificationType] = useState("executor")
@@ -137,7 +139,7 @@ export const TodoistPage = () => {
                 dispatch(fetchTaskNotifications({ role: activeNotificationType, user_id: userId }))
             }
         }
-    }, [userId, activeTaskType, activePage])
+    }, [userId, activeTaskType, activePage, activeNotificationType])
 
     useEffect(() => {
         if (teachers && employers)
@@ -192,6 +194,15 @@ export const TodoistPage = () => {
         setModalType("editTask")
     }
 
+    const openChangeStatusModal = (task) => {
+        setSelectedTask(task)
+        setFormData({
+            ...task,
+            tags: task.tags && task.tags.map(item => ({ value: item.id, label: item.name }))
+        })
+        setModalType("changeStatus")
+    }
+
     const openViewTaskModal = (task) => {
         setSelectedTask(task)
         setModalType("viewTask")
@@ -235,8 +246,19 @@ export const TodoistPage = () => {
                 dispatch(onAddAlertOptions({
                     status: true,
                     type: "success",
-                    msg: "O'qib chiqildi"
+                    msg: isRead ? "O'qib chiqildi" : "Ortga qaytarildi"
                 }))
+                // NOTIFICATION_TYPES.map(item => {
+                //     request(`${API_URL}Tasks/notifications/?role=${item.id}&user_id=${userId}`, "GET", null, headers())
+                //         .then(res => {
+                //             const filtered = res.filter(item => !item.is_read)
+                //             if (filtered.length > 0) {
+                //                 setIsHaveNot(true)
+                //             } else {
+                //                 if (isHaveNot) setIsHaveNot(false)
+                //             }
+                //         })
+                // })
             })
             .catch(err => {
                 dispatch(onAddAlertOptions({
@@ -247,6 +269,34 @@ export const TodoistPage = () => {
                 dispatch(notificationLoadingStop())
             })
     }
+
+    const onViewTask = (id) => {
+
+        request(`${API_URL}Tasks/missions/${id}/`, "GET", null, headers())
+            .then(res => {
+                setSelectedTask(res)
+                setModalType("viewTask")
+                setActiveCollapsibles(new Set())
+            })
+
+    }
+
+    useEffect(() => {
+        // if (notificationsList.length > 0)
+        if (userId) {
+            NOTIFICATION_TYPES.map(item => {
+                request(`${API_URL}Tasks/notifications/?role=${item.id}&user_id=${userId}`, "GET", null, headers())
+                    .then(res => {
+                        const filtered = res.filter(item => !item.is_read)
+                        if (filtered.length > 0) {
+                            setIsHaveNot(true)
+                        }
+                    })
+            })
+        }
+    }, [userId])
+
+    console.log(isHaveNot, "isHaveNot")
 
     // Task CRUD operations
     const handleCreateTask = () => {
@@ -312,6 +362,14 @@ export const TodoistPage = () => {
                         }))
                         setModalType(null)
                     })
+                    .catch(err => {
+                        dispatch(onAddAlertOptions({
+                            status: true,
+                            type: "error",
+                            msg: "Xatolik yuz berdi!"
+                        }))
+                        dispatch(taskLoadingStop())
+                    })
             })
             .catch(err => {
                 dispatch(onAddAlertOptions({
@@ -334,6 +392,39 @@ export const TodoistPage = () => {
                     msg: `${selectedTask.title} - Vazifasi o'chirildi`
                 }))
                 setModalType(null)
+            })
+            .catch(err => {
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "error",
+                    msg: "Xatolik yuz berdi!"
+                }))
+                dispatch(taskLoadingStop())
+            })
+    }
+
+    const handleChangeStatus = () => {
+        dispatch(taskLoading())
+        request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify({ status: formData.status }), headers())
+            .then(res => {
+                request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
+                    .then(res => {
+                        dispatch(editTask(res))
+                        dispatch(onAddAlertOptions({
+                            status: true,
+                            type: "success",
+                            msg: "Vazifani statusi o`zgartirildi"
+                        }))
+                        setModalType(null)
+                    })
+                    .catch(err => {
+                        dispatch(onAddAlertOptions({
+                            status: true,
+                            type: "error",
+                            msg: "Xatolik yuz berdi!"
+                        }))
+                        dispatch(taskLoadingStop())
+                    })
             })
             .catch(err => {
                 dispatch(onAddAlertOptions({
@@ -510,6 +601,35 @@ export const TodoistPage = () => {
                 }))
                 dispatch(taskProfileLoadingStop())
             })
+    }
+
+    const handleCompleteSubtask = (isDone, id) => {
+
+        dispatch(taskProfileLoading("subtasks"))
+
+        request(`${API_URL}Tasks/subtasks/${id}/`, "PATCH", JSON.stringify({ is_done: !isDone }), headers())
+            .then(res => {
+                dispatch(editSubTasks(res))
+                setSelectedTask({
+                    ...selectedTask,
+                    subtasks: selectedTask.subtasks.map((s) => (s.id === res.id ? res : s)),
+                })
+                setNestedModalType(null)
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: isDone ? "danger" : "success",
+                    msg: isDone ? "Sub-task qaytarildi" : "Sub-task bajirildi"
+                }))
+            })
+            .catch(err => {
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "error",
+                    msg: "Xatolik yuz berdi!"
+                }))
+                dispatch(taskProfileLoadingStop())
+            })
+
     }
 
     const handleCreateAttachment = () => {
@@ -837,6 +957,31 @@ export const TodoistPage = () => {
         return a.order - b.order;
     }
 
+    function sortTasks(data) {
+        const colorOrder = {
+            red: 0,
+            yellow: 1,
+            green: 2
+        };
+
+        return [...data].sort((a, b) => {
+            // completed всегда в самый низ
+            if (a.status === "completed" && b.status !== "completed") return 1;
+            if (b.status === "completed" && a.status !== "completed") return -1;
+
+            // если оба completed — сортировка по цветам не нужна
+            if (a.status === "completed" && b.status === "completed") return 0;
+
+            // сортировка по цветам
+            const aVal = colorOrder[a.deadline_color] ?? 999;
+            const bVal = colorOrder[b.deadline_color] ?? 999;
+
+            return aVal - bVal;
+        });
+    }
+
+
+
     const getStatusColor = (status) => {
         switch (status) {
             case "not_started":
@@ -863,7 +1008,7 @@ export const TodoistPage = () => {
         <DynamicModuleLoader reducers={reducers}>
             <div className={styles.container}>
                 <header className={styles.header}>
-                    <h1 className={styles.title}>Tasks Admin Panel</h1>
+                    <h1 className={styles.title}>Tasks</h1>
                     <div className={styles.headerActions}>
                         <button className={styles.btnPrimary} onClick={openCreateTaskModal}>
                             + New Task
@@ -889,12 +1034,20 @@ export const TodoistPage = () => {
                                 </span>
                                 /
                                 <span
-                                    onClick={() => setActivePage("notification")}
+                                    onClick={() => {
+                                        setActivePage("notification")
+                                        setIsHaveNot(false)
+                                    }}
                                     className={classNames(styles.sectionTitle__item, {
                                         [styles.active]: activePage === "notification"
                                     })}
                                 >
                                     Notifications
+                                    {
+                                        isHaveNot && (
+                                            <div className={styles.dott} />
+                                        )
+                                    }
                                 </span>
                             </h1>
                             <Select
@@ -905,7 +1058,8 @@ export const TodoistPage = () => {
                         </div>
                         <div
                             className={classNames(styles.grid, {
-                                [styles.loading]: tasksLoading
+                                [styles.loading]: tasksLoading || notificationsLoading,
+                                [styles.level]: userLevel > 2
                             })}
                         >
                             {
@@ -913,12 +1067,19 @@ export const TodoistPage = () => {
                                     ?
                                     tasksLoading
                                         ? <DefaultPageLoader status={"none"} />
-                                        : tasks.map((task) => (
-                                            <div key={task.id} className={styles.card}>
+                                        : sortTasks(tasks).map((task) => (
+                                            <div
+                                                key={task.id}
+                                                className={styles.card}
+                                                style={task.status === "completed" ? null : { "border": `1px solid ${task.deadline_color}` }}
+                                            >
                                                 <div className={styles.cardHeader}>
                                                     <h3 className={styles.cardTitle}>{task.title}</h3>
-                                                    <span className={styles.status}
-                                                        style={{ color: getStatusColor(task.status) }}>
+                                                    <span
+                                                        className={styles.status}
+                                                        style={{ color: getStatusColor(task.status) }}
+                                                        onClick={() => openChangeStatusModal(task)}
+                                                    >
                                                         {statusList.filter(item => item.id === task.status)[0]?.name}
                                                     </span>
                                                 </div>
@@ -975,42 +1136,49 @@ export const TodoistPage = () => {
                                                 </div>
                                             </div>
                                         ))
-                                    : NotificationsList.map(item => {
-                                        return <NotificationCard data={item} onToggleRead={onToggleRead} />
-                                    })
+                                    :
+                                    notificationsLoading
+                                        ? <DefaultPageLoader status={"none"} />
+                                        : notificationsList.map(item => {
+                                            return <NotificationCard data={item} onToggleRead={onToggleRead} onViewTask={onViewTask} />
+                                        })
                             }
                         </div>
                     </section>
 
                     {/* Tags Section */}
-                    <section className={styles.section}>
-                        <h1 className={styles.sectionTitle}>Tags</h1>
-                        <div
-                            className={classNames(styles.tagsList, {
-                                [styles.loading]: tagsLoading
-                            })}
-                        >
-                            {
-                                tagsLoading
-                                    ? <DefaultPageLoader status={"none"} />
-                                    : tags.map((tag) => (
-                                        <div key={tag.id} className={styles.tagItem}>
-                                            <span className={styles.tagName}>{tag.name}</span>
-                                            <div className={styles.tagActions}>
-                                                <button className={styles.btnSmallEdit}
-                                                    onClick={() => openEditTagModal(tag)}>
-                                                    Edit
-                                                </button>
-                                                <button className={styles.btnSmallDelete}
-                                                    onClick={() => openDeleteTagModal(tag)}>
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))
-                            }
-                        </div>
-                    </section>
+                    {
+                        userLevel < 2 && (
+                            <section className={styles.section}>
+                                <h1 className={styles.sectionTitle}>Tags</h1>
+                                <div
+                                    className={classNames(styles.tagsList, {
+                                        [styles.loading]: tagsLoading
+                                    })}
+                                >
+                                    {
+                                        tagsLoading
+                                            ? <DefaultPageLoader status={"none"} />
+                                            : tags.map((tag) => (
+                                                <div key={tag.id} className={styles.tagItem}>
+                                                    <span className={styles.tagName}>{tag.name}</span>
+                                                    <div className={styles.tagActions}>
+                                                        <button className={styles.btnSmallEdit}
+                                                            onClick={() => openEditTagModal(tag)}>
+                                                            Edit
+                                                        </button>
+                                                        <button className={styles.btnSmallDelete}
+                                                            onClick={() => openDeleteTagModal(tag)}>
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))
+                                    }
+                                </div>
+                            </section>
+                        )
+                    }
                 </div>
 
                 {/* Modals */}
@@ -1281,8 +1449,17 @@ export const TodoistPage = () => {
                                                         ? <MiniLoader />
                                                         : [...selectedTask.subtasks]?.sort(compareByOrder)?.map((st) => (
                                                             <div key={st.id} className={styles.nestedItem}>
-                                                                <p>{st.order}. {st.title}</p>
+                                                                <p style={st.is_done ? { textDecoration: "line-through", color: "#6b7280" } : null}>{st.order}. {st.title}</p>
                                                                 <div className={styles.nestedActions}>
+                                                                    <i
+                                                                        className={classNames(
+                                                                            `fa-regular ${st.is_done ? "fa-circle-xmark" : "fa-circle-check"}`,
+                                                                            styles.nestedActions__icon, {
+                                                                            [styles.compledted]: st.is_done
+                                                                        }
+                                                                        )}
+                                                                        onClick={() => handleCompleteSubtask(st.is_done, st.id)}
+                                                                    />
                                                                     <button className={styles.btnSmallEdit}
                                                                         onClick={() => openNestedModal("editSubtask", st)}>
                                                                         Edit
@@ -1761,6 +1938,42 @@ export const TodoistPage = () => {
                     </div>
                 )}
 
+                {(modalType === "changeStatus") && (
+                    <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                        <div className={styles.modal} onClick={(e) => e.stopPropagation()} style={{ width: "17%" }}>
+                            <h2 className={styles.modalTitle}>Change task status</h2>
+                            <div className={styles.formGroup}>
+                                <label>Status</label>
+                                <select
+                                    value={formData.status}
+                                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                    required
+                                >
+                                    {
+                                        statusList.map(item =>
+                                            <option value={item.id}>{item.name}</option>
+                                        )
+                                    }
+                                </select>
+                            </div>
+                            <div className={styles.formActions}>
+                                <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                    Cancel
+                                </button>
+                                <button
+                                    // disabled={!tagFormData}
+                                    className={classNames(styles.btnPrimary, {
+                                        // [styles.disabled]: !tagFormData
+                                    })}
+                                    onClick={handleChangeStatus}
+                                >
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* Create/Edit/Delete Tag Modals */}
                 {(modalType === "createTag" || modalType === "editTag") && (
                     <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
@@ -1815,12 +2028,18 @@ export const TodoistPage = () => {
     )
 }
 
-export default function NotificationCard({ data, onToggleRead }) {
+export default function NotificationCard({ data, onToggleRead, onViewTask }) {
     const { id, message, role, mission, deadline, is_read, created_at } = data;
 
     const handleToggle = () => {
+        console.log("hello");
+
         onToggleRead(id, !is_read);
     };
+
+    const handleView = () => {
+        onViewTask(mission)
+    }
 
     return (
         <div className={`${styles.card} ${is_read ? styles.read : ""}`}>
@@ -1836,12 +2055,20 @@ export default function NotificationCard({ data, onToggleRead }) {
                 <span className={styles.deadline}>Deadline: {deadline}</span>
             </div>
 
-            <button
-                className={styles.toggleBtn}
-                onClick={handleToggle}
-            >
-                {is_read ? "O'qilmagan deb belgilash" : "O'qilgan deb belgilash"}
-            </button>
+            <div className={styles.card__btn}>
+                <button
+                    className={styles.viewBtn}
+                    onClick={handleView}
+                >
+                    Vazifani korish
+                </button>
+                <button
+                    className={styles.toggleBtn}
+                    onClick={handleToggle}
+                >
+                    {is_read ? "O'qilmagan deb belgilash" : "O'qilgan deb belgilash"}
+                </button>
+            </div>
         </div>
     );
 }
