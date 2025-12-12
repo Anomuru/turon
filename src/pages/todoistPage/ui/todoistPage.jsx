@@ -55,6 +55,7 @@ import { getEmployersData } from "entities/employer/model/selector/employersSele
 import { employersReducer } from "entities/employer/index.js";
 import { DynamicModuleLoader } from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import { DefaultLoader, DefaultPageLoader } from "shared/ui/defaultLoader/index.js";
+import { Button } from "shared/ui/button"
 
 const reducers = {
     employers: employersReducer
@@ -98,6 +99,12 @@ export const TodoistPage = () => {
 
     // State management
 
+    const [isFilter, setIsFilter] = useState(false)
+    const [selectedStatus, setSelectedStatus] = useState("all")
+    const [selectedCreate, setSelectedCreate] = useState()
+    const [selectedDeadlineFrom, setSelectedDeadlineFrom] = useState()
+    const [selectedDeadlineTo, setSelectedDeadlineTo] = useState()
+
     const [isHaveNot, setIsHaveNot] = useState(false)
     const [activePage, setActivePage] = useState("task")
     const [activeTaskType, setActiveTaskType] = useState("myTasks")
@@ -129,17 +136,35 @@ export const TodoistPage = () => {
         if (userId && activeTaskType) {
             if (activePage === "task") {
                 if (activeTaskType === "myTasks") {
-                    dispatch(fetchTasks({ executor: userId }))
+                    dispatch(fetchTasks({
+                        executor: userId,
+                        status: selectedStatus,
+                        created_at: selectedCreate,
+                        deadline_after: selectedDeadlineFrom,
+                        deadline_before: selectedDeadlineTo
+                    }))
                 } else if (activeTaskType === "givenTask") {
-                    dispatch(fetchTasks({ creator: userId }))
+                    dispatch(fetchTasks({
+                        creator: userId,
+                        status: selectedStatus,
+                        created_at: selectedCreate,
+                        deadline_after: selectedDeadlineFrom,
+                        deadline_before: selectedDeadlineTo
+                    }))
                 } else {
-                    dispatch(fetchTasks({ reviewer: userId }))
+                    dispatch(fetchTasks({
+                        reviewer: userId,
+                        status: selectedStatus,
+                        created_at: selectedCreate,
+                        deadline_after: selectedDeadlineFrom,
+                        deadline_before: selectedDeadlineTo
+                    }))
                 }
             } else {
                 dispatch(fetchTaskNotifications({ role: activeNotificationType, user_id: userId }))
             }
         }
-    }, [userId, activeTaskType, activePage, activeNotificationType])
+    }, [userId, activeTaskType, activePage, activeNotificationType, selectedCreate, selectedDeadlineFrom, selectedDeadlineTo, selectedStatus])
 
     useEffect(() => {
         if (teachers && employers)
@@ -1050,11 +1075,21 @@ export const TodoistPage = () => {
                                     }
                                 </span>
                             </h1>
-                            <Select
-                                options={activePage === "task" ? TASK_TYPES : NOTIFICATION_TYPES}
-                                onChangeOption={activePage === "task" ? setActiveTaskType : setActiveNotificationType}
-                                defaultValue={activePage === "task" ? activeTaskType : activeNotificationType}
-                            />
+                            <div className={styles.sectionHeader__filter}>
+                                <Button
+                                    type={"filter"}
+                                    status={"filter"}
+                                    onClick={() => setIsFilter(true)}
+                                    extraClass={styles.btnFilter}
+                                >
+                                    Filter
+                                </Button>
+                                <Select
+                                    options={activePage === "task" ? TASK_TYPES : NOTIFICATION_TYPES}
+                                    onChangeOption={activePage === "task" ? setActiveTaskType : setActiveNotificationType}
+                                    defaultValue={activePage === "task" ? activeTaskType : activeNotificationType}
+                                />
+                            </div>
                         </div>
                         <div
                             className={classNames(styles.grid, {
@@ -1071,7 +1106,17 @@ export const TodoistPage = () => {
                                             <div
                                                 key={task.id}
                                                 className={styles.card}
-                                                style={task.status === "completed" ? null : { "border": `1px solid ${task.deadline_color}` }}
+                                                style={
+                                                    task.status === "completed"
+                                                        ? null
+                                                        : {
+                                                            "background": task.deadline_color === "red"
+                                                                ? "rgba(255, 0, 0, 0.12)"
+                                                                : task.deadline_color === "green"
+                                                                    ? "rgba(0, 255, 0, 0.12)"
+                                                                    : "rgba(255, 255, 0, 0.2)"
+                                                        }
+                                                }
                                             >
                                                 <div className={styles.cardHeader}>
                                                     <h3 className={styles.cardTitle}>{task.title}</h3>
@@ -1254,7 +1299,7 @@ export const TodoistPage = () => {
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label>Category</label>
+                                    <label>Departmant</label>
                                     <select
                                         value={formData.category || "admin"}
                                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -1384,7 +1429,7 @@ export const TodoistPage = () => {
                                         <p>{selectedTask.description}</p>
                                     </div>
                                     <div>
-                                        <strong>Category:</strong>
+                                        <strong>Departmant:</strong>
                                         <p>{categoryList.filter(item => item.id === selectedTask.category)[0]?.name}</p>
                                     </div>
                                     <div>
@@ -2024,6 +2069,55 @@ export const TodoistPage = () => {
                     </div>
                 )}
             </div>
+            <Modal
+                active={isFilter}
+                setActive={setIsFilter}
+                extraClass={styles.filter}
+            >
+                <h1>Filter</h1>
+                <div className={styles.filter__container}>
+                    <Select
+                        extraClass={styles.mainInput}
+                        options={[{ id: "all", name: "Hammasi" }, ...statusList]}
+                        onChangeOption={setSelectedStatus}
+                    />
+                    <Input
+                        extraClassName={styles.mainInput}
+                        title={"Created at"}
+                        type={"date"}
+                        onChange={(e) => setSelectedCreate(e.target.value)}
+                    />
+                    {/* <Input title={"Deadline"} /> */}
+                    <div className={styles.dualInput}>
+                        <Input
+                            extraClassName={styles.dualInput__inner}
+                            title={"Deadline (form)"}
+                            type={"date"}
+                            onChange={(e) => setSelectedDeadlineFrom(e.target.value)}
+                            value={selectedDeadlineFrom}
+                        />
+                        <Input
+                            extraClassName={styles.dualInput__inner}
+                            title={"Deadline (to)"}
+                            type={"date"}
+                            onChange={(e) => setSelectedDeadlineTo(e.target.value)}
+                            value={selectedDeadlineTo}
+                        />
+                    </div>
+                    <Button
+                        extraClass={styles.clearBtn}
+                        type={"danger"}
+                        onClick={() => {
+                            setSelectedCreate(null)
+                            setSelectedDeadlineFrom(null)
+                            setSelectedDeadlineTo(null)
+                            setSelectedStatus("all")
+                        }}
+                    >
+                        Clear
+                    </Button>
+                </div>
+            </Modal>
         </DynamicModuleLoader>
     )
 }
