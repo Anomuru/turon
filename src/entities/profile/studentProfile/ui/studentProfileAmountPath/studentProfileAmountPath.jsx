@@ -66,7 +66,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
     useEffect(() => {
         setValue("payment_sum" , changedData?.discount_sum)
         setValue("reason" , changedData?.discount_reason)
-        setValue("total_debt" , changedData?.remaining_debt)
+        setValue("total_debt" , changedData?.total_debt)
         setValue("discount" , changedData?.discount)
     } , [changedData])
 

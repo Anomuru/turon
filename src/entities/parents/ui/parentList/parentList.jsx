@@ -1,4 +1,8 @@
+import {fetchParentList} from "entities/parents/model/parentThunk.js";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 import {useNavigate} from "react-router";
+import {API_URL, headers, useHttp} from "shared/api/base.js";
 import {Button} from "shared/ui/button/index.js";
 import {Table} from "shared/ui/table/index.js";
 
@@ -6,8 +10,8 @@ import cls from "./parent.module.sass"
 import {useDispatch, useSelector} from "react-redux";
 import {getParentsList} from "../../model/parentSelector.js";
 import {onDeleteParents} from "../../model/parentSlice.js";
-import {useState} from "react";
-import {ConfirmModal} from "../../../../shared/ui/confirmModal/index.js";
+import {useEffect, useState} from "react";
+import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 
 export const ParentList = () => {
 
@@ -18,6 +22,14 @@ export const ParentList = () => {
     const [activeConfirm, setActiveConfirm] = useState(false)
 
     const navigate = useNavigate()
+    const branchId = useSelector(getUserBranchId)
+    const {request} = useHttp()
+    console.log(branchId)
+    useEffect(() => {
+        if (branchId) {
+            dispatch(fetchParentList(8))
+        }
+    }, [branchId])
 
     const renderData = () => {
         return parentsData.map((item, i) => (
@@ -27,7 +39,7 @@ export const ParentList = () => {
                 <td>{item.surname}</td>
                 <td>{item.phone}</td>
                 <td>{item.location}</td>
-                <td>{item.date}</td>
+                <td>{item.born_date}</td>
                 <td>{item.location}</td>
                 <td><i onClick={() => {
                     setActiveConfirm(true)
@@ -38,8 +50,19 @@ export const ParentList = () => {
     }
 
     const onDelete = () => {
-        dispatch(onDeleteParents(confirmItem.id))
-        setActiveConfirm(false)
+
+
+        request(`${API_URL}parents/detail/${confirmItem.id}/`, "DELETE", null, headers())
+            .then(res => {
+                dispatch(onDeleteParents(confirmItem.id))
+                setActiveConfirm(false)
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: "Muvaffaqiyatli o'chirildi"
+                }))
+            })
+
     }
 
     return (
@@ -47,7 +70,7 @@ export const ParentList = () => {
 
             <div className={cls.parent__header}>
                 <Button type={"filter"}>Deleted</Button>
-                <div className={cls.parent__header_plus}><i className={"fa fa-plus"}/></div>
+                {/*<div className={cls.parent__header_plus}><i className={"fa fa-plus"}/></div>*/}
             </div>
 
 

@@ -1,4 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
+import {parentsProfileReducer} from "features/parentsProfile/model/parentsProfileSlice.js";
 import {createReducerManager} from './reducerManager';
 import {useHttp} from "shared/api/base";
 import {oftenUsedReducer} from "entities/oftenUsed";
@@ -30,7 +31,7 @@ import {timeTableTuronReducer} from "pages/timeTable/model/slice/timeTableTuronS
 import {filterLeadsReducers} from "entities/filteredLeadsList/model/filteredLeadsListSlice.js";
 import {quarterMasterReducer} from "pages/quarterMasterPage/model/quarterMasterSlice.js";
 import {locationsReducer} from "features/locations/model/slice/locationsSlice.js";
-import {parentReducer} from "../../../../entities/parents/model/parentSlice.js";
+import {parentReducer} from "entities/parents/model/parentSlice.js";
 
 
 export function createReduxStore(
@@ -67,7 +68,8 @@ export function createReduxStore(
         filteredLeadsListSlice: filterLeadsReducers,
         quarterMasterSlice: quarterMasterReducer,
         locationsSlice: locationsReducer,
-        parentSlice: parentReducer
+        parentSlice: parentReducer,
+        parentsProfileSlice: parentsProfileReducer
 
 
 

@@ -1,12 +1,40 @@
+@import "app/styles/abstracts/mixins"
+@import "app/styles/abstracts/variables"
+
 .info
   box-shadow: 0 0 5px 0
   width: fit-content
-  padding: 2rem
+  padding: 5rem
   display: flex
   flex-direction: column
   align-items: center
   gap: 5px
+  position: relative
   border-radius: 10px
+  height: fit-content
   &__img
     width: 150px
     height: 150px
+
+.pen
+  position: absolute
+  font-size: 2rem
+  box-shadow: 0 0 5px 0
+  padding: 1rem
+  border-radius: 50%
+  right: 2rem
+  top: 2rem
+  @include btn-active
+  cursor: pointer
+.mess
+  font-size: 16px
+.errorMess
+  color: #f15c5c
+  display: flex
+  gap: 5px
+  font-size: 16px
+.successMess
+  color: $color-success
+  font-size: 16px
+  display: flex
+  gap: 5px
