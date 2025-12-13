@@ -41,7 +41,7 @@
   &__body
     &_card
       &_item
-        min-width: 40rem
+        width: 32%
 
         flex-shrink: 0
         min-height: 201px
@@ -104,3 +104,40 @@
           &_number
             display: flex
             justify-content: space-between
+@media (max-width: 1810px)
+  .child
+    &__body
+      &_card
+        &_item
+          width: 48%
+@media (max-width: 1480px)
+  .child
+    &__list
+      gap: 1rem
+    &__body
+      &_card
+        &_item
+          padding-left: 1rem
+          gap: 1rem
+          &_left
+            padding-left: 0
+@media (max-width: 1400px)
+  .child
+    &__list
+      gap: 1rem
+    &__body
+      &_card
+        &_item
+          width: 48%
+
+          padding: 2rem
+          .item__image
+            display: none
+@media (max-width: 1145px)
+  .child
+    &__list
+      gap: 1rem
+    &__body
+      &_card
+        &_item
+          width: 100%
