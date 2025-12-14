@@ -25,8 +25,9 @@ const initialState = {
         address: "chorvoq"
     },
 
-    loading: true,
-    error: null
+    loading: false,
+    error: null,
+    loadingUsers: false
 }
 
 
@@ -61,15 +62,15 @@ const parentsProfileSlice = createSlice({
 
         })
         .addCase(fetchParentsAvailableStudents.pending , state => {
-            state.loading = true
+            state.loadingUsers = true
         })
         .addCase(fetchParentsAvailableStudents.fulfilled , (state , action) => {
-            state.loading = false
+            state.loadingUsers = false
             state.children = action.payload
         })
         .addCase(fetchParentsAvailableStudents.rejected , state => {
             state.error = false
-            state.loading = false
+            state.loadingUsers = false
 
         })
 })

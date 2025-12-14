@@ -1,12 +1,13 @@
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
-import {getParentsChild} from "features/parentsProfile/model/parentsProfileSelector.js";
+import {getParentsChild, getParentsLoading} from "features/parentsProfile/model/parentsProfileSelector.js";
 import {onAddParentChild, onDeleteChild} from "features/parentsProfile/model/parentsProfileSlice.js";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {useParams} from "react-router";
+import {useNavigate, useParams} from "react-router";
 import {API_URL, headers, useHttp} from "shared/api/base.js";
 import unknownUser from "shared/assets/user-interface/user_image.png";
 import {ConfirmModal} from "shared/ui/confirmModal/index.js";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 import cls from "./parentProfileChildInfo.module.sass"
 import profilePic from "shared/assets/images/user_image.png"
 
@@ -19,11 +20,14 @@ export const ParentsProfileChildInfo = ({setActiveAdd}) => {
     const [activeConfirm, setActiveConfirm] = useState(false)
     const [activeItem, setActiveItem] = useState({})
     const dispatch = useDispatch()
+    const loading = useSelector(getParentsLoading)
+
+    const navigate = useNavigate()
 
     const {id} = useParams()
     const {request} = useHttp()
     const onDelete = () => {
-        const res ={
+        const res = {
             student_id: activeItem.id
         }
         request(`${API_URL}parents/${id}/remove_student/`, "POST", JSON.stringify(res), headers())
@@ -66,6 +70,7 @@ export const ParentsProfileChildInfo = ({setActiveAdd}) => {
                         backgroundPosition: "center"
                     }}>
                     <div
+                        onClick={() => navigate(`../students/profile/${item.id}`)}
                         className={cls.circle}
                     >
                         <img src={profilePic} alt=""/>
@@ -95,7 +100,8 @@ export const ParentsProfileChildInfo = ({setActiveAdd}) => {
             </div>
 
             <div className={cls.child__list}>
-                {renderChildren()}
+                {loading ? <DefaultPageLoader status={true}/> :
+                    renderChildren()}
                 {/*{renderChildren()}*/}
                 {/*{renderChildren()}*/}
             </div>

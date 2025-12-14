@@ -5,9 +5,9 @@ export const ParentsPage = () => {
 
 
     return (
-        <div>
+        <>
             <ParentList />
-        </div>
+        </>
     );
 };
 

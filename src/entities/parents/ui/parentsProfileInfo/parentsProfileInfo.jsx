@@ -25,10 +25,6 @@ export const ParentsProfileInfo = () => {
     const dispatch = useDispatch();
 
     const { register, handleSubmit, setValue } = useForm();
-
-    /* =========================
-       INIT DATA FROM BACKEND
-    ========================== */
     useEffect(() => {
         if (parentInfo) {
             setUsername(parentInfo.username || "");
@@ -41,9 +37,6 @@ export const ParentsProfileInfo = () => {
         }
     }, [parentInfo, setValue]);
 
-    /* =========================
-       USERNAME CHECK LOGIC
-    ========================== */
     useEffect(() => {
         if (!parentInfo) return;
 
@@ -54,7 +47,6 @@ export const ParentsProfileInfo = () => {
             return;
         }
 
-        // ❗ Bo'sh username
         if (!username) {
             setUsernameMessage(
                 <p className={cls.errorMess}>Username kiriting</p>
@@ -96,10 +88,6 @@ export const ParentsProfileInfo = () => {
 
         checkUsername();
     }, [username, parentInfo, request]);
-
-    /* =========================
-       SUBMIT
-    ========================== */
     const onSubmit = (data) => {
         const payload = {
             ...data,

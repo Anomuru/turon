@@ -12,9 +12,9 @@ export const fetchParentInfo = createAsyncThunk(
 
 export const fetchParentsAvailableStudents = createAsyncThunk(
     "parentsProfileSlice/fetchParentsAvailableStudents",
-    async (id) => {
+    async ({id, currentPage, pageSize, search}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}parents/${id}/available_students/`, "GET", null, headers())
+        return await request(`${API_URL}parents/${id}/available_students/?limit=${pageSize}&offset=${(currentPage - 1) * pageSize}&search=${search}`, "GET", null, headers())
     }
 )
 
