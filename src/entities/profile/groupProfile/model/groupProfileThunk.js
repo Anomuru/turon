@@ -1,29 +1,29 @@
-import {createAsyncThunk} from "@reduxjs/toolkit";
-import {API_URL, headers, ParamUrl, useHttp} from "shared/api/base";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import {useDispatch} from "react-redux";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { API_URL, headers, ParamUrl, useHttp } from "shared/api/base";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import { useDispatch } from "react-redux";
 
 // check-next-lesson-flow
 export const fetchGroupProfile = createAsyncThunk(
     "groupProfileSlice/fetchGroupProfile",
-    ({id, group_type}) => {
-        const {request} = useHttp()
+    ({ id, group_type }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Group/groups/profile/${id}/`, "GET", null, headers())
     }
 )
 
 export const fetchGroupProfileTimeTable = createAsyncThunk(
     "groupProfileSlice/fetchGroupProfileTimeTable",
-    ({group_id}) => {
-        const {request} = useHttp()
+    ({ group_id }) => {
+        const { request } = useHttp()
         return request(`${API_URL}TimeTable/GrouptimeTableList/${group_id}/`, "GET", null, headers())
     }
 )
 
 export const changeGroupProfile = createAsyncThunk(
     "groupProfileSlice/changeGroupProfile",
-    ({data, group_type, status, id}) => {
-        const {request} = useHttp()
+    ({ data, group_type, status, id }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Group/groups/profile/${id}/`, "PATCH", JSON.stringify({
             ...data,
             group_type,
@@ -34,16 +34,16 @@ export const changeGroupProfile = createAsyncThunk(
 
 export const deleteGroupProfile = createAsyncThunk(
     "groupProfileSlice/deleteGroupProfile",
-    ({id, res}) => {
-        const {request} = useHttp()
+    ({ id, res }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Group/groups/delete/${id}/`, "POST", JSON.stringify(res), headers())
     }
 )
 
 export const fetchFilteredTeachers = createAsyncThunk(
     "groupProfileSlice/fetchFilteredTeachers",
-    ({branch_id, subject_id}) => {
-        const {request} = useHttp()
+    ({ branch_id, subject_id }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Teachers/teachers-for-subject/${branch_id}/${subject_id}/`, "GET", null, headers())
     }
 )
@@ -51,39 +51,39 @@ export const fetchFilteredTeachers = createAsyncThunk(
 export const fetchReasons = createAsyncThunk(
     "groupProfileSlice/fetchReasons",
     () => {
-        const {request} = useHttp()
+        const { request } = useHttp()
         return request(`${API_URL}Group/group_reason/`, "GET", null, headers())
     }
 )
 
 export const fetchFilteredStudents = createAsyncThunk(
     "groupProfileSlice/fetchFilteredStudents",
-    ({branch_id, subject_id}) => {
-        const {request} = useHttp()
+    ({ branch_id, subject_id }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Students/students_for_subject/${branch_id}/${subject_id}/`, "GET", null, headers())
     }
 )
 
 export const fetchFilteredStudentsAndTeachers = createAsyncThunk(
     "groupProfileSlice/fetchFilteredStudentsAndTeachers",
-    ({branch_id, subject_id, res}) => {
-        const {request} = useHttp()
+    ({ branch_id, subject_id, res }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Group/filtered_teachers_students/${branch_id}/${subject_id}/`, "POST", JSON.stringify(res), headers())
     }
 )
 
 export const fetchFilteredGroups = createAsyncThunk(
     "groupProfileSlice/fetchFilteredGroups",
-    ({id, group_id}) => {
-        const {request} = useHttp()
+    ({ id, group_id }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Group/groups_for_teacher/${id}/${group_id}/`, "GET", null, headers())
     }
 )
 
 export const moveGroup = createAsyncThunk(
     "groupProfileSlice/moveGroup",
-    ({id, res}) => {
-        const {request} = useHttp()
+    ({ id, res }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Group/groups/move-to-group/${id}/`, "POST", JSON.stringify(res), headers())
     }
 )
@@ -91,31 +91,31 @@ export const moveGroup = createAsyncThunk(
 export const fetchWeekDays = createAsyncThunk(
     "groupProfileSlice/fetchWeekDays",
     () => {
-        const {request} = useHttp()
+        const { request } = useHttp()
         return request(`${API_URL}TimeTable/week_days/`, "GET", null, headers())
     }
 )
 
 export const changeWeekDays = createAsyncThunk(
     "groupProfileSlice/changeWeekDays",
-    ({id, res}) => {
-        const {request} = useHttp()
+    ({ id, res }) => {
+        const { request } = useHttp()
         return request(`${API_URL}TimeTable/GrouptimeTableUpdate/${id}/`, "PATCH", JSON.stringify(res), headers())
     }
 )
 
 export const createWeekDays = createAsyncThunk(
     "groupProfileSlice/changeWeekDays",
-    ({id, res}) => {
-        const {request} = useHttp()
+    ({ id, res }) => {
+        const { request } = useHttp()
         return request(`${API_URL}TimeTable/GrouptimeTableList/${id}/`, "POST", JSON.stringify(res), headers())
     }
 )
 
 export const deleteWeekDays = createAsyncThunk(
     "groupProfileSlice/deleteWeekDays",
-    ({id}) => {
-        const {request} = useHttp()
+    ({ id }) => {
+        const { request } = useHttp()
         return request(`${API_URL}TimeTable/time_table_delete/${id}/`, "DELETE", null, headers())
     }
 )
@@ -123,19 +123,19 @@ export const deleteWeekDays = createAsyncThunk(
 
 export const filteredStudents = createAsyncThunk(
     "groupProfileSlice/filteredStudents",
-    ({userBranchId, group_id, res}) => {
-        const {request} = useHttp()
+    ({ userBranchId, group_id, res }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Group/filtered_students_for_class_time_table/?branch=${userBranchId}&group=${group_id}`, "POST", JSON.stringify(res), headers())
     }
 )
 
 export const moveToClass = createAsyncThunk(
     "groupProfileSlice/moveToClass",
-    ({userBranchId, id, res}) => {
+    ({ userBranchId, id, res }) => {
         const dispatch = useDispatch()
-        const {request} = useHttp()
+        const { request } = useHttp()
         return request(`${API_URL}Group/filtered_students_move_to_class/?branch=${userBranchId}&group=${id}`, "POST", JSON.stringify(res), headers())
-            .then((res) =>{
+            .then((res) => {
                 dispatch(onAddAlertOptions({
                     type: "success",
                     status: true,
@@ -147,25 +147,25 @@ export const moveToClass = createAsyncThunk(
 
 export const getGroupStudyYears = createAsyncThunk(
     "groupProfileSlice/getGroupStudyYears",
-    ({id}) => {
-        const {request} = useHttp()
+    ({ id }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Attendance/attendance_year_list/${id}/`, "GET", null, headers())
     }
 )
 
 export const getGroupStudyMonth = createAsyncThunk(
     "groupProfileSlice/getGroupStudyMonth",
-    ({id, res}) => {
-        console.log(id , "id")
-        const {request} = useHttp()
-        return request(`${API_URL}Attendance/attendance_year_list/${id}/`, "POST", JSON.stringify({year: res}), headers())
+    ({ id, res }) => {
+        console.log(id, "id")
+        const { request } = useHttp()
+        return request(`${API_URL}Attendance/attendance_year_list/${id}/`, "POST", JSON.stringify({ year: res }), headers())
     }
 )
 
 export const getGroupDebtStudents = createAsyncThunk(
     "groupProfileSlice/getGroupDebtStudents",
-    ({id, res}) => {
-        const {request} = useHttp()
+    ({ id, res }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Attendance/attendance_year_list_all/${id}/`, "POST", JSON.stringify(res), headers())
     }
 )
@@ -173,8 +173,8 @@ export const getGroupDebtStudents = createAsyncThunk(
 
 export const getSchoolAttendance = createAsyncThunk(
     "groupProfileSlice/getSchoolAttendance",
-    ({id}) => {
-        const {request} = useHttp()
+    ({ id }) => {
+        const { request } = useHttp()
         return request(`${API_URL}Attendance/attendance/periods/?group_id=${id}`, "GET", null, headers())
     }
 )
@@ -182,23 +182,23 @@ export const getSchoolAttendance = createAsyncThunk(
 export const getSchoolAttendanceAll = createAsyncThunk(
     "groupProfileSlice/getSchoolAttendanceAll",
     () => {
-        const {request} = useHttp()
+        const { request } = useHttp()
         return request(`${API_URL}Attendance/attendance/periods-all/`, "GET", null, headers())
     }
 )
 
 export const getSchoolAttendanceList = createAsyncThunk(
     "groupProfileSlice/getSchoolAttendanceList",
-    ({group_id, year, month}) => {
-        const {request} = useHttp()
-        return request(`${API_URL}Attendance/attendance/monthly/?${ParamUrl({group_id, year, month})}`, "GET", null, headers())
+    ({ group_id, year, month }) => {
+        const { request } = useHttp()
+        return request(`${API_URL}Attendance/attendance/monthly/?${ParamUrl({ group_id, year, month })}`, "GET", null, headers())
     }
 )
 
 export const getSchoolAttendanceForDay = createAsyncThunk(
     "groupProfileSlice/getSchoolAttendanceForDay",
-    ({day, year, month, branch}) => {
-        const {request} = useHttp()
-        return request(`${API_URL}Attendance/attendance/branch-daily/${branch}/?${ParamUrl({day, year, month})}`, "GET", null, headers())
+    ({ day, year, month, branch }) => {
+        const { request } = useHttp()
+        return request(`${API_URL}Attendance/attendance/branch-daily/${branch}/?${ParamUrl({ day, year, month })}`, "GET", null, headers())
     }
 )

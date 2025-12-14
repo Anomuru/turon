@@ -1,15 +1,15 @@
-import React, {Suspense, lazy} from 'react';
-import {createRoutesFromElements, Navigate, Route, RouterProvider} from "react-router";
-import {createBrowserRouter} from "react-router-dom";
+import React, { Suspense, lazy } from 'react';
+import { createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 import classNames from "classnames";
 
 
-import {RequireAuth} from "./RequireAuth";
-import {routersConfigList} from "app/routers/config/routersConfigList";
+import { RequireAuth } from "./RequireAuth";
+import { routersConfigList } from "app/routers/config/routersConfigList";
 
 
 import RequireHeader from "app/routers/ui/RequireHeader";
-import {routersConfigProfile} from "app/routers/config/routerConfigProfiles";
+import { routersConfigProfile } from "app/routers/config/routerConfigProfiles";
 
 
 const Login = lazy(() => import("pages/loginPage"));
@@ -28,17 +28,18 @@ const Layout = React.lazy(() => import("app/layouts/layout").then((module) => ({
 })));
 
 const ClassAddColorPage = lazy(() => import("pages/classPage").then((module) =>
-    ({default: module.ClassAddColorPage})));
+    ({ default: module.ClassAddColorPage })));
 const Target = lazy(() => import("pages/target/ui/Target"));
 const LayoutTarget = lazy(() => import("app/layouts/layoutTarget/LayoutTarget"));
-const FlowProfileNavigators = lazy(() => import("entities/flowsProfile").then((module) => ({default: module.FlowProfileNavigators})));
+const FlowProfileNavigators = lazy(() => import("entities/flowsProfile").then((module) => ({ default: module.FlowProfileNavigators })));
 
 const StudentsPage = lazyPage(() => import("pages/studentsPage"), "StudentsPage");
 
 
 import "app/styles/index.sass";
-import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
-import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
+import { DefaultLoader, DefaultPageLoader } from "shared/ui/defaultLoader/index.js";
+import {NotificationPage, TodoistPage} from 'pages/todoistPage';
 
 
 export const AppRouter = () => {
@@ -53,25 +54,25 @@ export const AppRouter = () => {
                     path={"login"}
                     element={
                         <Suspense fallback={<div>Loading...</div>}>
-                            <Login/>
+                            <Login />
                         </Suspense>
                     }
                 />
                 <Route
                     path={"register"}
-                    element={<Register/>}
+                    element={<Register />}
                 />
 
                 <Route path={"/register/target/*"} element={<LayoutTarget>
-                    <Target/>
-                </LayoutTarget>}/>
+                    <Target />
+                </LayoutTarget>} />
 
                 <Route
-                    element={<RequireAuth/>}
+                    element={<RequireAuth />}
                 >
 
-                    <Route path={"platform/*"} element={<Layout/>}>
-                        <Route element={<RequireHeader/>}>
+                    <Route path={"platform/*"} element={<Layout />}>
+                        <Route element={<RequireHeader />}>
 
 
                             {
@@ -82,11 +83,11 @@ export const AppRouter = () => {
                                         element={
 
                                             // <RequireBranch>
-                                                <Suspense fallback={<div>
-                                                    <DefaultLoader/>
-                                                </div>}>
-                                                    {item.element}
-                                                </Suspense>
+                                            <Suspense fallback={<div>
+                                                <DefaultLoader />
+                                            </div>}>
+                                                {item.element}
+                                            </Suspense>
 
                                             // </RequireBranch>
                                         }
@@ -96,8 +97,10 @@ export const AppRouter = () => {
 
                         </Route>
 
-                        <Route element={<RequireHeader header={false} back={false}/>}>
+                        <Route element={<RequireHeader header={false} back={false} />}>
 
+                            <Route path='todoist' element={<TodoistPage />} />
+                            <Route path='notification' element={<NotificationPage />} />
 
                             {
                                 routersConfigProfile.map((item, index) =>
@@ -107,10 +110,10 @@ export const AppRouter = () => {
                                         element={
                                             // <RequireBranch>
                                             <Suspense fallback={<div>
-                                                <DefaultLoader/>
+                                                <DefaultLoader />
                                             </div>}>
                                                 {item.element}
-                                             </Suspense>
+                                            </Suspense>
                                             // </RequireBranch>
                                         }
                                     />
@@ -122,32 +125,32 @@ export const AppRouter = () => {
 
                         <Route
                             path={"profile"}
-                            element={<StudentProfilePage/>}
+                            element={<StudentProfilePage />}
                         />
 
 
                         <Route
                             path={"molasses"}
-                            element={<ClassMolassesPage/>}
+                            element={<ClassMolassesPage />}
                         />
                         <Route
                             path={"groups/flowsProfile/:id"}
-                            element={<FlowProfileNavigators/>}
+                            element={<FlowProfileNavigators />}
                         />
 
                         <Route
                             path={"groups/flow-list"}
-                            element={<FlowListPage/>}
+                            element={<FlowListPage />}
                         />
                         <Route
                             path={"classColorAdd"}
-                            element={<ClassAddColorPage/>}
+                            element={<ClassAddColorPage />}
                         />
 
 
                         <Route
                             index
-                            element={<Navigate to={"register"}/>}
+                            element={<Navigate to={"register"} />}
                         />
                     </Route>
                 </Route>
@@ -162,8 +165,8 @@ export const AppRouter = () => {
 
     return (
         <div className={classNames("app", "app_center_theme")}>
-            <Suspense fallback={<DefaultPageLoader/>}>
-                <RouterProvider router={router}/>
+            <Suspense fallback={<DefaultPageLoader />}>
+                <RouterProvider router={router} />
             </Suspense>
         </div>
     );

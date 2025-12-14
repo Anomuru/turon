@@ -8,6 +8,7 @@ import {
 
 const initialState = {
     userBranchId: null,
+    level: null,
     userData: null,
     userJob: null,
     userPermissions: null,
@@ -32,6 +33,7 @@ const userProfileSlice = createSlice({
                 localStorage.setItem('branchId', action.payload?.branch?.id);
 
                 state.userData = action.payload
+                state.level = action.payload?.level
                 state.userBranchId = action.payload?.branch?.id
                 state.userJob = action.payload?.job[0]
                 localStorage.setItem("job", action.payload?.job[0])

@@ -1,20 +1,20 @@
-import {fetchReasons} from "entities/profile/groupProfile";
-import {getReasons} from "entities/profile/groupProfile/model/groupProfileSelector";
-import React, {useEffect, useMemo, useState} from "react";
+import { fetchReasons } from "entities/profile/groupProfile";
+import { getReasons } from "entities/profile/groupProfile/model/groupProfileSelector";
+import React, { useEffect, useMemo, useState } from "react";
 import classNames from "classnames";
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
-import {Table} from "shared/ui/table";
+import { Table } from "shared/ui/table";
 
 import cls from "./deletedStudents.module.sass";
-import {API_URL, headers, useHttp} from "shared/api/base.js";
-import {ConfirmModal} from "shared/ui/confirmModal/index.js";
-import {onDeleteGroupStudentBack} from "../../model/studentsSlice";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
+import { API_URL, headers, useHttp } from "shared/api/base.js";
+import { ConfirmModal } from "shared/ui/confirmModal/index.js";
+import { onDeleteGroupStudentBack } from "../../model/studentsSlice";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice.js";
 
 
-export const DeletedStudents = ({currentTableData}) => {
+export const DeletedStudents = ({ currentTableData }) => {
 
     const dispatch = useDispatch()
 
@@ -30,7 +30,7 @@ export const DeletedStudents = ({currentTableData}) => {
         dispatch(fetchReasons())
     }, [])
 
-    const {request} = useHttp()
+    const { request } = useHttp()
     const handleDelete = () => {
 
         request(`${API_URL}Students/delete-student-from-deleted/${id}/`, "DELETE", null, headers())
@@ -72,7 +72,7 @@ export const DeletedStudents = ({currentTableData}) => {
                                 setId(item.student.id)
                                 setActive(true)
                             }}>
-                                <i className={"fa fa-times"}/>
+                                <i className={"fa fa-times"} />
                             </div>
                         </td>
                     </tr>
@@ -94,7 +94,7 @@ export const DeletedStudents = ({currentTableData}) => {
                                     setId(item.student.id)
                                     setActive(true)
                                 }}>
-                                    <i className={"fa fa-times"}/>
+                                    <i className={"fa fa-times"} />
                                 </div>
                             </td>
                         </tr>
@@ -138,27 +138,27 @@ export const DeletedStudents = ({currentTableData}) => {
             <div className={cls.table}>
                 <Table extraClass={cls.table__head}>
                     <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Full name</th>
-                        <th>Yosh</th>
-                        <th>Telefon nome</th>
-                        <th>Guruh</th>
-                        <th>Reg.sana</th>
-                        <th>O'chir.sana</th>
-                        <th>Sabab</th>
-                        <th/>
-                    </tr>
+                        <tr>
+                            <th>No</th>
+                            <th>Full name</th>
+                            <th>Yosh</th>
+                            <th>Telefon nome</th>
+                            <th>Guruh</th>
+                            <th>Reg.sana</th>
+                            <th>O'chir.sana</th>
+                            <th>Sabab</th>
+                            <th />
+                        </tr>
                     </thead>
                     <tbody>
 
-                    {renderDeletedStudents()}
+                        {renderDeletedStudents()}
                     </tbody>
                 </Table>
             </div>
 
             <ConfirmModal onClick={handleDelete} title={"Qaytarish"} text={"Studentni rostanham qaytarmoqchimisiz"}
-                          type={"danger"} active={active} setActive={setActive}/>
+                type={"danger"} active={active} setActive={setActive} />
         </div>
 
     );

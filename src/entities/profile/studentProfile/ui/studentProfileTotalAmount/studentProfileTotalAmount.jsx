@@ -1,24 +1,24 @@
-import {memo, useCallback, useEffect, useState} from 'react';
-import {useForm} from "react-hook-form";
+import { memo, useCallback, useEffect, useState } from 'react';
+import { useForm } from "react-hook-form";
 import classNames from "classnames";
 
-import {amountTypes, amountService} from "../../model/consts/amountConsts";
-import {EditableCard} from "shared/ui/editableCard";
-import {Input} from "shared/ui/input";
-import {Radio} from "shared/ui/radio";
-import {Select} from "shared/ui/select";
-import {Form} from "shared/ui/form";
-import {Modal} from "shared/ui/modal";
-import {useTheme} from "shared/lib/hooks/useTheme";
+import { amountTypes, amountService } from "../../model/consts/amountConsts";
+import { EditableCard } from "shared/ui/editableCard";
+import { Input } from "shared/ui/input";
+import { Radio } from "shared/ui/radio";
+import { Select } from "shared/ui/select";
+import { Form } from "shared/ui/form";
+import { Modal } from "shared/ui/modal";
+import { useTheme } from "shared/lib/hooks/useTheme";
 import cls from "./studentProfileTotalAmount.module.sass";
 import money from "shared/assets/images/Money.png";
 import creditCard from "shared/assets/images/CreditCard.png";
 import bank from "shared/assets/images/Bank.png";
-import {useDispatch, useSelector} from "react-redux";
-import {getMonthDataThunk, getMonthData} from "features/studentPayment";
-import {API_URL, headers, useHttp} from "shared/api/base";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import {fetchStudentProfileData} from "pages/profilePage/model/thunk/studentProfileThunk";
+import { useDispatch, useSelector } from "react-redux";
+import { getMonthDataThunk, getMonthData } from "features/studentPayment";
+import { API_URL, headers, useHttp } from "shared/api/base";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import { fetchStudentProfileData } from "pages/profilePage/model/thunk/studentProfileThunk";
 import {
     getMonth,
     getCherityYear,
@@ -28,14 +28,14 @@ import {
     fetchStudentCharityMonth,
     fetchStudentCharityYears
 } from "../../../../../features/studentPayment/model/studentPaymentThunk";
-import {Switch} from "shared/ui/switch";
+import { Switch } from "shared/ui/switch";
 
 
 const listPretcent = [-1, 34.8, 70.4];
 
-export const StudentProfileTotalAmount = memo(({active, setActive, student_id, branch_id, group_id}) => {
+export const StudentProfileTotalAmount = memo(({ active, setActive, student_id, branch_id, group_id }) => {
 
-    const {register, handleSubmit , setValue, reset} = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const getMonthDate = useSelector(getMonthData);
     const years = useSelector(getCherityYear);
     const monthYear = useSelector(getCherityYearMonth);
@@ -60,25 +60,22 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
     const [year, setYear] = useState(null)
     const [yearMonth, setMonth] = useState(null)
 
-
-
-    useEffect(() =>{
-        if(yearMonth) {
-            request(`${API_URL}Students/get_month/?student_id=${student_id}&year=${year}&month=${yearMonth}` , "POST" , null , headers() )
-                .then(res => {
-                    setValue("payment_sum" , res.sum)
-                })
+    useEffect(() => {
+        if (getMonthDate) {
+            setGetMonth(getMonthDate[0]?.id)
+            setSelectedMonth(getMonthDate[0]?.id)
         }
-    } , [yearMonth])
+    }, [getMonthDate])
+
 
     useEffect(() => {
         if (year) {
-            dispatch(fetchStudentCharityMonth({id: student_id, years: year}));
+            dispatch(fetchStudentCharityMonth({ id: student_id, years: year }));
         }
     }, [year])
 
-    const {theme} = useTheme();
-    const {request} = useHttp();
+    const { theme } = useTheme();
+    const { request } = useHttp();
 
     useEffect(() => {
         if (student_id) {
@@ -118,19 +115,22 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                 ...data
             }
             const response = await request(`${API_URL}Students/student_payment_month/${student_id}/${selectMonth}/`, "POST", JSON.stringify(newPaymentSchool), headers())
+                .then(res => {
+                    dispatch(onAddAlertOptions({
+                        type: "success",
+                        status: true,
+                        msg: "O'quvchi uchun to'lov muvofaqqiyatli o'tdi"
+                    }));
+                    dispatch(fetchStudentProfileData(student_id))
+                    dispatch(getMonthDataThunk(student_id))
+                    // setSelectedMonth(0);
+                })
                 .catch(err => {
                     console.log(newPaymentSchool, "new")
                 })
 
 
-            dispatch(onAddAlertOptions({
-                type: "success",
-                status: true,
-                msg: "O'quvchi uchun to'lov muvofaqqiyatli o'tdi"
-            }));
-            dispatch(fetchStudentProfileData(student_id))
-            dispatch(getMonthDataThunk(student_id))
-            setSelectedMonth(0);
+
             // reset()
             return response;
         } else {
@@ -196,7 +196,6 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                     msg: res.msg
                 }));
 
-                setValue("payment_sum" , "")
                 setDiscount(0);
             })
             .catch(err => {
@@ -271,15 +270,15 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                 <h1>Umumiy Hisob</h1>
                 <div className={cls.items}>
                     <div className={cls.items__inner}>
-                        <img src={money} alt=""/>
+                        <img src={money} alt="" />
                         <p>12 000 000</p>
                     </div>
                     <div className={cls.items__inner}>
-                        <img src={creditCard} alt=""/>
+                        <img src={creditCard} alt="" />
                         <p>11 000 000</p>
                     </div>
                     <div className={cls.items__inner}>
-                        <img src={bank} alt=""/>
+                        <img src={bank} alt="" />
                         <p>11 000 000</p>
                     </div>
                 </div>
@@ -295,15 +294,15 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                             onSubmit={handleSubmit(handleAddPayment)}
                             extraClassname={cls.form__wrapper}
                         >
-                                <Select
-                                    extraClass={cls.monthSelect}
-                                    title={"Oyni tanlang"}
-                                    options={getMonthDate}
-                                    onChangeOption={(value) => {
-                                        setSelectedMonth(value);
-                                        onSelect(value);
-                                    }}
-                                />
+                            <Select
+                                extraClass={cls.monthSelect}
+                                title={"Oyni tanlang"}
+                                options={getMonthDate}
+                                onChangeOption={(value) => {
+                                    setSelectedMonth(value);
+                                    onSelect(value);
+                                }}
+                            />
                             <div className={cls.items}>
                                 {amountTypes.map((item, index) => (
                                     <div
@@ -315,12 +314,12 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                                         }}
                                     >
                                         <p>{item.name}</p>
-                                        <img src={item.image} alt=""/>
+                                        <img src={item.image} alt="" />
                                     </div>
                                 ))}
                                 <div
                                     className={cls.items__active}
-                                    style={{left: `${listPretcent[activePaymentType]}%`}}
+                                    style={{ left: `${listPretcent[activePaymentType]}%` }}
                                 />
                             </div>
                             <div className={cls.form__inner}>
@@ -380,8 +379,8 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                             <div className={cls.form__container}>
                                 <div className={cls.form__inner}>
                                     <div className={cls.form__inner__discount}>
-                                        { swtich === true ? <h2>Foizli chegirma</h2> : <h2>Summali chegirma</h2>}
-                                        <Switch activeSwitch={swtich} onChangeSwitch={onChangeSwitch}/>
+                                        {swtich === true ? <h2>Foizli chegirma</h2> : <h2>Summali chegirma</h2>}
+                                        <Switch activeSwitch={swtich} onChangeSwitch={onChangeSwitch} />
                                     </div>
                                     <p>{activeService} miqdori</p>
                                     {month?.data && <>
@@ -391,7 +390,7 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                                             placeholder={"Summa"}
                                             type={"number"}
                                             value={month?.data[0]?.discount}
-                                            // onChange={(e) => setDiscountCharity(e.target.value)}
+                                        // onChange={(e) => setDiscountCharity(e.target.value)}
                                         />
 
                                         <Input
@@ -399,7 +398,7 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
                                             name={"reason"}
                                             placeholder={"Sababi"}
                                             value={month?.data[0]?.reason}
-                                            // onChange={(e) => setReasonCharity(e.target.value)}
+                                        // onChange={(e) => setReasonCharity(e.target.value)}
                                         />
 
                                     </>
@@ -411,7 +410,7 @@ export const StudentProfileTotalAmount = memo(({active, setActive, student_id, b
 
                         :
 
-                       null
+                        null
                     }
 
 

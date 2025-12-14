@@ -6,7 +6,8 @@ import {getSchoolAttendanceAll, getSchoolAttendanceForDay} from "entities/profil
 import {
     getAttendance,
     getAttendanceAll, getAttendanceAllForDay,
-    getAttendanceListForDay
+    getAttendanceListForDay,
+    getGroupProfileLoading
 } from "entities/profile/groupProfile/model/groupProfileSelector";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader";
 import {Select} from "shared/ui/select";
@@ -15,6 +16,7 @@ import cls from "./studentAttendancePage.module.sass";
 import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Table} from "shared/ui/table/index.js";
 import {getSelectedLocations} from "features/locations/index.js";
+import { DefaultLoader, DefaultPageLoader } from 'shared/ui/defaultLoader';
 
 const reducers = {
     groupProfileSlice: groupProfileReducer
@@ -24,11 +26,13 @@ export const StudentAttendancePage = () => {
 
     const dispatch = useDispatch()
 
+    const loading = useSelector(getGroupProfileLoading)
     const attendanceListForDay = useSelector(getAttendanceListForDay)
     const attendanceAllForDay = useSelector(getAttendanceAllForDay)
     const attendanceDates = useSelector(getAttendanceAll)
     const selectedBranch = useSelector(getSelectedLocations);
-    const branch = selectedBranch?.id;
+    const userBranchId = useSelector(getUserBranchId)
+    const branch = selectedBranch?.id || userBranchId; 
     const [attendanceYears, setAttendanceYears] = useState([])
     const [selectedYear, setSelectedYear] = useState(null)
     const [attendanceMonth, setAttendanceMonth] = useState([])
@@ -174,7 +178,10 @@ export const StudentAttendancePage = () => {
                     </div>
                 </div>
                 <div className={cls.studentAttendance__container}>
-                    <Table>
+                    {
+                        loading
+                        ? <DefaultPageLoader/>
+                        : <Table>
                         <thead style={{top: 0, position: "initial"}}>
                         <tr>
                             <th>No</th>
@@ -184,6 +191,7 @@ export const StudentAttendancePage = () => {
                         </thead>
                         {render()}
                     </Table>
+                    }
                 </div>
             </div>
         </DynamicModuleLoader>

@@ -136,6 +136,12 @@ export const StudentPayment = ({formatSalary}) => {
                         Umumiy qarz <br/> {formatSalary(res ? res?.total_debt : classes?.total_debt)}
                     </div>
                     <div className={cls.otchot}>
+                        With discount <br/> {formatSalary(res ? res?.total_with_discount : classes?.total_with_discount)}
+                    </div>
+                    <div className={cls.otchot}>
+                        Umumiy to'lov <br/> {formatSalary(res ? res?.total_sum : classes?.total_sum)}
+                    </div>
+                    <div className={cls.otchot}>
                         Qolgan qarz <br/> {formatSalary(res ? res?.reaming_debt : classes?.reaming_debt)}
                     </div>
                     <div className={cls.otchot}>
@@ -143,9 +149,6 @@ export const StudentPayment = ({formatSalary}) => {
                     </div>
                     <div className={cls.otchot}>
                         Chegirma 1-martalik <br/> {formatSalary(res ? res?.total_discount : classes?.total_discount)}
-                    </div>
-                    <div className={cls.otchot}>
-                        Umumiy to'lov <br/> {formatSalary(res ? res?.total_sum : classes?.total_sum)}
                     </div>
                 </div>
             </div>

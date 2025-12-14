@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import {
     fetchFilteredStudentsAndTeachers,
     fetchGroupProfileTimeTable,
@@ -139,6 +139,17 @@ const groupProfileSlice = createSlice({
         },
         loadingAttendance: (state) => {
             state.attendanceListLoading = true
+        },
+        loadingStudent: (state) => {
+            state.studentsLoading = true
+        },
+        addStudent: (state, action) => {
+            state.studentsLoading = false
+            state.data.students = action.payload
+        },
+        deleteStudent: (state, action) => {
+            state.studentsLoading = false
+            state.data.students = action.payload
         }
     },
     extraReducers: builder =>
@@ -280,7 +291,7 @@ const groupProfileSlice = createSlice({
                 // state.error = null
             })
             .addCase(fetchWeekDays.fulfilled, (state, action) => {
-                state.weekDays = action.payload?.days?.map(item => ({...item, name: item.name_uz}))
+                state.weekDays = action.payload?.days?.map(item => ({ ...item, name: item.name_uz }))
                 state.selectedWeekDay = action.payload?.today
                 // state.filteredStudents = action.payload.students
                 // state.loading = false
@@ -295,7 +306,7 @@ const groupProfileSlice = createSlice({
                 // state.error = null
             })
             .addCase(createWeekDays.fulfilled, (state, action) => {
-                state.weekDays = action.payload.map(item => ({...item, name: item.name_uz}))
+                state.weekDays = action.payload.map(item => ({ ...item, name: item.name_uz }))
                 // state.filteredStudents = action.payload.students
                 // state.loading = false
                 // state.error = null
@@ -353,70 +364,70 @@ const groupProfileSlice = createSlice({
 
 
 
-    .addCase(getSchoolAttendance.pending, state => {
-        state.groupAttendanceDateLoading = true
-        state.error = null
-    })
-    .addCase(getSchoolAttendance.fulfilled, (state, action) => {
-        state.groupAttendanceDate = action.payload?.periods
-        // state.groupAttendanceDate.date = action.payload?.periods
-        // const lastYear = action.payload?.periods[action.payload?.periods?.length - 1]?.year
-        // const yearMonths = action.payload?.periods.filter(item => item.year === lastYear)[0]?.months
-        // const lastMonth = yearMonths[yearMonths?.length - 1]
-        // state.groupAttendanceDate.lastYear = lastYear
-        // state.groupAttendanceDate.lastMonth = lastMonth?.month
-        // state.groupAttendanceDate.lastDay = lastMonth?.days[lastMonth?.days?.length - 1]
-        state.groupAttendanceDateLoading = false
-        state.error = null
-    })
-    .addCase(getSchoolAttendance.rejected, (state, action) => {
-        state.groupAttendanceDateLoading = false
-        state.error = true
-    })
+            .addCase(getSchoolAttendance.pending, state => {
+                state.groupAttendanceDateLoading = true
+                state.error = null
+            })
+            .addCase(getSchoolAttendance.fulfilled, (state, action) => {
+                state.groupAttendanceDate = action.payload?.periods
+                // state.groupAttendanceDate.date = action.payload?.periods
+                // const lastYear = action.payload?.periods[action.payload?.periods?.length - 1]?.year
+                // const yearMonths = action.payload?.periods.filter(item => item.year === lastYear)[0]?.months
+                // const lastMonth = yearMonths[yearMonths?.length - 1]
+                // state.groupAttendanceDate.lastYear = lastYear
+                // state.groupAttendanceDate.lastMonth = lastMonth?.month
+                // state.groupAttendanceDate.lastDay = lastMonth?.days[lastMonth?.days?.length - 1]
+                state.groupAttendanceDateLoading = false
+                state.error = null
+            })
+            .addCase(getSchoolAttendance.rejected, (state, action) => {
+                state.groupAttendanceDateLoading = false
+                state.error = true
+            })
 
-    .addCase(getSchoolAttendanceAll.pending, state => {
-        state.loading = true
-        state.error = null
-    })
-    .addCase(getSchoolAttendanceAll.fulfilled, (state, action) => {
-        state.groupAttendanceDateAll = action.payload?.periods
-        state.loading = false
-        state.error = null
-    })
-    .addCase(getSchoolAttendanceAll.rejected, (state, action) => {
-        state.loading = false
-        state.error = true
-    })
+            .addCase(getSchoolAttendanceAll.pending, state => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(getSchoolAttendanceAll.fulfilled, (state, action) => {
+                state.groupAttendanceDateAll = action.payload?.periods
+                state.loading = false
+                state.error = null
+            })
+            .addCase(getSchoolAttendanceAll.rejected, (state, action) => {
+                state.loading = false
+                state.error = true
+            })
 
 
-    .addCase(getSchoolAttendanceList.pending, state => {
-        state.attendanceListLoading = true
-        state.error = null
-    })
-    .addCase(getSchoolAttendanceList.fulfilled, (state, action) => {
-        state.attendanceList = action.payload
-        state.attendanceListLoading = false
-        state.error = null
-    })
-    .addCase(getSchoolAttendanceList.rejected, (state, action) => {
-        state.attendanceListLoading = false
-        state.error = true
-    })
+            .addCase(getSchoolAttendanceList.pending, state => {
+                state.attendanceListLoading = true
+                state.error = null
+            })
+            .addCase(getSchoolAttendanceList.fulfilled, (state, action) => {
+                state.attendanceList = action.payload
+                state.attendanceListLoading = false
+                state.error = null
+            })
+            .addCase(getSchoolAttendanceList.rejected, (state, action) => {
+                state.attendanceListLoading = false
+                state.error = true
+            })
 
-    .addCase(getSchoolAttendanceForDay.pending, state => {
-        state.loading = true
-        state.error = null
-    })
-    .addCase(getSchoolAttendanceForDay.fulfilled, (state, action) => {
-        state.attendanceListForDay = action.payload?.groups
-        state.attendanceAllForDay = action.payload?.overall_summary
-        state.loading = false
-        state.error = null
-    })
-    .addCase(getSchoolAttendanceForDay.rejected, (state, action) => {
-        state.loading = false
-        state.error = true
-    })
+            .addCase(getSchoolAttendanceForDay.pending, state => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(getSchoolAttendanceForDay.fulfilled, (state, action) => {
+                state.attendanceListForDay = action.payload?.groups
+                state.attendanceAllForDay = action.payload?.overall_summary
+                state.loading = false
+                state.error = null
+            })
+            .addCase(getSchoolAttendanceForDay.rejected, (state, action) => {
+                state.loading = false
+                state.error = true
+            })
 })
 
 export const {
@@ -426,8 +437,11 @@ export const {
     onMoveToGroup,
     createAttendance,
     deleteAttendance,
-    loadingAttendance
+    loadingAttendance,
+    loadingStudent,
+    addStudent,
+    deleteStudent
 } = groupProfileSlice.actions
 // export default groupProfileSlice.reducer
 
-export const {reducer: groupProfileReducer} = groupProfileSlice
+export const { reducer: groupProfileReducer } = groupProfileSlice

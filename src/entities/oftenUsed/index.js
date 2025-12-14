@@ -1,4 +1,4 @@
-export {default as oftenUsedSlice, oftenUsedReducer} from "./model/oftenUsedSlice";
+export { default as oftenUsedSlice, oftenUsedReducer } from "./model/oftenUsedSlice";
 
 export {
     fetchClassColorData,
@@ -44,6 +44,7 @@ export {
     getVacancyError,
     getTeacherData,
     getTeacherLoading,
-    getTeacherError
+    getTeacherError,
+    getStatusList
 } from "./model/oftenUsedSelector";
 

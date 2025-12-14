@@ -1,42 +1,42 @@
-import {deleteGroup} from "entities/groups/model/slice/groupsSlice";
-import {getGroupProfileNextLsData} from "entities/profile/groupProfile/model/groupProfileSelector";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import React, {memo, useEffect, useState} from 'react';
-import {useForm} from "react-hook-form";
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate, useParams} from "react-router";
+import { deleteGroup } from "entities/groups/model/slice/groupsSlice";
+import { getGroupProfileNextLsData } from "entities/profile/groupProfile/model/groupProfileSelector";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import React, { memo, useEffect, useState } from 'react';
+import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router";
 
 import {
     getGroupProfileData,
-    changeGroupProfile,
-    deleteGroupProfile
+    deleteGroupProfile,
+    fetchGroupProfile
 } from "entities/profile/groupProfile";
-import {getSchoolClassColors, getSchoolClassNumbers} from "entities/students";
-import {useTheme} from "shared/lib/hooks/useTheme";
-import {Button} from "shared/ui/button";
-import {EditableCard} from "shared/ui/editableCard";
-import {Form} from "shared/ui/form";
-import {Input} from "shared/ui/input";
-import {Modal} from "shared/ui/modal";
-import {Radio} from "shared/ui/radio";
-import {Select} from "shared/ui/select";
+import { getSchoolClassColors, getSchoolClassNumbers } from "entities/students";
+import { useTheme } from "shared/lib/hooks/useTheme";
+import { Button } from "shared/ui/button";
+import { EditableCard } from "shared/ui/editableCard";
+import { Form } from "shared/ui/form";
+import { Input } from "shared/ui/input";
+import { Modal } from "shared/ui/modal";
+import { Radio } from "shared/ui/radio";
+import { Select } from "shared/ui/select";
 import {
     getLanguagesData,
     getClassColorData,
     getClassNumberData
 } from "entities/oftenUsed";
-import {Switch} from "shared/ui/switch";
+import { Switch } from "shared/ui/switch";
 
 import cls from "./groupProfileInfoForm.module.sass";
 import nextImage from "shared/assets/images/groupImage.png";
 import defaultUserImg from "shared/assets/images/user_image.png";
-import {ConfirmModal} from "../../../../shared/ui/confirmModal";
-import {getBranch} from "../../../branchSwitcher";
-import {API_URL, headers, useHttp} from "shared/api/base.js";
+import { ConfirmModal } from "../../../../shared/ui/confirmModal";
+import { getBranch } from "../../../branchSwitcher";
+import { API_URL, headers, useHttp } from "shared/api/base.js";
 import classNames from "classnames";
 
 
-export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
+export const GroupProfileInfoForm = memo(({ currentTab, setCurrentTab }) => {
 
     const {
         register,
@@ -44,8 +44,9 @@ export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
         setValue
     } = useForm()
 
-    const {theme} = useTheme()
-    const {id} = useParams()
+    const { theme } = useTheme()
+    const { id } = useParams()
+    const { request } = useHttp()
     // const {id} = useSelector(getBranch)
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -65,24 +66,29 @@ export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
 
 
     const onSubmitChange = (data) => {
-        const res = {
+        const patch = {
             ...data,
-            color: data.color.id ? data.color.id : schoolClassColors.filter(item => item.name === data.color)[0]?.id ?? selectColor
+            color: data.color.id ? data.color.id : schoolClassColors.filter(item => item.name === data.color)[0]?.id ?? selectColor,
+            group_type: "school",
+            status: activeSwitch
         }
-        dispatch(changeGroupProfile({
-            status: activeSwitch,
-            data: res,
-            id,
-            group_type: theme === "app_center_theme" ? "center" : "school"
-        }))
-        dispatch(onAddAlertOptions({
-            type: "success",
-            status: true,
-            msg: `Guruhni malumotlari o'zgardi`
-        }))
+        request(`${API_URL}Group/groups/profile/${id}/`, "PATCH", JSON.stringify(patch), headers())
+            .then(res => {
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: `Guruhni malumotlari o'zgardi`
+                }))
+                dispatch(fetchGroupProfile({ id }))
+            })
+        // dispatch(changeGroupProfile({
+        //     status: activeSwitch,
+        //     data: res,
+        //     id,
+        //     group_type: theme === "app_center_theme" ? "center" : "school"
+        // }))
+
     }
-    const {request} = useHttp()
-    console.log(nextLesson, 'ssss')
 
     const onDelete = () => {
 
@@ -105,7 +111,7 @@ export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
         setValue("name", data?.name)
         setValue("price", data?.price)
         setValue("language", data?.language?.id)
-        if (data){
+        if (data) {
             setValue("color", data?.color?.id ? data.color?.id : schoolClassColors.filter(item => item?.name === data?.color)[0]?.id)
             setValue("class_number", data?.class_number?.id ? data.class_number.id : schoolClassNumbers.filter(item => item.number === data.class_number)[0]?.id)
         }
@@ -116,13 +122,13 @@ export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
         <>
             <EditableCard
                 extraClass={cls.info}
-                title={<i className="fas fa-edit"/>}
+                title={<i className="fas fa-edit" />}
                 onClick={() => setActive(true)}
             >
                 <span className={cls.info__circleBg}></span>
                 <span className={cls.info__circleBg2}></span>
                 <div className={cls.info__left}>
-                    <span style={{background: `${data?.color}`}} className={cls.info__left__box}>
+                    <span style={{ background: `${data?.color}` }} className={cls.info__left__box}>
                         <h1>{data?.class_number}</h1>
                     </span>
                 </div>
@@ -130,59 +136,59 @@ export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
                     <div className={cls.info__right__header}>
                         <h1>{data?.name}</h1>
                         <Button onClick={() => setCurrentTab("info")} extraClass={classNames(cls.info__right__header__status, { [cls.active]: currentTab === "info" })}>
-                            <i style={{fontSize: "1.9rem"}} className="fa-solid fa-graduation-cap"></i>
+                            <i style={{ fontSize: "1.9rem" }} className="fa-solid fa-graduation-cap"></i>
                             <h2>Sinf ma'lumotlari</h2>
                         </Button>
                         <Button onClick={() => navigate(`quarter/${id}`)} extraClass={cls.info__right__header__balance}>
-                            <i style={{fontSize: "1.9rem"}} className="fa-solid fa-bars-progress"></i>
+                            <i style={{ fontSize: "1.9rem" }} className="fa-solid fa-bars-progress"></i>
                             <h2>Chorak baholarni ko'rish</h2>
                         </Button>
                         <Button onClick={() => setCurrentTab("time")} extraClass={classNames(cls.info__right__header__time, { [cls.active]: currentTab === "time" })}>
-                            <i style={{fontSize: "1.9rem"}} className="fa-solid fa-table"></i>
+                            <i style={{ fontSize: "1.9rem" }} className="fa-solid fa-table"></i>
                             <h2>Time table</h2>
                         </Button>
                         <Button
                             onClick={() => navigate(`observe`)}
                             extraClass={classNames(cls.info__right__header__observed,)}>
-                            <i style={{fontSize: "1.9rem"}} className="fa-solid fa-table"></i>
+                            <i style={{ fontSize: "1.9rem" }} className="fa-solid fa-table"></i>
                             <h2>Observe Lesson</h2>
                         </Button>
                     </div>
                     <div className={cls.info__right__footer}>
-                        <div style={{background: "#FFEFDA", border: "2px solid #FED7AA"}} className={cls.info__right__footer__card}>
-                                <span style={{background: "#F97316"}}>
-                                    <i className="fa-regular fa-user"></i>
-                                </span>
+                        <div style={{ background: "#FFEFDA", border: "2px solid #FED7AA" }} className={cls.info__right__footer__card}>
+                            <span style={{ background: "#F97316" }}>
+                                <i className="fa-regular fa-user"></i>
+                            </span>
                             <div className={cls.info__right__footer__card__arounder}>
-                                <h2 style={{color: "#F97316"}}>Sinf rahbari</h2>
-                                <h1 style={{color: "#9A3412"}}>{data?.teacher}</h1>
+                                <h2 style={{ color: "#F97316" }}>Sinf rahbari</h2>
+                                <h1 style={{ color: "#9A3412" }}>{data?.teacher}</h1>
                             </div>
                         </div>
-                        <div style={{background: "#E3EFFE", border: "2px solid #3B82F6"}} className={cls.info__right__footer__card}>
-                                <span style={{background: "#3B82F6"}}>
-                                    <i className="fa-solid fa-globe"></i>
-                                </span>
+                        <div style={{ background: "#E3EFFE", border: "2px solid #3B82F6" }} className={cls.info__right__footer__card}>
+                            <span style={{ background: "#3B82F6" }}>
+                                <i className="fa-solid fa-globe"></i>
+                            </span>
                             <div className={cls.info__right__footer__card__arounder}>
-                                <h2 style={{color: "#4A63EB"}}>Sinf tili</h2>
-                                <h1 style={{color: "#1E40AF"}}>{data?.language?.name}</h1>
+                                <h2 style={{ color: "#4A63EB" }}>Sinf tili</h2>
+                                <h1 style={{ color: "#1E40AF" }}>{data?.language?.name}</h1>
                             </div>
                         </div>
-                        <div style={{background: "#F5ECFF", border: "2px solid #9675F1"}} className={cls.info__right__footer__card}>
-                                <span style={{background: "#A855F7"}}>
-                                    <i className="fa-solid fa-users"></i>
-                                </span>
+                        <div style={{ background: "#F5ECFF", border: "2px solid #9675F1" }} className={cls.info__right__footer__card}>
+                            <span style={{ background: "#A855F7" }}>
+                                <i className="fa-solid fa-users"></i>
+                            </span>
                             <div className={cls.info__right__footer__card__arounder}>
-                                <h2 style={{color: "#9675F1"}}>O'quvchilar soni</h2>
-                                <h1 style={{color: "#6B21A8"}}>{data?.count}-ta</h1>
+                                <h2 style={{ color: "#9675F1" }}>O'quvchilar soni</h2>
+                                <h1 style={{ color: "#6B21A8" }}>{data?.count}-ta</h1>
                             </div>
                         </div>
-                        <div style={{background: "#E2FDEB", border: "2px solid #22C55E"}} className={cls.info__right__footer__card}>
-                                <span style={{background: "#22C55E"}}>
-                                    <i className="fa-solid fa-dollar"></i>
-                                </span>
+                        <div style={{ background: "#E2FDEB", border: "2px solid #22C55E" }} className={cls.info__right__footer__card}>
+                            <span style={{ background: "#22C55E" }}>
+                                <i className="fa-solid fa-dollar"></i>
+                            </span>
                             <div className={cls.info__right__footer__card__arounder}>
-                                <h2 style={{color: "#16A384"}}>Sinf narxi</h2>
-                                <h1 style={{color: "#166534"}}>{data?.price?.toLocaleString()} uzs</h1>
+                                <h2 style={{ color: "#16A384" }}>Sinf narxi</h2>
+                                <h1 style={{ color: "#166534" }}>{data?.price?.toLocaleString()} uzs</h1>
                             </div>
                         </div>
                     </div>
@@ -265,7 +271,7 @@ export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
                             required
                         />
                         <Input title={"Sinf narxi"} type={"number"} placeholder={"Amount"} register={register}
-                               name={"price"}/>
+                            name={"price"} />
                     </>
                     {
                         schoolClassColors.length <= 3 ?
@@ -307,7 +313,7 @@ export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
                             onChangeSwitch={setActiveSwitch}
                         />
                     </div>
-                    <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <div style={{ display: "flex", justifyContent: "space-between" }}>
                         <Button
                             extraClass={cls.infoModal__btn}
                             onClick={handleSubmit(() => {
@@ -322,7 +328,7 @@ export const GroupProfileInfoForm = memo(({currentTab, setCurrentTab}) => {
                     </div>
                 </Form>
                 <ConfirmModal setActive={setDelete} active={deleteID} onClick={handleSubmit(onDelete)}
-                              title={`Rostanham o'chirmoqchimisiz`} type={"danger"}/>
+                    title={`Rostanham o'chirmoqchimisiz`} type={"danger"} />
 
             </Modal>
             {/*<ConfirmModal*/}

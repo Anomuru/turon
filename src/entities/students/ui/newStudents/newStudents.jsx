@@ -1,19 +1,19 @@
-import React, {memo, useEffect, useMemo, useState} from 'react';
-import {useNavigate} from "react-router";
+import React, { memo, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from "react-router";
 import cls from "entities/students/ui/newStudents/newStudents.module.sass";
-import {Table} from "shared/ui/table";
+import { Table } from "shared/ui/table";
 
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import {useDispatch, useSelector} from "react-redux";
-import {ConfirmModal} from "shared/ui/confirmModal";
-import {API_URL, headers, useHttp} from "shared/api/base";
-import {onDeleteNewStudents} from "../../model/studentsSlice";
-import {Alert} from "features/alert/index.js";
-import {getSearchValue} from "features/searchInput/index.js";
-import {fetchUpdateClassStudent} from "entities/students/model/studentsThunk.js";
-import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { ConfirmModal } from "shared/ui/confirmModal";
+import { API_URL, headers, useHttp } from "shared/api/base";
+import { onDeleteNewStudents } from "../../model/studentsSlice";
+import { Alert } from "features/alert/index.js";
+import { getSearchValue } from "features/searchInput/index.js";
+import { fetchUpdateClassStudent } from "entities/students/model/studentsThunk.js";
+import { getUserBranchId } from "entities/profile/userProfile/index.js";
 
-export const NewStudents = memo(({currentTableData}) => {
+export const NewStudents = memo(({ currentTableData }) => {
 
 
     const [studentId, setStudentId] = useState(false)
@@ -44,19 +44,19 @@ export const NewStudents = memo(({currentTableData}) => {
                 <td>
                     <div className={cls.td}>
                         {item?.comment?.slice(0, 10) + "..."}
-                        {item?.comment?.length >2 && <div className={cls.popup}>
+                        {item?.comment?.length > 2 && <div className={cls.popup}>
                             {item.comment}
                         </div>}
                     </div>
                 </td>
                 <td>{item.user?.registered_date}</td>
 
-                 <td onClick={() => {
+                <td onClick={() => {
                     setStudentId(item.id);
                     setIsOpen(!isOpen);
                     setIsDeleted(item?.deleted)
                 }}>
-                    <i style={{color: '#FF3737FF'}} className={`fa-solid fa-xmark ${cls.xmark}`}></i>
+                    <i style={{ color: '#FF3737FF' }} className={`fa-solid fa-xmark ${cls.xmark}`}></i>
                 </td>
 
 
@@ -68,7 +68,7 @@ export const NewStudents = memo(({currentTableData}) => {
     const render = renderStudents()
 
     const dispatch = useDispatch();
-    const {request} = useHttp();
+    const { request } = useHttp();
 
     const handleDelete = () => {
         request(`${API_URL}Students/students_delete/${studentId}/`, "DELETE", null, headers())
@@ -89,26 +89,26 @@ export const NewStudents = memo(({currentTableData}) => {
 
     return (
         <div className={cls.mainContainer}>
-            <Alert/>
+            <Alert />
             <div className={cls.mainContainer_tablePanelBox}>
                 <Table>
                     <thead className={cls.thead}>
-                    <tr>
-                        <th>№</th>
-                        <th>Full name</th>
-                        <th>Age</th>
-                        <th>Til</th>
-                        <th>Sinf</th>
-                        <th>Comment (Izoh)</th>
+                        <tr>
+                            <th>№</th>
+                            <th>Full name</th>
+                            <th>Age</th>
+                            <th>Til</th>
+                            <th>Sinf</th>
+                            <th>Comment (Izoh)</th>
 
-                        <th>Reg. sana</th>
+                            <th>Reg. sana</th>
 
-                        {currentTableData?.filter(item => !item.deleted)?.length ? <th>O'chirish</th> : ""}
+                            {currentTableData?.filter(item => !item.deleted)?.length ? <th>O'chirish</th> : ""}
 
-                    </tr>
+                        </tr>
                     </thead>
                     <tbody>
-                    {render}
+                        {render}
                     </tbody>
                 </Table>
             </div>
