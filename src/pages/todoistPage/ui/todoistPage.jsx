@@ -1184,7 +1184,7 @@ export const TodoistPage = () => {
                                     :
                                     notificationsLoading
                                         ? <DefaultPageLoader status={"none"} />
-                                        : notificationsList.map(item => {
+                                        : notificationsList?.map(item => {
                                             return <NotificationCard data={item} onToggleRead={onToggleRead} onViewTask={onViewTask} />
                                         })
                             }
