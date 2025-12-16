@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { parentsProfileReducer } from "features/parentsProfile/model/parentsProfileSlice.js";
 import { createReducerManager } from './reducerManager';
 import { useHttp } from "shared/api/base";
 import { oftenUsedReducer } from "entities/oftenUsed";
@@ -10,6 +11,7 @@ import {
     vacancyPageParseReducer,
 
 } from "features/vacancyModals/vacancyPageAdd/model/vacancyPageParseSlice.js";
+import { todoistReducer } from 'pages/todoistPage';
 import { taskManagerReducer } from "features/taskManager/modal/taskManagerSlice.js";
 import { calendarReducer } from "pages/calendarPage/model/calendarSlice.js";
 import { teacherReducer } from "entities/teachers/model/teacherSlice.js";
@@ -30,7 +32,7 @@ import { timeTableTuronReducer } from "pages/timeTable/model/slice/timeTableTuro
 import { filterLeadsReducers } from "entities/filteredLeadsList/model/filteredLeadsListSlice.js";
 import { quarterMasterReducer } from "pages/quarterMasterPage/model/quarterMasterSlice.js";
 import { locationsReducer } from "features/locations/model/slice/locationsSlice.js";
-import { todoistReducer } from 'pages/todoistPage';
+import { parentReducer } from "entities/parents/model/parentSlice.js";
 
 
 export function createReduxStore(
@@ -67,8 +69,9 @@ export function createReduxStore(
         filteredLeadsListSlice: filterLeadsReducers,
         quarterMasterSlice: quarterMasterReducer,
         locationsSlice: locationsReducer,
-        todoistSlice: todoistReducer
-
+        todoistSlice: todoistReducer,
+        parentSlice: parentReducer,
+        parentsProfileSlice: parentsProfileReducer
 
 
     };
