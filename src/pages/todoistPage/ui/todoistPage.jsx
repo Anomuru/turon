@@ -107,6 +107,8 @@ export const TodoistPage = () => {
     const [selectedTags, setSelectedTags] = useState([])
     const [selectedCategory, setSelectedCategory] = useState("all")
 
+    const [isRedirected, setIsRedirected] = useState(false)
+    const [selectedRedirect, setSelectedRedirect] = useState(null)
     const [isHaveNot, setIsHaveNot] = useState(false)
     const [activePage, setActivePage] = useState("task")
     const [activeTaskType, setActiveTaskType] = useState("myTasks")
@@ -190,7 +192,7 @@ export const TodoistPage = () => {
         setFormData({
             title: "",
             description: "",
-            executor: userId,
+            executor_ids: [],
             reviewer: userId,
             creator: userId,
             category: "admin",
@@ -220,6 +222,11 @@ export const TodoistPage = () => {
             tags: task.tags && task.tags.map(item => ({ value: item.id, label: item.name }))
         })
         setModalType("changeStatus")
+    }
+
+    const openRedirectModal = (task) => {
+        setSelectedTask(task)
+        setIsRedirected(true)
     }
 
     const openViewTaskModal = (task) => {
@@ -303,19 +310,55 @@ export const TodoistPage = () => {
     useEffect(() => {
         // if (notificationsList.length > 0)
         if (userId) {
-            NOTIFICATION_TYPES.map(item => {
-                request(`${API_URL}Tasks/notifications/?role=${item.id}&user_id=${userId}`, "GET", null, headers())
-                    .then(res => {
-                        const filtered = res.filter(item => !item.is_read)
-                        if (filtered.length > 0) {
-                            setIsHaveNot(true)
-                        }
-                    })
-            })
+            // NOTIFICATION_TYPES.map(item => {
+            request(`${API_URL}Tasks/notifications/?user_id=${userId}`, "GET", null, headers())
+                .then(res => {
+                    const filtered = res.filter(item => !item.is_read)
+                    if (filtered.length > 0) {
+                        setIsHaveNot(true)
+                    }
+                })
+            // })
         }
     }, [userId])
 
-    console.log(isHaveNot, "isHaveNot")
+    const onChangeRedirect = () => {
+
+        const patch = {
+            executor: +selectedRedirect
+        }
+
+        dispatch(taskLoading())
+        request(`${API_URL}Tasks/missions/${selectedTask.id}/`, "PATCH", JSON.stringify(patch), headers())
+            .then(res => {
+                request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
+                    .then(res => {
+                        dispatch(editTask(res))
+                        dispatch(onAddAlertOptions({
+                            status: true,
+                            type: "success",
+                            msg: "Vazifa yo'naltirildi"
+                        }))
+                        setModalType(null)
+                    })
+                    .catch(err => {
+                        dispatch(onAddAlertOptions({
+                            status: true,
+                            type: "error",
+                            msg: "Xatolik yuz berdi!"
+                        }))
+                        dispatch(taskLoadingStop())
+                    })
+            })
+            .catch(err => {
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "error",
+                    msg: "Xatolik yuz berdi!"
+                }))
+                dispatch(taskLoadingStop())
+            })
+    }
 
     // Task CRUD operations
     const handleCreateTask = () => {
@@ -330,23 +373,27 @@ export const TodoistPage = () => {
         const post = {
             ...formData,
             tags: formData.tags.map(item => item.value),
+            // executor_ids: formData.executor_ids.map(item => item.value),
+            executor_ids: [Number(formData.executor_ids)],
             ...repeat,
         }
 
         dispatch(taskLoading())
         request(`${API_URL}Tasks/missions/`, "POST", JSON.stringify(post), headers())
             .then(res => {
-                request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
-                    .then(res => {
-                        dispatch(addTask(res))
-                        dispatch(onAddAlertOptions({
-                            status: true,
-                            type: "success",
-                            msg: "Vazifa yaratildi"
-                        }))
-                        setModalType(null)
-                        setActiveTaskType("givenTask")
-                    })
+                res.map(item => {
+                    request(`${API_URL}Tasks/missions/${item.id}/`, "GET", null, headers())
+                        .then(res => {
+                            dispatch(addTask(res))
+                            dispatch(onAddAlertOptions({
+                                status: true,
+                                type: "success",
+                                msg: "Vazifa yaratildi"
+                            }))
+                            setModalType(null)
+                            setActiveTaskType("givenTask")
+                        })
+                })
             })
             .catch(err => {
                 dispatch(onAddAlertOptions({
@@ -364,7 +411,8 @@ export const TodoistPage = () => {
             ...formData,
             tags: formData.tags.map(item => item.value),
             creator: formData.creator.id,
-            executor: formData.executor.id,
+            // executor_ids: formData.executor_ids.map(item => item.value),
+            executor_ids: formData.executor_ids ? [Number(formData.executor_ids)] : [formData.executor.id],
             reviewer: typeof formData.reviewer === "object" ? formData.reviewer.id : formData.reviewer
         }
 
@@ -1156,6 +1204,16 @@ export const TodoistPage = () => {
                                                     }
                                                 </div>
                                                 <div className={styles.cardActions}>
+                                                    {
+                                                        task.executor.id === userId && (
+                                                            <button
+                                                                className={styles.btnRedirected}
+                                                                onClick={() => openRedirectModal(task)}
+                                                            >
+                                                                Redirected
+                                                            </button>
+                                                        )
+                                                    }
                                                     <button className={styles.btnView} onClick={() => openViewTaskModal(task)}>
                                                         View More
                                                     </button>
@@ -1278,9 +1336,20 @@ export const TodoistPage = () => {
                                     <div className={styles.formRow}>
                                         <div className={styles.formGroup}>
                                             <label>Executor</label>
+                                            {/* <AnimatedMulti
+                                                extraClass={styles.formGroup__multiSelect}
+                                                options={
+                                                    teachersList
+                                                        .filter(item => item.id !== userId)
+                                                        .map(item => ({ value: item.id, label: item.name }))
+                                                }
+                                                onChange={(e) => setFormData({ ...formData, executor_ids: e })}
+                                                value={formData.executor_ids}
+                                                fontSize={15}
+                                            /> */}
                                             <select
-                                                value={typeof formData.executor === "object" ? formData.executor.id : formData.executor || "none"}
-                                                onChange={(e) => setFormData({ ...formData, executor: e.target.value })}
+                                                value={typeof formData.executor === "object" ? formData.executor.id : formData.executor_ids || "none"}
+                                                onChange={(e) => setFormData({ ...formData, executor_ids: e.target.value })}
                                                 required
                                             >
                                                 <option value={"none"}>Select Executor</option>
@@ -1592,31 +1661,30 @@ export const TodoistPage = () => {
                                     {activeCollapsibles.has("comments") && (
                                         <>
                                             <div className={styles.collapsibleContent}>
-                                                {selectedTask.comments.map((com) => (
+                                                {[...selectedTask.comments].reverse().map((com) => (
                                                     <div key={com.id}
                                                         className={classNames(styles.nestedItem, styles.dual)}>
                                                         <div className={styles.nestedItem__header}>
-                                                            {
-                                                                com.user.id === userId || com.user === userId
-                                                                    ? <div
-                                                                        className={classNames(styles.nestedActions, styles.btns)}>
-                                                                        <button className={styles.btnSmallEdit}
-                                                                            onClick={() => openNestedModal("editComment", com)}>
-                                                                            Edit
-                                                                        </button>
-                                                                        <button
-                                                                            className={styles.btnSmallDelete}
-                                                                            onClick={() => openNestedModal("deleteComment", com)}
-                                                                        >
-                                                                            Delete
-                                                                        </button>
-                                                                    </div>
-                                                                    : <div className={styles.info}>
-                                                                        <p className={styles.btns__title}>{com.created_at}</p>
-                                                                        <p className={styles.btns__title}>{com.user.full_name}</p>
-                                                                    </div>
-                                                            }
-
+                                                            <div className={styles.info}>
+                                                                <p className={styles.btns__title}>{com.created_at}</p>
+                                                                {
+                                                                    com.user.id === userId || com.user === userId
+                                                                        ? <div
+                                                                            className={classNames(styles.nestedActions, styles.btns)}>
+                                                                            <button className={styles.btnSmallEdit}
+                                                                                onClick={() => openNestedModal("editComment", com)}>
+                                                                                Edit
+                                                                            </button>
+                                                                            <button
+                                                                                className={styles.btnSmallDelete}
+                                                                                onClick={() => openNestedModal("deleteComment", com)}
+                                                                            >
+                                                                                Delete
+                                                                            </button>
+                                                                        </div>
+                                                                        : <p className={styles.btns__title}>{com.user.full_name}</p>
+                                                                }
+                                                            </div>
                                                             <div>
                                                                 <p>{com.text}</p>
                                                             </div>
@@ -2134,6 +2202,28 @@ export const TodoistPage = () => {
                         Clear
                     </Button>
                 </div>
+            </Modal>
+            <Modal
+                setActive={setIsRedirected}
+                active={isRedirected}
+                extraClass={styles.redirect}
+            >
+                <h1>Redirect</h1>
+                <Select
+                    title={"Select redirect"}
+                    options={
+                        teachersList
+                            .filter(item => item.id !== userId)
+                    }
+                    onChangeOption={setSelectedRedirect}
+                    value={selectedRedirect}
+                />
+                <Button
+                    extraClass={styles.redirect__btn}
+                    onClick={onChangeRedirect}
+                >
+                    Enter
+                </Button>
             </Modal>
         </DynamicModuleLoader>
     )
