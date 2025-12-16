@@ -1,17 +1,9 @@
-<<<<<<< HEAD
+import { getBranchesSelect } from "entities/oftenUsed/model/oftenUsedSelector.js";
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from "react-router-dom";
 import { useTheme } from "shared/lib/hooks/useTheme";
-=======
-import {getBranchesSelect} from "entities/oftenUsed/model/oftenUsedSelector.js";
-import React, {useEffect, useState} from 'react';
-import {useForm} from 'react-hook-form';
-import {useDispatch, useSelector} from 'react-redux';
-import {useParams} from "react-router-dom";
-import {useTheme} from "shared/lib/hooks/useTheme";
->>>>>>> bc2d6c00266c8913a86bd6dfb4ea0ec6527c4571
 import {
     registerUser,
     registerTeacher,
@@ -47,16 +39,10 @@ import { DynamicModuleLoader } from "shared/lib/components/DynamicModuleLoader/D
 
 const userstype = {
     types: [
-<<<<<<< HEAD
         { value: "student", name: "Student" },
         { value: "teacher", name: "Teacher" },
-        { value: "employer", name: "Employer" }
-=======
-        {value: "student", name: "Student"},
-        {value: "teacher", name: "Teacher"},
-        {value: "employer", name: "Employer"},
-        {value: "parent", name: "Parent"}
->>>>>>> bc2d6c00266c8913a86bd6dfb4ea0ec6527c4571
+        { value: "employer", name: "Employer" },
+        { value: "parent", name: "Parent" }
     ]
 };
 
@@ -115,7 +101,7 @@ export const Register = () => {
     const [isDirector, setIsDirector] = useState("")
     const branchID = localStorage.getItem("branchId")
     const user = useSelector(getUserProfileData)
-    const [branchSelect , setBranchSelect] = useState(null)
+    const [branchSelect, setBranchSelect] = useState(null)
 
     const subjectOptions = safeData?.map(subject => ({
         value: subject?.id,
@@ -126,7 +112,7 @@ export const Register = () => {
     const filteredJobOptions = jobOptions.filter(
         job => job.name.toLowerCase() !== 'admin' && job.name.toLowerCase() !== 'director'
     );
-    useEffect(()=> {
+    useEffect(() => {
         dispatch(fetchBranchesForSelect())
     }, [])
     useEffect(() => {
@@ -261,7 +247,7 @@ export const Register = () => {
             };
             registerAction = registerEmployer(res2);
         } else if (registerType === "parent") {
-            const res ={
+            const res = {
                 location: branchSelect,
                 name: data.name,
                 surname: data.surname,
@@ -442,9 +428,7 @@ export const Register = () => {
                         </div>
                     </>
                 );
-<<<<<<< HEAD
-=======
-            case "parent" :
+            case "parent":
                 return (
                     <Select
                         onChangeOption={setBranchSelect}
@@ -453,7 +437,6 @@ export const Register = () => {
                         options={branches}
                     />
                 )
->>>>>>> bc2d6c00266c8913a86bd6dfb4ea0ec6527c4571
         }
     };
 
