@@ -104,6 +104,8 @@ export const TodoistPage = () => {
     const [selectedCreate, setSelectedCreate] = useState()
     const [selectedDeadlineFrom, setSelectedDeadlineFrom] = useState()
     const [selectedDeadlineTo, setSelectedDeadlineTo] = useState()
+    const [selectedTags, setSelectedTags] = useState([])
+    const [selectedCategory, setSelectedCategory] = useState("all")
 
     const [isHaveNot, setIsHaveNot] = useState(false)
     const [activePage, setActivePage] = useState("task")
@@ -135,36 +137,28 @@ export const TodoistPage = () => {
     useEffect(() => {
         if (userId && activeTaskType) {
             if (activePage === "task") {
+                console.log(selectedTags);
+
+                const props = {
+                    status: selectedStatus,
+                    created_at: selectedCreate,
+                    deadline_after: selectedDeadlineFrom,
+                    deadline_before: selectedDeadlineTo,
+                    category: selectedCategory,
+                    tags: selectedTags.length === 0 ? null : selectedTags.map(item => item.value)
+                }
                 if (activeTaskType === "myTasks") {
-                    dispatch(fetchTasks({
-                        executor: userId,
-                        status: selectedStatus,
-                        created_at: selectedCreate,
-                        deadline_after: selectedDeadlineFrom,
-                        deadline_before: selectedDeadlineTo
-                    }))
+                    dispatch(fetchTasks({ executor: userId, ...props }))
                 } else if (activeTaskType === "givenTask") {
-                    dispatch(fetchTasks({
-                        creator: userId,
-                        status: selectedStatus,
-                        created_at: selectedCreate,
-                        deadline_after: selectedDeadlineFrom,
-                        deadline_before: selectedDeadlineTo
-                    }))
+                    dispatch(fetchTasks({ creator: userId, ...props }))
                 } else {
-                    dispatch(fetchTasks({
-                        reviewer: userId,
-                        status: selectedStatus,
-                        created_at: selectedCreate,
-                        deadline_after: selectedDeadlineFrom,
-                        deadline_before: selectedDeadlineTo
-                    }))
+                    dispatch(fetchTasks({ reviewer: userId, ...props }))
                 }
             } else {
                 dispatch(fetchTaskNotifications({ role: activeNotificationType, user_id: userId }))
             }
         }
-    }, [userId, activeTaskType, activePage, activeNotificationType, selectedCreate, selectedDeadlineFrom, selectedDeadlineTo, selectedStatus])
+    }, [userId, activeTaskType, activePage, activeNotificationType, selectedCreate, selectedDeadlineFrom, selectedDeadlineTo, selectedStatus, selectedCategory, selectedTags])
 
     useEffect(() => {
         if (teachers && employers)
@@ -351,6 +345,7 @@ export const TodoistPage = () => {
                             msg: "Vazifa yaratildi"
                         }))
                         setModalType(null)
+                        setActiveTaskType("givenTask")
                     })
             })
             .catch(err => {
@@ -1252,6 +1247,32 @@ export const TodoistPage = () => {
                                     rows={3}
                                 />
                             </div>
+                            <div className={styles.formRow}>
+                                <div className={styles.formGroup}>
+                                    <label>Tags</label>
+                                    <AnimatedMulti
+                                        extraClass={styles.formGroup__multiSelect}
+                                        options={tagsList}
+                                        onChange={(e) => setFormData({ ...formData, tags: e })}
+                                        value={formData.tags}
+                                        fontSize={15}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Departmant</label>
+                                    <select
+                                        value={formData.category || "admin"}
+                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                        required
+                                    >
+                                        {
+                                            categoryList.map(item =>
+                                                <option value={item.id}>{item.name}</option>
+                                            )
+                                        }
+                                    </select>
+                                </div>
+                            </div>
                             {
                                 !(userLevel === 4) && (
                                     <div className={styles.formRow}>
@@ -1288,31 +1309,6 @@ export const TodoistPage = () => {
                                     </div>
                                 )
                             }
-                            <div className={styles.formRow}>
-                                <div className={styles.formGroup}>
-                                    <label>Tags</label>
-                                    <AnimatedMulti
-                                        options={tagsList}
-                                        onChange={(e) => setFormData({ ...formData, tags: e })}
-                                        value={formData.tags}
-                                        fontSize={15}
-                                    />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label>Departmant</label>
-                                    <select
-                                        value={formData.category || "admin"}
-                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                        required
-                                    >
-                                        {
-                                            categoryList.map(item =>
-                                                <option value={item.id}>{item.name}</option>
-                                            )
-                                        }
-                                    </select>
-                                </div>
-                            </div>
                             <div className={styles.formRow}>
                                 <div className={styles.formGroup}>
                                     <label>Status</label>
@@ -2077,15 +2073,34 @@ export const TodoistPage = () => {
                 <h1>Filter</h1>
                 <div className={styles.filter__container}>
                     <Select
+                        title={"Status"}
                         extraClass={styles.mainInput}
                         options={[{ id: "all", name: "Hammasi" }, ...statusList]}
                         onChangeOption={setSelectedStatus}
+                        value={selectedStatus}
                     />
-                    <Input
+                    {/* <Input
                         extraClassName={styles.mainInput}
                         title={"Created at"}
                         type={"date"}
                         onChange={(e) => setSelectedCreate(e.target.value)}
+                    /> */}
+                    <div className={styles.tags}>
+                        <span className={styles.tags__title}>Tags</span>
+                        <AnimatedMulti
+                            title={"Tags"}
+                            options={tagsList}
+                            onChange={setSelectedTags}
+                            value={selectedTags}
+                            fontSize={15}
+                        />
+                    </div>
+                    <Select
+                        title={"Departmant"}
+                        extraClass={styles.mainInput}
+                        options={[{ id: "all", name: "Hammasi" }, ...categoryList]}
+                        onChangeOption={setSelectedCategory}
+                        value={selectedCategory}
                     />
                     {/* <Input title={"Deadline"} /> */}
                     <div className={styles.dualInput}>
@@ -2112,6 +2127,8 @@ export const TodoistPage = () => {
                             setSelectedDeadlineFrom(null)
                             setSelectedDeadlineTo(null)
                             setSelectedStatus("all")
+                            setSelectedTags([])
+                            setSelectedCategory("all")
                         }}
                     >
                         Clear
