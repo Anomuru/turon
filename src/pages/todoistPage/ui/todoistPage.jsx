@@ -56,6 +56,8 @@ import { employersReducer } from "entities/employer/index.js";
 import { DynamicModuleLoader } from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import { DefaultLoader, DefaultPageLoader } from "shared/ui/defaultLoader/index.js";
 import { Button } from "shared/ui/button"
+import { Route, Routes, useNavigate } from "react-router"
+import { TodoProfile } from "./todoProfile/todoProfile"
 
 const reducers = {
     employers: employersReducer
@@ -78,6 +80,7 @@ export const TodoistPage = () => {
 
     const formDataImg = new FormData()
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { request } = useHttp()
     const { register, handleSubmit, setValue } = useForm()
 
@@ -107,6 +110,7 @@ export const TodoistPage = () => {
     const [selectedTags, setSelectedTags] = useState([])
     const [selectedCategory, setSelectedCategory] = useState("all")
 
+    const [selectedMultiTask, setSelectedMultiTask] = useState(null)
     const [isRedirected, setIsRedirected] = useState(false)
     const [selectedRedirect, setSelectedRedirect] = useState(null)
     const [isHaveNot, setIsHaveNot] = useState(false)
@@ -325,7 +329,7 @@ export const TodoistPage = () => {
     const onChangeRedirect = () => {
 
         const patch = {
-            executor: +selectedRedirect
+            executor_ids: [+selectedRedirect]
         }
 
         dispatch(taskLoading())
@@ -373,27 +377,27 @@ export const TodoistPage = () => {
         const post = {
             ...formData,
             tags: formData.tags.map(item => item.value),
-            // executor_ids: formData.executor_ids.map(item => item.value),
-            executor_ids: [Number(formData.executor_ids)],
+            executor_ids: formData.executor_ids.map(item => item.value),
+            // executor_ids: [Number(formData.executor_ids)],
             ...repeat,
         }
 
         dispatch(taskLoading())
         request(`${API_URL}Tasks/missions/`, "POST", JSON.stringify(post), headers())
             .then(res => {
-                res.map(item => {
-                    request(`${API_URL}Tasks/missions/${item.id}/`, "GET", null, headers())
-                        .then(res => {
-                            dispatch(addTask(res))
-                            dispatch(onAddAlertOptions({
-                                status: true,
-                                type: "success",
-                                msg: "Vazifa yaratildi"
-                            }))
-                            setModalType(null)
-                            setActiveTaskType("givenTask")
-                        })
-                })
+                // res.map(item => {
+                //     request(`${API_URL}Tasks/missions/${item.id}/`, "GET", null, headers())
+                //         .then(res => {
+                dispatch(addTask(res))
+                dispatch(onAddAlertOptions({
+                    status: true,
+                    type: "success",
+                    msg: "Vazifa yaratildi"
+                }))
+                setModalType(null)
+                setActiveTaskType("givenTask")
+                //         })
+                // })
             })
             .catch(err => {
                 dispatch(onAddAlertOptions({
@@ -1134,6 +1138,25 @@ export const TodoistPage = () => {
                                 />
                             </div>
                         </div>
+                        {
+                            (selectedMultiTask && selectedMultiTask.children) && (
+                                <div className={styles.multiTitle}>
+                                    <h2
+                                        className={styles.multiTitle__inner}
+                                    >
+                                        {selectedMultiTask.title}
+                                        {" "}
+                                        - Task Series
+                                    </h2>
+                                    <Button
+                                        extraClass={styles.multiTitle__back}
+                                        onClick={() => setSelectedMultiTask(null)}
+                                    >
+                                        Orqaga
+                                    </Button>
+                                </div>
+                            )
+                        }
                         <div
                             className={classNames(styles.grid, {
                                 [styles.loading]: tasksLoading || notificationsLoading,
@@ -1145,95 +1168,235 @@ export const TodoistPage = () => {
                                     ?
                                     tasksLoading
                                         ? <DefaultPageLoader status={"none"} />
-                                        : sortTasks(tasks).map((task) => (
-                                            <div
-                                                key={task.id}
-                                                className={styles.card}
-                                                style={
-                                                    task.status === "completed"
-                                                        ? null
-                                                        : {
-                                                            "background": task.deadline_color === "red"
-                                                                ? "rgba(255, 0, 0, 0.12)"
-                                                                : task.deadline_color === "green"
-                                                                    ? "rgba(0, 255, 0, 0.12)"
-                                                                    : "rgba(255, 255, 0, 0.2)"
+                                        : selectedMultiTask && selectedMultiTask.children
+                                            ? sortTasks(selectedMultiTask?.children).map((task) => (
+                                                <div
+                                                    key={task.id}
+                                                    className={styles.card}
+                                                    style={
+                                                        task.status === "completed"
+                                                            ? null
+                                                            : {
+                                                                "background": task.deadline_color === "red"
+                                                                    ? "rgba(255, 0, 0, 0.12)"
+                                                                    : task.deadline_color === "green"
+                                                                        ? "rgba(0, 255, 0, 0.12)"
+                                                                        : "rgba(255, 255, 0, 0.2)"
+                                                            }
+                                                    }
+                                                >
+                                                    <div className={styles.cardHeader}>
+                                                        <h3 className={styles.cardTitle}>{task.title}</h3>
+                                                        {
+                                                            task?.children?.length === 1 && (
+                                                                <span
+                                                                    className={styles.status}
+                                                                    style={{ color: getStatusColor(task.status) }}
+                                                                    onClick={() => task?.children?.length === 1 && openChangeStatusModal(task)}
+                                                                >
+                                                                    {statusList.filter(item => item.id === task.status)[0]?.name}
+                                                                </span>
+                                                            )
                                                         }
-                                                }
-                                            >
-                                                <div className={styles.cardHeader}>
-                                                    <h3 className={styles.cardTitle}>{task.title}</h3>
-                                                    <span
-                                                        className={styles.status}
-                                                        style={{ color: getStatusColor(task.status) }}
-                                                        onClick={() => openChangeStatusModal(task)}
-                                                    >
-                                                        {statusList.filter(item => item.id === task.status)[0]?.name}
-                                                    </span>
-                                                </div>
-                                                <p className={styles.cardText}>
-                                                    <strong>Executor:</strong> {task.executor.full_name}
-                                                </p>
-                                                <p className={styles.cardText}>
-                                                    <strong>Deadline:</strong> {task.deadline}
-                                                </p>
-                                                <div className={styles.tags}>
-                                                    {
-                                                        task.tags.length > 3
-                                                            ? <>
-                                                                {
-                                                                    task.tags.slice(0, 3).map((tagId) => {
-                                                                        // const tag = tags.find((t) => t.id === tagId)
-                                                                        return (
-                                                                            <span key={tagId.id} className={styles.tag}>
-                                                                                {tagId?.name}
-                                                                            </span>
-                                                                        )
-                                                                    })
-                                                                }
-                                                                <p className={styles.tags__inner}>+{task.tags.length - 3}</p>
-                                                            </>
-                                                            : task.tags.map((tagId) => {
-                                                                // const tag = tags.find((t) => t.id === tagId)
-                                                                return (
-                                                                    <span key={tagId.id} className={styles.tag}>
-                                                                        {tagId?.name}
-                                                                    </span>
-                                                                )
-                                                            })
-                                                    }
-                                                </div>
-                                                <div className={styles.cardActions}>
-                                                    {
-                                                        task.executor.id === userId && (
-                                                            <button
-                                                                className={styles.btnRedirected}
-                                                                onClick={() => openRedirectModal(task)}
-                                                            >
-                                                                Redirected
-                                                            </button>
-                                                        )
-                                                    }
-                                                    <button className={styles.btnView} onClick={() => openViewTaskModal(task)}>
-                                                        View More
-                                                    </button>
-                                                    {
-                                                        task.creator.id === userId && (
-                                                            <>
-                                                                <button className={styles.btnEdit}
-                                                                    onClick={() => openEditTaskModal(task)}>
-                                                                    Edit
+                                                    </div>
+                                                    <p className={styles.cardText}>
+                                                        <strong>
+                                                            {
+                                                                task?.children?.length === 1
+                                                                    ? "Executor"
+                                                                    : "Executors"
+                                                            }:
+                                                        </strong>
+                                                        {" "}
+                                                        {
+                                                            task?.children?.length !== 1 && task?.children?.length
+                                                                ? `${task?.executor?.full_name}  +${task?.children?.length - 1}`
+                                                                : task.executor.full_name
+                                                        }
+                                                    </p>
+                                                    <p className={styles.cardText}>
+                                                        <strong>Deadline:</strong> {task.deadline}
+                                                    </p>
+                                                    <div className={styles.tags}>
+                                                        {
+                                                            task.tags.length > 3
+                                                                ? <>
+                                                                    {
+                                                                        task.tags.slice(0, 3).map((tagId) => {
+                                                                            // const tag = tags.find((t) => t.id === tagId)
+                                                                            return (
+                                                                                <span key={tagId.id} className={styles.tag}>
+                                                                                    {tagId?.name}
+                                                                                </span>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                    <p className={styles.tags__inner}>+{task.tags.length - 3}</p>
+                                                                </>
+                                                                : task.tags.map((tagId) => {
+                                                                    // const tag = tags.find((t) => t.id === tagId)
+                                                                    return (
+                                                                        <span key={tagId.id} className={styles.tag}>
+                                                                            {tagId?.name}
+                                                                        </span>
+                                                                    )
+                                                                })
+                                                        }
+                                                    </div>
+                                                    <div className={styles.cardActions}>
+                                                        {
+                                                            (task.executor.id === userId || task.creator.id === userId) && (
+                                                                <button
+                                                                    className={styles.btnRedirected}
+                                                                    onClick={() => openRedirectModal(task)}
+                                                                >
+                                                                    Redirected
                                                                 </button>
-                                                                <button className={styles.btnDelete}
-                                                                    onClick={() => openDeleteTaskModal(task)}>
-                                                                    Delete
-                                                                </button>
-                                                            </>
-                                                        )
-                                                    }
+                                                            )
+                                                        }
+                                                        <button
+                                                            className={styles.btnView}
+                                                            onClick={() =>
+                                                                task?.children?.length === 1
+                                                                    ? openViewTaskModal(task)
+                                                                    : setSelectedMultiTask(task)
+                                                            }
+                                                        >
+                                                            View More
+                                                        </button>
+                                                        {
+                                                            (task.creator.id === userId) && (
+                                                                <>
+                                                                    <button
+                                                                        className={styles.btnEdit}
+                                                                        onClick={() => openEditTaskModal(task)}
+                                                                    >
+                                                                        Edit
+                                                                    </button>
+                                                                    <button
+                                                                        className={styles.btnDelete}
+                                                                        onClick={() => openDeleteTaskModal(task)}
+                                                                    >
+                                                                        Delete
+                                                                    </button>
+                                                                </>
+                                                            )
+                                                        }
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))
+                                            ))
+                                            : sortTasks(tasks).map((task) => (
+                                                <div
+                                                    key={task.id}
+                                                    className={styles.card}
+                                                    style={
+                                                        task.status === "completed"
+                                                            ? null
+                                                            : {
+                                                                "background": task.deadline_color === "red"
+                                                                    ? "rgba(255, 0, 0, 0.12)"
+                                                                    : task.deadline_color === "green"
+                                                                        ? "rgba(0, 255, 0, 0.12)"
+                                                                        : "rgba(255, 255, 0, 0.2)"
+                                                            }
+                                                    }
+                                                >
+                                                    <div className={styles.cardHeader}>
+                                                        <h3 className={styles.cardTitle}>{task.title}</h3>
+                                                        {
+                                                            task?.children?.length === 1 && (
+                                                                <span
+                                                                    className={styles.status}
+                                                                    style={{ color: getStatusColor(task.status) }}
+                                                                    onClick={() => task?.children?.length === 1 && openChangeStatusModal(task)}
+                                                                >
+                                                                    {statusList.filter(item => item.id === task.status)[0]?.name}
+                                                                </span>
+                                                            )
+                                                        }
+                                                    </div>
+                                                    <p className={styles.cardText}>
+                                                        <strong>
+                                                            {
+                                                                task?.children?.length === 1
+                                                                    ? "Executor"
+                                                                    : "Executors"
+                                                            }:
+                                                        </strong>
+                                                        {" "}
+                                                        {
+                                                            task?.children?.length !== 1 && task?.children?.length
+                                                                ? `${task?.executor?.full_name}  +${task?.children?.length - 1}`
+                                                                : task.executor.full_name
+                                                        }
+                                                    </p>
+                                                    <p className={styles.cardText}>
+                                                        <strong>Deadline:</strong> {task.deadline}
+                                                    </p>
+                                                    <div className={styles.tags}>
+                                                        {
+                                                            task.tags.length > 3
+                                                                ? <>
+                                                                    {
+                                                                        task.tags.slice(0, 3).map((tagId) => {
+                                                                            // const tag = tags.find((t) => t.id === tagId)
+                                                                            return (
+                                                                                <span key={tagId.id} className={styles.tag}>
+                                                                                    {tagId?.name}
+                                                                                </span>
+                                                                            )
+                                                                        })
+                                                                    }
+                                                                    <p className={styles.tags__inner}>+{task.tags.length - 3}</p>
+                                                                </>
+                                                                : task.tags.map((tagId) => {
+                                                                    // const tag = tags.find((t) => t.id === tagId)
+                                                                    return (
+                                                                        <span key={tagId.id} className={styles.tag}>
+                                                                            {tagId?.name}
+                                                                        </span>
+                                                                    )
+                                                                })
+                                                        }
+                                                    </div>
+                                                    <div className={styles.cardActions}>
+                                                        {
+                                                            (task.executor.id === userId || task.creator.id === userId) && (
+                                                                <button
+                                                                    className={styles.btnRedirected}
+                                                                    onClick={() => openRedirectModal(task)}
+                                                                >
+                                                                    Redirected
+                                                                </button>
+                                                            )
+                                                        }
+                                                        <button
+                                                            className={styles.btnView}
+                                                            onClick={() =>
+                                                                task?.children?.length === 1
+                                                                    ? openViewTaskModal(task)
+                                                                    : setSelectedMultiTask(task)
+                                                            }
+                                                        >
+                                                            View More
+                                                        </button>
+                                                        {
+                                                            (task.creator.id === userId && task?.children?.length === 1) && (
+                                                                <>
+                                                                    <button className={styles.btnEdit}
+                                                                        onClick={() => openEditTaskModal(task)}>
+                                                                        Edit
+                                                                    </button>
+                                                                    <button className={styles.btnDelete}
+                                                                        onClick={() => openDeleteTaskModal(task)}>
+                                                                        Delete
+                                                                    </button>
+                                                                </>
+                                                            )
+                                                        }
+                                                    </div>
+                                                </div>
+                                            ))
                                     :
                                     notificationsLoading
                                         ? <DefaultPageLoader status={"none"} />
@@ -1305,49 +1468,52 @@ export const TodoistPage = () => {
                                     rows={3}
                                 />
                             </div>
-                            <div className={styles.formRow}>
-                                <div className={styles.formGroup}>
-                                    <label>Tags</label>
-                                    <AnimatedMulti
-                                        extraClass={styles.formGroup__multiSelect}
-                                        options={tagsList}
-                                        onChange={(e) => setFormData({ ...formData, tags: e })}
-                                        value={formData.tags}
-                                        fontSize={15}
-                                    />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label>Departmant</label>
-                                    <select
-                                        value={formData.category || "admin"}
-                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                        required
-                                    >
-                                        {
-                                            categoryList.map(item =>
-                                                <option value={item.id}>{item.name}</option>
-                                            )
-                                        }
-                                    </select>
-                                </div>
+                            {/* <div className={styles.formRow}> */}
+                            <div className={styles.formGroup}>
+                                <label>Tags</label>
+                                <AnimatedMulti
+                                    extraClass={styles.formGroup__multiSelect}
+                                    options={tagsList}
+                                    onChange={(e) => setFormData({ ...formData, tags: e })}
+                                    value={formData.tags}
+                                    fontSize={15}
+                                />
                             </div>
+                            <div className={styles.formGroup}>
+                                <label>Departmant</label>
+                                <select
+                                    value={formData.category || "admin"}
+                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                    required
+                                >
+                                    {
+                                        categoryList.map(item =>
+                                            <option value={item.id}>{item.name}</option>
+                                        )
+                                    }
+                                </select>
+                            </div>
+                            {/* </div> */}
                             {
                                 !(userLevel === 4) && (
-                                    <div className={styles.formRow}>
-                                        <div className={styles.formGroup}>
-                                            <label>Executor</label>
-                                            {/* <AnimatedMulti
-                                                extraClass={styles.formGroup__multiSelect}
-                                                options={
-                                                    teachersList
-                                                        .filter(item => item.id !== userId)
-                                                        .map(item => ({ value: item.id, label: item.name }))
-                                                }
-                                                onChange={(e) => setFormData({ ...formData, executor_ids: e })}
-                                                value={formData.executor_ids}
-                                                fontSize={15}
-                                            /> */}
-                                            <select
+                                    // <div className={styles.formRow}>
+                                    <>
+                                        {
+                                            modalType !== "editTask" && (
+                                                <div className={styles.formGroup}>
+                                                    <label>Executor</label>
+                                                    <AnimatedMulti
+                                                        extraClass={styles.formGroup__multiSelect}
+                                                        options={
+                                                            teachersList
+                                                                .filter(item => item.id !== userId)
+                                                                .map(item => ({ value: item.id, label: item.name }))
+                                                        }
+                                                        onChange={(e) => setFormData({ ...formData, executor_ids: e })}
+                                                        value={formData.executor_ids}
+                                                        fontSize={15}
+                                                    />
+                                                    {/* <select
                                                 value={typeof formData.executor === "object" ? formData.executor.id : formData.executor_ids || "none"}
                                                 onChange={(e) => setFormData({ ...formData, executor_ids: e.target.value })}
                                                 required
@@ -1358,8 +1524,10 @@ export const TodoistPage = () => {
                                                         <option value={item.id}>{item.name}</option>
                                                     )
                                                 }
-                                            </select>
-                                        </div>
+                                            </select> */}
+                                                </div>
+                                            )
+                                        }
                                         <div className={styles.formGroup}>
                                             <label>Reviewer</label>
                                             <select
@@ -1375,34 +1543,35 @@ export const TodoistPage = () => {
                                                 }
                                             </select>
                                         </div>
-                                    </div>
+                                    </>
+                                    // </div>
                                 )
                             }
-                            <div className={styles.formRow}>
-                                <div className={styles.formGroup}>
-                                    <label>Status</label>
-                                    <select
-                                        value={formData.status || "not_started"}
-                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                        required
-                                    >
-                                        {
-                                            statusList.map(item =>
-                                                <option value={item.id}>{item.name}</option>
-                                            )
-                                        }
-                                    </select>
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label>Deadline</label>
-                                    <input
-                                        type="date"
-                                        value={formData.deadline || ""}
-                                        onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                                        required
-                                    />
-                                </div>
+                            {/* <div className={styles.formRow}> */}
+                            <div className={styles.formGroup}>
+                                <label>Status</label>
+                                <select
+                                    value={formData.status || "not_started"}
+                                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                    required
+                                >
+                                    {
+                                        statusList.map(item =>
+                                            <option value={item.id}>{item.name}</option>
+                                        )
+                                    }
+                                </select>
                             </div>
+                            <div className={styles.formGroup}>
+                                <label>Deadline</label>
+                                <input
+                                    type="date"
+                                    value={formData.deadline || ""}
+                                    onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                                    required
+                                />
+                            </div>
+                            {/* </div> */}
                             <div className={styles.formGroup}>
                                 <label>
                                     <input
