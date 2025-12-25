@@ -67,7 +67,13 @@ const todoistSlice = createSlice({
             state.notificationLoading = false
         },
         addTask: (state, action) => {
-            state.tasks = [action.payload, ...state.tasks]
+            state.tasks = [
+                {
+                    children: action.payload,
+                    ...action.payload[0]
+                },
+                ...state.tasks
+            ]
             state.taskLoading = false
         },
         editTask: (state, action) => {

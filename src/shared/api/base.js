@@ -1,4 +1,3 @@
-
 // export const API_URL_DOC = `http://192.168.0.101:8000/`
 // export const API_URL_DOC = `http://26.196.249.247:8000/`
 // export const API_URL_DOC = `http://26.253.30.50:8000/`//
@@ -18,7 +17,6 @@ export const headers = () => {
         'Content-Type': 'application/json'
     }
 }
-
 
 
 export const header = () => {
@@ -55,9 +53,9 @@ export const branchQueryId = () => {
 
 
 export const useHttp = () => {
-    const request = async (url, method = 'GET', body = null, headers = { 'Content-Type': 'application/json' }) => {
+    const request = async (url, method = 'GET', body = null, headers = {'Content-Type': 'application/json'}) => {
         try {
-            const response = await fetch(url, { method, mode: 'cors', body, headers });
+            const response = await fetch(url, {method, mode: 'cors', body, headers});
 
             if (!response.ok) {
                 throw new Error(`Could not fetch ${url}, status: ${response.status}`);
@@ -70,23 +68,26 @@ export const useHttp = () => {
         }
     }
 
-    return { request }
+    return {request}
 }
 
-export const ParamUrl = (params) => {
-    const paramsList = Object.keys(params);
-    let res = '';
+export const ParamUrl = (params = {}) => {
+    return Object.entries(params)
+        .filter(([_, value]) =>
+            value !== undefined &&
+            value !== null &&
+            value !== "all" &&
+            value !== ""
+        )
+        .map(([key, value]) => {
+            if (Array.isArray(value)) {
+                // массив → без кодирования запятых
+                return `${encodeURIComponent(key)}=${value.join(",")}`;
+            }
 
-    for (let i = 0; i < paramsList.length; i++) {
-        const key = paramsList[i];
-        const value = params[key];
-
-        if (value !== undefined && value !== null && value !== "all" && value !== "") {
-            res += `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}&`;
-        }
-    }
-
-    return res.slice(0, -1);
+            return `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`;
+        })
+        .join("&");
 };
 
 
