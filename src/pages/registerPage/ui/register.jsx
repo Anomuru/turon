@@ -248,7 +248,7 @@ export const Register = () => {
             registerAction = registerEmployer(res2);
         } else if (registerType === "parent") {
             const res ={
-                location: branchSelect,
+                location: branchID,
                 name: data.name,
                 surname: data.surname,
                 username: data.username,
@@ -428,15 +428,15 @@ export const Register = () => {
                         </div>
                     </>
                 );
-            case "parent" :
-                return (
-                    <Select
-                        onChangeOption={setBranchSelect}
-                        extraClass={cls.extraClasses}
-                        title={"O'quv markazi joylashuvi"}
-                        options={branches}
-                    />
-                )
+            // case "parent" :
+            //     return (
+            //         <Select
+            //             onChangeOption={setBranchSelect}
+            //             extraClass={cls.extraClasses}
+            //             title={"O'quv markazi joylashuvi"}
+            //             options={branches}
+            //         />
+            //     )
         }
     };
 

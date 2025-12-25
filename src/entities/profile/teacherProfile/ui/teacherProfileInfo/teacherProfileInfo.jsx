@@ -160,6 +160,15 @@ export const TeacherProfileInfo = memo(({active, setActive, setActiveModal, newI
                                     <h1 style={{color: "#1E40AF"}}>{teacherId?.face_id}</h1>
                                 </div>
                             </div>
+                            <div onClick={() => navigate(`../teacherAttendance/${teacherId.id}`)} style={{background: "#E3EFFE", border: "2px solid #3B82F6"}} className={cls.info__teacherSource__footer__card}>
+                                <span style={{background: "#3B82F6"}}>
+                                    <i className="fa-solid fa-clipboard-user"></i>
+                                </span>
+                                <div className={cls.info__teacherSource__footer__card__arounder}>
+                                    <h2 style={{color: "#4A63EB"}}>View</h2>
+                                    <h1 style={{color: "#1E40AF"}}>Attendance</h1>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <TeacherEdit

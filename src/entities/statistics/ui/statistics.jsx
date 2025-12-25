@@ -166,7 +166,7 @@ const Student_payments = ({data}) => (
                 <tr key={i}>
                     <td>{i + 1}</td>
                     <td>{item.name} {item.surname}</td>
-                    <td>{formatSum(item.payment_sum)}</td>
+                    <td>{formatSum(item.payment_sum1)}</td>
                     <td>{item.payment}</td>
                 </tr>
             ))}
@@ -192,9 +192,9 @@ const Teacher_salaries = ({data}) => (
                 <tr key={i}>
                     <td>{i + 1}</td>
                     <td>{item.name} {item.surname}</td>
-                    <td>{item.salary}</td>
-                    <td>{item.payment}</td>
-                    <td>{item.comment}</td>
+                    <td>{item.salary1}</td>
+                    <td>{item.payment1}</td>
+                    <td>{item.comment1}</td>
                 </tr>
             ))}
             </tbody>
@@ -219,9 +219,9 @@ const User_salaries = ({data}) => (
                 <tr key={i}>
                     <td>{i + 1}</td>
                     <td>{item.name} {item.surname}</td>
-                    <td>{formatSum(item.salary)}</td>
+                    <td>{formatSum(item.salary1)}</td>
                     <td>{item.payment}</td>
-                    <td>{item.comment}</td>
+                    <td>{item.comment1}</td>
                 </tr>
             ))}
             </tbody>

@@ -1,3 +1,6 @@
+import {DailyReportPage} from "pages/dailyReportPage/index.js";
+import {ParentsPage} from "pages/parentsPage/ui/parentsPage.jsx";
+import {TeacherAttendanceView} from "pages/teacherAttendanceView/index.js";
 import React from "react";
 
 import {
@@ -172,5 +175,20 @@ export const routersConfigList = [
         path: `Statistics/`,
         element: <StatisticsPage/>,
     },
+    {
+        name: "parents",
+        path: `parents/`,
+        element: <ParentsPage/>,
+    },
+    {
+        name: "teacherAttendanceView",
+        path: `teacherAttendance/:id`,
+        element: <TeacherAttendanceView/>,
+    },
+    {
+        name: "daily report",
+        path: "dailyReport",
+        element: <DailyReportPage/>
+    }
 
 ]

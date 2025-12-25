@@ -1,8 +1,10 @@
 import {Statistics} from "entities/statistics/index.js";
 import {statisticsReducer} from "entities/statistics/model/statisticsSlice.js";
+import {useNavigate} from "react-router";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {useDispatch, useSelector} from "react-redux";
 import {getStatistics, getStatisticsLoading} from "entities/statistics/model/statisticsSelector.js";
+import {Button} from "shared/ui/button/index.js";
 import {Input} from "shared/ui/input/index.js";
 
 import cls from "./statisticsPage.module.sass"
@@ -23,6 +25,7 @@ export const StatisticsPage = () => {
     const data = useSelector(getStatistics);
     const loading = useSelector(getStatisticsLoading);
 
+    const navigate = useNavigate()
     const today = new Date().toISOString().slice(0, 10);
     const [from, setFrom] = useState(today);
     const [to, setTo] = useState(today);
@@ -59,6 +62,7 @@ export const StatisticsPage = () => {
     return (
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.statistics}>
+                <Button onClick={() => navigate(`../dailyReport`)} extraClass={cls.button} type={"filter"}>Kunlik hisobot</Button>
                 <Input
                     value={from}
                     onChange={(e) => setFrom(e.target.value)}

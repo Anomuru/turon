@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { useForm } from "react-hook-form"
+import {useEffect, useState} from "react"
+import {useDispatch, useSelector} from "react-redux"
+import {useForm} from "react-hook-form"
 import classNames from "classnames"
 
 import {
@@ -34,43 +34,43 @@ import {
     taskTagsLoading,
     taskTagsLoadingStop
 } from "../model/todoistSlice"
-import { fetchTaskNotifications, fetchTaskProfile, fetchTasks, fetchTaskTags } from "../model/todoistThunk"
-import { API_URL, headerImg, headers, useHttp } from "shared/api/base"
-import { onAddAlertOptions } from "features/alert"
-import { getUserId } from "pages/loginPage"
-import { Modal } from "shared/ui/modal"
-import { Form } from "shared/ui/form"
-import { Input } from "shared/ui/input"
-import { Textarea } from "shared/ui/textArea"
-import { ConfirmModal } from "shared/ui/confirmModal"
-import { Select } from "shared/ui/select"
-import { MiniLoader } from "shared/ui/miniLoader"
+import {fetchTaskNotifications, fetchTaskProfile, fetchTasks, fetchTaskTags} from "../model/todoistThunk"
+import {API_URL, headerImg, headers, useHttp} from "shared/api/base"
+import {onAddAlertOptions} from "features/alert"
+import {getUserId} from "pages/loginPage"
+import {Modal} from "shared/ui/modal"
+import {Form} from "shared/ui/form"
+import {Input} from "shared/ui/input"
+import {Textarea} from "shared/ui/textArea"
+import {ConfirmModal} from "shared/ui/confirmModal"
+import {Select} from "shared/ui/select"
+import {MiniLoader} from "shared/ui/miniLoader"
 
 import styles from "./todoistPage.module.sass"
-import { fetchTeachersData, getTeacherData } from "entities/oftenUsed"
-import { getUserBranchId, getUserLevel } from "entities/profile/userProfile"
-import { AnimatedMulti } from "features/workerSelect"
-import { fetchEmployersData, fetchEmployersDataWithoutPagination } from "entities/employer/model/slice/employersThunk.js";
-import { getEmployersData } from "entities/employer/model/selector/employersSelector.js";
-import { employersReducer } from "entities/employer/index.js";
-import { DynamicModuleLoader } from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
-import { DefaultLoader, DefaultPageLoader } from "shared/ui/defaultLoader/index.js";
-import { Button } from "shared/ui/button"
+import {fetchTeachersData, getTeacherData} from "entities/oftenUsed"
+import {getUserBranchId, getUserLevel} from "entities/profile/userProfile"
+import {AnimatedMulti} from "features/workerSelect"
+import {fetchEmployersData, fetchEmployersDataWithoutPagination} from "entities/employer/model/slice/employersThunk.js";
+import {getEmployersData} from "entities/employer/model/selector/employersSelector.js";
+import {employersReducer} from "entities/employer/index.js";
+import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {Button} from "shared/ui/button"
 
 const reducers = {
     employers: employersReducer
 }
 
 const TASK_TYPES = [
-    { id: "myTasks", name: "Menig vazifalarim" },
-    { id: "givenTask", name: "Bergan vazifalarim" },
-    { id: "viewTasks", name: "Tekshirish vazifalari" },
+    {id: "myTasks", name: "Menig vazifalarim"},
+    {id: "givenTask", name: "Bergan vazifalarim"},
+    {id: "viewTasks", name: "Tekshirish vazifalari"},
 ]
 
 const NOTIFICATION_TYPES = [
-    { id: "executor", name: "Menig vazifalarim" },
-    { id: "creator", name: "Bergan vazifalarim" },
-    { id: "reviewer", name: "Tekshirish vazifalari" },
+    {id: "executor", name: "Menig vazifalarim"},
+    {id: "creator", name: "Bergan vazifalarim"},
+    {id: "reviewer", name: "Tekshirish vazifalari"},
 ]
 
 export const TodoistPage = () => {
@@ -78,8 +78,8 @@ export const TodoistPage = () => {
 
     const formDataImg = new FormData()
     const dispatch = useDispatch()
-    const { request } = useHttp()
-    const { register, handleSubmit, setValue } = useForm()
+    const {request} = useHttp()
+    const {register, handleSubmit, setValue} = useForm()
 
     const userBranchId = useSelector(getUserBranchId)
     const userLevel = useSelector(getUserLevel)
@@ -128,7 +128,7 @@ export const TodoistPage = () => {
         if (userBranchId) {
             dispatch(fetchTaskTags())
             dispatch(fetchTeachersData(userBranchId))
-            dispatch(fetchEmployersDataWithoutPagination({ branch: userBranchId, level: userLevel }))
+            dispatch(fetchEmployersDataWithoutPagination({branch: userBranchId, level: userLevel}))
         }
     }, [userBranchId])
 
@@ -161,7 +161,7 @@ export const TodoistPage = () => {
                     }))
                 }
             } else {
-                dispatch(fetchTaskNotifications({ role: activeNotificationType, user_id: userId }))
+                dispatch(fetchTaskNotifications({role: activeNotificationType, user_id: userId}))
             }
         }
     }, [userId, activeTaskType, activePage, activeNotificationType, selectedCreate, selectedDeadlineFrom, selectedDeadlineTo, selectedStatus])
@@ -184,7 +184,7 @@ export const TodoistPage = () => {
         if (tags) {
             setTagsList(
                 tags.map(item =>
-                    ({ value: item.id, label: item.name })
+                    ({value: item.id, label: item.name})
                 )
             )
         }
@@ -214,7 +214,7 @@ export const TodoistPage = () => {
         setSelectedTask(task)
         setFormData({
             ...task,
-            tags: task.tags && task.tags.map(item => ({ value: item.id, label: item.name }))
+            tags: task.tags && task.tags.map(item => ({value: item.id, label: item.name}))
         })
         setModalType("editTask")
     }
@@ -223,7 +223,7 @@ export const TodoistPage = () => {
         setSelectedTask(task)
         setFormData({
             ...task,
-            tags: task.tags && task.tags.map(item => ({ value: item.id, label: item.name }))
+            tags: task.tags && task.tags.map(item => ({value: item.id, label: item.name}))
         })
         setModalType("changeStatus")
     }
@@ -265,7 +265,7 @@ export const TodoistPage = () => {
 
         dispatch(notificationLoading())
 
-        request(`${API_URL}Tasks/notifications/${id}/`, "PATCH", JSON.stringify({ is_read: isRead }), headers())
+        request(`${API_URL}Tasks/notifications/${id}/`, "PATCH", JSON.stringify({is_read: isRead}), headers())
             .then(res => {
                 dispatch(editNotification(res))
                 dispatch(onAddAlertOptions({
@@ -430,7 +430,7 @@ export const TodoistPage = () => {
 
     const handleChangeStatus = () => {
         dispatch(taskLoading())
-        request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify({ status: formData.status }), headers())
+        request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify({status: formData.status}), headers())
             .then(res => {
                 request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
                     .then(res => {
@@ -464,7 +464,7 @@ export const TodoistPage = () => {
     // Tag CRUD operations
     const handleCreateTag = () => {
         dispatch(taskTagsLoading())
-        request(`${API_URL}Tasks/tags/`, "POST", JSON.stringify({ name: tagFormData }), headers())
+        request(`${API_URL}Tasks/tags/`, "POST", JSON.stringify({name: tagFormData}), headers())
             .then(res => {
                 dispatch(addTag(res))
                 dispatch(onAddAlertOptions({
@@ -488,7 +488,7 @@ export const TodoistPage = () => {
 
     const handleEditTag = () => {
         dispatch(taskTagsLoading())
-        request(`${API_URL}Tasks/tags/${selectedTag.id}/`, "PATCH", JSON.stringify({ name: tagFormData }), headers())
+        request(`${API_URL}Tasks/tags/${selectedTag.id}/`, "PATCH", JSON.stringify({name: tagFormData}), headers())
             .then(res => {
                 dispatch(editTag(res))
                 dispatch(onAddAlertOptions({
@@ -606,7 +606,7 @@ export const TodoistPage = () => {
 
         request(`${API_URL}Tasks/subtasks/${nestedFormData.id}`, "DELETE", null, headers())
             .then(res => {
-                dispatch(deleteSubTasks({ mission: selectedTask.id, subtask: nestedFormData.id }))
+                dispatch(deleteSubTasks({mission: selectedTask.id, subtask: nestedFormData.id}))
                 setSelectedTask({
                     ...selectedTask,
                     subtasks: selectedTask.subtasks.filter((s) => s.id !== nestedFormData.id),
@@ -632,7 +632,7 @@ export const TodoistPage = () => {
 
         dispatch(taskProfileLoading("subtasks"))
 
-        request(`${API_URL}Tasks/subtasks/${id}/`, "PATCH", JSON.stringify({ is_done: !isDone }), headers())
+        request(`${API_URL}Tasks/subtasks/${id}/`, "PATCH", JSON.stringify({is_done: !isDone}), headers())
             .then(res => {
                 dispatch(editSubTasks(res))
                 setSelectedTask({
@@ -737,7 +737,7 @@ export const TodoistPage = () => {
 
         request(`${API_URL}Tasks/attachments/${nestedFormData.id}`, "DELETE", null, headers())
             .then(res => {
-                dispatch(deleteAttachments({ mission: selectedTask.id, attachment: nestedFormData.id }))
+                dispatch(deleteAttachments({mission: selectedTask.id, attachment: nestedFormData.id}))
                 setSelectedTask({
                     ...selectedTask,
                     attachments: selectedTask.attachments.filter((s) => s.id !== nestedFormData.id),
@@ -843,7 +843,7 @@ export const TodoistPage = () => {
 
         request(`${API_URL}Tasks/comments/${nestedFormData.id}`, "DELETE", null, headers())
             .then(res => {
-                dispatch(deleteComments({ mission: selectedTask.id, comment: nestedFormData.id }))
+                dispatch(deleteComments({mission: selectedTask.id, comment: nestedFormData.id}))
                 setSelectedTask({
                     ...selectedTask,
                     comments: selectedTask.comments.filter((s) => s.id !== nestedFormData.id),
@@ -945,7 +945,7 @@ export const TodoistPage = () => {
 
         request(`${API_URL}Tasks/proofs/${nestedFormData.id}`, "DELETE", null, headers())
             .then(res => {
-                dispatch(deleteProofs({ mission: selectedTask.id, proof: nestedFormData.id }))
+                dispatch(deleteProofs({mission: selectedTask.id, proof: nestedFormData.id}))
                 setSelectedTask({
                     ...selectedTask,
                     proofs: selectedTask.proofs.filter((s) => s.id !== nestedFormData.id),
@@ -989,7 +989,7 @@ export const TodoistPage = () => {
             green: 2
         };
 
-        return [...data].sort((a, b) => {
+        return data?.length && [...data]?.sort((a, b) => {
             // completed всегда в самый низ
             if (a.status === "completed" && b.status !== "completed") return 1;
             if (b.status === "completed" && a.status !== "completed") return -1;
@@ -1004,7 +1004,6 @@ export const TodoistPage = () => {
             return aVal - bVal;
         });
     }
-
 
 
     const getStatusColor = (status) => {
@@ -1070,7 +1069,7 @@ export const TodoistPage = () => {
                                     Notifications
                                     {
                                         isHaveNot && (
-                                            <div className={styles.dott} />
+                                            <div className={styles.dott}/>
                                         )
                                     }
                                 </span>
@@ -1101,8 +1100,8 @@ export const TodoistPage = () => {
                                 activePage === "task"
                                     ?
                                     tasksLoading
-                                        ? <DefaultPageLoader status={"none"} />
-                                        : sortTasks(tasks).map((task) => (
+                                        ? <DefaultPageLoader status={"none"}/>
+                                        : sortTasks(tasks)?.map((task) => (
                                             <div
                                                 key={task.id}
                                                 className={styles.card}
@@ -1122,7 +1121,7 @@ export const TodoistPage = () => {
                                                     <h3 className={styles.cardTitle}>{task.title}</h3>
                                                     <span
                                                         className={styles.status}
-                                                        style={{ color: getStatusColor(task.status) }}
+                                                        style={{color: getStatusColor(task.status)}}
                                                         onClick={() => openChangeStatusModal(task)}
                                                     >
                                                         {statusList.filter(item => item.id === task.status)[0]?.name}
@@ -1161,18 +1160,19 @@ export const TodoistPage = () => {
                                                     }
                                                 </div>
                                                 <div className={styles.cardActions}>
-                                                    <button className={styles.btnView} onClick={() => openViewTaskModal(task)}>
+                                                    <button className={styles.btnView}
+                                                            onClick={() => openViewTaskModal(task)}>
                                                         View More
                                                     </button>
                                                     {
                                                         task.creator.id === userId && (
                                                             <>
                                                                 <button className={styles.btnEdit}
-                                                                    onClick={() => openEditTaskModal(task)}>
+                                                                        onClick={() => openEditTaskModal(task)}>
                                                                     Edit
                                                                 </button>
                                                                 <button className={styles.btnDelete}
-                                                                    onClick={() => openDeleteTaskModal(task)}>
+                                                                        onClick={() => openDeleteTaskModal(task)}>
                                                                     Delete
                                                                 </button>
                                                             </>
@@ -1183,9 +1183,10 @@ export const TodoistPage = () => {
                                         ))
                                     :
                                     notificationsLoading
-                                        ? <DefaultPageLoader status={"none"} />
+                                        ? <DefaultPageLoader status={"none"}/>
                                         : notificationsList.map(item => {
-                                            return <NotificationCard data={item} onToggleRead={onToggleRead} onViewTask={onViewTask} />
+                                            return <NotificationCard data={item} onToggleRead={onToggleRead}
+                                                                     onViewTask={onViewTask}/>
                                         })
                             }
                         </div>
@@ -1203,22 +1204,22 @@ export const TodoistPage = () => {
                                 >
                                     {
                                         tagsLoading
-                                            ? <DefaultPageLoader status={"none"} />
-                                            : tags.map((tag) => (
-                                                <div key={tag.id} className={styles.tagItem}>
-                                                    <span className={styles.tagName}>{tag.name}</span>
-                                                    <div className={styles.tagActions}>
-                                                        <button className={styles.btnSmallEdit}
+                                            ? <DefaultPageLoader status={"none"}/>
+                                            : tags?.length && tags?.map((tag) => (
+                                            <div key={tag.id} className={styles.tagItem}>
+                                                <span className={styles.tagName}>{tag.name}</span>
+                                                <div className={styles.tagActions}>
+                                                    <button className={styles.btnSmallEdit}
                                                             onClick={() => openEditTagModal(tag)}>
-                                                            Edit
-                                                        </button>
-                                                        <button className={styles.btnSmallDelete}
+                                                        Edit
+                                                    </button>
+                                                    <button className={styles.btnSmallDelete}
                                                             onClick={() => openDeleteTagModal(tag)}>
-                                                            Delete
-                                                        </button>
-                                                    </div>
+                                                        Delete
+                                                    </button>
                                                 </div>
-                                            ))
+                                            </div>
+                                        ))
                                     }
                                 </div>
                             </section>
@@ -1238,7 +1239,7 @@ export const TodoistPage = () => {
                                 <input
                                     type="text"
                                     value={formData.title || ""}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                    onChange={(e) => setFormData({...formData, title: e.target.value})}
                                     placeholder="Task title"
                                     required
                                 />
@@ -1247,7 +1248,7 @@ export const TodoistPage = () => {
                                 <label>Description</label>
                                 <textarea
                                     value={formData.description || ""}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    onChange={(e) => setFormData({...formData, description: e.target.value})}
                                     placeholder="Task description"
                                     rows={3}
                                 />
@@ -1259,7 +1260,7 @@ export const TodoistPage = () => {
                                             <label>Executor</label>
                                             <select
                                                 value={typeof formData.executor === "object" ? formData.executor.id : formData.executor || "none"}
-                                                onChange={(e) => setFormData({ ...formData, executor: e.target.value })}
+                                                onChange={(e) => setFormData({...formData, executor: e.target.value})}
                                                 required
                                             >
                                                 <option value={"none"}>Select Executor</option>
@@ -1274,7 +1275,7 @@ export const TodoistPage = () => {
                                             <label>Reviewer</label>
                                             <select
                                                 value={typeof formData.reviewer === "object" ? formData.reviewer.id : formData.reviewer || "none"}
-                                                onChange={(e) => setFormData({ ...formData, reviewer: e.target.value })}
+                                                onChange={(e) => setFormData({...formData, reviewer: e.target.value})}
                                                 required
                                             >
                                                 <option value={"none"}>Select Reviewer</option>
@@ -1293,7 +1294,7 @@ export const TodoistPage = () => {
                                     <label>Tags</label>
                                     <AnimatedMulti
                                         options={tagsList}
-                                        onChange={(e) => setFormData({ ...formData, tags: e })}
+                                        onChange={(e) => setFormData({...formData, tags: e})}
                                         value={formData.tags}
                                         fontSize={15}
                                     />
@@ -1302,11 +1303,11 @@ export const TodoistPage = () => {
                                     <label>Departmant</label>
                                     <select
                                         value={formData.category || "admin"}
-                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                        onChange={(e) => setFormData({...formData, category: e.target.value})}
                                         required
                                     >
                                         {
-                                            categoryList.map(item =>
+                                           categoryList?.length && categoryList?.map(item =>
                                                 <option value={item.id}>{item.name}</option>
                                             )
                                         }
@@ -1318,12 +1319,12 @@ export const TodoistPage = () => {
                                     <label>Status</label>
                                     <select
                                         value={formData.status || "not_started"}
-                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                        onChange={(e) => setFormData({...formData, status: e.target.value})}
                                         required
                                     >
                                         {
-                                            statusList.map(item =>
-                                                <option value={item.id}>{item.name}</option>
+                                            statusList?.map(item =>
+                                                <option value={item.id}>{item?.name}</option>
                                             )
                                         }
                                     </select>
@@ -1333,7 +1334,7 @@ export const TodoistPage = () => {
                                     <input
                                         type="date"
                                         value={formData.deadline || ""}
-                                        onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                                        onChange={(e) => setFormData({...formData, deadline: e.target.value})}
                                         required
                                     />
                                 </div>
@@ -1343,7 +1344,7 @@ export const TodoistPage = () => {
                                     <input
                                         type="checkbox"
                                         checked={formData.is_recurring || false}
-                                        onChange={(e) => setFormData({ ...formData, is_recurring: e.target.checked })}
+                                        onChange={(e) => setFormData({...formData, is_recurring: e.target.checked})}
                                     />
                                     Recurring
                                 </label>
@@ -1354,7 +1355,7 @@ export const TodoistPage = () => {
                                         <label>Recurring Type</label>
                                         <select
                                             value={formData.recurring_type || "daily"}
-                                            onChange={(e) => setFormData({ ...formData, recurring_type: e.target.value })}
+                                            onChange={(e) => setFormData({...formData, recurring_type: e.target.value})}
                                         >
                                             {
                                                 recurringTypes.map(item =>
@@ -1482,7 +1483,7 @@ export const TodoistPage = () => {
                                 {/* Collapsible Sections */}
                                 <div className={styles.collapsibleSection}>
                                     <div className={styles.collapsibleHeader}
-                                        onClick={() => toggleCollapsible("subtasks")}>
+                                         onClick={() => toggleCollapsible("subtasks")}>
                                         <span>Subtasks ({selectedTask.subtasks.length})</span>
                                         <span>{activeCollapsibles.has("subtasks") ? "−" : "+"}</span>
                                     </div>
@@ -1491,22 +1492,25 @@ export const TodoistPage = () => {
                                             <div className={styles.collapsibleContent}>
                                                 {
                                                     tasksProfileLoading && tasksProfileLoading === "subtasks"
-                                                        ? <MiniLoader />
+                                                        ? <MiniLoader/>
                                                         : [...selectedTask.subtasks]?.sort(compareByOrder)?.map((st) => (
                                                             <div key={st.id} className={styles.nestedItem}>
-                                                                <p style={st.is_done ? { textDecoration: "line-through", color: "#6b7280" } : null}>{st.order}. {st.title}</p>
+                                                                <p style={st.is_done ? {
+                                                                    textDecoration: "line-through",
+                                                                    color: "#6b7280"
+                                                                } : null}>{st.order}. {st.title}</p>
                                                                 <div className={styles.nestedActions}>
                                                                     <i
                                                                         className={classNames(
                                                                             `fa-regular ${st.is_done ? "fa-circle-xmark" : "fa-circle-check"}`,
                                                                             styles.nestedActions__icon, {
-                                                                            [styles.compledted]: st.is_done
-                                                                        }
+                                                                                [styles.compledted]: st.is_done
+                                                                            }
                                                                         )}
                                                                         onClick={() => handleCompleteSubtask(st.is_done, st.id)}
                                                                     />
                                                                     <button className={styles.btnSmallEdit}
-                                                                        onClick={() => openNestedModal("editSubtask", st)}>
+                                                                            onClick={() => openNestedModal("editSubtask", st)}>
                                                                         Edit
                                                                     </button>
                                                                     <button
@@ -1522,7 +1526,7 @@ export const TodoistPage = () => {
                                             </div>
                                             <div className={styles.btnSmallContainer}>
                                                 <button className={styles.btnSmall}
-                                                    onClick={() => openNestedModal("createSubtask")}>
+                                                        onClick={() => openNestedModal("createSubtask")}>
                                                     + Add Subtask
                                                 </button>
                                             </div>
@@ -1532,7 +1536,7 @@ export const TodoistPage = () => {
 
                                 <div className={styles.collapsibleSection}>
                                     <div className={styles.collapsibleHeader}
-                                        onClick={() => toggleCollapsible("attachments")}>
+                                         onClick={() => toggleCollapsible("attachments")}>
                                         <span>Attachments ({selectedTask.attachments.length})</span>
                                         <span>{activeCollapsibles.has("attachments") ? "−" : "+"}</span>
                                     </div>
@@ -1541,7 +1545,7 @@ export const TodoistPage = () => {
                                             <div className={styles.collapsibleContent}>
                                                 {[...selectedTask.attachments]?.reverse().map((att) => (
                                                     <div key={att.id}
-                                                        className={classNames(styles.nestedItem, styles.dual)}>
+                                                         className={classNames(styles.nestedItem, styles.dual)}>
                                                         <div className={styles.nestedItem__header}>
                                                             <div
                                                                 className={classNames(styles.nestedActions, styles.btns, styles.innerDual)}
@@ -1570,7 +1574,7 @@ export const TodoistPage = () => {
                                                         {
                                                             att.file && (
                                                                 <div className={styles.nestedItem__content}>
-                                                                    <img crossOrigin="anonymous" src={att.file} alt="" />
+                                                                    <img crossOrigin="anonymous" src={att.file} alt=""/>
                                                                 </div>
                                                             )
                                                         }
@@ -1579,7 +1583,7 @@ export const TodoistPage = () => {
                                             </div>
                                             <div className={styles.btnSmallContainer}>
                                                 <button className={styles.btnSmall}
-                                                    onClick={() => openNestedModal("createAttachment")}>
+                                                        onClick={() => openNestedModal("createAttachment")}>
                                                     + Add Attachment
                                                 </button>
                                             </div>
@@ -1589,7 +1593,7 @@ export const TodoistPage = () => {
 
                                 <div className={styles.collapsibleSection}>
                                     <div className={styles.collapsibleHeader}
-                                        onClick={() => toggleCollapsible("comments")}>
+                                         onClick={() => toggleCollapsible("comments")}>
                                         <span>Comments ({selectedTask.comments.length})</span>
                                         <span>{activeCollapsibles.has("comments") ? "−" : "+"}</span>
                                     </div>
@@ -1598,14 +1602,14 @@ export const TodoistPage = () => {
                                             <div className={styles.collapsibleContent}>
                                                 {selectedTask.comments.map((com) => (
                                                     <div key={com.id}
-                                                        className={classNames(styles.nestedItem, styles.dual)}>
+                                                         className={classNames(styles.nestedItem, styles.dual)}>
                                                         <div className={styles.nestedItem__header}>
                                                             {
                                                                 com.user.id === userId || com.user === userId
                                                                     ? <div
                                                                         className={classNames(styles.nestedActions, styles.btns)}>
                                                                         <button className={styles.btnSmallEdit}
-                                                                            onClick={() => openNestedModal("editComment", com)}>
+                                                                                onClick={() => openNestedModal("editComment", com)}>
                                                                             Edit
                                                                         </button>
                                                                         <button
@@ -1629,7 +1633,7 @@ export const TodoistPage = () => {
                                                             com.attachment && (
                                                                 <div className={styles.nestedItem__content}>
                                                                     <img crossOrigin="anonymous" src={com.attachment}
-                                                                        alt="" />
+                                                                         alt=""/>
                                                                 </div>
                                                             )
                                                         }
@@ -1638,7 +1642,7 @@ export const TodoistPage = () => {
                                             </div>
                                             <div className={styles.btnSmallContainer}>
                                                 <button className={styles.btnSmall}
-                                                    onClick={() => openNestedModal("createComment")}>
+                                                        onClick={() => openNestedModal("createComment")}>
                                                     + Add Comment
                                                 </button>
                                             </div>
@@ -1648,7 +1652,7 @@ export const TodoistPage = () => {
 
                                 <div className={styles.collapsibleSection}>
                                     <div className={styles.collapsibleHeader}
-                                        onClick={() => toggleCollapsible("proofs")}>
+                                         onClick={() => toggleCollapsible("proofs")}>
                                         <span>Proofs ({selectedTask.proofs.length})</span>
                                         <span>{activeCollapsibles.has("proofs") ? "−" : "+"}</span>
                                     </div>
@@ -1657,7 +1661,7 @@ export const TodoistPage = () => {
                                             <div className={styles.collapsibleContent}>
                                                 {[...selectedTask.proofs].reverse().map((proof) => (
                                                     <div key={proof.id}
-                                                        className={classNames(styles.nestedItem, styles.dual)}>
+                                                         className={classNames(styles.nestedItem, styles.dual)}>
                                                         <div className={styles.nestedItem__header}>
                                                             <div
                                                                 className={classNames(styles.nestedActions, styles.btns, styles.innerDual)}
@@ -1665,7 +1669,7 @@ export const TodoistPage = () => {
                                                                 <p className={styles.btns__title}>{proof.created_at}</p>
                                                                 <div className={styles.nestedActions}>
                                                                     <button className={styles.btnSmallEdit}
-                                                                        onClick={() => openNestedModal("editProof", proof)}>
+                                                                            onClick={() => openNestedModal("editProof", proof)}>
                                                                         Edit
                                                                     </button>
                                                                     <button
@@ -1683,7 +1687,7 @@ export const TodoistPage = () => {
                                                         {
                                                             proof.file && (
                                                                 <div className={styles.nestedItem__content}>
-                                                                    <img crossOrigin="anonymous" src={proof.file} alt="" />
+                                                                    <img crossOrigin="anonymous" src={proof.file} alt=""/>
                                                                 </div>
                                                             )
                                                         }
@@ -1692,7 +1696,7 @@ export const TodoistPage = () => {
                                             </div>
                                             <div className={styles.btnSmallContainer}>
                                                 <button className={styles.btnSmall}
-                                                    onClick={() => openNestedModal("createProof")}>
+                                                        onClick={() => openNestedModal("createProof")}>
                                                     + Add Proof
                                                 </button>
                                             </div>
@@ -1745,10 +1749,10 @@ export const TodoistPage = () => {
                                     </div>
                                     {
                                         tasksProfileLoading && tasksProfileLoading === "subtasks"
-                                            ? <MiniLoader />
+                                            ? <MiniLoader/>
                                             : <div className={styles.formActions}>
                                                 <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
+                                                        onClick={() => setNestedModalType(null)}>
                                                     Cancel
                                                 </button>
                                                 <button
@@ -1769,10 +1773,10 @@ export const TodoistPage = () => {
                                     <p className={styles.confirmText}>Are you sure?</p>
                                     {
                                         tasksProfileLoading && tasksProfileLoading === "subtasks"
-                                            ? <MiniLoader />
+                                            ? <MiniLoader/>
                                             : <div className={styles.formActions}>
                                                 <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
+                                                        onClick={() => setNestedModalType(null)}>
                                                     Cancel
                                                 </button>
                                                 <button className={styles.btnDanger} onClick={handleDeleteSubtask}>
@@ -1813,10 +1817,10 @@ export const TodoistPage = () => {
                                     {
 
                                         tasksProfileLoading && tasksProfileLoading === "attachments"
-                                            ? <MiniLoader />
+                                            ? <MiniLoader/>
                                             : <div className={styles.formActions}>
                                                 <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
+                                                        onClick={() => setNestedModalType(null)}>
                                                     Cancel
                                                 </button>
                                                 <button
@@ -1839,10 +1843,10 @@ export const TodoistPage = () => {
                                     {
 
                                         tasksProfileLoading && tasksProfileLoading === "attachments"
-                                            ? <MiniLoader />
+                                            ? <MiniLoader/>
                                             : <div className={styles.formActions}>
                                                 <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
+                                                        onClick={() => setNestedModalType(null)}>
                                                     Cancel
                                                 </button>
                                                 <button className={styles.btnDanger} onClick={handleDeleteAttachment}>
@@ -1882,10 +1886,10 @@ export const TodoistPage = () => {
                                     </div>
                                     {
                                         tasksProfileLoading && tasksProfileLoading === "comments"
-                                            ? <MiniLoader />
+                                            ? <MiniLoader/>
                                             : <div className={styles.formActions}>
                                                 <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
+                                                        onClick={() => setNestedModalType(null)}>
                                                     Cancel
                                                 </button>
                                                 <button
@@ -1903,10 +1907,10 @@ export const TodoistPage = () => {
                                     <p className={styles.confirmText}>Are you sure?</p>
                                     {
                                         tasksProfileLoading && tasksProfileLoading === "comments"
-                                            ? <MiniLoader />
+                                            ? <MiniLoader/>
                                             : <div className={styles.formActions}>
                                                 <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
+                                                        onClick={() => setNestedModalType(null)}>
                                                     Cancel
                                                 </button>
                                                 <button className={styles.btnDanger} onClick={handleDeleteComment}>
@@ -1945,10 +1949,10 @@ export const TodoistPage = () => {
                                     </div>
                                     {
                                         tasksProfileLoading && tasksProfileLoading === "proofs"
-                                            ? <MiniLoader />
+                                            ? <MiniLoader/>
                                             : <div className={styles.formActions}>
                                                 <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
+                                                        onClick={() => setNestedModalType(null)}>
                                                     Cancel
                                                 </button>
                                                 <button
@@ -1966,10 +1970,10 @@ export const TodoistPage = () => {
                                     <p className={styles.confirmText}>Are you sure?</p>
                                     {
                                         tasksProfileLoading && tasksProfileLoading === "proofs"
-                                            ? <MiniLoader />
+                                            ? <MiniLoader/>
                                             : <div className={styles.formActions}>
                                                 <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
+                                                        onClick={() => setNestedModalType(null)}>
                                                     Cancel
                                                 </button>
                                                 <button className={styles.btnDanger} onClick={handleDeleteProof}>
@@ -1985,13 +1989,13 @@ export const TodoistPage = () => {
 
                 {(modalType === "changeStatus") && (
                     <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
-                        <div className={styles.modal} onClick={(e) => e.stopPropagation()} style={{ width: "17%" }}>
+                        <div className={styles.modal} onClick={(e) => e.stopPropagation()} style={{width: "17%"}}>
                             <h2 className={styles.modalTitle}>Change task status</h2>
                             <div className={styles.formGroup}>
                                 <label>Status</label>
                                 <select
                                     value={formData.status}
-                                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                    onChange={(e) => setFormData({...formData, status: e.target.value})}
                                     required
                                 >
                                     {
@@ -2076,11 +2080,11 @@ export const TodoistPage = () => {
             >
                 <h1>Filter</h1>
                 <div className={styles.filter__container}>
-                    <Select
+                    {statusList && <Select
                         extraClass={styles.mainInput}
-                        options={[{ id: "all", name: "Hammasi" }, ...statusList]}
+                        options={[{id: "all", name: "Hammasi"}, ...statusList]}
                         onChangeOption={setSelectedStatus}
-                    />
+                    />}
                     <Input
                         extraClassName={styles.mainInput}
                         title={"Created at"}
@@ -2122,8 +2126,8 @@ export const TodoistPage = () => {
     )
 }
 
-export default function NotificationCard({ data, onToggleRead, onViewTask }) {
-    const { id, message, role, mission, deadline, is_read, created_at } = data;
+export default function NotificationCard({data, onToggleRead, onViewTask}) {
+    const {id, message, role, mission, deadline, is_read, created_at} = data;
 
     const handleToggle = () => {
         console.log("hello");

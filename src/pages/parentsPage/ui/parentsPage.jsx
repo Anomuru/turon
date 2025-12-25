@@ -1,4 +1,5 @@
-import {ParentList} from "entities/parents/index.js";
+import {ParentList} from "entities/parents/ui/parentList/parentList.jsx";
+
 
 export const ParentsPage = () => {
 

@@ -1,4 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
+import teacherAttendanceSlice from "entities/teacherAttendance/model/teacherAttendanceSlice.js";
 import {parentsProfileReducer} from "features/parentsProfile/model/parentsProfileSlice.js";
 import {createReducerManager} from './reducerManager';
 import {useHttp} from "shared/api/base";
@@ -69,7 +70,9 @@ export function createReduxStore(
         quarterMasterSlice: quarterMasterReducer,
         locationsSlice: locationsReducer,
         parentSlice: parentReducer,
-        parentsProfileSlice: parentsProfileReducer
+        parentsProfileSlice: parentsProfileReducer,
+        teacherAttendanceSlice
+
 
 
 
