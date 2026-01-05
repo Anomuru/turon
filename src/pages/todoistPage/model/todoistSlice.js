@@ -77,6 +77,12 @@ const todoistSlice = createSlice({
             state.taskLoading = false
         },
         editTask: (state, action) => {
+            if (action.payload.isMulti) {
+                state.tasks = [
+                    action.payload,
+                    ...state.tasks.filter(item => item.id !== action.payload.id)
+                ]
+            }
             state.tasks = [
                 action.payload,
                 ...state.tasks.filter(item => item.id !== action.payload.id)

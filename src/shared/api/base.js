@@ -1,4 +1,4 @@
-// export const API_URL_DOC = `http://192.168.0.101:8000/`
+// export const API_URL_DOC = `http://192.168.0.100:8000/`
 // export const API_URL_DOC = `http://26.196.249.247:8000/`
 // export const API_URL_DOC = `http://26.253.30.50:8000/`//
 export const API_URL_DOC = `http://26.107.238.217:8000/`
@@ -53,9 +53,9 @@ export const branchQueryId = () => {
 
 
 export const useHttp = () => {
-    const request = async (url, method = 'GET', body = null, headers = {'Content-Type': 'application/json'}) => {
+    const request = async (url, method = 'GET', body = null, headers = { 'Content-Type': 'application/json' }) => {
         try {
-            const response = await fetch(url, {method, mode: 'cors', body, headers});
+            const response = await fetch(url, { method, mode: 'cors', body, headers });
 
             if (!response.ok) {
                 throw new Error(`Could not fetch ${url}, status: ${response.status}`);
@@ -68,7 +68,7 @@ export const useHttp = () => {
         }
     }
 
-    return {request}
+    return { request }
 }
 
 export const ParamUrl = (params = {}) => {

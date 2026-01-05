@@ -55,6 +55,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
     const [change, setChange] = useState(false);
     const [canChange, setCanChange] = useState(false);
     const [canDelete, setCanDelete] = useState(false);
+    const [modalActive, setActiveModal] = useState(false)
 
 
     const years = useSelector(getCherityYear)
