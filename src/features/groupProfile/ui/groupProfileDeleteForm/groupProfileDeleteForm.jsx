@@ -587,7 +587,19 @@ export const GroupProfileDeleteForm = memo(({ branch }) => {
                             required
                         /> : null
                     }
-                    <Button extraClass={cls.deleteForm__btn}>Add</Button>
+                    {
+                        selectOpt === "deleted" && (
+                            <Input
+                                extraClassName={cls.deleteForm__input}
+                                placeholder={"Sana"}
+                                register={register}
+                                name={"del_date"}
+                                type={"date"}
+                                required
+                            />
+                        )
+                    }
+                    <Button type={"danger"} extraClass={cls.deleteForm__btn}>Delete</Button>
                 </Form>
             </Modal>
             <Modal

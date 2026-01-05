@@ -10,8 +10,11 @@ import { Table } from "shared/ui/table";
 import cls from "./deletedStudents.module.sass";
 import { API_URL, headers, useHttp } from "shared/api/base.js";
 import { ConfirmModal } from "shared/ui/confirmModal/index.js";
-import { onDeleteGroupStudentBack } from "../../model/studentsSlice";
+import { onChangeDeletedDate, onDeleteGroupStudentBack } from "../../model/studentsSlice";
 import { onAddAlertOptions } from "features/alert/model/slice/alertSlice.js";
+import { Modal } from "shared/ui/modal";
+import { Input } from "shared/ui/input";
+import { Button } from "shared/ui/button";
 
 
 export const DeletedStudents = ({ currentTableData }) => {
@@ -25,6 +28,9 @@ export const DeletedStudents = ({ currentTableData }) => {
     const navigation = useNavigate()
     const [active, setActive] = useState(false)
     const [id, setId] = useState(false)
+    const [isChangeModal, setIsChangeModal] = useState(false)
+    const [selectedStudent, setSelectedStudent] = useState(null)
+    const [selectedDate, setSelectedDate] = useState(null)
 
     useEffect(() => {
         dispatch(fetchReasons())
@@ -45,6 +51,31 @@ export const DeletedStudents = ({ currentTableData }) => {
         dispatch(onDeleteGroupStudentBack(id))
 
     };
+
+    const onSubmit = () => {
+        const post = { del_date: selectedDate, student_id: selectedStudent }
+        request(`${API_URL}Students/change_date_deleted_student/`, "POST", JSON.stringify(post), headers())
+            .then(res => {
+                console.log(res)
+                dispatch(onChangeDeletedDate(post))
+                setSelectedStudent(null)
+                setSelectedDate(null)
+                setIsChangeModal(false)
+                dispatch(onAddAlertOptions({
+                    msg: res.msg,
+                    status: true,
+                    type: "success"
+                }))
+            })
+    }
+
+    const onChangeDelDate = (data) => {
+        setSelectedStudent(data.id)
+        setSelectedDate(data.deleted_date)
+        setIsChangeModal(true)
+    }
+
+
     const renderDeletedStudents = () => {
 
 
@@ -75,6 +106,12 @@ export const DeletedStudents = ({ currentTableData }) => {
                                 <i className={"fa fa-times"} />
                             </div>
                         </td>
+                        <td>
+                            <i
+                                onClick={() => onChangeDelDate(item)}
+                                className={"fa fa-pen"}
+                            />
+                        </td>
                     </tr>
                 )
             } else {
@@ -96,6 +133,12 @@ export const DeletedStudents = ({ currentTableData }) => {
                                 }}>
                                     <i className={"fa fa-times"} />
                                 </div>
+                            </td>
+                            <td>
+                                <i
+                                    onClick={() => onChangeDelDate(item)}
+                                    className={"fa fa-pen"}
+                                />
                             </td>
                         </tr>
                     )
@@ -148,6 +191,7 @@ export const DeletedStudents = ({ currentTableData }) => {
                             <th>O'chir.sana</th>
                             <th>Sabab</th>
                             <th />
+                            <th />
                         </tr>
                     </thead>
                     <tbody>
@@ -157,8 +201,34 @@ export const DeletedStudents = ({ currentTableData }) => {
                 </Table>
             </div>
 
-            <ConfirmModal onClick={handleDelete} title={"Qaytarish"} text={"Studentni rostanham qaytarmoqchimisiz"}
-                type={"danger"} active={active} setActive={setActive} />
+            <ConfirmModal
+                onClick={handleDelete}
+                title={"Qaytarish"}
+                text={"Studentni rostanham qaytarmoqchimisiz"}
+                type={"danger"}
+                active={active}
+                setActive={setActive}
+            />
+            <Modal
+                active={isChangeModal}
+                setActive={setIsChangeModal}
+                extraClass={cls.modal}
+            >
+                <Input
+                    title={"Deleted date"}
+                    placeholder={"Enter deleted date"}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    extraClassName={cls.modal__input}
+                    type={"date"}
+                    defaultValue={selectedDate}
+                />
+                <Button
+                    onClick={onSubmit}
+                    extraClass={cls.modal__btn}
+                >
+                    Enter
+                </Button>
+            </Modal>
         </div>
 
     );
