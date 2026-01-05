@@ -244,7 +244,7 @@ export const GroupProfileDeleteForm = memo(({ branch }) => {
     }
 
     const onChangePaymentMonth = (data) => {
-        request(`${API_URL}Attendance/attendance_per_month_delete/${selectedChange?.attendance_id}/`, "PUT", JSON.stringify(data), headers())
+        request(`${API_URL}Attendance/attendance_per_month_change/${selectedChange?.attendance_id}/`, "PUT", JSON.stringify(data), headers())
             .then(res => {
                 dispatch(changeDebtStudent({ id: selectedChange.id, res }))
                 dispatch(onAddAlertOptions({
@@ -648,9 +648,9 @@ export const GroupProfileDeleteForm = memo(({ branch }) => {
                     </div>
                 </div>
                 <div className={cls.paymentForm__content}>
-                    <div className={cls.items}>
-                        {renderAmountService}
-                    </div>
+                    {/*<div className={cls.items}>*/}
+                    {/*    {renderAmountService}*/}
+                    {/*</div>*/}
                     <div className={cls.form}>
                         <h1>{activeService}</h1>
                         {

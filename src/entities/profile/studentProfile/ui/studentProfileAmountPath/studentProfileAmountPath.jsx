@@ -379,7 +379,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
                           id={"changeForm"} typeSubmit={"outside"}>
                         <h1>Oylik qarz o'zgartirish</h1>
 
-                        <Input title={"To'lov summasi (qolgan qarzi)"} register={register} name={"total_debt"}/>
+                        <Input title={"To'lov summasi (Umumiy qarz)"} register={register} name={"total_debt"}/>
                         <Input
                             title={"Chegirma summasi"}
                             register={register}

@@ -394,7 +394,7 @@ export const StudentProfileTotalAmount = memo(({ active, setActive, student_id, 
                                             name={"discount"}
                                             placeholder={"Summa"}
                                             type={"number"}
-                                            value={month?.data[0]?.discount}
+                                            value={month?.data[1]?.discount}
                                             // onChange={(e) => setDiscountCharity(e.target.value)}
                                         />
 
