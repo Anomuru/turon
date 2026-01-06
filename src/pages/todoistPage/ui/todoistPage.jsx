@@ -415,7 +415,7 @@ export const TodoistPage = () => {
             tags: formData.tags.map(item => item.value),
             category: formData.category,
             // ...formData,
-            // creator: formData.creator.id,
+            creator: formData.creator.id,
             // executor_ids: formData.executor_ids.map(item => item.value),
             // executor_ids: formData.executor_ids ? [Number(formData.executor_ids)] : [formData.executor.id],
             reviewer: typeof formData.reviewer === "object" ? formData.reviewer.id : formData.reviewer,
@@ -428,7 +428,7 @@ export const TodoistPage = () => {
         }
 
         dispatch(taskLoading())
-        request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify(patch), headers())
+        request(`${API_URL}Tasks/missions/${formData.id}/`, "PUT", JSON.stringify(patch), headers())
             .then(res => {
 
                 request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
