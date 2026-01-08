@@ -101,7 +101,9 @@ export const UserProfilePage = () => {
     }, [salaryData, setCurrentPage, search, activeList])
 
     const onSubmitChangeInfo = (data) => {
-        dispatch(changingUserProfile())
+        console.log(true);
+
+        // dispatch(changingUserProfile())
         request(`${API_URL}Users/users/update/${id}/`, "PATCH", JSON.stringify(data), headers())
             .then(res => {
 
@@ -119,7 +121,7 @@ export const UserProfilePage = () => {
     }
 
     const onSubmitChangeImage = (data) => {
-        dispatch(changingUserProfile())
+        // dispatch(changingUserProfile())
         const formData = new FormData
         formData.append("profile_img", data)
         request(`${API_URL}Users/users/update/${id}/`, "PATCH", formData, headersImg())
