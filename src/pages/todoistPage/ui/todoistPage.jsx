@@ -92,8 +92,8 @@ export const TodoistPage = () => {
     const tasks = useSelector(getTasks)
     const tasksLoading = useSelector(getTaskLoading)
     const tasksProfileLoading = useSelector(getTaskProfileLoading)
-    const statusList = useSelector(getTaskStatusList)
-    const categoryList = useSelector(getTaskCategoryList)
+    const statusList = useSelector(getTaskStatusList) ?? []
+    const categoryList = useSelector(getTaskCategoryList) ?? []
     const recurringTypes = useSelector(getTaskRecurringTypes)
     const notificationsList = useSelector(getTaskNotificationsList)
     const notificationsLoading = useSelector(getTaskNotificationLoading)
@@ -1103,6 +1103,7 @@ export const TodoistPage = () => {
     }
 
     function sortTasks(data) {
+        if (!data) return []
         const colorOrder = {
             red: 0,
             yellow: 1,
@@ -1233,7 +1234,7 @@ export const TodoistPage = () => {
                             className={classNames(styles.grid, {
                                 [styles.loading]: tasksLoading || notificationsLoading,
                                 [styles.level]: userLevel > 2,
-                                [styles.none]: (tasks.length === 0 && activePage === "task") || (notificationsList.length === 0 && activePage !== "task")
+                                [styles.none]: (tasks?.length === 0 && activePage === "task") || (notificationsList?.length === 0 && activePage !== "task")
                             })}
                         >
                             {
@@ -1241,7 +1242,7 @@ export const TodoistPage = () => {
                                     ?
                                     tasksLoading
                                         ? <DefaultPageLoader status={"none"} />
-                                        : tasks.length === 0
+                                        : tasks?.length === 0
                                             ? <h1 className={styles.grid__title}>
                                                 {
                                                     activeTaskType === "myTasks"
@@ -1506,7 +1507,7 @@ export const TodoistPage = () => {
                                     {
                                         tagsLoading
                                             ? <DefaultPageLoader status={"none"} />
-                                            : tags.map((tag) => (
+                                            : tags?.map((tag) => (
                                                 <div key={tag.id} className={styles.tagItem}>
                                                     <span className={styles.tagName}>{tag.name}</span>
                                                     <div className={styles.tagActions}>
