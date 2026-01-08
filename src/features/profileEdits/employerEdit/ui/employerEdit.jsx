@@ -100,6 +100,7 @@ export const EmployerEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
                 <div className={cls.filter__container}>
 
                     <Input
+                        title={"Ism"}
                         type={"text"}
                         extraClassName={cls.inputAge}
                         placeholder={"Ism"}
@@ -110,6 +111,7 @@ export const EmployerEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
 
                     <div className={cls.filter__age}>
                         <Input
+                            title={"Familiya"}
                             type={"text"}
                             extraClassName={cls.filter__input}
                             placeholder={"Familiya"}
@@ -118,6 +120,7 @@ export const EmployerEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
                         // value={selectedFrom}
                         />
                         <Input
+                            title={"Tel raqami"}
                             type={"number"}
                             extraClassName={cls.filter__input}
                             placeholder={"Tel raqami"}
@@ -126,6 +129,7 @@ export const EmployerEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
                         // value={selectedTo}
                         />
                         <Input
+                            title={"Tug'ilgan yili"}
                             type={"date"}
                             extraClassName={cls.inputAge}
                             placeholder={"Tug'ilgan yili"}
@@ -134,6 +138,7 @@ export const EmployerEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
                         // value={selectedFrom}
                         />
                         <Input
+                            title={"Oylik"}
                             type={"number"}
                             extraClassName={cls.inputAge}
                             placeholder={"Oylik"}
@@ -141,6 +146,7 @@ export const EmployerEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
                             value={money}
                         />
                         <Input
+                            title={"Level"}
                             type={"number"}
                             extraClassName={cls.inputAge}
                             placeholder={"Level"}
@@ -148,6 +154,7 @@ export const EmployerEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
                             value={level}
                         />
                         <Select
+                            title={"Soha"}
                             extraClass={cls.inputAge}
                             options={jobs}
                             onChangeOption={setSelectedJob}

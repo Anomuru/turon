@@ -535,6 +535,22 @@ $color-gray: #999
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))
   gap: 16px
 
+  &__desc
+    position: relative
+    &:hover .fullDesc
+      display: flex
+      opacity: 1
+    .fullDesc
+      width: 30rem
+      position: absolute
+      top: -5rem
+      right: -30rem
+      background: white
+      border-radius: 1rem
+      border: 1px solid
+      display: none
+      opacity: 0
+
   div
     background-color: #f9fafb
     padding: 12px

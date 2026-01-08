@@ -334,7 +334,24 @@ export const TodoistPage = () => {
             .then(res => {
                 request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
                     .then(res => {
-                        dispatch(editTask(res))
+                        if (selectedMultiTask && selectedMultiTask.children) {
+                            dispatch(editMultiTask({
+                                ...res,
+                                parent: selectedMultiTask.id
+                            }))
+                            setSelectedMultiTask(() => {
+                                return ({
+                                    // ...prev,
+                                    ...selectedMultiTask.children.filter(item => item.id !== res.id)[0],
+                                    children: [
+                                        ...selectedMultiTask.children.filter(item => item.id !== res.id),
+                                        res
+                                    ]
+                                })
+                            })
+                        } else {
+                            dispatch(editTask(res))
+                        }
                         dispatch(onAddAlertOptions({
                             status: true,
                             type: "success",
@@ -1738,9 +1755,24 @@ export const TodoistPage = () => {
 
                                 <div className={styles.viewContent}>
                                     <div className={styles.infoGrid}>
-                                        <div>
+                                        <div className={styles.infoGrid__desc}>
                                             <strong>Description:</strong>
-                                            <p>{selectedTask.description}</p>
+                                            <p className={styles.desc}>
+                                                {
+                                                    selectedTask.description.length > 30
+                                                        ? `${selectedTask.description.slice(0, 30)}...`
+                                                        : selectedTask.description
+                                                }
+                                            </p>
+                                            {
+                                                selectedTask.description.length > 30 && (
+                                                    <div className={styles.fullDesc}>
+                                                        <p>
+                                                            {selectedTask.description}
+                                                        </p>
+                                                    </div>
+                                                )
+                                            }
                                         </div>
                                         <div>
                                             <strong>Departmant:</strong>
@@ -2141,9 +2173,9 @@ export const TodoistPage = () => {
                                                         Cancel
                                                     </button>
                                                     <button
-                                                        disabled={!nestedFormData.note}
+                                                        disabled={!nestedFormData.note && !nestedFormData.file}
                                                         className={classNames(styles.btnPrimary, {
-                                                            [styles.disabled]: !nestedFormData.note
+                                                            [styles.disabled]: !nestedFormData.note && !nestedFormData.file
                                                         })}
                                                         onClick={nestedModalType === "createAttachment" ? handleCreateAttachment : handleEditAttachment}
                                                     >
@@ -2210,7 +2242,10 @@ export const TodoistPage = () => {
                                                         Cancel
                                                     </button>
                                                     <button
-                                                        className={styles.btnPrimary}
+                                                        disabled={!nestedFormData.text && !nestedFormData.comFile}
+                                                        className={classNames(styles.btnPrimary, {
+                                                            [styles.disabled]: !nestedFormData.text && !nestedFormData.comFile
+                                                        })}
                                                         onClick={nestedModalType === "createComment" ? handleCreateComment : handleEditComment}
                                                     >
                                                         {nestedModalType === "createComment" ? "Create" : "Update"}
@@ -2273,7 +2308,10 @@ export const TodoistPage = () => {
                                                         Cancel
                                                     </button>
                                                     <button
-                                                        className={styles.btnPrimary}
+                                                        disabled={!nestedFormData.comment && !nestedFormData.proofFile}
+                                                        className={classNames(styles.btnPrimary, {
+                                                            [styles.disabled]: !nestedFormData.comment && !nestedFormData.proofFile
+                                                        })}
                                                         onClick={nestedModalType === "createProof" ? handleCreateProof : handleEditProof}
                                                     >
                                                         {nestedModalType === "createProof" ? "Create" : "Update"}
