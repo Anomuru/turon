@@ -1,3 +1,4 @@
+import {ParentsProfile} from "features/parentsProfile/ui/parentsProfile.jsx";
 import React from "react";
 import {RgbDataPage} from "pages/rgbDataPage";
 import {
@@ -243,6 +244,11 @@ export const routersConfigProfile = [
         name: "GroupObserve",
         path: getGroupObserve(":id"),
         element: <GroupObservePage/>
+    },
+    {
+        name: "parent",
+        path: "parents/profile/:id",
+        element: <ParentsProfile/>
     },
 
 

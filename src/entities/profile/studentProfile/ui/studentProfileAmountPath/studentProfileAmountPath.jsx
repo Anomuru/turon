@@ -1,8 +1,8 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import classNames from "classnames";
-import { useSelector, useDispatch } from "react-redux";
-import { EditableCard } from "shared/ui/editableCard";
-import { Table } from "shared/ui/table";
+import {useSelector, useDispatch} from "react-redux";
+import {EditableCard} from "shared/ui/editableCard";
+import {Table} from "shared/ui/table";
 
 import cls from "./studentProfileAmountPath.module.sass";
 import inTo from "shared/assets/images/inTo.png";
@@ -16,28 +16,28 @@ import {
     studentPaymenListDelete,
     studentPaymentListDeleteGetThunk, StudentPaymentEditModal, studentBookOrderListThunk, getBookPaymentsList
 } from "features/studentPayment";
-import { Button } from "shared/ui/button";
+import {Button} from "shared/ui/button";
 
-import { StudentPaymentDates } from "features/studentPaymentDates";
-import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
-import { fetchStudentProfileData } from "pages/profilePage/model/thunk/studentProfileThunk";
+import {StudentPaymentDates} from "features/studentPaymentDates";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
+import {fetchStudentProfileData} from "pages/profilePage/model/thunk/studentProfileThunk";
 
-import { Modal } from "shared/ui/modal";
-import { Select } from "shared/ui/select";
-import { useParams } from "react-router";
-import { getCherityYear, getCherityYearMonth, getMonth } from "features/studentPayment/model/selectors/selectors";
-import { API_URL, headers, useHttp } from "shared/api/base";
-import { fetchStudentCharityMonth, fetchStudentDebtorData } from "features/studentPayment/model/studentPaymentThunk";
-import { Form } from "shared/ui/form";
-import { Input } from "shared/ui/input";
-import { useForm } from "react-hook-form";
-import { onChange, onDeleteDebtorData } from "features/studentPayment/model/studentPaymentSlice";
-import { ConfirmModal } from "../../../../../shared/ui/confirmModal";
-
-
+import {Modal} from "shared/ui/modal";
+import {Select} from "shared/ui/select";
+import {useParams} from "react-router";
+import {getCherityYear, getCherityYearMonth, getMonth} from "features/studentPayment/model/selectors/selectors";
+import {API_URL, headers, useHttp} from "shared/api/base";
+import {fetchStudentCharityMonth, fetchStudentDebtorData} from "features/studentPayment/model/studentPaymentThunk";
+import {Form} from "shared/ui/form";
+import {Input} from "shared/ui/input";
+import {useForm} from "react-hook-form";
+import {onChange, onDeleteDebtorData} from "features/studentPayment/model/studentPaymentSlice";
+import {ConfirmModal} from "shared/ui/confirmModal/index.js";
 
 
-export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
+
+
+export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
     const pathArray = window.location.pathname.split('/');
     const lastId = pathArray[pathArray.length - 1];
     const booksList = useSelector(getBookPaymentsList);
@@ -63,23 +63,23 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
     const data = useSelector(getMonth)
 
 
-    const [persentage, setPersentage] = useState(false)
+    const [persentage , setPersentage] = useState(false)
     useEffect(() => {
-        setValue("payment_sum", changedData?.discount_sum)
-        setValue("reason", changedData?.discount_reason)
-        setValue("total_debt", changedData?.total_debt)
-        setValue("discount", changedData?.discount)
-    }, [changedData])
+        setValue("payment_sum" , changedData?.discount_sum)
+        setValue("reason" , changedData?.discount_reason)
+        setValue("total_debt" , changedData?.total_debt)
+        setValue("discount" , changedData?.discount)
+    } , [changedData])
 
 
 
-    const { register, handleSubmit, setValue } = useForm()
+    const {register, handleSubmit, setValue} = useForm()
 
 
-    const { register: registerChange, handleSubmit: handleSubmitChange, setValue: setValueChange } = useForm()
+    const {register: registerChange, handleSubmit: handleSubmitChange, setValue: setValueChange} = useForm()
 
 
-    const { id } = useParams()
+    const {id} = useParams()
     // const {id} = useSelector(getBranch)
 
 
@@ -135,9 +135,9 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
                 <td>{item.date}</td>
                 <td>
                     <div onClick={() => setModal(!modal)}
-                        className={classNames(cls.inner, {
-                            [cls.active]: item?.payment_type.name
-                        })}
+                         className={classNames(cls.inner, {
+                             [cls.active]: item?.payment_type.name
+                         })}
                     >
                         {item?.payment_type.name}
                     </div>
@@ -145,7 +145,7 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
                 {!change && (
                     <td>
                         <Button onClick={() => setPortal(!portal)} type={"delete"}>
-                            <i style={{ color: "white" }} className={"fa-solid fa-xmark"}></i>
+                            <i style={{color: "white"}} className={"fa-solid fa-xmark"}></i>
                         </Button>
                     </td>
                 )}
@@ -155,8 +155,8 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
 
     const renderOutData = () => {
         if (!bookPaymnetList || bookPaymnetList.length === 0) {
-            return <div style={{ width: 232 + "%", display: 'flex', alignItems: "center", justifyContent: "center" }}>
-                <h1 style={{ alignSelf: "center", marginLeft: 20 + "rem", marginTop: 12 + "rem", color: "#dddddd" }}>Kitob
+            return <div style={{width: 232 + "%", display: 'flex', alignItems: "center", justifyContent: "center"}}>
+                <h1 style={{alignSelf: "center", marginLeft: 20 + "rem", marginTop: 12 + "rem", color: "#dddddd"}}>Kitob
                     sotib olinmagan</h1>
             </div>
         }
@@ -175,14 +175,7 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
             return (
                 <tr>
                     <td>{i + 1}</td>
-                    <td
-                        onClick={() => {
-                            setValue("payment_sum", item.discount_sum)
-                            setValue("reason", item.discount_reason)
-                            setActiveModal(true)
-                            setItemChange(item.discount_id)
-                        }}
-                    >
+                    <td>
                         {item?.month}
                     </td>
                     <td>{item?.total_debt}</td>
@@ -211,7 +204,7 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
                                 setCanChange(true)
                                 setValueChange("total_debt", item.total_debt)
                             }}
-                            style={{ color: '#484848' }}
+                            style={{color: '#484848'}}
                             className={`fa-solid fa-pen `}
                         ></i>
                     </td>
@@ -225,22 +218,16 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
     const renderOut = renderOutData();
     const renderDebtor = renderDebtorData()
 
-    const { request } = useHttp()
-    const onChangeCharity = (data) => {
-        request(`${API_URL}Students/charity_month/${itemChange}/`, "PUT", JSON.stringify(data), headers())
-            .then(res => {
-                setActiveModal(false)
-                dispatch(onChange({ id: itemChange, payment_sum: data.payment_sum, reason: data.reason }))
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
+    const {request} = useHttp()
 
     const onChangePaymentMonth = (data) => {
 
+        const res = {
+            ...data ,
+            persentage
+        }
 
-        request(`${API_URL}Attendance/attendance_per_month_delete/${changedData.id}/`, "PUT", JSON.stringify(data), headers())
+        request(`${API_URL}Attendance/attendance_per_month_delete/${changedData.id}/`, "PUT", JSON.stringify(res), headers())
             .then(res => {
                 dispatch(fetchStudentDebtorData(id))
                 setCanChange(false)
@@ -283,7 +270,7 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
                         onClick={() => setActiveState("balanceIn")}
                     >
                         <div className={cls.pathItem}>
-                            <img src={inTo} alt="" />
+                            <img src={inTo} alt=""/>
                             <h2>In</h2>
                         </div>
                         <p>To’lov va Chegirmalar</p>
@@ -293,11 +280,11 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
                             [cls.active]: activeState !== "balanceOut" && activeState
                         })}
                         onClick={() => setActiveState("balanceOut")}
-                        style={{ background: "#FFE4E6", border: ".1rem solid #F43F5E" }}
+                        style={{background: "#FFE4E6", border: ".1rem solid #F43F5E"}}
                     >
                         <div className={cls.pathItem}>
                             <h2>Out</h2>
-                            <img src={outTo} alt="" />
+                            <img src={outTo} alt=""/>
                         </div>
                         <p>Kitoblar</p>
                     </div>
@@ -306,9 +293,9 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
                             [cls.active]: activeState !== "balanceBackLog"
                         })}
                         onClick={() => setActiveState("balanceBackLog")}
-                        style={{ background: "#E0F8FF", border: ".1rem solid #20A5CA" }}
+                        style={{background: "#E0F8FF", border: ".1rem solid #20A5CA"}}
                     >
-                        <h2 style={{ color: "#20A5CA" }}>Qarzdorlik</h2>
+                        <h2 style={{color: "#20A5CA"}}>Qarzdorlik</h2>
                     </div>
                 </div>
                 {
@@ -318,13 +305,13 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
                                 {
                                     activeState === "balanceBackLog" ?
                                         <div className={cls.popup}>
-                                            <AddDebt studentId={id} month={month} years={years} />
+                                            <AddDebt studentId={id} month={month} years={years}/>
                                         </div> :
                                         <>
                                             <Button children={change ? "Amaldagi" : "O'chirilganlar"}
-                                                extraClass={change ? cls.buttonDel2 : cls.buttonDel}
-                                                onClick={() => setChange(!change)} />
-                                            <StudentPaymentDates />
+                                                    extraClass={change ? cls.buttonDel2 : cls.buttonDel}
+                                                    onClick={() => setChange(!change)}/>
+                                            <StudentPaymentDates/>
                                         </>
                                 }
                             </div>
@@ -332,48 +319,48 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
                                 {
                                     activeState === "balanceIn" ? <Table>
                                         <thead>
-                                            <tr>
-                                                <th>Turi</th>
-                                                <th>To’lov</th>
-                                                <th>Sana</th>
-                                                <th>To’lov turi</th>
-                                                {!change && <th>O’chirish</th>}
-                                            </tr>
+                                        <tr>
+                                            <th>Turi</th>
+                                            <th>To’lov</th>
+                                            <th>Sana</th>
+                                            <th>To’lov turi</th>
+                                            {!change && <th>O’chirish</th>}
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            {renderIn}
+                                        {renderIn}
                                         </tbody>
                                     </Table> : activeState === "balanceOut" ? <Table>
                                         <thead>
-                                            <tr>
-                                                <th>Turi</th>
-                                                <th>To’lov</th>
-                                                <th>Sana</th>
-                                            </tr>
+                                        <tr>
+                                            <th>Turi</th>
+                                            <th>To’lov</th>
+                                            <th>Sana</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            {renderOut}
+                                        {renderOut}
                                         </tbody>
                                     </Table> : activeState === "balanceBackLog" ?
                                         <div className={cls.tableDebt}>
                                             <Table>
                                                 <thead>
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Oy</th>
-                                                        <th>Umumiy qarz</th>
-                                                        <th>Qolgan qarz</th>
-                                                        <th>Xayriya</th>
-                                                        <th>Chegirma</th>
-                                                        <th>Chegirma sababi</th>
-                                                        <th>Cash</th>
-                                                        <th>Click</th>
-                                                        <th>Bank</th>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Oy</th>
+                                                    <th>Umumiy qarz</th>
+                                                    <th>Qolgan qarz</th>
+                                                    <th>Xayriya</th>
+                                                    <th>Chegirma</th>
+                                                    <th>Chegirma sababi</th>
+                                                    <th>Cash</th>
+                                                    <th>Click</th>
+                                                    <th>Bank</th>
 
-                                                    </tr>
+                                                </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {renderDebtor}
+                                                {renderDebtor}
                                                 </tbody>
                                             </Table>
                                         </div>
@@ -384,16 +371,44 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
                         : null
                 }
                 {!change && (
-                    <ConfirmModal setActive={setPortal} active={portal} onClick={handleDelete} type={"danger"} />
+                    <ConfirmModal setActive={setPortal} active={portal} onClick={handleDelete} type={"danger"}/>
                 )}
 
 
                 <Modal active={canChange} setActive={setCanChange}>
-                    <Form onSubmit={handleSubmitChange(onChangePaymentMonth)} extraClassname={cls.changeModal}
-                        id={"changeForm"} typeSubmit={"outside"}>
+                    <Form onSubmit={handleSubmit(onChangePaymentMonth)} extraClassname={cls.changeModal}
+                          id={"changeForm"} typeSubmit={"outside"}>
                         <h1>Oylik qarz o'zgartirish</h1>
 
-                        <Input value={changedData?.total_debt} register={registerChange} name={"total_debt"} />
+                        <Input title={"To'lov summasi (Umumiy qarz)"} register={register} name={"total_debt"}/>
+                        <Input
+                            title={"Chegirma summasi"}
+                            register={register}
+                            name={"payment_sum"}
+                            type={"number"}
+                            // value={changedData?.discount_sum}
+                        />
+
+                        <div >
+                            <div style={{display: "flex" , width: "50%" , justifyContent: "space-between"}}>
+                                <h2>Yillik chegirma ( {persentage ? "Foizlik" : "Summalik"} )</h2>
+                                <Input checked={persentage} style={{margin : 0}} onChange={() => setPersentage(!persentage)} type={"checkbox"}/>
+                            </div>
+                            <Input
+
+
+                                register={register}
+                                // value={changedData?.discount_reason}
+                                name={"discount"}
+                            />
+                        </div>
+
+                        <Input
+                            title={"Sababi"}
+                            register={register}
+                            // value={changedData?.discount_reason}
+                            name={"reason"}
+                        />
                         <div className={cls.btns}>
                             <Button
                                 onClick={() => {
@@ -430,43 +445,27 @@ export const StudentProfileAmountPath = memo(({ active, setActive, job }) => {
                 studentId={lastId}
             />
 
-            <Modal active={modalActive} setActive={setActiveModal}>
-                <div style={{ padding: "3rem" }}>
-                    <Form onSubmit={handleSubmit(onChangeCharity)}>
-                        <Input
-                            register={register}
-                            name={"payment_sum"}
-                            type={"number"}
-                        // value={itemChange.discount_sum}
-                        />
-                        <Input
-                            register={register}
-                            // value={itemChange.discount_reason}
-                            name={"reason"}
-                        />
-                    </Form>
-                </div>
-            </Modal>
+
         </EditableCard>
 
     );
 });
 
 
-const AddDebt = ({ month, studentId, years }) => {
+const AddDebt = ({month, studentId, years}) => {
 
 
     const [months, setMonths] = useState(null)
     const [year, setYear] = useState(null)
     useEffect(() => {
         if (year) {
-            dispatch(fetchStudentCharityMonth({ id: studentId, years: year }));
+            dispatch(fetchStudentCharityMonth({id: studentId, years: year}));
         }
     }, [year])
 
     const [activeModal, setActiveModal] = useState(false)
 
-    const { request } = useHttp()
+    const {request} = useHttp()
     const dispatch = useDispatch()
     const onClick = () => {
         request(`${API_URL}Students/missing_month_post/${studentId}/`, "POST", JSON.stringify({
@@ -491,8 +490,8 @@ const AddDebt = ({ month, studentId, years }) => {
             <Button onClick={() => setActiveModal(!activeModal)}>Qo'shish</Button>
 
             <Modal active={activeModal} setActive={setActiveModal}>
-                <Select options={years.years} onChangeOption={setYear} />
-                <Select options={month} onChangeOption={setMonths} />
+                <Select options={years.years} onChangeOption={setYear}/>
+                <Select options={month} onChangeOption={setMonths}/>
                 <Button extraClass={cls.buttonAdd} onClick={onClick}>Qo'shish</Button>
             </Modal>
 

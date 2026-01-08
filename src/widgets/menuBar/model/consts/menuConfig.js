@@ -77,6 +77,22 @@ export const menuConfig = [
         branches: true
 
     },
+    // {
+    //     to: "teacherAttendance/",
+    //     name: "O'qituvchilar Davomit",
+    //     icon: "c",
+    //     roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+    //     branches: true
+    //
+    // },
+    {
+        to: "parents/",
+        name: "Ota-onalar",
+        icon: "fa-users",
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+        branches: true
+
+    },
     {
         to: "groups",
         name: "Sinflar",
