@@ -442,7 +442,7 @@ export const TodoistPage = () => {
             is_recurring: formData.is_recurring,
             recurring_type: formData.recurring_type,
             repeat_every: formData.repeat_every,
-            executor_ids: [formData.executor.id]
+            executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id]
         }
 
         dispatch(taskLoading())
@@ -533,7 +533,7 @@ export const TodoistPage = () => {
 
     const handleChangeStatus = () => {
         dispatch(taskLoading())
-        request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify({ status: formData.status, executor_ids: [formData.executor.id] }), headers())
+        request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify({ status: formData.status, executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id] }), headers())
             .then(res => {
                 request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
                     .then(res => {
