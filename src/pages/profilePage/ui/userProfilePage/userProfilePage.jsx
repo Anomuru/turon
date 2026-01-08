@@ -1,18 +1,18 @@
-import {getUserProfileLoading} from "entities/profile/userProfile/model/userProfileSelector";
-import {changeUserProfile, changingUserProfile} from "entities/profile/userProfile/model/userProfileSlice";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import {useEffect, useMemo, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {useForm} from "react-hook-form";
-import {useParams} from "react-router";
+import { getUserProfileLoading } from "entities/profile/userProfile/model/userProfileSelector";
+import { changeUserProfile, changingUserProfile } from "entities/profile/userProfile/model/userProfileSlice";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router";
 import classNames from "classnames";
-import {API_URL, headers, headersImg, useHttp} from "shared/api/base";
-import {DefaultPageLoader} from "shared/ui/defaultLoader";
+import { API_URL, headers, headersImg, useHttp } from "shared/api/base";
+import { DefaultPageLoader } from "shared/ui/defaultLoader";
 
-import {ChangeInfoForm} from "widgets/changeInfoForm";
-import {Pagination} from "features/pagination";
-import {getSearchValue} from "features/searchInput";
-import {ImageCrop} from "features/imageCrop";
+import { ChangeInfoForm } from "widgets/changeInfoForm";
+import { Pagination } from "features/pagination";
+import { getSearchValue } from "features/searchInput";
+import { ImageCrop } from "features/imageCrop";
 import {
     UserProfileChange,
     UserProfileInfo,
@@ -34,9 +34,9 @@ export const UserProfilePage = () => {
         dispatch(fetchUserProfileData(id))
     }, [])
 
-    const {id} = useParams()
+    const { id } = useParams()
     // const {id} = useSelector(getBranch)
-    const {request} = useHttp()
+    const { request } = useHttp()
     const dispatch = useDispatch()
     const userData = useSelector(getUserProfileData)
     const userLoading = useSelector(getUserProfileLoading)
@@ -44,6 +44,11 @@ export const UserProfilePage = () => {
     const salaryInnerData = useSelector(getUserSalaryInnerData)
     const search = useSelector(getSearchValue)
     const data = useMemo(() => [
+        {
+            name: "username",
+            placeholder: "Username",
+            defaultValue: userData?.username
+        },
         {
             name: "name",
             placeholder: "Ism",
@@ -53,6 +58,11 @@ export const UserProfilePage = () => {
             name: "surname",
             placeholder: "Familiya",
             defaultValue: userData?.surname
+        },
+        {
+            name: "level",
+            placeholder: "Level",
+            defaultValue: userData?.level
         },
         {
             name: "father_name",
@@ -132,7 +142,7 @@ export const UserProfilePage = () => {
         // setCurrentStatus(true)
     }
 
-    if (userLoading) return <DefaultPageLoader/>
+    if (userLoading) return <DefaultPageLoader />
     return (
         <div className={cls.userProfilePage}>
             <UserProfileInfo
@@ -152,7 +162,7 @@ export const UserProfilePage = () => {
                 {
                     activeList
                         ?
-                        <UserProfileSalaryListInner data={currentTableData}/>
+                        <UserProfileSalaryListInner data={currentTableData} />
                         :
                         <UserProfileSalaryList
                             data={currentTableData}
