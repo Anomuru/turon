@@ -14,7 +14,7 @@ const RequireHeader = ({ header = true, back }) => {
     const dispatch = useDispatch();
     const locations = useSelector(getLocations)
     const userId = useSelector(getUserId)
-    console.log(locations, 'locs')
+
 
     useEffect(() => {
         if (userId)
