@@ -133,6 +133,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
                 </td>
                 <td>{item.payment_sum}</td>
                 <td>{item.date}</td>
+                <td>{item.attendance}</td>
                 <td>
                     <div onClick={() => setModal(!modal)}
                          className={classNames(cls.inner, {
@@ -323,6 +324,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
                                             <th>Turi</th>
                                             <th>To’lov</th>
                                             <th>Sana</th>
+                                            <th>Oy</th>
                                             <th>To’lov turi</th>
                                             {!change && <th>O’chirish</th>}
                                         </tr>
