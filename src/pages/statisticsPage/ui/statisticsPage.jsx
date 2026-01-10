@@ -14,6 +14,7 @@ import {getPaymentType} from "entities/capital/model/thunk/capitalThunk.js";
 import {capitalReducer, getCapitalTypes} from "entities/capital/index.js";
 import {Radio} from "shared/ui/radio/index.js";
 import {getSelectedLocations} from "features/locations/index.js";
+import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 const reducers = {
     statisticsSlice: statisticsReducer,
@@ -31,8 +32,12 @@ export const StatisticsPage = () => {
     const [to, setTo] = useState(today);
 
     const branchId = localStorage.getItem("branchId");
-    const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id ?? branchId;
+    const ROLE = localStorage.getItem("job")
+    const currentBranch = useSelector(getCurrentBranch)
+    const branchForFilter =
+        ROLE === "director"
+            ? currentBranch
+            : branchId;
     const paymentType = useSelector(getCapitalTypes)
 
     const [activePayment , setActivePayment] = useState()

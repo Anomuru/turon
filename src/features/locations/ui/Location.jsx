@@ -3,7 +3,7 @@ import { Select } from 'shared/ui/select';
 import cls from './Location.module.sass';
 import { useDispatch, useSelector } from 'react-redux';
 
-
+import {setCurrentBranchId} from "entities/oftenUsed/model/oftenUsedSlice.js";
 import { addSelectedLocations } from "../model/slice/locationsSlice";
 import { fetchLocationsThunk } from "../model/thunk/locationsThunk";
 import {
@@ -14,6 +14,8 @@ import {
 } from "../model/selector/locationsSelector";
 import { MiniLoader } from "shared/ui/miniLoader";
 import { getUserId } from 'pages/loginPage';
+import {fetchBranchesForSelect} from "entities/oftenUsed/index.js";
+import {getBranchesSelect, getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 
 export const Location = () => {
@@ -23,7 +25,11 @@ export const Location = () => {
     // const selectedLocationsById = useSelector(getSelectedLocationsByIds)
     const selectedLocations = useSelector(getSelectedLocations)
     const loading = useSelector(getLocationLoading)
+    const currentBranchId = useSelector(getCurrentBranch)
     const userId = useSelector(getUserId)
+    const branches = useSelector(getBranchesSelect)
+
+    console.log(currentBranchId, 'director locs');
 
 
     const [isLocal, setIsSetLocal] = useState(false)
@@ -37,6 +43,21 @@ export const Location = () => {
             dispatch(fetchLocationsThunk(userId))
     }, [userId]);
 
+    useEffect(()=> {
+        dispatch(fetchBranchesForSelect())
+    }, [])
+
+    useEffect(() => {
+        const ROLE = localStorage.getItem("job");
+        const id =
+            ROLE === "director"
+                ? localStorage.getItem("branchForDirector")
+                : localStorage.getItem("branchId");
+
+        if (id) {
+            dispatch(setCurrentBranchId(id));
+        }
+    }, [dispatch]);
 
 
     //
@@ -58,37 +79,28 @@ export const Location = () => {
 
 
     const changeSelectedLocation = useCallback((id) => {
-        dispatch(addSelectedLocations(id))
+        dispatch(setCurrentBranchId(id));
+        localStorage.setItem("branchForDirector", id)
     }, []);
 
-    if (loading) {
-        return (
-            <div className={cls.loader}>
-                <MiniLoader />
-            </div>
-        )
-    }
+    // if (loading) {
+    //     return (
+    //         <div className={cls.loader}>
+    //             <MiniLoader />
+    //         </div>
+    //     )
+    // }
 
 
     return (
         <div className={cls.locations}>
-
-
-            {
-                // locations.length > 1 ?
                 <Select
                     onChangeOption={changeSelectedLocation}
-                    options={locations}
+                    options={branches}
+                    defaultValue={currentBranchId}
+
 
                 />
-                // :
-                // selectedLocations[0]?.name ?
-                // <div className={cls.location}>
-                //     <span>Location:</span>
-                //     <span>{selectedLocations[0]?.name}</span>
-                // </div> : null
-            }
-
         </div>
     );
 };

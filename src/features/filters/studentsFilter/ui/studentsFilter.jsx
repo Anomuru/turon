@@ -21,6 +21,7 @@ import {Button} from "shared/ui/button/index.js";
 import {getSearchValue} from "features/searchInput/index.js";
 import {BRANCH} from "shared/const/roles.js";
 import {getSelectedLocations} from "features/locations/index.js";
+import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 export const StudentsFilter = React.memo(({active, setActive, activePage, pageSize, currentPage}) => {
 
@@ -40,9 +41,14 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
     localStorage.setItem("ageFrom", selectedAgeFrom)
     localStorage.setItem("ageTo", selectedAgeTo)
     localStorage.setItem("studentSwitch", `${isSwitch}`)
+
+    const currentBranch = useSelector(getCurrentBranch)
+    const ROLE = localStorage.getItem("job")
     const userBranchId = localStorage.getItem("branchId")
-    const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id ?? userBranchId;
+    const branchForFilter =
+        ROLE === "director"
+            ? currentBranch
+            : userBranchId;
 
 
 

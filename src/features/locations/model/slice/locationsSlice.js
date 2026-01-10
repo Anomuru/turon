@@ -13,6 +13,9 @@ const locationsSlice = createSlice({
     name: "ChangeLocationSlice",
     initialState,
     reducers: {
+        setCurrentBranchId: (state, action) => {
+            state.currentBranchId = action.payload;
+        },
         addSelectedLocations: (state, action) => {
             const filteredLocation = state.locations.find(
                 (item) => item?.id === +action.payload
@@ -88,4 +91,4 @@ const locationsSlice = createSlice({
 });
 
 export const { reducer: locationsReducer } = locationsSlice;
-export const { addSelectedLocations, clearSelectedLocations } = locationsSlice.actions;
+export const { addSelectedLocations, clearSelectedLocations, setCurrentBranchId } = locationsSlice.actions;
