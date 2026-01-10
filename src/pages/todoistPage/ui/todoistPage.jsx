@@ -20,10 +20,11 @@ import {
     addTag,
     addTask,
     deleteAttachments, deleteComments,
+    deleteMultiTask,
     deleteProofs,
     deleteSubTasks,
     deleteTag, deleteTask,
-    editAttachments, editComments, editNotification, editProofs,
+    editAttachments, editComments, editMultiTask, editNotification, editProofs,
     editSubTasks,
     editTag,
     editTask,
@@ -91,8 +92,8 @@ export const TodoistPage = () => {
     const tasks = useSelector(getTasks)
     const tasksLoading = useSelector(getTaskLoading)
     const tasksProfileLoading = useSelector(getTaskProfileLoading)
-    const statusList = useSelector(getTaskStatusList)
-    const categoryList = useSelector(getTaskCategoryList)
+    const statusList = useSelector(getTaskStatusList) ?? []
+    const categoryList = useSelector(getTaskCategoryList) ?? []
     const recurringTypes = useSelector(getTaskRecurringTypes)
     const notificationsList = useSelector(getTaskNotificationsList)
     const notificationsLoading = useSelector(getTaskNotificationLoading)
@@ -333,7 +334,24 @@ export const TodoistPage = () => {
             .then(res => {
                 request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
                     .then(res => {
-                        dispatch(editTask({ ...res, isMulti: true }))
+                        if (selectedMultiTask && selectedMultiTask.children) {
+                            dispatch(editMultiTask({
+                                ...res,
+                                parent: selectedMultiTask.id
+                            }))
+                            setSelectedMultiTask(() => {
+                                return ({
+                                    // ...prev,
+                                    ...selectedMultiTask.children.filter(item => item.id !== res.id)[0],
+                                    children: [
+                                        ...selectedMultiTask.children.filter(item => item.id !== res.id),
+                                        res
+                                    ]
+                                })
+                            })
+                        } else {
+                            dispatch(editTask(res))
+                        }
                         dispatch(onAddAlertOptions({
                             status: true,
                             type: "success",
@@ -415,7 +433,7 @@ export const TodoistPage = () => {
             tags: formData.tags.map(item => item.value),
             category: formData.category,
             // ...formData,
-            // creator: formData.creator.id,
+            creator: formData.creator.id,
             // executor_ids: formData.executor_ids.map(item => item.value),
             // executor_ids: formData.executor_ids ? [Number(formData.executor_ids)] : [formData.executor.id],
             reviewer: typeof formData.reviewer === "object" ? formData.reviewer.id : formData.reviewer,
@@ -424,16 +442,33 @@ export const TodoistPage = () => {
             is_recurring: formData.is_recurring,
             recurring_type: formData.recurring_type,
             repeat_every: formData.repeat_every,
-            // executor_ids: []
+            executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id]
         }
 
         dispatch(taskLoading())
-        request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify(patch), headers())
+        request(`${API_URL}Tasks/missions/${formData.id}/`, "PUT", JSON.stringify(patch), headers())
             .then(res => {
 
                 request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
                     .then(res => {
-                        dispatch(editTask(res))
+                        if (selectedMultiTask && selectedMultiTask.children) {
+                            dispatch(editMultiTask({
+                                ...res,
+                                parent: selectedMultiTask.id
+                            }))
+                            setSelectedMultiTask(() => {
+                                return ({
+                                    // ...prev,
+                                    ...selectedMultiTask.children.filter(item => item.id !== res.id)[0],
+                                    children: [
+                                        ...selectedMultiTask.children.filter(item => item.id !== res.id),
+                                        res
+                                    ]
+                                })
+                            })
+                        } else {
+                            dispatch(editTask(res))
+                        }
                         dispatch(onAddAlertOptions({
                             status: true,
                             type: "success",
@@ -464,7 +499,21 @@ export const TodoistPage = () => {
         dispatch(taskLoading())
         request(`${API_URL}Tasks/missions/${selectedTask.id}/`, "DELETE", null, headers())
             .then(res => {
-                dispatch(deleteTask(selectedTask.id))
+                if (selectedMultiTask && selectedMultiTask.children) {
+                    dispatch(deleteMultiTask({
+                        id: selectedTask.id,
+                        parent: selectedMultiTask.id
+                    }))
+                    setSelectedMultiTask(() => {
+                        return ({
+                            // ...prev,
+                            ...selectedMultiTask.children.filter(item => item.id !== selectedTask.id)[0],
+                            children: selectedMultiTask.children.filter(item => item.id !== selectedTask.id)
+                        })
+                    })
+                } else {
+                    dispatch(deleteTask(selectedTask.id))
+                }
                 dispatch(onAddAlertOptions({
                     status: true,
                     type: "success",
@@ -484,11 +533,28 @@ export const TodoistPage = () => {
 
     const handleChangeStatus = () => {
         dispatch(taskLoading())
-        request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify({ status: formData.status }), headers())
+        request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify({ status: formData.status, executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id] }), headers())
             .then(res => {
                 request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
                     .then(res => {
-                        dispatch(editTask(res))
+                        if (selectedMultiTask && selectedMultiTask.children) {
+                            dispatch(editMultiTask({
+                                ...res,
+                                parent: selectedMultiTask.id
+                            }))
+                            setSelectedMultiTask(() => {
+                                return ({
+                                    // ...prev,
+                                    ...selectedMultiTask.children.filter(item => item.id !== res.id)[0],
+                                    children: [
+                                        ...selectedMultiTask.children.filter(item => item.id !== res.id),
+                                        res
+                                    ]
+                                })
+                            })
+                        } else {
+                            dispatch(editTask(res))
+                        }
                         dispatch(onAddAlertOptions({
                             status: true,
                             type: "success",
@@ -1037,6 +1103,7 @@ export const TodoistPage = () => {
     }
 
     function sortTasks(data) {
+        if (!data) return []
         const colorOrder = {
             red: 0,
             yellow: 1,
@@ -1166,7 +1233,8 @@ export const TodoistPage = () => {
                         <div
                             className={classNames(styles.grid, {
                                 [styles.loading]: tasksLoading || notificationsLoading,
-                                [styles.level]: userLevel > 2
+                                [styles.level]: userLevel > 2,
+                                [styles.none]: (tasks?.length === 0 && activePage === "task") || (notificationsList?.length === 0 && activePage !== "task")
                             })}
                         >
                             {
@@ -1174,232 +1242,254 @@ export const TodoistPage = () => {
                                     ?
                                     tasksLoading
                                         ? <DefaultPageLoader status={"none"} />
-                                        : (selectedMultiTask && selectedMultiTask.children)
-                                            ? sortTasks(selectedMultiTask.children).map((task) => (
-                                                <div
-                                                    key={task.id}
-                                                    className={styles.card}
-                                                    style={
-                                                        task.status === "completed"
-                                                            ? null
-                                                            : {
-                                                                "background": task.deadline_color === "red"
-                                                                    ? "rgba(255, 0, 0, 0.12)"
-                                                                    : task.deadline_color === "green"
-                                                                        ? "rgba(0, 255, 0, 0.12)"
-                                                                        : "rgba(255, 255, 0, 0.2)"
-                                                            }
-                                                    }
-                                                >
-                                                    <div className={styles.cardHeader}>
-                                                        <h3 className={styles.cardTitle}>{task.title}</h3>
-                                                        <span
-                                                            className={styles.status}
-                                                            style={{ color: getStatusColor(task.status) }}
-                                                            onClick={() => openChangeStatusModal(task)}
-                                                        >
-                                                            {statusList.filter(item => item.id === task.status)[0]?.name}
-                                                        </span>
-                                                    </div>
-                                                    <p className={styles.cardText}>
-                                                        <strong>Executor:</strong> {task.executor.full_name}
-                                                    </p>
-                                                    {
-                                                        task.is_redirected && (
-                                                            <p className={styles.cardText}>
-                                                                <strong>Redirected:</strong> {task.redirected_by.full_name}
-                                                            </p>
-                                                        )
-                                                    }
-                                                    <p className={styles.cardText}>
-                                                        <strong>Deadline:</strong> {task.deadline}
-                                                    </p>
-                                                    <div className={styles.tags}>
-                                                        {
-                                                            task.tags.length > 3
-                                                                ? <>
-                                                                    {
-                                                                        task.tags.slice(0, 3).map((tagId) => {
-                                                                            // const tag = tags.find((t) => t.id === tagId)
-                                                                            return (
-                                                                                <span key={tagId.id} className={styles.tag}>
-                                                                                    {tagId?.name}
-                                                                                </span>
-                                                                            )
-                                                                        })
-                                                                    }
-                                                                    <p className={styles.tags__inner}>+{task.tags.length - 3}</p>
-                                                                </>
-                                                                : task.tags.map((tagId) => {
-                                                                    // const tag = tags.find((t) => t.id === tagId)
-                                                                    return (
-                                                                        <span key={tagId.id} className={styles.tag}>
-                                                                            {tagId?.name}
-                                                                        </span>
-                                                                    )
-                                                                })
+                                        : tasks?.length === 0
+                                            ? <h1 className={styles.grid__title}>
+                                                {
+                                                    activeTaskType === "myTasks"
+                                                        ? "Sizga vazifa berilmagan"
+                                                        : activeTaskType === "givenTask"
+                                                            ? "Siz vazifa bermagansiz"
+                                                            : "Tekshirishingiz kerak bolgan vazifa yo'q"
+                                                }
+                                            </h1>
+                                            : (selectedMultiTask && selectedMultiTask.children)
+                                                ? sortTasks(selectedMultiTask.children).map((task) => (
+                                                    <div
+                                                        key={task.id}
+                                                        className={styles.card}
+                                                        style={
+                                                            task.status === "completed"
+                                                                ? null
+                                                                : {
+                                                                    "background": task.deadline_color === "red"
+                                                                        ? "rgba(255, 0, 0, 0.12)"
+                                                                        : task.deadline_color === "green"
+                                                                            ? "rgba(0, 255, 0, 0.12)"
+                                                                            : "rgba(255, 255, 0, 0.2)"
+                                                                }
                                                         }
-                                                    </div>
-                                                    <div className={styles.cardActions}>
+                                                    >
+                                                        <div className={styles.cardHeader}>
+                                                            <h3 className={styles.cardTitle}>{task.title}</h3>
+                                                            <span
+                                                                className={styles.status}
+                                                                style={{ color: getStatusColor(task.status) }}
+                                                                onClick={() => openChangeStatusModal(task)}
+                                                            >
+                                                                {statusList.filter(item => item.id === task.status)[0]?.name}
+                                                            </span>
+                                                        </div>
+                                                        <p className={styles.cardText}>
+                                                            <strong>Executor:</strong> {task.executor.full_name}
+                                                        </p>
                                                         {
-                                                            (userLevel !== 4) && (
-                                                                <button
-                                                                    className={styles.btnRedirected}
-                                                                    onClick={() => openRedirectModal(task)}
-                                                                >
-                                                                    Redirected
-                                                                </button>
+                                                            (task.is_redirected && task.executor.id !== task.redirected_by.id) && (
+                                                                <p className={styles.cardText}>
+                                                                    <strong>Redirected:</strong> {task.redirected_by.full_name}
+                                                                </p>
                                                             )
                                                         }
-                                                        <button className={styles.btnView}
-                                                            onClick={() => openViewTaskModal(task)}>
-                                                            View More
-                                                        </button>
-                                                        {
-                                                            task.creator.id === userId && (
-                                                                <>
-                                                                    {/* <button className={styles.btnEdit}
+                                                        <p className={styles.cardText}>
+                                                            <strong>Deadline:</strong> {task.deadline}
+                                                        </p>
+                                                        <div className={styles.tags}>
+                                                            {
+                                                                task.tags.length > 3
+                                                                    ? <>
+                                                                        {
+                                                                            task.tags.slice(0, 3).map((tagId) => {
+                                                                                // const tag = tags.find((t) => t.id === tagId)
+                                                                                return (
+                                                                                    <span key={tagId.id} className={styles.tag}>
+                                                                                        {tagId?.name}
+                                                                                    </span>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                        <p className={styles.tags__inner}>+{task.tags.length - 3}</p>
+                                                                    </>
+                                                                    : task.tags.map((tagId) => {
+                                                                        // const tag = tags.find((t) => t.id === tagId)
+                                                                        return (
+                                                                            <span key={tagId.id} className={styles.tag}>
+                                                                                {tagId?.name}
+                                                                            </span>
+                                                                        )
+                                                                    })
+                                                            }
+                                                        </div>
+                                                        <div className={styles.cardActions}>
+                                                            {
+                                                                (userLevel !== 4) && (
+                                                                    <button
+                                                                        className={styles.btnRedirected}
+                                                                        onClick={() => openRedirectModal(task)}
+                                                                    >
+                                                                        Redirected
+                                                                    </button>
+                                                                )
+                                                            }
+                                                            <button className={styles.btnView}
+                                                                onClick={() => openViewTaskModal(task)}>
+                                                                View More
+                                                            </button>
+                                                            {
+                                                                task.creator.id === userId && (
+                                                                    <>
+                                                                        {/* <button className={styles.btnEdit}
                                                                         onClick={() => openEditTaskModal(task)}>
                                                                         Edit
                                                                     </button> */}
-                                                                    <button className={styles.btnDelete}
-                                                                        onClick={() => openDeleteTaskModal(task)}>
-                                                                        Delete
-                                                                    </button>
-                                                                </>
-                                                            )
-                                                        }
-                                                    </div>
-                                                </div>
-                                            ))
-                                            : sortTasks(tasks).map((task) => (
-                                                <div
-                                                    key={task.id}
-                                                    className={styles.card}
-                                                    style={
-                                                        task.status === "completed"
-                                                            ? null
-                                                            : {
-                                                                "background": task.deadline_color === "red"
-                                                                    ? "rgba(255, 0, 0, 0.12)"
-                                                                    : task.deadline_color === "green"
-                                                                        ? "rgba(0, 255, 0, 0.12)"
-                                                                        : "rgba(255, 255, 0, 0.2)"
-                                                            }
-                                                    }
-                                                >
-                                                    <div className={styles.cardHeader}>
-                                                        <h3 className={styles.cardTitle}>{task.title}</h3>
-                                                        <span
-                                                            className={styles.status}
-                                                            style={{ color: getStatusColor(task.status) }}
-                                                            onClick={() => task?.children?.length === 1 && openChangeStatusModal(task)}
-                                                        >
-                                                            {statusList.filter(item => item.id === task.status)[0]?.name}
-                                                        </span>
-                                                    </div>
-                                                    <p className={styles.cardText}>
-                                                        <strong>
-                                                            {
-                                                                (activeTaskType === "givenTask" && task?.children?.length > 1)
-                                                                    ? "Executors:"
-                                                                    : "Executor:"
-
-                                                            }
-                                                        </strong>
-                                                        {" "}
-                                                        {
-                                                            (activeTaskType === "givenTask" && task?.children?.length > 1)
-                                                                ? `${task.executor.full_name} +${task.children?.length - 1}`
-                                                                : task.executor.full_name
-                                                        }
-                                                    </p>
-                                                    {
-                                                        task.is_redirected && (
-                                                            <p className={styles.cardText}>
-                                                                <strong>Redirected:</strong> {task.redirected_by.full_name}
-                                                            </p>
-                                                        )
-                                                    }
-                                                    <p className={styles.cardText}>
-                                                        <strong>Deadline:</strong> {task.deadline}
-                                                    </p>
-                                                    <div className={styles.tags}>
-                                                        {
-                                                            task.tags.length > 3
-                                                                ? <>
-                                                                    {
-                                                                        task.tags.slice(0, 3).map((tagId) => {
-                                                                            // const tag = tags.find((t) => t.id === tagId)
-                                                                            return (
-                                                                                <span key={tagId.id} className={styles.tag}>
-                                                                                    {tagId?.name}
-                                                                                </span>
-                                                                            )
-                                                                        })
-                                                                    }
-                                                                    <p className={styles.tags__inner}>+{task.tags.length - 3}</p>
-                                                                </>
-                                                                : task.tags.map((tagId) => {
-                                                                    // const tag = tags.find((t) => t.id === tagId)
-                                                                    return (
-                                                                        <span key={tagId.id} className={styles.tag}>
-                                                                            {tagId?.name}
-                                                                        </span>
-                                                                    )
-                                                                })
-                                                        }
-                                                    </div>
-                                                    <div className={styles.cardActions}>
-                                                        {
-                                                            (userLevel !== 4 && task?.children?.length === 1) && (
-                                                                <button
-                                                                    className={styles.btnRedirected}
-                                                                    onClick={() => openRedirectModal(task)}
-                                                                >
-                                                                    Redirected
-                                                                </button>
-                                                            )
-                                                        }
-                                                        <button
-                                                            className={styles.btnView}
-                                                            onClick={() =>
-                                                                task.children.length === 1
-                                                                    ? openViewTaskModal(task)
-                                                                    : setSelectedMultiTask(task)
-                                                            }
-                                                        >
-                                                            View More
-                                                        </button>
-                                                        {
-                                                            (task.creator.id === userId) && (
-                                                                (activeTaskType === "givenTask" && task?.children?.length > 1)
-                                                                    ? null
-                                                                    : <>
-                                                                        <button className={styles.btnEdit}
-                                                                            onClick={() => openEditTaskModal(task)}>
-                                                                            Edit
-                                                                        </button>
                                                                         <button className={styles.btnDelete}
                                                                             onClick={() => openDeleteTaskModal(task)}>
                                                                             Delete
                                                                         </button>
                                                                     </>
+                                                                )
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                ))
+                                                : sortTasks(tasks).map((task) => (
+                                                    <div
+                                                        key={task.id}
+                                                        className={styles.card}
+                                                        style={
+                                                            task.status === "completed"
+                                                                ? null
+                                                                : {
+                                                                    "background": task.deadline_color === "red"
+                                                                        ? "rgba(255, 0, 0, 0.12)"
+                                                                        : task.deadline_color === "green"
+                                                                            ? "rgba(0, 255, 0, 0.12)"
+                                                                            : "rgba(255, 255, 0, 0.2)"
+                                                                }
+                                                        }
+                                                    >
+                                                        <div className={styles.cardHeader}>
+                                                            <h3 className={styles.cardTitle}>{task.title}</h3>
+                                                            {
+                                                                task.children?.length > 1
+                                                                    ? null
+                                                                    : <span
+                                                                        className={styles.status}
+                                                                        style={{ color: getStatusColor(task.status) }}
+                                                                        onClick={() => openChangeStatusModal(task)}
+                                                                    >
+                                                                        {statusList.filter(item => item.id === task.status)[0]?.name}
+                                                                    </span>
+                                                            }
+                                                        </div>
+                                                        <p className={styles.cardText}>
+                                                            <strong>
+                                                                {
+                                                                    (activeTaskType === "givenTask" && task?.children?.length > 1)
+                                                                        ? "Executors:"
+                                                                        : "Executor:"
+
+                                                                }
+                                                            </strong>
+                                                            {" "}
+                                                            {
+                                                                (activeTaskType === "givenTask" && task?.children?.length > 1)
+                                                                    ? `${task.executor.full_name} +${task.children?.length - 1}`
+                                                                    : task.executor?.full_name
+                                                            }
+                                                        </p>
+                                                        {
+                                                            (task.is_redirected && task.executor.id !== task.redirected_by.id) && (
+                                                                <p className={styles.cardText}>
+                                                                    <strong>Redirected:</strong> {task.redirected_by.full_name}
+                                                                </p>
                                                             )
                                                         }
+                                                        <p className={styles.cardText}>
+                                                            <strong>Deadline:</strong> {task.deadline}
+                                                        </p>
+                                                        <div className={styles.tags}>
+                                                            {
+                                                                task.tags?.length > 3
+                                                                    ? <>
+                                                                        {
+                                                                            task.tags.slice(0, 3).map((tagId) => {
+                                                                                // const tag = tags.find((t) => t.id === tagId)
+                                                                                return (
+                                                                                    <span key={tagId.id} className={styles.tag}>
+                                                                                        {tagId?.name}
+                                                                                    </span>
+                                                                                )
+                                                                            })
+                                                                        }
+                                                                        <p className={styles.tags__inner}>+{task.tags.length - 3}</p>
+                                                                    </>
+                                                                    : task.tags?.map((tagId) => {
+                                                                        // const tag = tags.find((t) => t.id === tagId)
+                                                                        return (
+                                                                            <span key={tagId.id} className={styles.tag}>
+                                                                                {tagId?.name}
+                                                                            </span>
+                                                                        )
+                                                                    })
+                                                            }
+                                                        </div>
+                                                        <div className={styles.cardActions}>
+                                                            {
+                                                                (userLevel !== 4 && (task?.children?.length === 1 || !task?.children)) && (
+                                                                    <button
+                                                                        className={styles.btnRedirected}
+                                                                        onClick={() => openRedirectModal(task)}
+                                                                    >
+                                                                        Redirected
+                                                                    </button>
+                                                                )
+                                                            }
+                                                            <button
+                                                                className={styles.btnView}
+                                                                onClick={() =>
+                                                                    (task.children && task.children?.length > 1)
+                                                                        ? setSelectedMultiTask(task)
+                                                                        : openViewTaskModal(task)
+                                                                }
+                                                            >
+                                                                View More
+                                                            </button>
+                                                            {
+                                                                (task.creator?.id === userId) && (
+                                                                    (activeTaskType === "givenTask" && task?.children?.length > 1)
+                                                                        ? null
+                                                                        : <>
+                                                                            <button
+                                                                                className={styles.btnEdit}
+                                                                                onClick={() => openEditTaskModal(task)}
+                                                                            >
+                                                                                Edit
+                                                                            </button>
+                                                                            <button
+                                                                                className={styles.btnDelete}
+                                                                                onClick={() => openDeleteTaskModal(task)}
+                                                                            >
+                                                                                Delete
+                                                                            </button>
+                                                                        </>
+                                                                )
+                                                            }
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))
+                                                ))
                                     :
                                     notificationsLoading
                                         ? <DefaultPageLoader status={"none"} />
-                                        : notificationsList?.map(item => {
-                                            return <NotificationCard
-                                                data={item}
-                                                onToggleRead={onToggleRead}
-                                                onViewTask={onViewTask}
-                                            />
-                                        })
+                                        : notificationsList.length === 0
+                                            ? <h1 className={styles.grid__title}>
+                                                Sizga xechqanday xabar yo'q
+                                            </h1>
+                                            : notificationsList?.map(item => {
+                                                return <NotificationCard
+                                                    data={item}
+                                                    onToggleRead={onToggleRead}
+                                                    onViewTask={onViewTask}
+                                                />
+                                            })
                             }
                         </div>
                     </section>
@@ -1417,7 +1507,7 @@ export const TodoistPage = () => {
                                     {
                                         tagsLoading
                                             ? <DefaultPageLoader status={"none"} />
-                                            : tags.map((tag) => (
+                                            : tags?.map((tag) => (
                                                 <div key={tag.id} className={styles.tagItem}>
                                                     <span className={styles.tagName}>{tag.name}</span>
                                                     <div className={styles.tagActions}>
@@ -1442,875 +1532,910 @@ export const TodoistPage = () => {
                 {/* Modals */}
 
                 {/* Create/Edit Task Modal */}
-                {(modalType === "createTask" || modalType === "editTask") && (
-                    <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
-                        <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                            <h2 className={styles.modalTitle}>{modalType === "createTask" ? "Create Task" : "Edit Task"}</h2>
-                            <div className={styles.formGroup}>
-                                <label>Title</label>
-                                <input
-                                    type="text"
-                                    value={formData.title || ""}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    placeholder="Task title"
-                                    required
-                                />
-                            </div>
-                            <div className={styles.formGroup}>
-                                <label>Description</label>
-                                <textarea
-                                    value={formData.description || ""}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    placeholder="Task description"
-                                    rows={3}
-                                />
-                            </div>
-                            {/*<div className={styles.formRow}>*/}
-                            <div className={styles.formGroup}>
-                                <label>Tags</label>
-                                <AnimatedMulti
-                                    extraClass={styles.formGroup__multiSelect}
-                                    options={tagsList}
-                                    onChange={(e) => setFormData({ ...formData, tags: e })}
-                                    value={formData.tags}
-                                    fontSize={15}
-                                />
-                            </div>
-                            {
-                                !(userLevel === 4) && (
-                                    // <div className={styles.formRow}>
-                                    <>
+                {
+                    (modalType === "createTask" || modalType === "editTask") && (
+                        <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                                <h2 className={styles.modalTitle}>{modalType === "createTask" ? "Create Task" : "Edit Task"}</h2>
+                                <div className={styles.formGroup}>
+                                    <label>Title</label>
+                                    <input
+                                        type="text"
+                                        value={formData.title || ""}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        placeholder="Task title"
+                                        required
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Description</label>
+                                    <textarea
+                                        value={formData.description || ""}
+                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        placeholder="Task description"
+                                        rows={3}
+                                    />
+                                </div>
+                                {/*<div className={styles.formRow}>*/}
+                                <div className={styles.formGroup}>
+                                    <label>Tags</label>
+                                    <AnimatedMulti
+                                        extraClass={styles.formGroup__multiSelect}
+                                        options={tagsList}
+                                        onChange={(e) => setFormData({ ...formData, tags: e })}
+                                        value={formData.tags}
+                                        fontSize={15}
+                                    />
+                                </div>
+                                {
+                                    !(userLevel === 4) && (
+                                        // <div className={styles.formRow}>
+                                        <>
+                                            {
+                                                modalType !== "editTask" && (
+                                                    <div className={styles.formGroup}>
+                                                        <label>Executor</label>
+                                                        <AnimatedMulti
+                                                            extraClass={styles.formGroup__multiSelect}
+                                                            options={[
+                                                                // {value: userId, label: "Me"},
+                                                                ...teachersList
+                                                                    .filter(item => item.id !== userId)
+                                                                    .map(item => ({ value: item.id, label: item.name }))
+                                                            ]}
+                                                            onChange={(e) => setFormData({ ...formData, executor_ids: e })}
+                                                            value={
+                                                                formData.executor_ids ?? [{
+                                                                    value: selectedTask.executor.id,
+                                                                    label: selectedTask.executor.full_name
+                                                                }]
+                                                            }
+                                                            fontSize={15}
+                                                        />
+                                                        {/*<select*/}
+                                                        {/*    value={typeof formData.executor === "object" ? formData.executor.id : formData.executor_ids || "none"}*/}
+                                                        {/*    onChange={(e) => setFormData({ ...formData, executor_ids: e.target.value })}*/}
+                                                        {/*    required*/}
+                                                        {/*>*/}
+                                                        {/*    <option value={"none"}>Select Executor</option>*/}
+                                                        {/*    {*/}
+                                                        {/*        [...teachersList].map(item =>*/}
+                                                        {/*            <option value={item.id}>{item.name}</option>*/}
+                                                        {/*        )*/}
+                                                        {/*    }*/}
+                                                        {/*</select>*/}
+                                                    </div>
+                                                )
+                                            }
+                                            <div className={styles.formGroup}>
+                                                <label>Reviewer</label>
+                                                <select
+                                                    value={typeof formData.reviewer === "object" ? formData.reviewer.id : formData.reviewer || "none"}
+                                                    onChange={(e) => setFormData({ ...formData, reviewer: e.target.value })}
+                                                    required
+                                                >
+                                                    <option value={userId}>Me</option>
+                                                    {
+                                                        [...teachersList].map(item =>
+                                                            <option value={item.id}>{item.name}</option>
+                                                        )
+                                                    }
+                                                </select>
+                                            </div>
+                                        </>
+                                        // {/*</div>*/}
+                                    )
+                                }
+                                <div className={styles.formGroup}>
+                                    <label>Departmant</label>
+                                    <select
+                                        value={formData.category || "admin"}
+                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                        required
+                                    >
                                         {
-                                            modalType !== "editTask" && (
-                                                <div className={styles.formGroup}>
-                                                    <label>Executor</label>
-                                                    <AnimatedMulti
-                                                        extraClass={styles.formGroup__multiSelect}
-                                                        options={[
-                                                            // {value: userId, label: "Me"},
-                                                            ...teachersList
-                                                                .filter(item => item.id !== userId)
-                                                                .map(item => ({ value: item.id, label: item.name }))
-                                                        ]}
-                                                        onChange={(e) => setFormData({ ...formData, executor_ids: e })}
-                                                        value={
-                                                            formData.executor_ids ?? [{
-                                                                value: selectedTask.executor.id,
-                                                                label: selectedTask.executor.full_name
-                                                            }]
-                                                        }
-                                                        fontSize={15}
-                                                    />
-                                                    {/*<select*/}
-                                                    {/*    value={typeof formData.executor === "object" ? formData.executor.id : formData.executor_ids || "none"}*/}
-                                                    {/*    onChange={(e) => setFormData({ ...formData, executor_ids: e.target.value })}*/}
-                                                    {/*    required*/}
-                                                    {/*>*/}
-                                                    {/*    <option value={"none"}>Select Executor</option>*/}
-                                                    {/*    {*/}
-                                                    {/*        [...teachersList].map(item =>*/}
-                                                    {/*            <option value={item.id}>{item.name}</option>*/}
-                                                    {/*        )*/}
-                                                    {/*    }*/}
-                                                    {/*</select>*/}
-                                                </div>
+                                            categoryList.map(item =>
+                                                <option value={item.id}>{item.name}</option>
                                             )
                                         }
+                                    </select>
+                                </div>
+                                {/*</div>*/}
+                                {/*<div className={styles.formRow}>*/}
+                                {/*<div className={styles.formGroup}>*/}
+                                {/*    <label>Status</label>*/}
+                                {/*    <select*/}
+                                {/*        value={formData.status || "not_started"}*/}
+                                {/*        onChange={(e) => setFormData({...formData, status: e.target.value})}*/}
+                                {/*        required*/}
+                                {/*    >*/}
+                                {/*        {*/}
+                                {/*            statusList.map(item =>*/}
+                                {/*                <option value={item.id}>{item.name}</option>*/}
+                                {/*            )*/}
+                                {/*        }*/}
+                                {/*    </select>*/}
+                                {/*</div>*/}
+                                <div className={styles.formGroup}>
+                                    <label>Deadline</label>
+                                    <input
+                                        type="date"
+                                        value={formData.deadline || ""}
+                                        onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                                        required
+                                    />
+                                </div>
+                                {/*</div>*/}
+                                <div className={styles.formGroup}>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.is_recurring || false}
+                                            onChange={(e) => setFormData({ ...formData, is_recurring: e.target.checked })}
+                                        />
+                                        Recurring
+                                    </label>
+                                </div>
+                                {formData.is_recurring && (
+                                    <div className={styles.formRow}>
                                         <div className={styles.formGroup}>
-                                            <label>Reviewer</label>
+                                            <label>Recurring Type</label>
                                             <select
-                                                value={typeof formData.reviewer === "object" ? formData.reviewer.id : formData.reviewer || "none"}
-                                                onChange={(e) => setFormData({ ...formData, reviewer: e.target.value })}
-                                                required
+                                                value={formData.recurring_type || "daily"}
+                                                onChange={(e) => setFormData({ ...formData, recurring_type: e.target.value })}
                                             >
-                                                <option value={userId}>Me</option>
                                                 {
-                                                    [...teachersList].map(item =>
+                                                    recurringTypes.map(item =>
                                                         <option value={item.id}>{item.name}</option>
                                                     )
                                                 }
                                             </select>
                                         </div>
-                                    </>
-                                    // {/*</div>*/}
-                                )
-                            }
-                            <div className={styles.formGroup}>
-                                <label>Departmant</label>
-                                <select
-                                    value={formData.category || "admin"}
-                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                    required
-                                >
-                                    {
-                                        categoryList.map(item =>
-                                            <option value={item.id}>{item.name}</option>
-                                        )
-                                    }
-                                </select>
-                            </div>
-                            {/*</div>*/}
-                            {/*<div className={styles.formRow}>*/}
-                            {/*<div className={styles.formGroup}>*/}
-                            {/*    <label>Status</label>*/}
-                            {/*    <select*/}
-                            {/*        value={formData.status || "not_started"}*/}
-                            {/*        onChange={(e) => setFormData({...formData, status: e.target.value})}*/}
-                            {/*        required*/}
-                            {/*    >*/}
-                            {/*        {*/}
-                            {/*            statusList.map(item =>*/}
-                            {/*                <option value={item.id}>{item.name}</option>*/}
-                            {/*            )*/}
-                            {/*        }*/}
-                            {/*    </select>*/}
-                            {/*</div>*/}
-                            <div className={styles.formGroup}>
-                                <label>Deadline</label>
-                                <input
-                                    type="date"
-                                    value={formData.deadline || ""}
-                                    onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                                    required
-                                />
-                            </div>
-                            {/*</div>*/}
-                            <div className={styles.formGroup}>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        checked={formData.is_recurring || false}
-                                        onChange={(e) => setFormData({ ...formData, is_recurring: e.target.checked })}
-                                    />
-                                    Recurring
-                                </label>
-                            </div>
-                            {formData.is_recurring && (
-                                <div className={styles.formRow}>
-                                    <div className={styles.formGroup}>
-                                        <label>Recurring Type</label>
-                                        <select
-                                            value={formData.recurring_type || "daily"}
-                                            onChange={(e) => setFormData({ ...formData, recurring_type: e.target.value })}
-                                        >
-                                            {
-                                                recurringTypes.map(item =>
-                                                    <option value={item.id}>{item.name}</option>
-                                                )
-                                            }
-                                        </select>
+                                        <div className={styles.formGroup}>
+                                            <label>Repeat Every</label>
+                                            <input
+                                                disabled={formData.recurring_type !== "custom"}
+                                                type="number"
+                                                min="1"
+                                                value={formData.recurring_type !== "custom" ? recurringTypes.filter(item => item.id === formData.recurring_type)[0]?.number : formData.repeat_every}
+                                                onChange={(e) => setFormData({
+                                                    ...formData,
+                                                    repeat_every: Number.parseInt(formData.recurring_type !== "custom" ? recurringTypes.filter(item => item.id === formData.recurring_type)[0]?.number : e.target.value)
+                                                })}
+                                            />
+                                        </div>
                                     </div>
-                                    <div className={styles.formGroup}>
-                                        <label>Repeat Every</label>
-                                        <input
-                                            disabled={formData.recurring_type !== "custom"}
-                                            type="number"
-                                            min="1"
-                                            value={formData.recurring_type !== "custom" ? recurringTypes.filter(item => item.id === formData.recurring_type)[0]?.number : formData.repeat_every}
-                                            onChange={(e) => setFormData({
-                                                ...formData,
-                                                repeat_every: Number.parseInt(formData.recurring_type !== "custom" ? recurringTypes.filter(item => item.id === formData.recurring_type)[0]?.number : e.target.value)
-                                            })}
-                                        />
-                                    </div>
+                                )}
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button
+                                        disabled={!formData.title || !formData.deadline}
+                                        className={classNames(styles.btnPrimary, {
+                                            [styles.disabled]: !formData.title || !formData.deadline
+                                        })}
+                                        onClick={modalType === "createTask" ? handleCreateTask : handleEditTask}
+                                    >
+                                        {modalType === "createTask" ? "Create" : "Update"}
+                                    </button>
                                 </div>
-                            )}
-                            <div className={styles.formActions}>
-                                <button className={styles.btnCancel} onClick={() => setModalType(null)}>
-                                    Cancel
-                                </button>
-                                <button
-                                    disabled={!formData.title || !formData.deadline}
-                                    className={classNames(styles.btnPrimary, {
-                                        [styles.disabled]: !formData.title || !formData.deadline
-                                    })}
-                                    onClick={modalType === "createTask" ? handleCreateTask : handleEditTask}
-                                >
-                                    {modalType === "createTask" ? "Create" : "Update"}
-                                </button>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
                 {/* Delete Task Modal */}
-                {modalType === "deleteTask" && (
-                    <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
-                        <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                            <h2 className={styles.modalTitle}>Delete Task</h2>
-                            <p className={styles.confirmText}>
-                                Are you sure you want to delete "{selectedTask?.title}"? This action cannot be undone.
-                            </p>
-                            <div className={styles.formActions}>
-                                <button className={styles.btnCancel} onClick={() => setModalType(null)}>
-                                    Cancel
-                                </button>
-                                <button className={styles.btnDanger} onClick={handleDeleteTask}>
-                                    Delete
-                                </button>
+                {
+                    modalType === "deleteTask" && (
+                        <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                                <h2 className={styles.modalTitle}>Delete Task</h2>
+                                <p className={styles.confirmText}>
+                                    Are you sure you want to delete "{selectedTask?.title}"? This action cannot be undone.
+                                </p>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button className={styles.btnDanger} onClick={handleDeleteTask}>
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
                 {/* View Task Modal */}
-                {modalType === "viewTask" && selectedTask && (
-                    <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
-                        <div className={styles.modalLarge} onClick={(e) => e.stopPropagation()}>
-                            <h2 className={styles.modalTitle}>{selectedTask.title}</h2>
+                {
+                    modalType === "viewTask" && selectedTask && (
+                        <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                            <div className={styles.modalLarge} onClick={(e) => e.stopPropagation()}>
+                                <h2 className={styles.modalTitle}>{selectedTask.title}</h2>
 
-                            <div className={styles.viewContent}>
-                                <div className={styles.infoGrid}>
-                                    <div>
-                                        <strong>Description:</strong>
-                                        <p>{selectedTask.description}</p>
-                                    </div>
-                                    <div>
-                                        <strong>Departmant:</strong>
-                                        <p>{categoryList.filter(item => item.id === selectedTask.category)[0]?.name}</p>
-                                    </div>
-                                    <div>
-                                        <strong>Creator:</strong>
-                                        <p>{selectedTask.creator.full_name}</p>
-                                    </div>
-                                    <div>
-                                        <strong>Executor {selectedTask.is_redirected ? "(Redirected)" : null}:</strong>
-                                        <p>{selectedTask.executor.full_name}</p>
-                                        {selectedTask.is_redirected && (
-                                            <p>({selectedTask?.redirected_by?.full_name})</p>)}
-                                    </div>
-                                    <div>
-                                        <strong>Reviewer:</strong>
-                                        <p>{selectedTask.reviewer.full_name}</p>
-                                    </div>
-                                    <div>
-                                        <strong>Deadline:</strong>
-                                        <p>{selectedTask.deadline}</p>
-                                    </div>
-                                    <div>
-                                        <strong>Status:</strong>
-                                        <p>{statusList.filter(item => item.id === selectedTask.status)[0]?.name}</p>
-                                    </div>
-                                    <div>
-                                        <strong>Created:</strong>
-                                        <p>{selectedTask.created_at}</p>
-                                    </div>
-                                    <div>
-                                        <strong>Recurring:</strong>
-                                        <p>{selectedTask.is_recurring ? `Yes (${selectedTask.recurring_type})` : "No"}</p>
-                                    </div>
-                                </div>
-
-                                <div className={styles.viewContent__tags}>
-                                    <strong className={styles.tagsTitle}>Tags:</strong>
-                                    <div
-                                        className={classNames(styles.tagsContainer, {
-                                            [styles.none]: selectedTask.tags.length === 0
-                                        })}
-                                    >
-                                        {
-                                            selectedTask.tags.length === 0
-                                                ? <h2>Teglar qo'shilmagan</h2>
-                                                : selectedTask.tags.map(item =>
-                                                    <h3 className={styles.tag}>{item.name}</h3>
-                                                )
-                                        }
-                                    </div>
-                                </div>
-
-                                {/* Collapsible Sections */}
-                                <div className={styles.collapsibleSection}>
-                                    <div className={styles.collapsibleHeader}
-                                        onClick={() => toggleCollapsible("subtasks")}>
-                                        <span>Subtasks ({selectedTask.subtasks.length})</span>
-                                        <span>{activeCollapsibles.has("subtasks") ? "−" : "+"}</span>
-                                    </div>
-                                    {activeCollapsibles.has("subtasks") && (
-                                        <>
-                                            <div className={styles.collapsibleContent}>
+                                <div className={styles.viewContent}>
+                                    <div className={styles.infoGrid}>
+                                        <div className={styles.infoGrid__desc}>
+                                            <strong>Description:</strong>
+                                            <p className={styles.desc}>
                                                 {
-                                                    tasksProfileLoading && tasksProfileLoading === "subtasks"
-                                                        ? <MiniLoader />
-                                                        : [...selectedTask.subtasks]?.sort(compareByOrder)?.map((st) => (
-                                                            <div key={st.id} className={styles.nestedItem}>
-                                                                <p style={st.is_done ? {
-                                                                    textDecoration: "line-through",
-                                                                    color: "#6b7280"
-                                                                } : null}>{st.order}. {st.title}</p>
-                                                                <div className={styles.nestedActions}>
-                                                                    <i
-                                                                        className={classNames(
-                                                                            `fa-regular ${st.is_done ? "fa-circle-xmark" : "fa-circle-check"}`,
-                                                                            styles.nestedActions__icon, {
-                                                                            [styles.compledted]: st.is_done
-                                                                        }
-                                                                        )}
-                                                                        onClick={() => handleCompleteSubtask(st.is_done, st.id)}
-                                                                    />
-                                                                    <button className={styles.btnSmallEdit}
-                                                                        onClick={() => openNestedModal("editSubtask", st)}>
-                                                                        Edit
-                                                                    </button>
-                                                                    <button
-                                                                        className={styles.btnSmallDelete}
-                                                                        onClick={() => openNestedModal("deleteSubtask", st)}
-                                                                    >
-                                                                        Delete
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        ))
+                                                    selectedTask.description.length > 30
+                                                        ? `${selectedTask.description.slice(0, 30)}...`
+                                                        : selectedTask.description
                                                 }
-                                            </div>
-                                            <div className={styles.btnSmallContainer}>
-                                                <button className={styles.btnSmall}
-                                                    onClick={() => openNestedModal("createSubtask")}>
-                                                    + Add Subtask
-                                                </button>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-
-                                <div className={styles.collapsibleSection}>
-                                    <div className={styles.collapsibleHeader}
-                                        onClick={() => toggleCollapsible("attachments")}>
-                                        <span>Attachments ({selectedTask.attachments.length})</span>
-                                        <span>{activeCollapsibles.has("attachments") ? "−" : "+"}</span>
-                                    </div>
-                                    {activeCollapsibles.has("attachments") && (
-                                        <>
-                                            <div className={styles.collapsibleContent}>
-                                                {[...selectedTask.attachments]?.reverse().map((att) => (
-                                                    <div key={att.id}
-                                                        className={classNames(styles.nestedItem, styles.dual)}>
-                                                        <div className={styles.nestedItem__header}>
-                                                            <div
-                                                                className={classNames(styles.nestedActions, styles.btns, styles.innerDual)}
-                                                            >
-                                                                <p className={styles.btns__title}>{att.uploaded_at}</p>
-                                                                <div className={styles.btns__container}>
-                                                                    <button
-                                                                        className={styles.btnSmallEdit}
-                                                                        onClick={() => openNestedModal("editAttachment", att)}
-                                                                    >
-                                                                        Edit
-                                                                    </button>
-                                                                    <button
-                                                                        className={styles.btnSmallDelete}
-                                                                        onClick={() => openNestedModal("deleteAttachment", att)}
-                                                                    >
-                                                                        Delete
-                                                                    </button>
-                                                                </div>
-
-                                                            </div>
-                                                            <div>
-                                                                <p>{att.note}</p>
-                                                            </div>
-                                                        </div>
-                                                        {
-                                                            att.file && (
-                                                                <div className={styles.nestedItem__content}>
-                                                                    <img crossOrigin="anonymous" src={att.file} alt="" />
-                                                                </div>
-                                                            )
-                                                        }
+                                            </p>
+                                            {
+                                                selectedTask.description.length > 30 && (
+                                                    <div className={styles.fullDesc}>
+                                                        <p>
+                                                            {selectedTask.description}
+                                                        </p>
                                                     </div>
-                                                ))}
-                                            </div>
-                                            <div className={styles.btnSmallContainer}>
-                                                <button className={styles.btnSmall}
-                                                    onClick={() => openNestedModal("createAttachment")}>
-                                                    + Add Attachment
-                                                </button>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-
-                                <div className={styles.collapsibleSection}>
-                                    <div className={styles.collapsibleHeader}
-                                        onClick={() => toggleCollapsible("comments")}>
-                                        <span>Comments ({selectedTask.comments.length})</span>
-                                        <span>{activeCollapsibles.has("comments") ? "−" : "+"}</span>
+                                                )
+                                            }
+                                        </div>
+                                        <div>
+                                            <strong>Departmant:</strong>
+                                            <p>{categoryList.filter(item => item.id === selectedTask.category)[0]?.name}</p>
+                                        </div>
+                                        <div>
+                                            <strong>Creator:</strong>
+                                            <p>{selectedTask.creator.full_name}</p>
+                                        </div>
+                                        <div>
+                                            <strong>Executor {(selectedTask.is_redirected && selectedTask.executor.id !== selectedTask?.redirected_by?.id) ? "(Redirected)" : null}:</strong>
+                                            <p>{selectedTask.executor.full_name}</p>
+                                            {(selectedTask.is_redirected && selectedTask.executor.id !== selectedTask?.redirected_by?.id) && (
+                                                <p>({selectedTask?.redirected_by?.full_name})</p>)}
+                                        </div>
+                                        <div>
+                                            <strong>Reviewer:</strong>
+                                            <p>{selectedTask.reviewer.full_name}</p>
+                                        </div>
+                                        <div>
+                                            <strong>Deadline:</strong>
+                                            <p>{selectedTask.deadline}</p>
+                                        </div>
+                                        <div>
+                                            <strong>Status:</strong>
+                                            <p>{statusList.filter(item => item.id === selectedTask.status)[0]?.name}</p>
+                                        </div>
+                                        <div>
+                                            <strong>Created:</strong>
+                                            <p>{selectedTask.created_at}</p>
+                                        </div>
+                                        <div>
+                                            <strong>Recurring:</strong>
+                                            <p>{selectedTask.is_recurring ? `Yes (${selectedTask.recurring_type})` : "No"}</p>
+                                        </div>
                                     </div>
-                                    {activeCollapsibles.has("comments") && (
-                                        <>
-                                            <div className={styles.collapsibleContent}>
-                                                {[...selectedTask.comments].reverse().map((com) => (
-                                                    <div key={com.id}
-                                                        className={classNames(styles.nestedItem, styles.dual)}>
-                                                        <div className={styles.nestedItem__header}>
-                                                            <div className={styles.info}>
-                                                                <p className={styles.btns__title}>{com.created_at}</p>
-                                                                {
-                                                                    com.user.id === userId || com.user === userId
-                                                                        ? <div
-                                                                            className={classNames(styles.nestedActions, styles.btns)}>
-                                                                            <button className={styles.btnSmallEdit}
-                                                                                onClick={() => openNestedModal("editComment", com)}>
-                                                                                Edit
-                                                                            </button>
-                                                                            <button
-                                                                                className={styles.btnSmallDelete}
-                                                                                onClick={() => openNestedModal("deleteComment", com)}
-                                                                            >
-                                                                                Delete
-                                                                            </button>
-                                                                        </div>
-                                                                        :
-                                                                        <p className={styles.btns__title}>{com.user.full_name}</p>
-                                                                }
-                                                            </div>
-                                                            <div>
-                                                                <p>{com.text}</p>
-                                                            </div>
-                                                        </div>
-                                                        {
-                                                            com.attachment && (
-                                                                <div className={styles.nestedItem__content}>
-                                                                    <img crossOrigin="anonymous" src={com.attachment}
-                                                                        alt="" />
-                                                                </div>
-                                                            )
-                                                        }
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <div className={styles.btnSmallContainer}>
-                                                <button className={styles.btnSmall}
-                                                    onClick={() => openNestedModal("createComment")}>
-                                                    + Add Comment
-                                                </button>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
 
-                                <div className={styles.collapsibleSection}>
-                                    <div className={styles.collapsibleHeader}
-                                        onClick={() => toggleCollapsible("proofs")}>
-                                        <span>Proofs ({selectedTask.proofs.length})</span>
-                                        <span>{activeCollapsibles.has("proofs") ? "−" : "+"}</span>
+                                    <div className={styles.viewContent__tags}>
+                                        <strong className={styles.tagsTitle}>Tags:</strong>
+                                        <div
+                                            className={classNames(styles.tagsContainer, {
+                                                [styles.none]: selectedTask.tags.length === 0
+                                            })}
+                                        >
+                                            {
+                                                selectedTask.tags.length === 0
+                                                    ? <h2>Teglar qo'shilmagan</h2>
+                                                    : selectedTask.tags.map(item =>
+                                                        <h3 className={styles.tag}>{item.name}</h3>
+                                                    )
+                                            }
+                                        </div>
                                     </div>
-                                    {activeCollapsibles.has("proofs") && (
-                                        <>
-                                            <div className={styles.collapsibleContent}>
-                                                {[...selectedTask.proofs].reverse().map((proof) => (
-                                                    <div key={proof.id}
-                                                        className={classNames(styles.nestedItem, styles.dual)}>
-                                                        <div className={styles.nestedItem__header}>
-                                                            <div
-                                                                className={classNames(styles.nestedActions, styles.btns, styles.innerDual)}
-                                                            >
-                                                                <p className={styles.btns__title}>{proof.created_at}</p>
-                                                                <div className={styles.nestedActions}>
-                                                                    <button className={styles.btnSmallEdit}
-                                                                        onClick={() => openNestedModal("editProof", proof)}>
-                                                                        Edit
-                                                                    </button>
-                                                                    <button
-                                                                        className={styles.btnSmallDelete}
-                                                                        onClick={() => openNestedModal("deleteProof", proof)}
-                                                                    >
-                                                                        Delete
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <p>{proof.comment}</p>
-                                                            </div>
-                                                        </div>
-                                                        {
-                                                            proof.file && (
-                                                                <div className={styles.nestedItem__content}>
-                                                                    <img crossOrigin="anonymous" src={proof.file} alt="" />
-                                                                </div>
-                                                            )
-                                                        }
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <div className={styles.btnSmallContainer}>
-                                                <button className={styles.btnSmall}
-                                                    onClick={() => openNestedModal("createProof")}>
-                                                    + Add Proof
-                                                </button>
-                                            </div>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
 
-                            <div className={styles.formActions}>
-                                <button className={styles.btnCancel} onClick={() => setModalType(null)}>
-                                    Close
-                                </button>
+                                    {/* Collapsible Sections */}
+                                    <div className={styles.collapsibleSection}>
+                                        <div className={styles.collapsibleHeader}
+                                            onClick={() => toggleCollapsible("subtasks")}>
+                                            <span>Subtasks ({selectedTask.subtasks.length})</span>
+                                            <span>{activeCollapsibles.has("subtasks") ? "−" : "+"}</span>
+                                        </div>
+                                        {activeCollapsibles.has("subtasks") && (
+                                            <>
+                                                <div className={styles.collapsibleContent}>
+                                                    {
+                                                        tasksProfileLoading && tasksProfileLoading === "subtasks"
+                                                            ? <MiniLoader />
+                                                            : [...selectedTask.subtasks]?.sort(compareByOrder)?.map((st) => (
+                                                                <div key={st.id} className={styles.nestedItem}>
+                                                                    <p style={st.is_done ? {
+                                                                        textDecoration: "line-through",
+                                                                        color: "#6b7280"
+                                                                    } : null}>{st.order}. {st.title}</p>
+                                                                    <div className={styles.nestedActions}>
+                                                                        <i
+                                                                            className={classNames(
+                                                                                `fa-regular ${st.is_done ? "fa-circle-xmark" : "fa-circle-check"}`,
+                                                                                styles.nestedActions__icon, {
+                                                                                [styles.compledted]: st.is_done
+                                                                            }
+                                                                            )}
+                                                                            onClick={() => handleCompleteSubtask(st.is_done, st.id)}
+                                                                        />
+                                                                        <button className={styles.btnSmallEdit}
+                                                                            onClick={() => openNestedModal("editSubtask", st)}>
+                                                                            Edit
+                                                                        </button>
+                                                                        <button
+                                                                            className={styles.btnSmallDelete}
+                                                                            onClick={() => openNestedModal("deleteSubtask", st)}
+                                                                        >
+                                                                            Delete
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            ))
+                                                    }
+                                                </div>
+                                                <div className={styles.btnSmallContainer}>
+                                                    <button className={styles.btnSmall}
+                                                        onClick={() => openNestedModal("createSubtask")}>
+                                                        + Add Subtask
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className={styles.collapsibleSection}>
+                                        <div className={styles.collapsibleHeader}
+                                            onClick={() => toggleCollapsible("attachments")}>
+                                            <span>Attachments ({selectedTask.attachments.length})</span>
+                                            <span>{activeCollapsibles.has("attachments") ? "−" : "+"}</span>
+                                        </div>
+                                        {activeCollapsibles.has("attachments") && (
+                                            <>
+                                                <div className={styles.collapsibleContent}>
+                                                    {[...selectedTask.attachments]?.reverse().map((att) => (
+                                                        <div key={att.id}
+                                                            className={classNames(styles.nestedItem, styles.dual)}>
+                                                            <div className={styles.nestedItem__header}>
+                                                                <div
+                                                                    className={classNames(styles.nestedActions, styles.btns, styles.innerDual)}
+                                                                >
+                                                                    <p className={styles.btns__title}>{att.uploaded_at}</p>
+                                                                    <div className={styles.btns__container}>
+                                                                        <button
+                                                                            className={styles.btnSmallEdit}
+                                                                            onClick={() => openNestedModal("editAttachment", att)}
+                                                                        >
+                                                                            Edit
+                                                                        </button>
+                                                                        <button
+                                                                            className={styles.btnSmallDelete}
+                                                                            onClick={() => openNestedModal("deleteAttachment", att)}
+                                                                        >
+                                                                            Delete
+                                                                        </button>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div>
+                                                                    <p>{att.note}</p>
+                                                                </div>
+                                                            </div>
+                                                            {
+                                                                att.file && (
+                                                                    <div className={styles.nestedItem__content}>
+                                                                        <img crossOrigin="anonymous" src={att.file} alt="" />
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className={styles.btnSmallContainer}>
+                                                    <button className={styles.btnSmall}
+                                                        onClick={() => openNestedModal("createAttachment")}>
+                                                        + Add Attachment
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className={styles.collapsibleSection}>
+                                        <div className={styles.collapsibleHeader}
+                                            onClick={() => toggleCollapsible("comments")}>
+                                            <span>Comments ({selectedTask.comments.length})</span>
+                                            <span>{activeCollapsibles.has("comments") ? "−" : "+"}</span>
+                                        </div>
+                                        {activeCollapsibles.has("comments") && (
+                                            <>
+                                                <div className={styles.collapsibleContent}>
+                                                    {[...selectedTask.comments].reverse().map((com) => (
+                                                        <div key={com.id}
+                                                            className={classNames(styles.nestedItem, styles.dual)}>
+                                                            <div className={styles.nestedItem__header}>
+                                                                <div className={styles.info}>
+                                                                    <p className={styles.btns__title}>{com.created_at}</p>
+                                                                    {
+                                                                        com.user.id === userId || com.user === userId
+                                                                            ? <div
+                                                                                className={classNames(styles.nestedActions, styles.btns)}>
+                                                                                <button className={styles.btnSmallEdit}
+                                                                                    onClick={() => openNestedModal("editComment", com)}>
+                                                                                    Edit
+                                                                                </button>
+                                                                                <button
+                                                                                    className={styles.btnSmallDelete}
+                                                                                    onClick={() => openNestedModal("deleteComment", com)}
+                                                                                >
+                                                                                    Delete
+                                                                                </button>
+                                                                            </div>
+                                                                            :
+                                                                            <p className={styles.btns__title}>{com.user.full_name}</p>
+                                                                    }
+                                                                </div>
+                                                                <div>
+                                                                    <p>{com.text}</p>
+                                                                </div>
+                                                            </div>
+                                                            {
+                                                                com.attachment && (
+                                                                    <div className={styles.nestedItem__content}>
+                                                                        <img crossOrigin="anonymous" src={com.attachment}
+                                                                            alt="" />
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className={styles.btnSmallContainer}>
+                                                    <button className={styles.btnSmall}
+                                                        onClick={() => openNestedModal("createComment")}>
+                                                        + Add Comment
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className={styles.collapsibleSection}>
+                                        <div className={styles.collapsibleHeader}
+                                            onClick={() => toggleCollapsible("proofs")}>
+                                            <span>Proofs ({selectedTask.proofs.length})</span>
+                                            <span>{activeCollapsibles.has("proofs") ? "−" : "+"}</span>
+                                        </div>
+                                        {activeCollapsibles.has("proofs") && (
+                                            <>
+                                                <div className={styles.collapsibleContent}>
+                                                    {[...selectedTask.proofs].reverse().map((proof) => (
+                                                        <div key={proof.id}
+                                                            className={classNames(styles.nestedItem, styles.dual)}>
+                                                            <div className={styles.nestedItem__header}>
+                                                                <div
+                                                                    className={classNames(styles.nestedActions, styles.btns, styles.innerDual)}
+                                                                >
+                                                                    <p className={styles.btns__title}>{proof.created_at}</p>
+                                                                    <div className={styles.nestedActions}>
+                                                                        <button className={styles.btnSmallEdit}
+                                                                            onClick={() => openNestedModal("editProof", proof)}>
+                                                                            Edit
+                                                                        </button>
+                                                                        <button
+                                                                            className={styles.btnSmallDelete}
+                                                                            onClick={() => openNestedModal("deleteProof", proof)}
+                                                                        >
+                                                                            Delete
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <div>
+                                                                    <p>{proof.comment}</p>
+                                                                </div>
+                                                            </div>
+                                                            {
+                                                                proof.file && (
+                                                                    <div className={styles.nestedItem__content}>
+                                                                        <img crossOrigin="anonymous" src={proof.file} alt="" />
+                                                                    </div>
+                                                                )
+                                                            }
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className={styles.btnSmallContainer}>
+                                                    <button className={styles.btnSmall}
+                                                        onClick={() => openNestedModal("createProof")}>
+                                                        + Add Proof
+                                                    </button>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                        Close
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
                 {/* Nested CRUD Modals */}
-                {nestedModalType && (
-                    <div className={styles.modalBackdrop} onClick={() => setNestedModalType(null)}>
-                        <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                            {nestedModalType === "createSubtask" || nestedModalType === "editSubtask" ? (
-                                <>
-                                    <h2 className={styles.modalTitle}>
-                                        {nestedModalType === "createSubtask" ? "Create Subtask" : "Edit Subtask"}
-                                    </h2>
-                                    <div className={styles.formGroup}>
-                                        <label>Title</label>
-                                        <input
-                                            type="text"
-                                            value={nestedFormData.title || ""}
-                                            onChange={(e) => setNestedFormData({
-                                                ...nestedFormData,
-                                                title: e.target.value
-                                            })}
-                                            placeholder="Subtask title"
-                                        />
-                                    </div>
-                                    <div className={styles.formGroup}>
-                                        <label>Order</label>
-                                        <input
-                                            type="number"
-                                            value={nestedFormData.order || ""}
-                                            onChange={(e) => setNestedFormData({
-                                                ...nestedFormData,
-                                                order: e.target.value
-                                            })}
-                                            placeholder="Subtask order"
-                                        />
-                                    </div>
-                                    {
-                                        tasksProfileLoading && tasksProfileLoading === "subtasks"
-                                            ? <MiniLoader />
-                                            : <div className={styles.formActions}>
-                                                <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    disabled={!nestedFormData.order || !nestedFormData.title}
-                                                    className={classNames(styles.btnPrimary, {
-                                                        [styles.disabled]: !nestedFormData.order || !nestedFormData.title
-                                                    })}
-                                                    onClick={nestedModalType === "createSubtask" ? handleCreateSubtask : handleEditSubtask}
-                                                >
-                                                    {nestedModalType === "createSubtask" ? "Create" : "Update"}
-                                                </button>
-                                            </div>
-                                    }
-                                </>
-                            ) : nestedModalType === "deleteSubtask" ? (
-                                <>
-                                    <h2 className={styles.modalTitle}>Delete Subtask</h2>
-                                    <p className={styles.confirmText}>Are you sure?</p>
-                                    {
-                                        tasksProfileLoading && tasksProfileLoading === "subtasks"
-                                            ? <MiniLoader />
-                                            : <div className={styles.formActions}>
-                                                <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
-                                                    Cancel
-                                                </button>
-                                                <button className={styles.btnDanger} onClick={handleDeleteSubtask}>
-                                                    Delete
-                                                </button>
-                                            </div>
-                                    }
+                {
+                    nestedModalType && (
+                        <div className={styles.modalBackdrop} onClick={() => setNestedModalType(null)}>
+                            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                                {nestedModalType === "createSubtask" || nestedModalType === "editSubtask" ? (
+                                    <>
+                                        <h2 className={styles.modalTitle}>
+                                            {nestedModalType === "createSubtask" ? "Create Subtask" : "Edit Subtask"}
+                                        </h2>
+                                        <div className={styles.formGroup}>
+                                            <label>Title</label>
+                                            <input
+                                                type="text"
+                                                value={nestedFormData.title || ""}
+                                                onChange={(e) => setNestedFormData({
+                                                    ...nestedFormData,
+                                                    title: e.target.value
+                                                })}
+                                                placeholder="Subtask title"
+                                            />
+                                        </div>
+                                        <div className={styles.formGroup}>
+                                            <label>Order</label>
+                                            <input
+                                                type="number"
+                                                value={nestedFormData.order || ""}
+                                                onChange={(e) => setNestedFormData({
+                                                    ...nestedFormData,
+                                                    order: e.target.value
+                                                })}
+                                                placeholder="Subtask order"
+                                            />
+                                        </div>
+                                        {
+                                            tasksProfileLoading && tasksProfileLoading === "subtasks"
+                                                ? <MiniLoader />
+                                                : <div className={styles.formActions}>
+                                                    <button className={styles.btnCancel}
+                                                        onClick={() => setNestedModalType(null)}>
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        disabled={!nestedFormData.order || !nestedFormData.title}
+                                                        className={classNames(styles.btnPrimary, {
+                                                            [styles.disabled]: !nestedFormData.order || !nestedFormData.title
+                                                        })}
+                                                        onClick={nestedModalType === "createSubtask" ? handleCreateSubtask : handleEditSubtask}
+                                                    >
+                                                        {nestedModalType === "createSubtask" ? "Create" : "Update"}
+                                                    </button>
+                                                </div>
+                                        }
+                                    </>
+                                ) : nestedModalType === "deleteSubtask" ? (
+                                    <>
+                                        <h2 className={styles.modalTitle}>Delete Subtask</h2>
+                                        <p className={styles.confirmText}>Are you sure?</p>
+                                        {
+                                            tasksProfileLoading && tasksProfileLoading === "subtasks"
+                                                ? <MiniLoader />
+                                                : <div className={styles.formActions}>
+                                                    <button className={styles.btnCancel}
+                                                        onClick={() => setNestedModalType(null)}>
+                                                        Cancel
+                                                    </button>
+                                                    <button className={styles.btnDanger} onClick={handleDeleteSubtask}>
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                        }
 
-                                </>
-                            ) : nestedModalType === "createAttachment" || nestedModalType === "editAttachment" ? (
-                                <>
-                                    <h2 className={styles.modalTitle}>
-                                        {nestedModalType === "createAttachment" ? "Create Attachment" : "Edit Attachment"}
-                                    </h2>
-                                    <div className={styles.formGroup}>
-                                        <label>Note</label>
-                                        <input
-                                            type="text"
-                                            value={nestedFormData.note || ""}
-                                            onChange={(e) => setNestedFormData({
-                                                ...nestedFormData,
-                                                note: e.target.value
-                                            })}
-                                            placeholder="Note"
-                                        />
-                                    </div>
-                                    <div className={styles.formGroup}>
-                                        <label>File</label>
-                                        <input
-                                            type="file"
-                                            onChange={(e) => setNestedFormData({
-                                                ...nestedFormData,
-                                                file: e.target.files[0]
-                                            })}
-                                            placeholder="Filename"
-                                        />
-                                    </div>
-                                    {
+                                    </>
+                                ) : nestedModalType === "createAttachment" || nestedModalType === "editAttachment" ? (
+                                    <>
+                                        <h2 className={styles.modalTitle}>
+                                            {nestedModalType === "createAttachment" ? "Create Attachment" : "Edit Attachment"}
+                                        </h2>
+                                        <div className={styles.formGroup}>
+                                            <label>Note</label>
+                                            <input
+                                                type="text"
+                                                value={nestedFormData.note || ""}
+                                                onChange={(e) => setNestedFormData({
+                                                    ...nestedFormData,
+                                                    note: e.target.value
+                                                })}
+                                                placeholder="Note"
+                                            />
+                                        </div>
+                                        <div className={styles.formGroup}>
+                                            <label>File</label>
+                                            <input
+                                                type="file"
+                                                onChange={(e) => setNestedFormData({
+                                                    ...nestedFormData,
+                                                    file: e.target.files[0]
+                                                })}
+                                                placeholder="Filename"
+                                            />
+                                        </div>
+                                        {
 
-                                        tasksProfileLoading && tasksProfileLoading === "attachments"
-                                            ? <MiniLoader />
-                                            : <div className={styles.formActions}>
-                                                <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    disabled={!nestedFormData.note}
-                                                    className={classNames(styles.btnPrimary, {
-                                                        [styles.disabled]: !nestedFormData.note
-                                                    })}
-                                                    onClick={nestedModalType === "createAttachment" ? handleCreateAttachment : handleEditAttachment}
-                                                >
-                                                    {nestedModalType === "createAttachment" ? "Create" : "Update"}
-                                                </button>
-                                            </div>
-                                    }
+                                            tasksProfileLoading && tasksProfileLoading === "attachments"
+                                                ? <MiniLoader />
+                                                : <div className={styles.formActions}>
+                                                    <button className={styles.btnCancel}
+                                                        onClick={() => setNestedModalType(null)}>
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        disabled={!nestedFormData.note && !nestedFormData.file}
+                                                        className={classNames(styles.btnPrimary, {
+                                                            [styles.disabled]: !nestedFormData.note && !nestedFormData.file
+                                                        })}
+                                                        onClick={nestedModalType === "createAttachment" ? handleCreateAttachment : handleEditAttachment}
+                                                    >
+                                                        {nestedModalType === "createAttachment" ? "Create" : "Update"}
+                                                    </button>
+                                                </div>
+                                        }
 
-                                </>
-                            ) : nestedModalType === "deleteAttachment" ? (
-                                <>
-                                    <h2 className={styles.modalTitle}>Delete Attachment</h2>
-                                    <p className={styles.confirmText}>Are you sure?</p>
-                                    {
+                                    </>
+                                ) : nestedModalType === "deleteAttachment" ? (
+                                    <>
+                                        <h2 className={styles.modalTitle}>Delete Attachment</h2>
+                                        <p className={styles.confirmText}>Are you sure?</p>
+                                        {
 
-                                        tasksProfileLoading && tasksProfileLoading === "attachments"
-                                            ? <MiniLoader />
-                                            : <div className={styles.formActions}>
-                                                <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
-                                                    Cancel
-                                                </button>
-                                                <button className={styles.btnDanger} onClick={handleDeleteAttachment}>
-                                                    Delete
-                                                </button>
-                                            </div>
-                                    }
+                                            tasksProfileLoading && tasksProfileLoading === "attachments"
+                                                ? <MiniLoader />
+                                                : <div className={styles.formActions}>
+                                                    <button className={styles.btnCancel}
+                                                        onClick={() => setNestedModalType(null)}>
+                                                        Cancel
+                                                    </button>
+                                                    <button className={styles.btnDanger} onClick={handleDeleteAttachment}>
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                        }
 
-                                </>
-                            ) : nestedModalType === "createComment" || nestedModalType === "editComment" ? (
-                                <>
-                                    <h2 className={styles.modalTitle}>
-                                        {nestedModalType === "createComment" ? "Create Comment" : "Edit Comment"}
-                                    </h2>
-                                    <div className={styles.formGroup}>
-                                        <label>Text</label>
-                                        <textarea
-                                            value={nestedFormData.text || ""}
-                                            onChange={(e) => setNestedFormData({
-                                                ...nestedFormData,
-                                                text: e.target.value
-                                            })}
-                                            placeholder="Comment text"
-                                            rows={3}
-                                        />
-                                    </div>
-                                    <div className={styles.formGroup}>
-                                        <label>File</label>
-                                        <input
-                                            type="file"
-                                            onChange={(e) => setNestedFormData({
-                                                ...nestedFormData,
-                                                comFile: e.target.files[0]
-                                            })}
-                                            placeholder="Filename"
-                                        />
-                                    </div>
-                                    {
-                                        tasksProfileLoading && tasksProfileLoading === "comments"
-                                            ? <MiniLoader />
-                                            : <div className={styles.formActions}>
-                                                <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    className={styles.btnPrimary}
-                                                    onClick={nestedModalType === "createComment" ? handleCreateComment : handleEditComment}
-                                                >
-                                                    {nestedModalType === "createComment" ? "Create" : "Update"}
-                                                </button>
-                                            </div>
-                                    }
-                                </>
-                            ) : nestedModalType === "deleteComment" ? (
-                                <>
-                                    <h2 className={styles.modalTitle}>Delete Comment</h2>
-                                    <p className={styles.confirmText}>Are you sure?</p>
-                                    {
-                                        tasksProfileLoading && tasksProfileLoading === "comments"
-                                            ? <MiniLoader />
-                                            : <div className={styles.formActions}>
-                                                <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
-                                                    Cancel
-                                                </button>
-                                                <button className={styles.btnDanger} onClick={handleDeleteComment}>
-                                                    Delete
-                                                </button>
-                                            </div>
-                                    }
-                                </>
-                            ) : nestedModalType === "createProof" || nestedModalType === "editProof" ? (
-                                <>
-                                    <h2 className={styles.modalTitle}>
-                                        {nestedModalType === "createProof" ? "Create Proof" : "Edit Proof"}
-                                    </h2>
-                                    <div className={styles.formGroup}>
-                                        <label>Comment</label>
-                                        <textarea
-                                            value={nestedFormData.comment || ""}
-                                            onChange={(e) => setNestedFormData({
-                                                ...nestedFormData,
-                                                comment: e.target.value
-                                            })}
-                                            placeholder="Proof comment"
-                                            rows={2}
-                                        />
-                                    </div>
-                                    <div className={styles.formGroup}>
-                                        <label>File</label>
-                                        <input
-                                            type="file"
-                                            onChange={(e) => setNestedFormData({
-                                                ...nestedFormData,
-                                                proofFile: e.target.files[0]
-                                            })}
-                                            placeholder="Filename"
-                                        />
-                                    </div>
-                                    {
-                                        tasksProfileLoading && tasksProfileLoading === "proofs"
-                                            ? <MiniLoader />
-                                            : <div className={styles.formActions}>
-                                                <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    className={styles.btnPrimary}
-                                                    onClick={nestedModalType === "createProof" ? handleCreateProof : handleEditProof}
-                                                >
-                                                    {nestedModalType === "createProof" ? "Create" : "Update"}
-                                                </button>
-                                            </div>
-                                    }
-                                </>
-                            ) : nestedModalType === "deleteProof" ? (
-                                <>
-                                    <h2 className={styles.modalTitle}>Delete Proof</h2>
-                                    <p className={styles.confirmText}>Are you sure?</p>
-                                    {
-                                        tasksProfileLoading && tasksProfileLoading === "proofs"
-                                            ? <MiniLoader />
-                                            : <div className={styles.formActions}>
-                                                <button className={styles.btnCancel}
-                                                    onClick={() => setNestedModalType(null)}>
-                                                    Cancel
-                                                </button>
-                                                <button className={styles.btnDanger} onClick={handleDeleteProof}>
-                                                    Delete
-                                                </button>
-                                            </div>
-                                    }
-                                </>
-                            ) : null}
-                        </div>
-                    </div>
-                )}
-
-                {(modalType === "changeStatus") && (
-                    <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
-                        <div className={styles.modal} onClick={(e) => e.stopPropagation()} style={{ width: "17%" }}>
-                            <h2 className={styles.modalTitle}>Change task status</h2>
-                            <div className={styles.formGroup}>
-                                <label>Status</label>
-                                <select
-                                    value={formData.status}
-                                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                    required
-                                >
-                                    {
-                                        statusList.map(item =>
-                                            <option value={item.id}>{item.name}</option>
-                                        )
-                                    }
-                                </select>
-                            </div>
-                            <div className={styles.formActions}>
-                                <button className={styles.btnCancel} onClick={() => setModalType(null)}>
-                                    Cancel
-                                </button>
-                                <button
-                                    // disabled={!tagFormData}
-                                    className={classNames(styles.btnPrimary, {
-                                        // [styles.disabled]: !tagFormData
-                                    })}
-                                    onClick={handleChangeStatus}
-                                >
-                                    Update
-                                </button>
+                                    </>
+                                ) : nestedModalType === "createComment" || nestedModalType === "editComment" ? (
+                                    <>
+                                        <h2 className={styles.modalTitle}>
+                                            {nestedModalType === "createComment" ? "Create Comment" : "Edit Comment"}
+                                        </h2>
+                                        <div className={styles.formGroup}>
+                                            <label>Text</label>
+                                            <textarea
+                                                value={nestedFormData.text || ""}
+                                                onChange={(e) => setNestedFormData({
+                                                    ...nestedFormData,
+                                                    text: e.target.value
+                                                })}
+                                                placeholder="Comment text"
+                                                rows={3}
+                                            />
+                                        </div>
+                                        <div className={styles.formGroup}>
+                                            <label>File</label>
+                                            <input
+                                                type="file"
+                                                onChange={(e) => setNestedFormData({
+                                                    ...nestedFormData,
+                                                    comFile: e.target.files[0]
+                                                })}
+                                                placeholder="Filename"
+                                            />
+                                        </div>
+                                        {
+                                            tasksProfileLoading && tasksProfileLoading === "comments"
+                                                ? <MiniLoader />
+                                                : <div className={styles.formActions}>
+                                                    <button className={styles.btnCancel}
+                                                        onClick={() => setNestedModalType(null)}>
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        disabled={!nestedFormData.text && !nestedFormData.comFile}
+                                                        className={classNames(styles.btnPrimary, {
+                                                            [styles.disabled]: !nestedFormData.text && !nestedFormData.comFile
+                                                        })}
+                                                        onClick={nestedModalType === "createComment" ? handleCreateComment : handleEditComment}
+                                                    >
+                                                        {nestedModalType === "createComment" ? "Create" : "Update"}
+                                                    </button>
+                                                </div>
+                                        }
+                                    </>
+                                ) : nestedModalType === "deleteComment" ? (
+                                    <>
+                                        <h2 className={styles.modalTitle}>Delete Comment</h2>
+                                        <p className={styles.confirmText}>Are you sure?</p>
+                                        {
+                                            tasksProfileLoading && tasksProfileLoading === "comments"
+                                                ? <MiniLoader />
+                                                : <div className={styles.formActions}>
+                                                    <button className={styles.btnCancel}
+                                                        onClick={() => setNestedModalType(null)}>
+                                                        Cancel
+                                                    </button>
+                                                    <button className={styles.btnDanger} onClick={handleDeleteComment}>
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                        }
+                                    </>
+                                ) : nestedModalType === "createProof" || nestedModalType === "editProof" ? (
+                                    <>
+                                        <h2 className={styles.modalTitle}>
+                                            {nestedModalType === "createProof" ? "Create Proof" : "Edit Proof"}
+                                        </h2>
+                                        <div className={styles.formGroup}>
+                                            <label>Comment</label>
+                                            <textarea
+                                                value={nestedFormData.comment || ""}
+                                                onChange={(e) => setNestedFormData({
+                                                    ...nestedFormData,
+                                                    comment: e.target.value
+                                                })}
+                                                placeholder="Proof comment"
+                                                rows={2}
+                                            />
+                                        </div>
+                                        <div className={styles.formGroup}>
+                                            <label>File</label>
+                                            <input
+                                                type="file"
+                                                onChange={(e) => setNestedFormData({
+                                                    ...nestedFormData,
+                                                    proofFile: e.target.files[0]
+                                                })}
+                                                placeholder="Filename"
+                                            />
+                                        </div>
+                                        {
+                                            tasksProfileLoading && tasksProfileLoading === "proofs"
+                                                ? <MiniLoader />
+                                                : <div className={styles.formActions}>
+                                                    <button className={styles.btnCancel}
+                                                        onClick={() => setNestedModalType(null)}>
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        disabled={!nestedFormData.comment && !nestedFormData.proofFile}
+                                                        className={classNames(styles.btnPrimary, {
+                                                            [styles.disabled]: !nestedFormData.comment && !nestedFormData.proofFile
+                                                        })}
+                                                        onClick={nestedModalType === "createProof" ? handleCreateProof : handleEditProof}
+                                                    >
+                                                        {nestedModalType === "createProof" ? "Create" : "Update"}
+                                                    </button>
+                                                </div>
+                                        }
+                                    </>
+                                ) : nestedModalType === "deleteProof" ? (
+                                    <>
+                                        <h2 className={styles.modalTitle}>Delete Proof</h2>
+                                        <p className={styles.confirmText}>Are you sure?</p>
+                                        {
+                                            tasksProfileLoading && tasksProfileLoading === "proofs"
+                                                ? <MiniLoader />
+                                                : <div className={styles.formActions}>
+                                                    <button className={styles.btnCancel}
+                                                        onClick={() => setNestedModalType(null)}>
+                                                        Cancel
+                                                    </button>
+                                                    <button className={styles.btnDanger} onClick={handleDeleteProof}>
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                        }
+                                    </>
+                                ) : null}
                             </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
+
+                {
+                    (modalType === "changeStatus") && (
+                        <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                            <div className={styles.modal} onClick={(e) => e.stopPropagation()} style={{ width: "17%" }}>
+                                <h2 className={styles.modalTitle}>Change task status</h2>
+                                <div className={styles.formGroup}>
+                                    <label>Status</label>
+                                    <select
+                                        value={formData.status}
+                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                        required
+                                    >
+                                        {
+                                            statusList.map(item =>
+                                                <option value={item.id}>{item.name}</option>
+                                            )
+                                        }
+                                    </select>
+                                </div>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button
+                                        // disabled={!tagFormData}
+                                        className={classNames(styles.btnPrimary, {
+                                            // [styles.disabled]: !tagFormData
+                                        })}
+                                        onClick={handleChangeStatus}
+                                    >
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
 
                 {/* Create/Edit/Delete Tag Modals */}
-                {(modalType === "createTag" || modalType === "editTag") && (
-                    <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
-                        <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                            <h2 className={styles.modalTitle}>{modalType === "createTag" ? "Create Tag" : "Edit Tag"}</h2>
-                            <div className={styles.formGroup}>
-                                <label>Tag Name</label>
-                                <input
-                                    type="text"
-                                    value={tagFormData || ""}
-                                    onChange={(e) => setTagFormData(e.target.value)}
-                                    placeholder="Tag name"
-                                />
-                            </div>
-                            <div className={styles.formActions}>
-                                <button className={styles.btnCancel} onClick={() => setModalType(null)}>
-                                    Cancel
-                                </button>
-                                <button
-                                    disabled={!tagFormData}
-                                    className={classNames(styles.btnPrimary, {
-                                        [styles.disabled]: !tagFormData
-                                    })}
-                                    onClick={modalType === "createTag" ? handleCreateTag : handleEditTag}
-                                >
-                                    {modalType === "createTag" ? "Create" : "Update"}
-                                </button>
+                {
+                    (modalType === "createTag" || modalType === "editTag") && (
+                        <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                                <h2 className={styles.modalTitle}>{modalType === "createTag" ? "Create Tag" : "Edit Tag"}</h2>
+                                <div className={styles.formGroup}>
+                                    <label>Tag Name</label>
+                                    <input
+                                        type="text"
+                                        value={tagFormData || ""}
+                                        onChange={(e) => setTagFormData(e.target.value)}
+                                        placeholder="Tag name"
+                                    />
+                                </div>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button
+                                        disabled={!tagFormData}
+                                        className={classNames(styles.btnPrimary, {
+                                            [styles.disabled]: !tagFormData
+                                        })}
+                                        onClick={modalType === "createTag" ? handleCreateTag : handleEditTag}
+                                    >
+                                        {modalType === "createTag" ? "Create" : "Update"}
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )
+                }
 
-                {modalType === "deleteTag" && (
-                    <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
-                        <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                            <h2 className={styles.modalTitle}>Delete Tag</h2>
-                            <p className={styles.confirmText}>Are you sure you want to delete the tag
-                                "{selectedTag?.name}"?</p>
-                            <div className={styles.formActions}>
-                                <button className={styles.btnCancel} onClick={() => setModalType(null)}>
-                                    Cancel
-                                </button>
-                                <button className={styles.btnDanger} onClick={handleDeleteTag}>
-                                    Delete
-                                </button>
+                {
+                    modalType === "deleteTag" && (
+                        <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                                <h2 className={styles.modalTitle}>Delete Tag</h2>
+                                <p className={styles.confirmText}>Are you sure you want to delete the tag
+                                    "{selectedTag?.name}"?</p>
+                                <div className={styles.formActions}>
+                                    <button className={styles.btnCancel} onClick={() => setModalType(null)}>
+                                        Cancel
+                                    </button>
+                                    <button className={styles.btnDanger} onClick={handleDeleteTag}>
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )
+                }
+            </div >
             <Modal
                 active={isFilter}
                 setActive={setIsFilter}
@@ -2367,7 +2492,11 @@ export const TodoistPage = () => {
                     </div>
                     <Button
                         extraClass={styles.clearBtn}
-                        type={"danger"}
+                        type={
+                            selectedCreate || selectedDeadlineFrom || selectedDeadlineTo || selectedStatus !== "all" || selectedTags.length !== 0 || selectedCategory !== "all"
+                                ? "danger"
+                                : "disabled"
+                        }
                         onClick={() => {
                             setSelectedCreate(null)
                             setSelectedDeadlineFrom(null)
@@ -2391,7 +2520,7 @@ export const TodoistPage = () => {
                     title={"Select redirect"}
                     options={
                         teachersList
-                            .filter(item => item.id !== userId)
+                            .filter(item => item.id !== userId && item.id !== selectedTask?.executor?.id)
                     }
                     onChangeOption={setSelectedRedirect}
                     value={selectedRedirect}
@@ -2406,7 +2535,7 @@ export const TodoistPage = () => {
                     Enter
                 </Button>
             </Modal>
-        </DynamicModuleLoader>
+        </DynamicModuleLoader >
     )
 }
 

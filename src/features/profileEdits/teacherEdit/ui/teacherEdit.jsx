@@ -1,21 +1,21 @@
-import {AnimatedMulti} from "features/workerSelect";
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {editTeacherThunk} from "../../../../entities/teachers";
-import {Modal} from "shared/ui/modal";
-import {Input} from "shared/ui/input";
-import {getTeacherId} from "../../../../entities/teachers";
+import { AnimatedMulti } from "features/workerSelect";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { editTeacherThunk } from "../../../../entities/teachers";
+import { Modal } from "shared/ui/modal";
+import { Input } from "shared/ui/input";
+import { getTeacherId } from "../../../../entities/teachers";
 import cls from './teacherEdit.module.sass'
-import {Button} from "../../../../shared/ui/button";
-import {onAddAlertOptions} from "../../../alert/model/slice/alertSlice";
-import {Select} from "../../../../shared/ui/select";
+import { Button } from "../../../../shared/ui/button";
+import { onAddAlertOptions } from "../../../alert/model/slice/alertSlice";
+import { Select } from "../../../../shared/ui/select";
 
-import {fetchCategories, fetchSubjectsData, getClassTypeData, getSubjectsData , getCategories} from "entities/oftenUsed";
-import {HexColorPicker} from "react-colorful";
-import {API_URL, headers, useHttp} from "shared/api/base";
+import { fetchCategories, fetchSubjectsData, getClassTypeData, getSubjectsData, getCategories } from "entities/oftenUsed";
+import { HexColorPicker } from "react-colorful";
+import { API_URL, headers, useHttp } from "shared/api/base";
 
 
-export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
+export const TeacherEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
     const dispatch = useDispatch();
     const teacherID = useSelector(getTeacherId);
     const categories = useSelector(getCategories)
@@ -25,6 +25,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
     const [username, setUsername] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
+    const [level, setLevel] = useState('');
     const [fatherName, setFatherName] = useState('');
     const [teacherSalaryType, setTeacherSalaryType] = useState('');
     const [phone, setNumber] = useState('')
@@ -44,18 +45,18 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
         label: subject?.name,
     }));
 
-    const {request} = useHttp()
+    const { request } = useHttp()
 
     useEffect(() => {
         if (username && username !== teacherID?.user?.username) {
             const checkUsername = async () => {
                 try {
-                    const response = await request(`${API_URL}Users/username-check/`, "POST", JSON.stringify({username}), headers());
+                    const response = await request(`${API_URL}Users/username-check/`, "POST", JSON.stringify({ username }), headers());
 
                     const data = await response
                     if (data.exists === true) {
                         setUsernameMessage(<p className={cls.errorMess}>
-                            <i className="fa-solid fa-circle-exclamation" style={{color: "#f15c5c"}}></i>
+                            <i className="fa-solid fa-circle-exclamation" style={{ color: "#f15c5c" }}></i>
                             Username band
                         </p>);
                         setIsUsernameAvailable(false);
@@ -78,7 +79,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
             setUsernameMessage(<p>Username kiriting</p>);
             setIsUsernameAvailable(false);
         }
-    }, [username,teacherID]);
+    }, [username, teacherID]);
 
 
     useEffect(() => {
@@ -91,6 +92,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
             setClassTime(teacherID?.working_hours)
             setName(teacherID.user?.name)
             setSurname(teacherID.user?.surname)
+            setLevel(teacherID.user?.level)
             setNumber(teacherID.user?.phone)
             setAge(teacherID.user?.birth_date)
             setTeacherSalaryType(teacherID?.teacher_salary_type)
@@ -118,7 +120,8 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                 phone,
                 age,
                 // username,
-                father_name: fatherName
+                father_name: fatherName,
+                level
             },
             teacher_salary_type: teacherSalaryType,
             class_type: classType,
@@ -130,7 +133,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
             face_id: faceId
         };
 
-        dispatch(editTeacherThunk({id: (teacherID.id), updateTeacher}))
+        dispatch(editTeacherThunk({ id: (teacherID.id), updateTeacher }))
             .then(() => {
                 onUpdate(updateTeacher)
                 dispatch(onAddAlertOptions({
@@ -161,7 +164,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Username"}
                             onChange={(e) => setUsername(e.target.value)}
                             value={username}
-                            // value={selectedFrom}
+                        // value={selectedFrom}
                         />
                         <Input
                             type={"text"}
@@ -170,7 +173,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Ism"}
                             onChange={(e) => setName(e.target.value)}
                             value={name}
-                            // value={selectedFrom}
+                        // value={selectedFrom}
                         />
                         <Input
                             type={"text"}
@@ -179,7 +182,16 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Familiya"}
                             onChange={(e) => setSurname(e.target.value)}
                             value={surname}
-                            // value={selectedFrom}
+                        // value={selectedFrom}
+                        />
+                        <Input
+                            type={"level"}
+                            title={"Level"}
+                            extraClassName={cls.filter__input}
+                            placeholder={"Enter level"}
+                            onChange={(e) => setLevel(e.target.value)}
+                            value={level}
+                        // value={selectedFrom}
                         />
                         <Input
                             type={"text"}
@@ -188,7 +200,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Otasing ismi"}
                             onChange={(e) => setFatherName(e.target.value)}
                             value={fatherName}
-                            // value={selectedFrom}
+                        // value={selectedFrom}
                         />
                         <Input
                             type={"number"}
@@ -197,7 +209,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Tel raqami"}
                             onChange={(e) => setNumber(e.target.value)}
                             value={phone}
-                            // value={selectedTo}
+                        // value={selectedTo}
                         />
 
                         <Input
@@ -207,7 +219,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             title={"Tug'ilgan yili"}
                             onChange={(e) => setAge(e.target.value)}
                             value={age}
-                            // value={selectedFrom}
+                        // value={selectedFrom}
                         />
                         <Input
                             type={"number"}
@@ -248,7 +260,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Darslik soat"}
                             onChange={(e) => setClassTime(e.target.value)}
                             value={classTime}
-                            // value={selectedTo}
+                        // value={selectedTo}
                         />
                         <Input
                             type={"number"}
@@ -257,7 +269,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             placeholder={"Darslik soat"}
                             onChange={(e) => setClassSalary(e.target.value)}
                             value={classSalary}
-                            // value={selectedTo}
+                        // value={selectedTo}
                         />
                         <Input
                             type={"number"}
@@ -265,17 +277,17 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                             extraClassName={cls.filter__input}
                             onChange={(e) => setFaceID(e.target.value)}
                             value={faceId}
-                            // value={selectedTo}
+                        // value={selectedTo}
                         />
                         <div>
-                            <div style={{display: "flex" , gap: "1rem" , alignItems: "center" , marginBottom: "10px"}}><h3>Rang qushish :</h3> <div style={{backgroundColor: colorChange ? colorChange : "black" , width: "30px" , height: "30px" , borderRadius: "5px" , boxShadow: colorChange === "#ffffff" ? "0 0 5px 0" : null}}></div></div>
-                            <HexColorPicker style={{width: "30rem", height: "15rem"}} color={colorChange}
-                                            onChange={setColorChange}/>
+                            <div style={{ display: "flex", gap: "1rem", alignItems: "center", marginBottom: "10px" }}><h3>Rang qushish :</h3> <div style={{ backgroundColor: colorChange ? colorChange : "black", width: "30px", height: "30px", borderRadius: "5px", boxShadow: colorChange === "#ffffff" ? "0 0 5px 0" : null }}></div></div>
+                            <HexColorPicker style={{ width: "30rem", height: "15rem" }} color={colorChange}
+                                onChange={setColorChange} />
                         </div>
                     </div>
 
 
-                    <div style={{display: "flex", gap: "5px"}}>
+                    <div style={{ display: "flex", gap: "5px" }}>
                         {/*<a href={API_URL_DOC+} download><Button> Resume Saqlab olish</Button></a>*/}
 
                         <Button>Resume O'zgartirish</Button>
@@ -284,7 +296,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                     <div className={cls.filter__switch}>
                         <div></div>
                         <Button extraClass={cls.submitBtn} type={"submit"} children={"Button"}
-                                onClick={handleEditTeacher}/>
+                            onClick={handleEditTeacher} />
                     </div>
 
                 </div>
