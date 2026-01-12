@@ -104,14 +104,16 @@ const todoistSlice = createSlice({
         },
         deleteMultiTask: (state, action) => {
             state.tasks =
-                state.tasks.map(item => {
-                    if (item.id === action.payload.parent) {
-                        return {
-                            ...item.children.filter(it => it.id !== action.payload.id)[0],
-                            children: item.children.filter(it => it.id !== action.payload.id)
-                        }
-                    } else return item
-                })
+                state.tasks
+                    .map(item => {
+                        if (item.id === action.payload.parent) {
+                            return {
+                                ...item.children.filter(it => it.id !== action.payload.id)[0],
+                                children: item.children.filter(it => it.id !== action.payload.id)
+                            }
+                        } else return item
+                    })
+                    .filter(item => item.id)
             state.taskLoading = false
         },
         addTag: (state, action) => {
