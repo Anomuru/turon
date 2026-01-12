@@ -1,3 +1,4 @@
+import {getBranchesSelect} from "entities/oftenUsed/model/oftenUsedSelector.js";
 import React, {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {useDispatch, useSelector} from 'react-redux';
@@ -27,7 +28,7 @@ import {
     fetchLanguagesData,
     fetchSubjectsData,
     fetchClassNumberData,
-    fetchClassTypeData
+    fetchClassTypeData, fetchBranchesForSelect
 } from "entities/oftenUsed"
 
 import cls from "./register.module.sass";
@@ -41,7 +42,7 @@ const userstype = {
         {value: "student", name: "Student"},
         {value: "teacher", name: "Teacher"},
         {value: "employer", name: "Employer"},
-        {value: "parent" , name: "Parent"}
+        {value: "parent", name: "Parent"}
     ]
 };
 
@@ -100,16 +101,20 @@ export const Register = () => {
     const [isDirector, setIsDirector] = useState("")
     const branchID = localStorage.getItem("branchId")
     const user = useSelector(getUserProfileData)
+    const [branchSelect , setBranchSelect] = useState(null)
+
     const subjectOptions = safeData?.map(subject => ({
         value: subject?.id,
         label: subject?.name,
     }));
 
-
+    const branches = useSelector(getBranchesSelect)
     const filteredJobOptions = jobOptions.filter(
         job => job.name.toLowerCase() !== 'admin' && job.name.toLowerCase() !== 'director'
     );
-
+    useEffect(()=> {
+        dispatch(fetchBranchesForSelect())
+    }, [])
     useEffect(() => {
         if (user && user?.job) {
             setIsDirector(user.job.toString())
@@ -241,6 +246,31 @@ export const Register = () => {
                 profession: Number(selectedProfession),
             };
             registerAction = registerEmployer(res2);
+        } else if (registerType === "parent") {
+            const res ={
+                location: branchID,
+                name: data.name,
+                surname: data.surname,
+                username: data.username,
+                phone: data.phone,
+                born_date: data.born_date,
+                password: data.password,
+                father_name: data.father_name
+            }
+
+            request(`${API_URL}parents/create/`, "POST", JSON.stringify(res), headers())
+                .then(res => {
+                    console.log(res)
+                    setLoading(false)
+                    dispatch(onAddAlertOptions({
+                        status: true,
+                        type: "success",
+                        msg: "Muvofaqqiyatli qo'shildi"
+                    }))
+                })
+                .catch(err => {
+                    setLoading(false)
+                })
         }
 
         if (registerAction) {
@@ -291,6 +321,7 @@ export const Register = () => {
             });
         }
     };
+    console.log(branchSelect)
 
     const renderFormFields = () => {
         switch (registerType) {
@@ -397,13 +428,15 @@ export const Register = () => {
                         </div>
                     </>
                 );
-            case "parent" :
-                return (
-                    <Select
-                        extraClass={cls.extraClasses}
-
-                    />
-                )
+            // case "parent" :
+            //     return (
+            //         <Select
+            //             onChangeOption={setBranchSelect}
+            //             extraClass={cls.extraClasses}
+            //             title={"O'quv markazi joylashuvi"}
+            //             options={branches}
+            //         />
+            //     )
         }
     };
 

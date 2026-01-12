@@ -63,6 +63,7 @@ export const GroupProfileModalTeachers = memo(({ branch }) => {
                     status: true,
                     msg: `Guruhni o'qituvchisi o'zgardi`
                 }))
+                setActive(false)
             })
         // dispatch(changeGroupProfile({
         //     data: { teacher: [teacherId] },
@@ -81,6 +82,7 @@ export const GroupProfileModalTeachers = memo(({ branch }) => {
         )
     }, [currentTeachersData, searchValue])
 
+    console.log(searched)
     const renderTeachers = useCallback(() => {
         return searched?.map(item =>
             <tr>
@@ -106,7 +108,7 @@ export const GroupProfileModalTeachers = memo(({ branch }) => {
                 <td>
                     <div className={cls.check}>
                         <Switch
-                            activeSwitch={profileData?.teacher[0]?.id === item?.id}
+                            activeSwitch={profileData?.teacher === `${item.name} ${item.surname}`}
                             onChangeSwitch={() => onChangeTeacher(item?.id)}
                         />
                         {/*<div className={classNames(cls.status, {*/}

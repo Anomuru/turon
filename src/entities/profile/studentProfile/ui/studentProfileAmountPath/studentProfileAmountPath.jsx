@@ -55,6 +55,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
     const [change, setChange] = useState(false);
     const [canChange, setCanChange] = useState(false);
     const [canDelete, setCanDelete] = useState(false);
+    const [modalActive, setActiveModal] = useState(false)
 
 
     const years = useSelector(getCherityYear)
@@ -66,7 +67,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
     useEffect(() => {
         setValue("payment_sum" , changedData?.discount_sum)
         setValue("reason" , changedData?.discount_reason)
-        setValue("total_debt" , changedData?.remaining_debt)
+        setValue("total_debt" , changedData?.total_debt)
         setValue("discount" , changedData?.discount)
     } , [changedData])
 
@@ -132,6 +133,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
                 </td>
                 <td>{item.payment_sum}</td>
                 <td>{item.date}</td>
+                <td>{item.attendance}</td>
                 <td>
                     <div onClick={() => setModal(!modal)}
                          className={classNames(cls.inner, {
@@ -322,6 +324,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
                                             <th>Turi</th>
                                             <th>To’lov</th>
                                             <th>Sana</th>
+                                            <th>Oy</th>
                                             <th>To’lov turi</th>
                                             {!change && <th>O’chirish</th>}
                                         </tr>
@@ -379,7 +382,7 @@ export const StudentProfileAmountPath = memo(({active, setActive, job}) => {
                           id={"changeForm"} typeSubmit={"outside"}>
                         <h1>Oylik qarz o'zgartirish</h1>
 
-                        <Input title={"To'lov summasi (qolgan qarzi)"} register={register} name={"total_debt"}/>
+                        <Input title={"To'lov summasi (Umumiy qarz)"} register={register} name={"total_debt"}/>
                         <Input
                             title={"Chegirma summasi"}
                             register={register}

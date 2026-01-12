@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import {
     fetchClassColors,
@@ -30,7 +30,7 @@ const initialState = {
     loading: false,
     error: null,
     totalCount: null,
-    studentClassUpdate:[],
+    studentClassUpdate: [],
     studentClassUpdateLoading: false,
     studentClassUpdateCount: null
 }
@@ -58,17 +58,20 @@ export const newStudents = createSlice({
             state.newStudentsStatus = "idle"
         },
 
-        onDeleteNewStudents: (state,action) => {
+        onDeleteNewStudents: (state, action) => {
             state.newStudentes = state.newStudentes.filter(item => item.id !== +action.payload)
         },
 
-        onDeleteGroupStudentBack: (state,action) => {
+        onDeleteGroupStudentBack: (state, action) => {
             state.deletedStudents = state.deletedStudents.filter(item => item.student.id !== action.payload)
         },
         onDeleteCreateStudents: (state, action) => {
             state.newStudentes = state.newStudentes.filter(
                 item => !action.payload.includes(item.id)
             )
+        },
+        onChangeDeletedDate: (state, action) => {
+            state.deletedStudents = state.deletedStudents.map(item => item.id === action.payload.student_id ? { ...item, deleted_date: action.payload.del_date } : item)
         }
 
     },
@@ -224,7 +227,7 @@ export const newStudents = createSlice({
 })
 
 // export default studentsSlice.reducer
-export const {reducer: studentsReducer} = newStudents
+export const { reducer: studentsReducer } = newStudents
 export const {
     getFilteredStudentsData,
     getFilteredStudentsStatus,
@@ -233,5 +236,6 @@ export const {
     stopFilteredStudentsLoading,
     onDeleteNewStudents,
     onDeleteGroupStudentBack,
-    onDeleteCreateStudents
+    onDeleteCreateStudents,
+    onChangeDeletedDate
 } = newStudents.actions

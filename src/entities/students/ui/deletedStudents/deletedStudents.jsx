@@ -1,20 +1,23 @@
-import {fetchReasons} from "entities/profile/groupProfile";
-import {getReasons} from "entities/profile/groupProfile/model/groupProfileSelector";
-import React, {useEffect, useMemo, useState} from "react";
+import { fetchReasons } from "entities/profile/groupProfile";
+import { getReasons } from "entities/profile/groupProfile/model/groupProfileSelector";
+import React, { useEffect, useMemo, useState } from "react";
 import classNames from "classnames";
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 
-import {Table} from "shared/ui/table";
+import { Table } from "shared/ui/table";
 
 import cls from "./deletedStudents.module.sass";
-import {API_URL, headers, useHttp} from "shared/api/base.js";
-import {ConfirmModal} from "shared/ui/confirmModal/index.js";
-import {onDeleteGroupStudentBack} from "../../model/studentsSlice";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
+import { API_URL, headers, useHttp } from "shared/api/base.js";
+import { ConfirmModal } from "shared/ui/confirmModal/index.js";
+import { onChangeDeletedDate, onDeleteGroupStudentBack } from "../../model/studentsSlice";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice.js";
+import { Modal } from "shared/ui/modal";
+import { Input } from "shared/ui/input";
+import { Button } from "shared/ui/button";
 
 
-export const DeletedStudents = ({currentTableData}) => {
+export const DeletedStudents = ({ currentTableData }) => {
 
     const dispatch = useDispatch()
 
@@ -25,12 +28,15 @@ export const DeletedStudents = ({currentTableData}) => {
     const navigation = useNavigate()
     const [active, setActive] = useState(false)
     const [id, setId] = useState(false)
+    const [isChangeModal, setIsChangeModal] = useState(false)
+    const [selectedStudent, setSelectedStudent] = useState(null)
+    const [selectedDate, setSelectedDate] = useState(null)
 
     useEffect(() => {
         dispatch(fetchReasons())
     }, [])
 
-    const {request} = useHttp()
+    const { request } = useHttp()
     const handleDelete = () => {
 
         request(`${API_URL}Students/delete-student-from-deleted/${id}/`, "DELETE", null, headers())
@@ -45,6 +51,31 @@ export const DeletedStudents = ({currentTableData}) => {
         dispatch(onDeleteGroupStudentBack(id))
 
     };
+
+    const onSubmit = () => {
+        const post = { del_date: selectedDate, student_id: selectedStudent }
+        request(`${API_URL}Students/change_date_deleted_student/`, "POST", JSON.stringify(post), headers())
+            .then(res => {
+                console.log(res)
+                dispatch(onChangeDeletedDate(post))
+                setSelectedStudent(null)
+                setSelectedDate(null)
+                setIsChangeModal(false)
+                dispatch(onAddAlertOptions({
+                    msg: res.msg,
+                    status: true,
+                    type: "success"
+                }))
+            })
+    }
+
+    const onChangeDelDate = (data) => {
+        setSelectedStudent(data.id)
+        setSelectedDate(data.deleted_date)
+        setIsChangeModal(true)
+    }
+
+
     const renderDeletedStudents = () => {
 
 
@@ -72,8 +103,14 @@ export const DeletedStudents = ({currentTableData}) => {
                                 setId(item.student.id)
                                 setActive(true)
                             }}>
-                                <i className={"fa fa-times"}/>
+                                <i className={"fa fa-times"} />
                             </div>
+                        </td>
+                        <td>
+                            <i
+                                onClick={() => onChangeDelDate(item)}
+                                className={"fa fa-pen"}
+                            />
                         </td>
                     </tr>
                 )
@@ -94,8 +131,14 @@ export const DeletedStudents = ({currentTableData}) => {
                                     setId(item.student.id)
                                     setActive(true)
                                 }}>
-                                    <i className={"fa fa-times"}/>
+                                    <i className={"fa fa-times"} />
                                 </div>
+                            </td>
+                            <td>
+                                <i
+                                    onClick={() => onChangeDelDate(item)}
+                                    className={"fa fa-pen"}
+                                />
                             </td>
                         </tr>
                     )
@@ -138,27 +181,54 @@ export const DeletedStudents = ({currentTableData}) => {
             <div className={cls.table}>
                 <Table extraClass={cls.table__head}>
                     <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Full name</th>
-                        <th>Yosh</th>
-                        <th>Telefon nome</th>
-                        <th>Guruh</th>
-                        <th>Reg.sana</th>
-                        <th>O'chir.sana</th>
-                        <th>Sabab</th>
-                        <th/>
-                    </tr>
+                        <tr>
+                            <th>No</th>
+                            <th>Full name</th>
+                            <th>Yosh</th>
+                            <th>Telefon nome</th>
+                            <th>Guruh</th>
+                            <th>Reg.sana</th>
+                            <th>O'chir.sana</th>
+                            <th>Sabab</th>
+                            <th />
+                            <th />
+                        </tr>
                     </thead>
                     <tbody>
 
-                    {renderDeletedStudents()}
+                        {renderDeletedStudents()}
                     </tbody>
                 </Table>
             </div>
 
-            <ConfirmModal onClick={handleDelete} title={"Qaytarish"} text={"Studentni rostanham qaytarmoqchimisiz"}
-                          type={"danger"} active={active} setActive={setActive}/>
+            <ConfirmModal
+                onClick={handleDelete}
+                title={"Qaytarish"}
+                text={"Studentni rostanham qaytarmoqchimisiz"}
+                type={"danger"}
+                active={active}
+                setActive={setActive}
+            />
+            <Modal
+                active={isChangeModal}
+                setActive={setIsChangeModal}
+                extraClass={cls.modal}
+            >
+                <Input
+                    title={"Deleted date"}
+                    placeholder={"Enter deleted date"}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    extraClassName={cls.modal__input}
+                    type={"date"}
+                    defaultValue={selectedDate}
+                />
+                <Button
+                    onClick={onSubmit}
+                    extraClass={cls.modal__btn}
+                >
+                    Enter
+                </Button>
+            </Modal>
         </div>
 
     );

@@ -6,40 +6,26 @@ const formatSum = (sum) => {
     return sum?.toString()?.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ")
 }
 
-export const Statistics = ({ data, loading, filter }) => {
-    if (loading) return <DefaultPageLoader/>;
+export const Statistics = ({data, loading}) => {
 
-    const show = (key) => filter === "all" || filter === key;
-
+    if (loading === true) {
+        return <DefaultPageLoader/>
+    }
     return (
         <div className={cls.container}>
-            {show("new_students") && data?.new_students?.data?.length > 0 && (
-                <New_students data={data.new_students}/>
-            )}
-            {show("new_studying_students") && data?.new_studying_students?.data?.length > 0 && (
-                <New_studying_students data={data.new_studying_students}/>
-            )}
-            {show("student_payments") && data?.student_payments?.data?.length > 0 && (
-                <Student_payments data={data.student_payments}/>
-            )}
-            {show("teacher_salaries") && data?.teacher_salaries?.data?.length > 0 && (
-                <Teacher_salaries data={data.teacher_salaries}/>
-            )}
-            {show("user_salaries") && data?.user_salaries?.data?.length > 0 && (
-                <User_salaries data={data.user_salaries}/>
-            )}
-            {show("new_groups") && data?.new_groups?.data?.length > 0 && (
-                <New_groups data={data.new_groups}/>
-            )}
-            {show("new_leads") && data?.new_leads?.data?.length > 0 && (
-                <New_leads data={data.new_leads}/>
-            )}
-            {show("overhead_payments") && data?.overhead_payments?.data?.length > 0 && (
-                <Overhead_payments data={data.overhead_payments}/>
-            )}
+            {data?.new_students?.data?.length > 0 && (<New_students data={data.new_students}/>)}
+            {data?.new_studying_students?.data?.length > 0 && (
+                <New_studying_students data={data.new_studying_students}/>)}
+            {data?.student_payments?.data?.length > 0 && (<Student_payments data={data.student_payments}/>)}
+            {data?.teacher_salaries?.data?.length > 0 && (<Teacher_salaries data={data.teacher_salaries}/>)}
+            {data?.user_salaries?.data?.length > 0 && (<User_salaries data={data.user_salaries}/>)}
+            {data?.new_groups?.data?.length > 0 && (<New_groups data={data.new_groups}/>)}
+            {data?.new_leads?.data?.length > 0 && (<New_leads data={data.new_leads}/>)}
+            {data?.overhead_payments?.data?.length > 0 && (<Overhead_payments data={data.overhead_payments}/>)}
+
         </div>
-    );
-};
+    )
+}
 
 const New_groups = ({data}) => {
 
@@ -206,9 +192,9 @@ const Teacher_salaries = ({data}) => (
                 <tr key={i}>
                     <td>{i + 1}</td>
                     <td>{item.name} {item.surname}</td>
-                    <td>{item.salary}</td>
-                    <td>{item.payment}</td>
-                    <td>{item.comment}</td>
+                    <td>{item.salary1}</td>
+                    <td>{item.payment1}</td>
+                    <td>{item.comment1}</td>
                 </tr>
             ))}
             </tbody>
@@ -233,9 +219,9 @@ const User_salaries = ({data}) => (
                 <tr key={i}>
                     <td>{i + 1}</td>
                     <td>{item.name} {item.surname}</td>
-                    <td>{formatSum(item.salary)}</td>
+                    <td>{formatSum(item.salary1)}</td>
                     <td>{item.payment}</td>
-                    <td>{item.comment}</td>
+                    <td>{item.comment1}</td>
                 </tr>
             ))}
             </tbody>

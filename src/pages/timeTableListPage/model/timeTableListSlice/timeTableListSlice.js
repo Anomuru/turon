@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import {
     fetchTimeTableListData,
@@ -25,8 +25,8 @@ const TimeTableSlice = createSlice({
         //     state.loading = false
         //     state.error = null
         // }
-        onDelete: (state , action) => {
-            state.data= state.data.filter(item => item.id !== action.payload)
+        onDelete: (state, action) => {
+            state.data = state.data.filter(item => item.id !== action.payload)
 
         }
     },
@@ -79,5 +79,5 @@ const TimeTableSlice = createSlice({
 
 // export default TimeTableSlice.reducer
 
-export const {reducer: timeTableReducer} = TimeTableSlice
-export const {changeTime , onDelete} = TimeTableSlice.actions
+export const { reducer: timeTableReducer } = TimeTableSlice
+export const { changeTime, onDelete } = TimeTableSlice.actions

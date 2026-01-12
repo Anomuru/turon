@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import {
     fetchSubjectsData,
@@ -10,7 +10,10 @@ import {
     fetchClassInput,
     fetchGroupsForSelect,
     fetchTeachersForSelect,
-    fetchBranchesForSelect, fetchOperatorsData, fetchVacancyData, fetchTeachersData
+    fetchBranchesForSelect,
+    fetchOperatorsData,
+    fetchVacancyData,
+    fetchTeachersData
 } from "./oftenUsedThunk";
 
 const initialState = {
@@ -57,7 +60,12 @@ const initialState = {
     teacherLoading: false,
     teacherError: null,
 
-
+    statusList: [
+        { id: "not_started", name: "Not Started" },
+        { id: "in_progress", name: "In Progress" },
+        { id: "blocked", name: "Blocked" },
+        { id: "completed", name: "Completed" }
+    ]
 }
 
 const oftenUsedSlice = createSlice({

@@ -1,1 +1,0 @@
-export {ParentsPage} from "./ui/parentsPage.jsx"

@@ -1,4 +1,4 @@
-import {ROLES} from "shared/const/roles";
+import { ROLES } from "shared/const/roles";
 
 export const menuConfig = [
     // {
@@ -30,6 +30,13 @@ export const menuConfig = [
         name: "Operator Tasks",
         icon: "fa-tasks",
         roles: [ROLES.admin]
+        // roles: true
+    },
+    {
+        to: "todoist",
+        name: "Todoist",
+        icon: "fa-circle-check",
+        roles: [ROLES.admin, ROLES.teacher, ROLES.accountant, ROLES.methodist, ROLES.director, ROLES.muxarir, ROLES.operator, ROLES.programmer, ROLES.smm, ROLES.teacher, ROLES.zavxos],
         // roles: true
     },
     // {
@@ -70,12 +77,21 @@ export const menuConfig = [
         branches: true
 
     },
+    // {
+    //     to: "teacherAttendance/",
+    //     name: "O'qituvchilar Davomit",
+    //     icon: "c",
+    //     roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+    //     branches: true
+    //
+    // },
     {
-        to: "parents",
+        to: "parents/",
         name: "Ota-onalar",
         icon: "fa-users",
         roles: [ROLES.admin, ROLES.director, ROLES.programmer],
         branches: true
+
     },
     {
         to: "groups",

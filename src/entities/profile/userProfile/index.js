@@ -10,6 +10,7 @@ export {
 } from "./model/userProfileThunk";
 export {
     getUserBranchId,
+    getUserLevel,
     getUserPermission,
     getUserProfileData,
     getUserSalaryInnerData,

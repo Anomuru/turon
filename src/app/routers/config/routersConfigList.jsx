@@ -1,3 +1,6 @@
+import {DailyReportPage} from "pages/dailyReportPage/index.js";
+import {ParentsPage} from "pages/parentsPage/ui/parentsPage.jsx";
+import {TeacherAttendanceView} from "pages/teacherAttendanceView/index.js";
 import React from "react";
 
 import {
@@ -43,7 +46,6 @@ const ClassMain = lazyPage(() => import("pages/classPage/ui/classMain"), "ClassM
 const Settings = lazyPage(() => import("pages/settings"), "Settings");
 const StatisticsPage = lazyPage(() => import("pages/statisticsPage"), "StatisticsPage");
 const QuarterMaster = lazyPage(() => import("pages/quarterMasterPage"), "QuarterMasterPage");
-const ParentsPage = lazyPage(() => import("pages/parentsPage/ui/parentsPage.jsx"), "ParentsPage");
 
 export const routersConfigList = [
     {
@@ -174,8 +176,19 @@ export const routersConfigList = [
         element: <StatisticsPage/>,
     },
     {
-        path: `parents`,
+        name: "parents",
+        path: `parents/`,
         element: <ParentsPage/>,
     },
+    {
+        name: "teacherAttendanceView",
+        path: `teacherAttendance/:id`,
+        element: <TeacherAttendanceView/>,
+    },
+    {
+        name: "daily report",
+        path: "dailyReport",
+        element: <DailyReportPage/>
+    }
 
 ]

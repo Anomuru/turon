@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-// import {StoreProvider} from "src/app/providers/storeProvider/index.js";
+// import {StoreProvider} from "src/app/providers/storeProvider/index.jsx";
 // import {ThemeProvider} from "./providers/themeProvider";
 // import {SearchProvider} from "./providers/searchProvider";
 import {AppRouter} from "./routers";

@@ -1,3 +1,4 @@
+
 import { memo, useCallback, useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import classNames from "classnames";
@@ -393,8 +394,8 @@ export const StudentProfileTotalAmount = memo(({ active, setActive, student_id, 
                                             name={"discount"}
                                             placeholder={"Summa"}
                                             type={"number"}
-                                            value={month?.data[0]?.discount}
-                                        // onChange={(e) => setDiscountCharity(e.target.value)}
+                                            value={month?.data[1]?.discount}
+                                            // onChange={(e) => setDiscountCharity(e.target.value)}
                                         />
 
                                         <Input
@@ -402,7 +403,7 @@ export const StudentProfileTotalAmount = memo(({ active, setActive, student_id, 
                                             name={"reason"}
                                             placeholder={"Sababi"}
                                             value={month?.data[0]?.reason}
-                                        // onChange={(e) => setReasonCharity(e.target.value)}
+                                            // onChange={(e) => setReasonCharity(e.target.value)}
                                         />
 
                                     </>

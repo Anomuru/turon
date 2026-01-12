@@ -90,7 +90,7 @@ export const Pagination = React.memo((props) => {
 
             {totalPages > 1 && (
                 <ul className={classNames(cls.pagination_container, {[className]: className})}>
-                    <li
+                    {currentPage !== 1 &&  <li
                         key={10000}
                         className={classNames(cls.pagination_item, cls.arrow, {
                             [cls.disabled]: currentPage === 1
@@ -98,7 +98,7 @@ export const Pagination = React.memo((props) => {
                         onClick={onPrevious}
                     >
                         <i className="fas fa-arrow-left"></i>
-                    </li>
+                    </li> }
                     <div className={cls.numbers}>
                         {renderedPages}
                     </div>

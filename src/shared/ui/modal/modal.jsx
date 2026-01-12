@@ -1,13 +1,13 @@
-import {createPortal} from 'react-dom';
+import { createPortal } from 'react-dom';
 import classNames from 'classnames';
-import React, {memo} from 'react';
-import {useTheme} from "../../lib/hooks/useTheme";
+import React, { memo } from 'react';
+import { useTheme } from "../../lib/hooks/useTheme";
 import cls from "./modal.module.sass";
 import close from "shared/assets/icons/cross.svg";
 
-export const Modal = memo(({children, active, setActive, extraClass, type = "simple", typeIcon}) => {
+export const Modal = memo(({ children, active, setActive, extraClass, type = "simple", typeIcon }) => {
 
-    const {theme} = useTheme()
+    const { theme } = useTheme()
 
     const onClick = (target) => {
         if (target && typeof target.className === 'string') {
