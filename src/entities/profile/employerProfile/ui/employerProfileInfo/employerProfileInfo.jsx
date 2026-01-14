@@ -83,7 +83,7 @@ export const EmployerProfileInfo = memo(({active, setActive, setActiveModal, new
                                     <i style={{fontSize: "1.9rem"}} className="fa-solid fa-graduation-cap"></i>
                                     <h2>Ishchi</h2>
                                 </Button>
-                                <Button onClick={() => navigate(`employerSalaryPage/${employerId?.id}`)} extraClass={cls.info__teacherSource__header__balance}>
+                                <Button onClick={() => navigate(`employerSalaryPage/${employerId?.user?.id}`)} extraClass={cls.info__teacherSource__header__balance}>
                                     <i style={{fontSize: "1.9rem"}} className="fa-solid fa-dollar-sign"></i>
                                     <h2>Balans</h2>
                                 </Button>
