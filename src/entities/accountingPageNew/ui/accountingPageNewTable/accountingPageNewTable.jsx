@@ -1,13 +1,14 @@
-import {useState, useMemo} from "react";
+import {useMemo, useState} from "react";
 import cls from "./accountingPageNewTable.module.sass";
 import {useDispatch, useSelector} from "react-redux";
 import {getAccountingNewPageLoading} from "entities/accountingPageNew/model/accountingNewSelector.js";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 import {API_URL, headers, useHttp} from "shared/api/base.js";
 import {ConfirmModal} from "shared/ui/confirmModal/index.js";
-import {onDeleteCapital} from "entities/accounting/model/slice/capital.js";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 import {onDeleteData} from "entities/accountingPageNew/model/accountingNewSlice.js";
+import {useNavigate} from "react-router";
+import {employers} from "entities/employer/index.js";
 
 export const AccountingPageNewTable = ({activeFilter, data, selectType}) => {
     const [sortConfig, setSortConfig] = useState({
@@ -17,6 +18,7 @@ export const AccountingPageNewTable = ({activeFilter, data, selectType}) => {
 
     const [confirmModal, setConfirmModal] = useState(false)
     const [confirmModalItem, setConfirmModalItem] = useState({})
+    const navigate = useNavigate()
 
     const loading = useSelector(getAccountingNewPageLoading)
     const formatAmount = (val) =>
@@ -71,7 +73,7 @@ export const AccountingPageNewTable = ({activeFilter, data, selectType}) => {
     const onDelete = () => {
 
         const renderRoute = () => {
-            switch (selectType){
+            switch (selectType) {
                 case "studentPayments":
                     return `Students/student_payment_delete/`
                 case "teacherSalary":
@@ -149,7 +151,11 @@ export const AccountingPageNewTable = ({activeFilter, data, selectType}) => {
                         {sortedPayments.map((p, idx) => (
                             <tr key={p.id}>
                                 <td>{idx + 1}</td>
-                                <td>
+                                <td
+                                    onClick={() => navigate(
+                                        `../${selectType === "studentPayments" ? "students" : "teacher" }/${selectType === "teacherSalary" ? "teacherProfile" : selectType === "employeesSalary" ? "employerProfile" : "profile"}/${p.employee_id ? p.employee_id : p.student_id}`,
+                                    )}
+                                >
                                     {selectType === "capital" ? p.capital : p.name} {!p.capital ? p.surname ? p.surname : "" : ""}
                                 </td>
                                 <td>{formatAmount(p.payment_sum)}</td>
