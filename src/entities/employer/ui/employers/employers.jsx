@@ -2,7 +2,7 @@ import cls from "./employers.module.sass"
 import {Table} from "shared/ui/table";
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
-import {DefaultPageLoader} from "../../../../shared/ui/defaultLoader";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 import {getEmployerDataWithFilter, getEmployerLoading} from "../../model/selector/employersSelector";
 import {useDispatch, useSelector} from "react-redux";
 import {ConfirmModal} from "shared/ui/confirmModal";
