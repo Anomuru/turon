@@ -77,20 +77,43 @@ const todoistSlice = createSlice({
             state.taskLoading = false
         },
         editTask: (state, action) => {
-            if (action.payload.isMulti) {
-                state.tasks = [
-                    action.payload,
-                    ...state.tasks.filter(item => item.id !== action.payload.id)
-                ]
-            }
             state.tasks = [
                 action.payload,
                 ...state.tasks.filter(item => item.id !== action.payload.id)
             ]
             state.taskLoading = false
         },
+        editMultiTask: (state, action) => {
+            state.tasks =
+                state.tasks.map(item => {
+                    if (item.id === action.payload.parent) {
+                        return {
+                            ...item.children.filter(it => it.id !== action.payload.id)[0],
+                            children: [
+                                ...item.children.filter(it => it.id !== action.payload.id),
+                                action.payload
+                            ]
+                        }
+                    } else return item
+                })
+            state.taskLoading = false
+        },
         deleteTask: (state, action) => {
             state.tasks = state.tasks.filter(item => item.id !== action.payload)
+            state.taskLoading = false
+        },
+        deleteMultiTask: (state, action) => {
+            state.tasks =
+                state.tasks
+                    .map(item => {
+                        if (item.id === action.payload.parent) {
+                            return {
+                                ...item.children.filter(it => it.id !== action.payload.id)[0],
+                                children: item.children.filter(it => it.id !== action.payload.id)
+                            }
+                        } else return item
+                    })
+                    .filter(item => item.id)
             state.taskLoading = false
         },
         addTag: (state, action) => {
@@ -301,7 +324,9 @@ export const {
     notificationLoadingStop,
     addTask,
     editTask,
+    editMultiTask,
     deleteTask,
+    deleteMultiTask,
     addTag,
     editTag,
     deleteTag,

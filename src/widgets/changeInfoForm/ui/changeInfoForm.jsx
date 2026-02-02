@@ -1,16 +1,16 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from "classnames";
 
-import {useForm} from "react-hook-form";
-import {Button} from "shared/ui/button";
-import {Form} from "shared/ui/form";
-import {Input} from "shared/ui/input";
-import {Modal} from "shared/ui/modal";
-import {Select} from "shared/ui/select";
+import { useForm } from "react-hook-form";
+import { Button } from "shared/ui/button";
+import { Form } from "shared/ui/form";
+import { Input } from "shared/ui/input";
+import { Modal } from "shared/ui/modal";
+import { Select } from "shared/ui/select";
 
 import cls from "./changeInfoForm.module.sass";
 
-export const ChangeInfoForm = ({onSubmit, data, defaultValue, active, setActive, extraClass}) => {
+export const ChangeInfoForm = ({ onSubmit, data, defaultValue, active, setActive, extraClass }) => {
 
     const {
         register,
@@ -79,6 +79,7 @@ export const ChangeInfoForm = ({onSubmit, data, defaultValue, active, setActive,
                         )
                     } else return (
                         <Input
+                            title={item?.placeholder}
                             extraClassName={classNames(item?.extraClass, cls.change__extraClass)}
                             placeholder={item?.placeholder}
                             register={register}
@@ -113,7 +114,7 @@ export const ChangeInfoForm = ({onSubmit, data, defaultValue, active, setActive,
                 <Form
                     extraClassname={classNames(cls.change__form, extraClass)}
                     onSubmit={handleSubmit(onSubmit)}
-                    // typeSubmit={""}
+                // typeSubmit={""}
                 >
                     {render()}
                 </Form>
