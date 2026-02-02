@@ -1130,7 +1130,7 @@ export const TodoistPage = () => {
     const getStatusColor = (status) => {
         switch (status) {
             case "not_started":
-                return "#999999";        // серый — ещё не начато
+                return "#999999";         // серый — ещё не начато
             case "in_progress":
                 return "#4A90E2";        // синий — в процессе
             case "blocked":

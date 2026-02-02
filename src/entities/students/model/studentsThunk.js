@@ -34,7 +34,7 @@ export const fetchStudentsByClass = createAsyncThunk(
     "newStudents/fetchStudentsByClass",
     ({branch, number}) => {
         const {request} = useHttp()
-        return request(`${API_URL}Students/new-registered-students/?branch=${branch}&number=${number}`, "GET", null, headers())
+        return request(`${API_URL}Students/new-registered-students/?branch=8&number=${number}`, "GET", null, headers())
     }
 )
 

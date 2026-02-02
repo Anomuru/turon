@@ -25,6 +25,7 @@ function getWeekdayUz(dateInput) {
 export const StudentProfileTimeTable = memo(() => {
 
     const data = useSelector(getTimeTableTuronForShow)
+    console.log(data, 'table for students')
 
     return (
         <EditableCard

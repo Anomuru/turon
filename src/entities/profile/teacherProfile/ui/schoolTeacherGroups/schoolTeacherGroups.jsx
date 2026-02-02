@@ -50,6 +50,7 @@ export const SchoolTeacherGroups = memo(({currentTab}) => {
     const schoolTeacherGroups = teacherData?.group
     const schoolTeacherFlows = teacherData?.flow
     const teachId = teacherData?.id
+    console.log(teacherData, "teacher data")
 
 
     useEffect(() => {
@@ -76,6 +77,7 @@ export const SchoolTeacherGroups = memo(({currentTab}) => {
         })
     }
 
+    console.log(schoolTeacherFlows, "flowwwww")
     const render = renderStudents()
     return currentTab === "info"
         ? <div className={cls.groupsContainer}>
@@ -118,10 +120,10 @@ export const SchoolTeacherGroups = memo(({currentTab}) => {
                             : schoolTeacherFlows?.length === 0 ?
                                 <div className={cls.classProfile__notFound}>
                                     <i style={{fontSize: "4rem", color: "#D1D5DB"}} className="fa-solid fa-face-smile"></i>
-                                    <h1 style={{color: "#D1D5DB"}}>O'qituvchida sinf yo'q</h1>
+                                    <h1 style={{color: "#D1D5DB"}}>O'qituvchida flow yo'q</h1>
                                 </div> :
                                 schoolTeacherFlows?.map((item, index) => (
-                                    <div onClick={() => navigation(`../students/profile/${item?.id}`)} key={index}
+                                    <div onClick={() => navigation(`../groups/flowsProfile/${item?.id}`)} key={index}
                                          className={cls.classProfile__card}>
                                         <div className={cls.classProfile__card__left}>
                                 <span style={{background: "linear-gradient(35deg, #417EF5, #5D69F1)"}} className={cls.classProfile__card__left__span}>
