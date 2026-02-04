@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import {FlowList} from "entities/flowList";
+import { FlowList } from "entities/flowList";
 import {
     fetchGroupsDataWithFilter, getClassDataForFlow,
     getGroupsListCount,
@@ -7,28 +7,27 @@ import {
     getGroupsLoading,
     groupsReducer
 } from "entities/groups";
-import {getUserBranchId} from "entities/profile/userProfile";
-import {useDispatch, useSelector} from "react-redux";
-import {flowListThunk, getFlowList} from "entities/flows";
-import {API_URL, headers, useHttp} from "shared/api/base";
-import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
-import {Button} from "shared/ui/button";
-import {DefaultPageLoader} from "shared/ui/defaultLoader";
+import { getUserBranchId } from "entities/profile/userProfile";
+import { useDispatch, useSelector } from "react-redux";
+import { flowListThunk, getFlowList } from "entities/flows";
+import { API_URL, headers, useHttp } from "shared/api/base";
+import { DynamicModuleLoader } from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import { Button } from "shared/ui/button";
+import { DefaultPageLoader } from "shared/ui/defaultLoader";
 import cls from "./FlowListPage.module.sass";
-import {Pagination} from "features/pagination";
-import {getSearchValue} from "features/searchInput";
-import {useEffect, useMemo, useState} from "react";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import {useNavigate} from "react-router";
-import {fetchClassesDataForFlow} from "entities/groups/model/slice/groupsThunk.js";
+import { Pagination } from "features/pagination";
+import { getSearchValue } from "features/searchInput";
+import { useEffect, useMemo, useState } from "react";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import { useNavigate } from "react-router";
+import { fetchClassesDataForFlow } from "entities/groups/model/slice/groupsThunk.js";
 
 const reducers = {
     groupsSlice: groupsReducer
 }
 
 export const FlowListPage = () => {
-
-    const {request} = useHttp()
+    const { request } = useHttp()
     const dispatch = useDispatch()
     const userBranchId = useSelector(getUserBranchId)
     const navigate = useNavigate()
@@ -36,11 +35,10 @@ export const FlowListPage = () => {
     useEffect(() => {
         if (userBranchId) {
             dispatch(flowListThunk())
-            dispatch(fetchClassesDataForFlow({branch: userBranchId}))
+            dispatch(fetchClassesDataForFlow({ branch: userBranchId }))
         }
     }, [userBranchId])
 
-    // const flowList = useSelector(getFlowList)
     const totalCount = useSelector(getGroupsListCount)
     const flowList = useSelector(getClassDataForFlow)
     const loading = useSelector(getGroupsLoading)
@@ -49,135 +47,150 @@ export const FlowListPage = () => {
     let PageSize = useMemo(() => 50, [])
 
     const [currentTableData, setCurrentTableData] = useState([])
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1)
     const [selectedId, setSelectedId] = useState([])
 
     const searchedUsers = useMemo(() => {
         const filteredHeroes = flowList?.slice()
-        setCurrentPage(1)
 
         if (!search) return filteredHeroes
 
         return filteredHeroes.filter(item =>
             item.name?.toLowerCase().includes(search.toLowerCase())
         )
-    }, [flowList])
+    }, [flowList, search])
 
     useEffect(() => {
-        if (searchedUsers)
+        setCurrentPage(1)
+    }, [search])
+
+    useEffect(() => {
+        if (searchedUsers) {
             setCurrentTableData(searchedUsers)
+        }
     }, [searchedUsers])
 
     const onChangeAll = (classId) => {
         setCurrentTableData(prev => prev.map(item => {
-            if (item?.id === +classId) {
-                if (item.isCheck) {
-                    setSelectedId(prev => prev.filter(i => i?.classId !== item?.id))
-                    return {
-                        isCheck: false,
-                        id: item.id,
-                        students: item.students.map(item => ({
-                            ...item,
-                            isCheck: false,
-                            id: item.id,
+            if (item?.id !== +classId) return item
 
-                        })),
-                        class_number: item.class_number,
-                        color: item.color
+            const newIsCheck = !item.isCheck
+
+            setSelectedId(prev => {
+                if (newIsCheck) {
+                    // Добавляем всех студентов
+                    const existingIndex = prev.findIndex(i => i?.classId === item?.id)
+                    const allStudents = item?.students?.map(s => s?.id) || []
+
+                    if (existingIndex >= 0) {
+                        const newArr = [...prev]
+                        newArr[existingIndex] = {
+                            classId: item?.id,
+                            students: allStudents
+                        }
+                        return newArr
                     }
+                    return [
+                        ...prev,
+                        {
+                            classId: item?.id,
+                            students: allStudents
+                        }
+                    ]
                 } else {
-                    setSelectedId(prev => {
-                        if (prev.filter(i => i?.classId === item?.id)[0]) {
-                            return [
-                                ...prev.filter(i => i?.classId !== item.id),
-                                {
-                                    classId: item?.id,
-                                    students: item?.students?.map(item => item?.id)
-                                }
-                            ]
-                        } else return [
-                            ...prev,
-                            {
-                                classId: item?.id,
-                                students: item?.students?.map(item => item?.id)
-                            }
-                        ]
-                    })
-                    return {
-                        isCheck: true,
-                        id: item.id,
-                        students: item.students.map(item => ({
-                            ...item,
-                            isCheck: true,
-                            id: item.id,
-                        })),
-                        class_number: item.class_number,
-                        color: item.color
-                    }
+                    // ✅ ИСПРАВЛЕНО: полностью удаляем класс из selectedId
+                    return prev.filter(i => i?.classId !== item?.id)
                 }
-            } else return item
+            })
+
+            return {
+                isCheck: newIsCheck,
+                id: item.id,
+                students: item.students.map(s => ({
+                    ...s,
+                    isCheck: newIsCheck,
+                    id: s.id,
+                })),
+                class_number: item.class_number,
+                color: item.color
+            }
         }))
     }
 
     const onChangeSingle = (studentId, classId) => {
-
-
         setSelectedId(prev => {
-            if (prev.filter(i => i?.classId === +classId)[0]) {
+            const existingClass = prev.find(i => i?.classId === +classId)
+
+            if (existingClass) {
+                const updatedStudents = existingClass.students.includes(+studentId)
+                    ? existingClass.students.filter(item => item !== +studentId)
+                    : [...existingClass.students, +studentId]
+
+                // ✅ ИСПРАВЛЕНО: если студентов не осталось, удаляем класс полностью
+                if (updatedStudents.length === 0) {
+                    return prev.filter(i => i?.classId !== +classId)
+                }
+
                 return prev.map(i => {
-                    if (i?.classId === classId) {
+                    if (i?.classId === +classId) {
                         return {
                             classId: i?.classId,
-                            students: i?.students.includes(+studentId)
-                                ? i.students.filter(item => item !== +studentId)
-                                :
-                                [...i.students, +studentId]
+                            students: updatedStudents
                         }
                     }
+                    return i
                 })
             } else {
-                return [...prev, {
-                    classId: +classId,
-                    students: [+studentId]
-                }]
+                // Добавляем новый класс с одним студентом
+                return [
+                    ...prev,
+                    {
+                        classId: +classId,
+                        students: [+studentId]
+                    }
+                ]
             }
         })
     }
 
-
+    // ✅ ИСПРАВЛЕНО: правильная синхронизация с selectedId
     useEffect(() => {
         setCurrentTableData(prev => prev?.map(item => {
-            const filtered = selectedId?.filter(i => i?.classId === item.id)[0]
-            if (filtered) {
-                return {
-                    isCheck: filtered?.students?.length === item.students.length,
-                    id: item.id,
-                    students: item.students.map(i => {
-                        if (filtered?.students?.includes(i.id)) {
-                            return {
-                                ...i,
-                                isCheck: true,
-                                id: i.id,
+            const filtered = selectedId?.find(i => i?.classId === item.id)
 
-                            }
-                        } else return {
-                            ...i,
-                            isCheck: false,
-                            id: i.id,
-                        }
-                    }),
+            if (filtered && filtered.students.length > 0) {
+                // Класс найден и в нем есть студенты
+                return {
+                    isCheck: filtered.students.length === item.students.length,
+                    id: item.id,
+                    students: item.students.map(student => ({
+                        ...student,
+                        isCheck: filtered.students.includes(student.id),
+                        id: student.id,
+                    })),
                     class_number: item.class_number,
                     color: item.color
                 }
-            } else return item
+            } else {
+                // ✅ ИСПРАВЛЕНО: если класс не найден или студентов нет - снимаем все галочки
+                return {
+                    isCheck: false,
+                    id: item.id,
+                    students: item.students.map(student => ({
+                        ...student,
+                        isCheck: false,
+                        id: student.id,
+                    })),
+                    class_number: item.class_number,
+                    color: item.color
+                }
+            }
         }))
-    }, [selectedId, currentPage])
+    }, [selectedId])
 
     const onCreateFlow = () => {
-        let idArr = []
-        selectedId.map(item => {
-            item?.students?.map(i => idArr.push(i))
-        })
+        const idArr = selectedId.flatMap(item => item?.students || [])
+
         const res = localStorage.getItem("flowData")
         const data = {
             ...JSON.parse(res),
@@ -185,38 +198,41 @@ export const FlowListPage = () => {
             classes: []
         }
 
-        request(`${API_URL}Flow/flow-list-create/`, "POST", JSON.stringify(data), headers())
-            .then(res => {
-                dispatch(onAddAlertOptions({
-                    type: "success",
-                    msg: res.msg,
-                    status: true
-                }))
-                localStorage.removeItem("flowData")
-            })
-            .then(() => {
-                navigate(-1)
-            })
+        console.log(data, "data");
+
+        // request(`${API_URL}Flow/flow-list-create/`, "POST", JSON.stringify(data), headers())
+        //     .then(res => {
+        //         dispatch(onAddAlertOptions({
+        //             type: "success",
+        //             msg: res.msg,
+        //             status: true
+        //         }))
+        //         localStorage.removeItem("flowData")
+        //     })
+        //     .then(() => {
+        //         navigate(-1)
+        //     })
+        //     .catch(error => {
+        //         dispatch(onAddAlertOptions({
+        //             type: "error",
+        //             msg: error?.message || "Ошибка при создании flow",
+        //             status: true
+        //         }))
+        //     })
     }
 
-
     const renderFlowList = () => {
-        return currentTableData?.map((item, i) => {
-
-            return (
-                <FlowList
-                    currentPage={currentPage}
-                    key={i}
-                    flowList={item}
-                    title={`${item?.class_number}-${item?.color}`}
-                    onChangeAll={onChangeAll}
-                    onChangeSingle={onChangeSingle}
-                    // flowList={item?.students}
-                    number={i}
-                    // name={item?.name}
-                />
-            )
-        })
+        return currentTableData?.map((item, i) => (
+            <FlowList
+                currentPage={currentPage}
+                key={item.id}
+                flowList={item}
+                title={`${item?.class_number}-${item?.color}`}
+                onChangeAll={onChangeAll}
+                onChangeSingle={onChangeSingle}
+                number={i}
+            />
+        ))
     }
 
     const render = renderFlowList()
@@ -231,7 +247,7 @@ export const FlowListPage = () => {
                     </div>
                 </div>
                 {
-                    loading ? <DefaultPageLoader/> :
+                    loading ? <DefaultPageLoader /> :
                         <div className={cls.table}>
                             <div>
                                 {render}
@@ -253,8 +269,8 @@ export const FlowListPage = () => {
                                 <Button
                                     extraClass={cls.table__btn}
                                     onClick={onCreateFlow}
-                                    type={selectedId.filter(item => item?.students?.length > 0)[0] ? "" : "disabled"}
-                                    disabled={selectedId.filter(item => item?.students?.length > 0)[0] ? "" : "disabled"}
+                                    type={selectedId.some(item => item?.students?.length > 0) ? "" : "disabled"}
+                                    disabled={!selectedId.some(item => item?.students?.length > 0)}
                                 >
                                     Create
                                 </Button>
