@@ -198,27 +198,25 @@ export const FlowListPage = () => {
             classes: []
         }
 
-        console.log(data, "data");
-
-        // request(`${API_URL}Flow/flow-list-create/`, "POST", JSON.stringify(data), headers())
-        //     .then(res => {
-        //         dispatch(onAddAlertOptions({
-        //             type: "success",
-        //             msg: res.msg,
-        //             status: true
-        //         }))
-        //         localStorage.removeItem("flowData")
-        //     })
-        //     .then(() => {
-        //         navigate(-1)
-        //     })
-        //     .catch(error => {
-        //         dispatch(onAddAlertOptions({
-        //             type: "error",
-        //             msg: error?.message || "Ошибка при создании flow",
-        //             status: true
-        //         }))
-        //     })
+        request(`${API_URL}Flow/flow-list-create/`, "POST", JSON.stringify(data), headers())
+            .then(res => {
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    msg: res.msg,
+                    status: true
+                }))
+                localStorage.removeItem("flowData")
+            })
+            .then(() => {
+                navigate(-1)
+            })
+            .catch(error => {
+                dispatch(onAddAlertOptions({
+                    type: "error",
+                    msg: error?.message || "Ошибка при создании flow",
+                    status: true
+                }))
+            })
     }
 
     const renderFlowList = () => {
