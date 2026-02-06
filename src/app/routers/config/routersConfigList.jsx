@@ -46,6 +46,7 @@ const ClassMain = lazyPage(() => import("pages/classPage/ui/classMain"), "ClassM
 const Settings = lazyPage(() => import("pages/settings"), "Settings");
 const StatisticsPage = lazyPage(() => import("pages/statisticsPage"), "StatisticsPage");
 const QuarterMaster = lazyPage(() => import("pages/quarterMasterPage"), "QuarterMasterPage");
+const RatingForTeachersPage = lazyPage(() => import("pages/ratingForTeachersPage"), "RatingForTeachersPage");
 
 export const routersConfigList = [
     {
@@ -174,6 +175,11 @@ export const routersConfigList = [
         name: "Statistics",
         path: `Statistics/`,
         element: <StatisticsPage/>,
+    },
+    {
+        name: "rating",
+        path: "rating",
+        element: <RatingForTeachersPage/>
     },
     {
         name: "parents",

@@ -26,6 +26,12 @@ export const menuConfig = [
         roles: [ROLES.admin, ROLES.director, ROLES.programmer],
     },
     {
+        to: "rating",
+        name: "Reyting ko'rsatkichlari",
+        icon: "fa-users",
+        roles: [ROLES.director, ROLES.programmer]
+    },
+    {
         to: "adminTaskManager",
         name: "Operator Tasks",
         icon: "fa-tasks",
