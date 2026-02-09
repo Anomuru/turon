@@ -17,6 +17,10 @@ const categoies = [
     {
         value: "observation",
         name: "Observation"
+    },
+    {
+        value: "lesson_plan",
+        name: "Lesson Plan"
     }
 ]
 
@@ -84,7 +88,22 @@ export const RatingForTeachers = () => {
             <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{item.name} {item.surname}</td>
-                <td>{item.ball}</td>
+                {
+                    value === "observation" && (
+                        <td>{item?.ball}</td>
+                    )
+                }
+                {
+                    value === "lesson_plan" && (
+                        <>
+                            <td>{item?.total}</td>
+                            <td>{item?.done}</td>
+                            <td>{item?.percent}%</td>
+
+                        </>
+                    )
+                }
+
             </tr>
         ));
     }
@@ -107,7 +126,7 @@ export const RatingForTeachers = () => {
                            onChange={handleDateChange}
                     />
                     <span className={cls.rating__header__inner__box}>
-                        <p>Hammasini ko'rish</p>
+                        <p>Hozirgi oyni ko'rish</p>
                     <Switch onChangeSwitch={handleSwitch}  activeSwitch={active}/>
                     </span>
                 </div>
@@ -119,7 +138,17 @@ export const RatingForTeachers = () => {
                     <tr style={{position: "sticky", top: "-2rem"}}>
                         <th>T/r</th>
                         <th>Ism-familiyasi</th>
-                        <th>Ball ko'rsatkichi</th>
+                        {value === "observation" && (
+                            <th>Ball ko'rsatkichi</th>
+                        )}
+
+                        {value === "lesson_plan" && (
+                            <>
+                                <th>Jami plan</th>
+                                <th>Bajarilgan</th>
+                                <th>Foiz (%)</th>
+                            </>
+                        )}
                     </tr>
                     </thead>
                     <tbody>
