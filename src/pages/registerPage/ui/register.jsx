@@ -320,6 +320,7 @@ export const Register = () => {
             });
         }
     };
+    console.log(branchSelect)
 
     const renderFormFields = () => {
         switch (registerType) {

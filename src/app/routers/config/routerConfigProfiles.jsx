@@ -27,11 +27,12 @@ import {
     getRouteTaskManager,
     getRouteFilteredLeads,
     getAccounting,
-    getGroupQuarter, getGroupQuarterShow, getGroupObserve
+    getGroupQuarter, getGroupQuarterShow, getGroupObserve, getLessonTable
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
 import {AccountingPageMainIndex} from "pages/accountingPage/index.js";
+import {LessonsTable} from "features/groupProfile/ui/lessonTable/lessonTable.jsx";
 const AccountingPageNew = lazyPage(() => import("pages/accountingPage2.0") , "AccountingPageNew");
 // import {GroupQuarterShow} from "pages/groupsPage/index.js";
 
@@ -249,6 +250,11 @@ export const routersConfigProfile = [
         name: "parent",
         path: "parents/profile/:id",
         element: <ParentsProfile/>
+    },
+    {
+        name: "lessonTable",
+        path: getLessonTable(":id"),
+        element: <LessonsTable/>
     },
 
 

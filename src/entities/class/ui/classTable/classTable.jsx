@@ -108,6 +108,7 @@ export const ClassTable = ({edit}) => {
                         ))}
                     </div>
                 </td>
+                <td>{item.overall_hours}</td>
                 <td>{item.price}</td>
                 <td style={{width: "3rem"}}>
                     <div className={cls.items}>
@@ -152,6 +153,7 @@ export const ClassTable = ({edit}) => {
                             <th>No</th>
                             <th>Sinf </th>
                             <th>Fanlari</th>
+                            <th>Umumiy soati</th>
                             <th>Narxi</th>
                             <th/>
                         </tr>

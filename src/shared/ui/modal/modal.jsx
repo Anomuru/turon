@@ -5,7 +5,7 @@ import { useTheme } from "../../lib/hooks/useTheme";
 import cls from "./modal.module.sass";
 import close from "shared/assets/icons/cross.svg";
 
-export const Modal = memo(({ children, active, setActive, extraClass, type = "simple", typeIcon }) => {
+export const Modal = memo(({ children, active, setActive, extraClass, status ,  type = "simple", typeIcon }) => {
 
     const { theme } = useTheme()
 
@@ -25,6 +25,7 @@ export const Modal = memo(({ children, active, setActive, extraClass, type = "si
                     <div
                         className={classNames(cls.modal, "outClose", [theme])}
                         onClick={(e) => onClick(e.target)}
+                        style={{padding: status ?  "0 2rem 0 1rem" : ""}}
                     >
                         <div className={classNames(cls.modal__inner, extraClass)}>
                             {!typeIcon ?
@@ -51,6 +52,7 @@ export const Modal = memo(({ children, active, setActive, extraClass, type = "si
                 <div
                     className={classNames(cls.modal, "outClose", [theme])}
                     onClick={(e) => onClick(e.target)}
+                    style={{padding: status ?  "0 2rem 0 1rem" : ""}}
                 >
                     {children}
                 </div>,

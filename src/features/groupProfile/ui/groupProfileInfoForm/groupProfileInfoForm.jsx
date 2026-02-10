@@ -191,6 +191,15 @@ export const GroupProfileInfoForm = memo(({ currentTab, setCurrentTab }) => {
                                 <h1 style={{ color: "#166534" }}>{data?.price?.toLocaleString()} uzs</h1>
                             </div>
                         </div>
+                        <div onClick={() => navigate(`lessonTable/${id}`)} style={{ background: "#E2FDEB", border: "2px solid #22C55E" }} className={cls.info__right__footer__card}>
+                            <span style={{ background: "#22C55E" }}>
+                               <i className="fa-solid fa-users"></i>
+                            </span>
+                            <div className={cls.info__right__footer__card__arounder}>
+                                <h2 style={{ color: "#16A384" }}>attendance </h2>
+                                <h1 style={{ color: "#166534" }}>students</h1>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
