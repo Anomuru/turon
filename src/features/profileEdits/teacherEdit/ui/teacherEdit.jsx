@@ -1,21 +1,20 @@
-import { AnimatedMulti } from "features/workerSelect";
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { editTeacherThunk } from "../../../../entities/teachers";
-import { Modal } from "shared/ui/modal";
-import { Input } from "shared/ui/input";
-import { getTeacherId } from "../../../../entities/teachers";
+import {AnimatedMulti} from "features/workerSelect";
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {editTeacherThunk, getTeacherId} from "../../../../entities/teachers";
+import {Modal} from "shared/ui/modal";
+import {Input} from "shared/ui/input";
 import cls from './teacherEdit.module.sass'
-import { Button } from "../../../../shared/ui/button";
-import { onAddAlertOptions } from "../../../alert/model/slice/alertSlice";
-import { Select } from "../../../../shared/ui/select";
+import {Button} from "../../../../shared/ui/button";
+import {onAddAlertOptions} from "../../../alert/model/slice/alertSlice";
+import {Select} from "../../../../shared/ui/select";
 
-import { fetchCategories, fetchSubjectsData, getClassTypeData, getSubjectsData, getCategories } from "entities/oftenUsed";
-import { HexColorPicker } from "react-colorful";
-import { API_URL, headers, useHttp } from "shared/api/base";
+import {fetchSubjectsData, getCategories, getClassTypeData, getSubjectsData} from "entities/oftenUsed";
+import {HexColorPicker} from "react-colorful";
+import {API_URL, headers, useHttp} from "shared/api/base";
 
 
-export const TeacherEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
+export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
     const dispatch = useDispatch();
     const teacherID = useSelector(getTeacherId);
     const categories = useSelector(getCategories)
@@ -25,7 +24,6 @@ export const TeacherEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
     const [username, setUsername] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
-    const [level, setLevel] = useState('');
     const [fatherName, setFatherName] = useState('');
     const [teacherSalaryType, setTeacherSalaryType] = useState('');
     const [phone, setNumber] = useState('')
@@ -40,23 +38,25 @@ export const TeacherEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
     const [usernameMessage, setUsernameMessage] = useState('');
     const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
 
+    const [changeUsername, setChangeUsername] = useState(false)
+
     const subjectOptions = subjects?.map(subject => ({
         value: subject?.id,
         label: subject?.name,
     }));
 
-    const { request } = useHttp()
+    const {request} = useHttp()
 
     useEffect(() => {
         if (username && username !== teacherID?.user?.username) {
             const checkUsername = async () => {
                 try {
-                    const response = await request(`${API_URL}Users/username-check/`, "POST", JSON.stringify({ username }), headers());
+                    const response = await request(`${API_URL}Users/username-check/`, "POST", JSON.stringify({username}), headers());
 
                     const data = await response
                     if (data.exists === true) {
                         setUsernameMessage(<p className={cls.errorMess}>
-                            <i className="fa-solid fa-circle-exclamation" style={{ color: "#f15c5c" }}></i>
+                            <i className="fa-solid fa-circle-exclamation" style={{color: "#f15c5c"}}></i>
                             Username band
                         </p>);
                         setIsUsernameAvailable(false);
@@ -92,7 +92,6 @@ export const TeacherEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
             setClassTime(teacherID?.working_hours)
             setName(teacherID.user?.name)
             setSurname(teacherID.user?.surname)
-            setLevel(teacherID.user?.level)
             setNumber(teacherID.user?.phone)
             setAge(teacherID.user?.birth_date)
             setTeacherSalaryType(teacherID?.teacher_salary_type)
@@ -120,8 +119,7 @@ export const TeacherEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
                 phone,
                 age,
                 // username,
-                father_name: fatherName,
-                level
+                father_name: fatherName
             },
             teacher_salary_type: teacherSalaryType,
             class_type: classType,
@@ -133,7 +131,7 @@ export const TeacherEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
             face_id: faceId
         };
 
-        dispatch(editTeacherThunk({ id: (teacherID.id), updateTeacher }))
+        dispatch(editTeacherThunk({id: (teacherID.id), updateTeacher}))
             .then(() => {
                 onUpdate(updateTeacher)
                 dispatch(onAddAlertOptions({
@@ -147,160 +145,205 @@ export const TeacherEdit = ({ isOpen, onClose, onUpdate, teacherId }) => {
 
     if (!isOpen) return null
 
+    const onChangeUsername = () => {
+        if (!teacherID) return;
+        const updateTeacher = {
+            user: {
+                name,
+                surname,
+                phone,
+                age,
+                username,
+                father_name: fatherName
+            },
+            teacher_salary_type: teacherSalaryType,
+            class_type: classType,
+            subject: selectedSubjects.map(item => item?.value),
+            color: colorChange,
+            working_hours: +classTime,
+            salary_percentage: +money,
+            class_salary: classSalary,
+            face_id: faceId
+        };
+
+        dispatch(editTeacherThunk({id: (teacherID.id), updateTeacher}))
+            .then(() => {
+                onUpdate(updateTeacher)
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: "Ma'lumot muvofaqqiyatli o'zgartirildi"
+                }))
+                setChangeUsername(false)
+                onClose()
+            })
+    }
 
     return (
-        <Modal
-            active={isOpen}
-            setActive={onClose}
-        >
-            <div className={cls.filter}>
-                <h1>Ma'lumotlarni o'zgartirish</h1>
-                <div className={cls.filter__container}>
-                    <div className={cls.filter__age}>
-                        <Input
-                            type={"text"}
-                            title={usernameMessage && <p className={cls.mess}>{usernameMessage}</p>}
-                            extraClassName={cls.filter__input}
-                            placeholder={"Username"}
-                            onChange={(e) => setUsername(e.target.value)}
-                            value={username}
+        <>
+            <Modal active={changeUsername} setActive={setChangeUsername}>
+                <div style={{width: "450px", display: "flex", flexDirection: "column", gap: "15px"}}>
+                    <Input
+                        type={"text"}
+                        title={usernameMessage && <p className={cls.mess}>{usernameMessage}</p>}
+                        extraClassName={cls.filter__input}
+                        placeholder={"Username"}
+                        onChange={(e) => setUsername(e.target.value)}
+                        value={username}
                         // value={selectedFrom}
-                        />
-                        <Input
-                            type={"text"}
-                            title={"Ism"}
-                            extraClassName={cls.filter__input}
-                            placeholder={"Ism"}
-                            onChange={(e) => setName(e.target.value)}
-                            value={name}
-                        // value={selectedFrom}
-                        />
-                        <Input
-                            type={"text"}
-                            title={"Familiya"}
-                            extraClassName={cls.filter__input}
-                            placeholder={"Familiya"}
-                            onChange={(e) => setSurname(e.target.value)}
-                            value={surname}
-                        // value={selectedFrom}
-                        />
-                        <Input
-                            type={"level"}
-                            title={"Level"}
-                            extraClassName={cls.filter__input}
-                            placeholder={"Enter level"}
-                            onChange={(e) => setLevel(e.target.value)}
-                            value={level}
-                        // value={selectedFrom}
-                        />
-                        <Input
-                            type={"text"}
-                            title={"Otasing ismi"}
-                            extraClassName={cls.filter__input}
-                            placeholder={"Otasing ismi"}
-                            onChange={(e) => setFatherName(e.target.value)}
-                            value={fatherName}
-                        // value={selectedFrom}
-                        />
-                        <Input
-                            type={"number"}
-                            title={"Tel raqami"}
-                            extraClassName={cls.filter__input}
-                            placeholder={"Tel raqami"}
-                            onChange={(e) => setNumber(e.target.value)}
-                            value={phone}
-                        // value={selectedTo}
-                        />
-
-                        <Input
-                            type={"date"}
-                            extraClassName={cls.inputAge}
-                            placeholder={"Tug'ilgan yili"}
-                            title={"Tug'ilgan yili"}
-                            onChange={(e) => setAge(e.target.value)}
-                            value={age}
-                        // value={selectedFrom}
-                        />
-                        <Input
-                            type={"number"}
-                            extraClassName={cls.inputAge}
-                            placeholder={"Ustama foiz"}
-                            title={"Ustama foiz"}
-                            onChange={(e) => setMoney(e.target.value)}
-                            value={money}
-                        />
-                        <AnimatedMulti
-                            options={subjectOptions}
-                            onChange={setSelectedSubjects}
-                            extraClass={cls.multiSelect}
-                            value={selectedSubjects}
-                            fontSize={15}
-                        />
-                        <Select
-                            extraClass={cls.extraClasses}
-                            name={"category"}
-                            options={categories}
-                            defaultValue={teacherSalaryType?.id ?? teacherSalaryType}
-                            onChangeOption={setTeacherSalaryType}
-                            title={"Toifa"}
-                        />
-                        <Select
-                            extraClass={cls.extraClasses}
-                            name={"class_type"}
-                            options={classTypes}
-                            onChangeOption={setClassType}
-                            title={"Sinf"}
-                            defaultValue={classType}
-
-                        />
-                        <Input
-                            type={"number"}
-                            title={"Darslik soat"}
-                            extraClassName={cls.filter__input}
-                            placeholder={"Darslik soat"}
-                            onChange={(e) => setClassTime(e.target.value)}
-                            value={classTime}
-                        // value={selectedTo}
-                        />
-                        <Input
-                            type={"number"}
-                            title={"Sinfdan oylik"}
-                            extraClassName={cls.filter__input}
-                            placeholder={"Darslik soat"}
-                            onChange={(e) => setClassSalary(e.target.value)}
-                            value={classSalary}
-                        // value={selectedTo}
-                        />
-                        <Input
-                            type={"number"}
-                            title={"Face Id raqami"}
-                            extraClassName={cls.filter__input}
-                            onChange={(e) => setFaceID(e.target.value)}
-                            value={faceId}
-                        // value={selectedTo}
-                        />
-                        <div>
-                            <div style={{ display: "flex", gap: "1rem", alignItems: "center", marginBottom: "10px" }}><h3>Rang qushish :</h3> <div style={{ backgroundColor: colorChange ? colorChange : "black", width: "30px", height: "30px", borderRadius: "5px", boxShadow: colorChange === "#ffffff" ? "0 0 5px 0" : null }}></div></div>
-                            <HexColorPicker style={{ width: "30rem", height: "15rem" }} color={colorChange}
-                                onChange={setColorChange} />
-                        </div>
-                    </div>
-
-
-                    <div style={{ display: "flex", gap: "5px" }}>
-                        {/*<a href={API_URL_DOC+} download><Button> Resume Saqlab olish</Button></a>*/}
-
-                        <Button>Resume O'zgartirish</Button>
-                    </div>
-
-                    <div className={cls.filter__switch}>
-                        <div></div>
-                        <Button extraClass={cls.submitBtn} type={"submit"} children={"Button"}
-                            onClick={handleEditTeacher} />
-                    </div>
-
+                    />
+                    <Button onClick={onChangeUsername}>
+                        O'zgartirish
+                    </Button>
                 </div>
-            </div>
-        </Modal>
+            </Modal>
+            <Modal
+                active={isOpen}
+                setActive={onClose}
+            >
+                <div className={cls.filter}>
+                    <h1>Ma'lumotlarni o'zgartirish</h1>
+                    <div className={cls.filter__container}>
+                        <div className={cls.filter__age}>
+                            <Button onClick={() => setChangeUsername(true)}>Username o'zgartirish</Button>
+
+
+                            <Input
+                                type={"text"}
+                                title={"Ism"}
+                                extraClassName={cls.filter__input}
+                                placeholder={"Ism"}
+                                onChange={(e) => setName(e.target.value)}
+                                value={name}
+                                // value={selectedFrom}
+                            />
+                            <Input
+                                type={"text"}
+                                title={"Familiya"}
+                                extraClassName={cls.filter__input}
+                                placeholder={"Familiya"}
+                                onChange={(e) => setSurname(e.target.value)}
+                                value={surname}
+                                // value={selectedFrom}
+                            />
+                            <Input
+                                type={"text"}
+                                title={"Otasing ismi"}
+                                extraClassName={cls.filter__input}
+                                placeholder={"Otasing ismi"}
+                                onChange={(e) => setFatherName(e.target.value)}
+                                value={fatherName}
+                                // value={selectedFrom}
+                            />
+                            <Input
+                                type={"number"}
+                                title={"Tel raqami"}
+                                extraClassName={cls.filter__input}
+                                placeholder={"Tel raqami"}
+                                onChange={(e) => setNumber(e.target.value)}
+                                value={phone}
+                                // value={selectedTo}
+                            />
+
+                            <Input
+                                type={"date"}
+                                extraClassName={cls.inputAge}
+                                placeholder={"Tug'ilgan yili"}
+                                title={"Tug'ilgan yili"}
+                                onChange={(e) => setAge(e.target.value)}
+                                value={age}
+                                // value={selectedFrom}
+                            />
+                            <Input
+                                type={"number"}
+                                extraClassName={cls.inputAge}
+                                placeholder={"Ustama foiz"}
+                                title={"Ustama foiz"}
+                                onChange={(e) => setMoney(e.target.value)}
+                                value={money}
+                            />
+                            <AnimatedMulti
+                                options={subjectOptions}
+                                onChange={setSelectedSubjects}
+                                extraClass={cls.multiSelect}
+                                value={selectedSubjects}
+                                fontSize={15}
+                            />
+                            <Select
+                                extraClass={cls.extraClasses}
+                                name={"category"}
+                                options={categories}
+                                defaultValue={teacherSalaryType?.id ?? teacherSalaryType}
+                                onChangeOption={setTeacherSalaryType}
+                                title={"Toifa"}
+                            />
+                            <Select
+                                extraClass={cls.extraClasses}
+                                name={"class_type"}
+                                options={classTypes}
+                                onChangeOption={setClassType}
+                                title={"Sinf"}
+                                defaultValue={classType}
+
+                            />
+                            <Input
+                                type={"number"}
+                                title={"Darslik soat"}
+                                extraClassName={cls.filter__input}
+                                placeholder={"Darslik soat"}
+                                onChange={(e) => setClassTime(e.target.value)}
+                                value={classTime}
+                                // value={selectedTo}
+                            />
+                            <Input
+                                type={"number"}
+                                title={"Sinfdan oylik"}
+                                extraClassName={cls.filter__input}
+                                placeholder={"Darslik soat"}
+                                onChange={(e) => setClassSalary(e.target.value)}
+                                value={classSalary}
+                                // value={selectedTo}
+                            />
+                            <Input
+                                type={"number"}
+                                title={"Face Id raqami"}
+                                extraClassName={cls.filter__input}
+                                onChange={(e) => setFaceID(e.target.value)}
+                                value={faceId}
+                                // value={selectedTo}
+                            />
+                            <div>
+                                <div style={{display: "flex", gap: "1rem", alignItems: "center", marginBottom: "10px"}}>
+                                    <h3>Rang qushish :</h3>
+                                    <div style={{
+                                        backgroundColor: colorChange ? colorChange : "black",
+                                        width: "30px",
+                                        height: "30px",
+                                        borderRadius: "5px",
+                                        boxShadow: colorChange === "#ffffff" ? "0 0 5px 0" : null
+                                    }}></div>
+                                </div>
+                                <HexColorPicker style={{width: "30rem", height: "15rem"}} color={colorChange}
+                                                onChange={setColorChange}/>
+                            </div>
+                        </div>
+
+
+                        {/*<div style={{display: "flex", gap: "5px"}}>*/}
+                        {/*    /!*<a href={API_URL_DOC+} download><Button> Resume Saqlab olish</Button></a>*!/*/}
+
+                        {/*    <Button>Resume O'zgartirish</Button>*/}
+                        {/*</div>*/}
+
+                        <div className={cls.filter__switch}>
+                            <div></div>
+                            <Button extraClass={cls.submitBtn} type={"submit"} children={"Button"}
+                                    onClick={handleEditTeacher}/>
+                        </div>
+
+                    </div>
+                </div>
+            </Modal>
+        </>
     );
 }

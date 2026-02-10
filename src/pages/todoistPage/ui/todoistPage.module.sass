@@ -689,78 +689,78 @@ $color-gray: #999
   .infoGrid
     grid-template-columns: 1fr
 
-.card
-  width: 100%
-  background: #fff
-  border: 1px solid #ddd
-  padding: 16px
-  margin-bottom: 12px
-  border-radius: 12px
-  box-shadow: 0 3px 8px rgba(0,0,0,.05)
-  transition: .2s
+  .card
+    width: 100%
+    background: #fff
+    border: 1px solid #ddd
+    padding: 16px
+    margin-bottom: 12px
+    border-radius: 12px
+    box-shadow: 0 3px 8px rgba(0,0,0,.05)
+    transition: .2s
 
-  &.read
-    opacity: .6
+    &.read
+      opacity: .6
 
-  &__btn
-    margin-top: auto
+    &__btn
+      margin-top: auto
+      display: flex
+      justify-content: space-between
+
+  .header
     display: flex
     justify-content: space-between
+    margin-bottom: 8px
 
-.header
-  display: flex
-  justify-content: space-between
-  margin-bottom: 8px
+  .role
+    font-weight: 600
+    color: #4a4aff
 
-.role
-  font-weight: 600
-  color: #4a4aff
+  .date
+    font-size: 14px
+    color: #777
 
-.date
-  font-size: 14px
-  color: #777
+  .message
+    margin: 10px 0
+    font-size: 15px
 
-.message
-  margin: 10px 0
-  font-size: 15px
+  .info
+    display: flex
+    justify-content: space-between
+    margin-bottom: 12px
 
-.info
-  display: flex
-  justify-content: space-between
-  margin-bottom: 12px
+  .mission
+    font-weight: 500
 
-.mission
-  font-weight: 500
+  .deadline
+    font-weight: 500
+    color: #d9534f
+    font-size: 1.4rem
 
-.deadline
-  font-weight: 500
-  color: #d9534f
-  font-size: 1.4rem
+  .viewBtn
+    padding: 8px 12px
+    border: none
+    border-radius: 8px
+    color: #4a4aff
+    border: 1px solid #4a4aff
+    background: white
+    cursor: pointer
 
-.viewBtn
-  padding: 8px 12px
-  border: none
-  border-radius: 8px
-  color: #4a4aff
-  border: 1px solid #4a4aff
-  background: white
-  cursor: pointer
+  .toggleBtn
+    padding: 8px 12px
+    background: #4a4aff
+    border: none
+    border-radius: 8px
+    color: white
+    cursor: pointer
+    transition: .2s
 
-.toggleBtn
-  padding: 8px 12px
-  background: #4a4aff
-  border: none
-  border-radius: 8px
-  color: white
-  cursor: pointer
-  transition: .2s
+    &:hover
+      background: #3737d4
 
-  &:hover
-    background: #3737d4
-
-.redirect
-  display: flex
-  flex-direction: column
-  gap: 2rem
-  &__btn
-    align-self: flex-end
+  .redirect
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    &__btn
+      align-self: flex-end
