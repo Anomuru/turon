@@ -1,92 +1,94 @@
-import {useEffect, useState} from "react";
-import styles from "./groupProfileQuarter.module.sass"
-import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import { useEffect, useState } from "react";
+import styles from "./groupProfileQuarter.module.sass";
+import { DynamicModuleLoader } from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {
     addTest,
     deleteTest,
     groupQuarterReducer,
     updateTest
 } from "features/groupProfile/model/makeQuarter/groupQuarterSlice.js";
-import {useDispatch, useSelector} from "react-redux";
-import {getTerm, getTermData} from "features/groupProfile/model/makeQuarter/groupQuarterSelector.js";
-import {fetchTerm, fetchTermData} from "features/groupProfile/model/makeQuarter/groupQuarterThunk.js";
-import {Select} from "shared/ui/select/index.js";
-import {Modal} from "shared/ui/modal/index.js";
-import {Input} from "shared/ui/input/index.js";
-import {useForm} from "react-hook-form";
-import {Button} from "shared/ui/button/index.js";
-import {API_URL, headers, useHttp} from "shared/api/base.js";
-import {ConfirmModal} from "shared/ui/confirmModal/index.js";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
-import {Table} from "shared/ui/table/index.js";
-import {DefaultLoader} from "shared/ui/defaultLoader/index.js";
-import {getSelectedLocations} from "features/locations/index.js";
+import { useDispatch, useSelector } from "react-redux";
+import { getTerm, getTermData } from "features/groupProfile/model/makeQuarter/groupQuarterSelector.js";
+import { fetchTerm, fetchTermData } from "features/groupProfile/model/makeQuarter/groupQuarterThunk.js";
+import { Select } from "shared/ui/select/index.js";
+import { Modal } from "shared/ui/modal/index.js";
+import { Input } from "shared/ui/input/index.js";
+import { useForm } from "react-hook-form";
+import { Button } from "shared/ui/button/index.js";
+import { API_URL, headers, useHttp } from "shared/api/base.js";
+import { ConfirmModal } from "shared/ui/confirmModal/index.js";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice.js";
+import { Table } from "shared/ui/table/index.js";
+import { DefaultLoader } from "shared/ui/defaultLoader/index.js";
+import { getSelectedLocations } from "features/locations/index.js";
 
 const reducers = {
     groupQuarterSlice: groupQuarterReducer
-}
+};
 
-// optimizatsiya qilaman  (sardor)
 export const GroupProfileQuarter = () => {
-    const data = useSelector(getTermData)
-    const term = useSelector(getTerm)
-    const [selectedTerm, setSelectedTerm] = useState(null)
+    const data = useSelector(getTermData);
+    const term = useSelector(getTerm);
+    const [selectedTerm, setSelectedTerm] = useState(null);
 
-    const [active, setActive] = useState(false)
-    const [activeItems, setActiveItems] = useState({})
-    const branchId = localStorage.getItem("branchId")
+    const [active, setActive] = useState(false);
+    const [activeItems, setActiveItems] = useState({});
+    const branchId = localStorage.getItem("branchId");
     const selectedBranch = useSelector(getSelectedLocations);
-   const branchForFilter = selectedBranch?.id ?? branchId;
+    const branchForFilter = selectedBranch?.id ?? branchId;
 
-    const {reset, register, handleSubmit} = useForm()
+    const { reset, register, handleSubmit } = useForm();
     const [assignments, setAssignments] = useState([]);
-    const [viewActive, setViewActive] = useState(false)
-    const [viewTest, setViewTest] = useState(null)
-    const [loading, setLoading] = useState(false)
+    const [viewActive, setViewActive] = useState(false);
+    const [viewTest, setViewTest] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    const {request} = useHttp()
-    const [quarterYear, setQuarterYear] = useState(null)
-    const [quarterYearSelected, setQuarterYearSelected] = useState(null)
+    const { request } = useHttp();
+    const [quarterYear, setQuarterYear] = useState(null);
+    const [quarterYearSelected, setQuarterYearSelected] = useState(null);
 
-    useEffect(() => {
-        if (quarterYear) {
-            setQuarterYearSelected(quarterYear[0]?.academic_year)
-        }
-    }, [quarterYear])
+    const dispatch = useDispatch();
 
     useEffect(() => {
         request(`${API_URL}terms/education-years/`, "GET", null, headers())
-            .then(res => {
-                setQuarterYear(res)
-            })
-    }, [])
+            .then(res => setQuarterYear(res));
+    }, []);
+
+    useEffect(() => {
+        if (quarterYear) {
+            setQuarterYearSelected(quarterYear[0]?.academic_year);
+        }
+    }, [quarterYear]);
 
     useEffect(() => {
         if (term) {
-            setSelectedTerm(term[0]?.id)
+            setSelectedTerm(term[0]?.id);
         }
-    }, [term])
-
-    const dispatch = useDispatch()
+    }, [term]);
 
     useEffect(() => {
-        if (quarterYearSelected){
-            dispatch(fetchTerm(quarterYearSelected))
+        if (quarterYearSelected) {
+            dispatch(fetchTerm(quarterYearSelected));
         }
-    }, [quarterYearSelected])
+    }, [quarterYearSelected]);
 
     useEffect(() => {
         if (selectedTerm && branchId) {
-            dispatch(fetchTermData({termId: selectedTerm, branchId: branchForFilter}))
+            dispatch(fetchTermData({ termId: selectedTerm, branchId: branchForFilter }));
         }
-    }, [selectedTerm, branchForFilter])
+    }, [selectedTerm, branchForFilter]);
 
     useEffect(() => {
         if (viewTest) {
             setAssignments(
                 viewTest.data.map(item => ({
                     student_id: item.id,
-                    percentage: item.assignment?.percentage ?? item.assignment ?? 0,
+                    percentage:
+                        typeof item.assignment?.percentage === "number"
+                            ? item.assignment.percentage
+                            : typeof item.assignment === "number"
+                                ? item.assignment
+                                : 0,
                     test_id: viewTest.id,
                 }))
             );
@@ -95,9 +97,9 @@ export const GroupProfileQuarter = () => {
 
     useEffect(() => {
         if (viewActive === false) {
-            setViewTest(null)
+            setViewTest(null);
         }
-    }, [viewActive])
+    }, [viewActive]);
 
     const onClick = (item, path) => {
         setActive(true);
@@ -115,24 +117,21 @@ export const GroupProfileQuarter = () => {
 
         request(`${API_URL}terms/create-test/`, "POST", JSON.stringify(res), headers())
             .then(res => {
-                dispatch(addTest({
-                    path: activeItems,
-                    test: res
-                }));
+                dispatch(addTest({ path: activeItems, test: res }));
                 dispatch(onAddAlertOptions({
                     status: true,
                     type: "success",
                     msg: "Test muvaffaqiyatli qo'shildi"
-                }))
-                setActive(false)
-                reset()
+                }));
+                setActive(false);
+                reset();
             })
-            .catch(err => console.log(err))
-    }
+            .catch(err => console.log(err));
+    };
 
     const onViewTest = (path, row) => {
         const groupId = path.find(p => p.type === "group")?.id;
-        setLoading(true)
+        setLoading(true);
         request(`${API_URL}terms/student-assignment/${groupId}/${row.id}/`, "GET", null, headers())
             .then(res => {
                 setViewTest({
@@ -140,43 +139,74 @@ export const GroupProfileQuarter = () => {
                     weight: row.weight,
                     data: res
                 });
-                setLoading(false)
+                setLoading(false);
                 setViewActive(true);
             })
             .catch(err => console.log(err));
     };
 
+    // ✅ BU YERDA PAYLOAD TOZALANADI
     const onSubmitAssignments = () => {
-        request(`${API_URL}terms/assignment-create/`, "POST", JSON.stringify(assignments), headers())
+        const payload = assignments.map(a => {
+            let cleanPercentage = 0;
+
+            if (typeof a.percentage === "number") {
+                cleanPercentage = a.percentage;
+            } else if (typeof a.percentage === "string") {
+                cleanPercentage = Number(a.percentage) || 0;
+            } else {
+                cleanPercentage = 0;
+            }
+
+            return {
+                student_id: a.student_id,
+                test_id: a.test_id,
+                percentage: cleanPercentage, // ✅ faqat number
+            };
+        });
+
+        request(`${API_URL}terms/assignment-create/`, "POST", JSON.stringify(payload), headers())
             .then(() => {
                 dispatch(onAddAlertOptions({
                     status: true,
                     type: "success",
                     msg: "Natijalar saqlandi"
-                }))
-                setViewActive(false)
+                }));
+                setViewActive(false);
             })
             .catch(err => console.log(err));
     };
 
     return (
         <DynamicModuleLoader reducers={reducers}>
-            {loading ? <DefaultLoader/> : null}
+            {loading ? <DefaultLoader /> : null}
             <div className={styles.quarter}>
-                <div style={{alignSelf: "flex-end" , display: "flex" , gap: "2rem"}}>
-                    <Select defaultValue={quarterYearSelected} options={quarterYear}
-                            onChangeOption={setQuarterYearSelected}/>
-                    <Select defaultValue={selectedTerm} options={term} onChangeOption={setSelectedTerm}/>
+                <div style={{ alignSelf: "flex-end", display: "flex", gap: "2rem" }}>
+                    <Select
+                        defaultValue={quarterYearSelected}
+                        options={quarterYear}
+                        onChangeOption={setQuarterYearSelected}
+                    />
+                    <Select
+                        defaultValue={selectedTerm}
+                        options={term}
+                        onChangeOption={setSelectedTerm}
+                    />
                 </div>
-                <Accordion selectedTerm={selectedTerm} onClick={onClick} items={data}  onViewTest={onViewTest}/>
+                <Accordion
+                    selectedTerm={selectedTerm}
+                    onClick={onClick}
+                    items={data}
+                    onViewTest={onViewTest}
+                />
             </div>
 
             {/* Create Modal */}
             <Modal setActive={setActive} active={active}>
-                <div style={{padding: "2rem"}}>
-                    <Input name={"name"} placeholder={"Nomi"} register={register}/>
-                    <Input name={"weight"} type={"number"} register={register} placeholder={"Foiz % "}/>
-                    <Input name={"date"} type={"date"} register={register}/>
+                <div style={{ padding: "2rem" }}>
+                    <Input name={"name"} placeholder={"Nomi"} register={register} />
+                    <Input name={"weight"} type={"number"} register={register} placeholder={"Foiz % "} />
+                    <Input name={"date"} type={"date"} register={register} />
                     <Button onClick={handleSubmit(onPostTerm)}>Create</Button>
                 </div>
             </Modal>
@@ -200,10 +230,9 @@ export const GroupProfileQuarter = () => {
                                     const assignmentItem = assignments.find(a => a.student_id === item.id);
 
                                     const percentage =
-                                        assignmentItem?.percentage ??
-                                        item.assignment?.percentage ??
-                                        item.assignment ??
-                                        0;
+                                        typeof assignmentItem?.percentage === "number"
+                                            ? assignmentItem.percentage
+                                            : 0;
 
                                     const result = (percentage * viewTest.weight) / 100;
 
@@ -213,9 +242,10 @@ export const GroupProfileQuarter = () => {
                                             <td>{item.name} {item.surname}</td>
                                             <td>
                                                 <Input
+                                                    disabled={item.assignment?.is_editable === false ? "disabled" : ""}
                                                     extraClassName={styles.input}
                                                     type="number"
-                                                    value={percentage === 0 ? "" : Number(percentage)} // <-- nol oldini oladi
+                                                    value={percentage === 0 ? "" : Number(percentage)}
                                                     onChange={(e) => {
                                                         const newValue = e.target.value === "" ? 0 : Number(e.target.value);
 
@@ -226,7 +256,7 @@ export const GroupProfileQuarter = () => {
                                                                 const updated = [...prev];
                                                                 updated[existingIndex] = {
                                                                     ...updated[existingIndex],
-                                                                    percentage: newValue,
+                                                                    percentage: newValue, // ✅ har doim number
                                                                 };
                                                                 return updated;
                                                             }
@@ -236,7 +266,7 @@ export const GroupProfileQuarter = () => {
                                                                 {
                                                                     student_id: item.id,
                                                                     test_id: viewTest.id,
-                                                                    percentage: newValue,
+                                                                    percentage: newValue, // ✅
                                                                 },
                                                             ];
                                                         });
@@ -258,7 +288,7 @@ export const GroupProfileQuarter = () => {
             </Modal>
         </DynamicModuleLoader>
     );
-}
+};
 
 
 function Accordion({items, onClick, parentId = null, path = [], onDeleteId, onViewTest ,selectedTerm}) {
