@@ -136,8 +136,6 @@ export const TimeTableClassView = (props) => {
 
                             }
                         </div>
-
-
                         <div className={cls.footer}>
                             {
                                 lessons?.map(item => {
@@ -190,6 +188,8 @@ const Container = (props) => {
     return (
         <div
             className={cls.droppableContainer}
+
+
         >
             {
                 !!item.group.name &&
