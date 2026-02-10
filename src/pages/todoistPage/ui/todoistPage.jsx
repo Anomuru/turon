@@ -456,7 +456,7 @@ export const TodoistPage = () => {
             is_recurring: formData.is_recurring,
             recurring_type: formData.recurring_type,
             repeat_every: formData.repeat_every,
-            // executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id]
+            executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id]
         }
 
         dispatch(taskLoading())
@@ -1095,7 +1095,10 @@ export const TodoistPage = () => {
 
                 {/* Create/Edit Task Modal */}
                 {(modalType === "createTask" || modalType === "editTask") && (
-                    <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                    <div
+                        className={styles.modalBackdrop}
+                        // onClick={() => setModalType(null)}
+                    >
                         <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                             <h2 className={styles.modalTitle}>
                                 {modalType === "createTask" ? "Create Task" : "Edit Task"}
@@ -1113,6 +1116,7 @@ export const TodoistPage = () => {
                             <div className={styles.formGroup}>
                                 <label>Description</label>
                                 <textarea
+                                    style={{ height: "130px" }}
                                     value={formData.description || ""}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     placeholder="Task description"
@@ -1312,25 +1316,28 @@ export const TodoistPage = () => {
 
                 {/* View Task Modal */}
                 {modalType === "viewTask" && selectedTask && (
-                    <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                    <div
+                        className={styles.modalBackdrop}
+                        onClick={() => setModalType(null)}
+                    >
                         <div className={styles.modalLarge} onClick={(e) => e.stopPropagation()}>
                             <h2 className={styles.modalTitle}>{selectedTask.title}</h2>
 
                             <div className={styles.viewContent}>
                                 <div className={styles.infoGrid}>
-                                    <div className={styles.infoGrid__desc}>
-                                        <strong>Description:</strong>
-                                        <p className={styles.desc}>
-                                            {selectedTask.description.length > 30
-                                                ? `${selectedTask.description.slice(0, 30)}...`
-                                                : selectedTask.description}
-                                        </p>
-                                        {selectedTask.description.length > 30 && (
-                                            <div className={styles.fullDesc}>
-                                                <p>{selectedTask.description}</p>
-                                            </div>
-                                        )}
-                                    </div>
+                                    {/*<div className={styles.infoGrid__desc}>*/}
+                                    {/*    <strong>Description:</strong>*/}
+                                    {/*    <p className={styles.desc}>*/}
+                                    {/*        {selectedTask.description.length > 30*/}
+                                    {/*            ? `${selectedTask.description.slice(0, 30)}...`*/}
+                                    {/*            : selectedTask.description}*/}
+                                    {/*    </p>*/}
+                                    {/*    {selectedTask.description.length > 30 && (*/}
+                                    {/*        <div className={styles.fullDesc}>*/}
+                                    {/*            <p>{selectedTask.description}</p>*/}
+                                    {/*        </div>*/}
+                                    {/*    )}*/}
+                                    {/*</div>*/}
                                     <div>
                                         <strong>Departmant:</strong>
                                         <p>{categoryList.filter(item => item.id === selectedTask.category)[0]?.name}</p>
@@ -1365,6 +1372,16 @@ export const TodoistPage = () => {
                                     <div>
                                         <strong>Recurring:</strong>
                                         <p>{selectedTask.is_recurring ? `Yes (${selectedTask.recurring_type})` : "No"}</p>
+                                    </div>
+                                </div>
+                                <div className={styles.viewContent__desc}>
+                                    <strong className={styles.descTitle}>Description:</strong>
+                                    <div
+                                        className={classNames(styles.descContainer, {
+                                            [styles.none]: selectedTask.tags.length === 0
+                                        })}
+                                    >
+                                        {selectedTask.description}
                                     </div>
                                 </div>
 
