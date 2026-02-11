@@ -1,22 +1,22 @@
-import {fetchClassInput, getClassInputData} from "entities/oftenUsed";
-import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
-import React, {useEffect, useMemo, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
+import { fetchClassInput, getClassInputData } from "entities/oftenUsed";
+import { onAddAlertOptions } from "features/alert/model/slice/alertSlice";
+import React, { useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 
-import {getSearchValue} from "features/searchInput";
-import {Pagination} from "features/pagination";
+import { getSearchValue } from "features/searchInput";
+import { Pagination } from "features/pagination";
 import {
     TimeTableChange,
     TimeTableCreate,
     TimeTableHeader,
     TimeTableList
 } from "entities/timeTable";
-import {ConfirmModal} from "shared/ui/confirmModal";
+import { ConfirmModal } from "shared/ui/confirmModal";
 import {
     getTimeTableData, getTimeTableDataCount,
     getTimeTableLoading
 } from "../model/timeTableListSelector/timeTableListSelector";
-import {onDelete} from "../model/timeTableListSlice/timeTableListSlice";
+import { onDelete } from "../model/timeTableListSlice/timeTableListSlice";
 import {
     createTimeTable,
     fetchTimeTableListData,
@@ -24,8 +24,10 @@ import {
 } from "../model/timeTableListThunk/timeTableListThunk";
 
 import cls from "./timeTableListPage.module.sass";
-import {API_URL, headers, useHttp} from "shared/api/base";
-import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import { API_URL, headers, useHttp } from "shared/api/base";
+import { DynamicModuleLoader } from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import { getUserBranchId } from "entities/profile/userProfile/index.js";
+import { getSelectedLocations } from "features/locations/index.js";
 
 const reducers = {}
 
@@ -50,12 +52,17 @@ export const TimeTableListPage = () => {
 
 
 
+    const branch = useSelector(getUserBranchId)
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id ?? branch;
+
     useEffect(() => {
-        dispatch(fetchTimeTableListData({currentPage, pageSize: PageSize , search}))
+        if (branchForFilter)
+            dispatch(fetchTimeTableListData({ currentPage, pageSize: PageSize, search, branch: branchForFilter }))
         // dispatch(fetchClassInput())
-    }, [currentPage , search])
+    }, [currentPage, search, branchForFilter])
     const onSubmitCreate = (data) => {
-        dispatch(createTimeTable(data))
+        dispatch(createTimeTable({ ...data, branch: branchForFilter }))
         dispatch(onAddAlertOptions({
             type: "success",
             status: true,
@@ -67,7 +74,7 @@ export const TimeTableListPage = () => {
 
     const onSubmitChange = (dataForm) => {
         const filteredTime = data?.filter(item => item.id === isChange?.id)[0]
-        dispatch(updateTimeTable({id: isChange?.id, obj: dataForm}))
+        dispatch(updateTimeTable({ id: isChange?.id, obj: dataForm, branch: branchForFilter }))
         dispatch(onAddAlertOptions({
             type: "success",
             status: true,
@@ -76,7 +83,7 @@ export const TimeTableListPage = () => {
         setCurrentStatus(true)
     }
 
-    const {request} = useHttp()
+    const { request } = useHttp()
     const onDeleteTimeTable = () => {
 
         request(`${API_URL}SchoolTimeTable/hours-list-update/${isChange.id}`, "DELETE", null, headers())
@@ -103,53 +110,53 @@ export const TimeTableListPage = () => {
 
     return (
         // <DynamicModuleLoader reducers={reducers}>
-            <div className={cls.timeTable}>
-                <TimeTableHeader
-                    isCreate={isCreate}
-                    setIsCreate={setIsCreate}
-                    setIsFilter={setIsFilter}
-                    setStatus={setCurrentStatus}
-                    totalCount={data?.count}
-                />
+        <div className={cls.timeTable}>
+            <TimeTableHeader
+                isCreate={isCreate}
+                setIsCreate={setIsCreate}
+                setIsFilter={setIsFilter}
+                setStatus={setCurrentStatus}
+                totalCount={data?.count}
+            />
 
-                <div className={cls.timeTable__table}>
-                    <TimeTableList
-                        data={data}
-                        setIsChange={setIsChange}
-                        loading={loading}
-                        setStatus={setCurrentStatus}
-                    />
-                    <Pagination
-                        totalCount={dataCount}
-                        currentPage={currentPage}
-                        pageSize={PageSize}
-                        onPageChange={page => {
-                            setCurrentPage(page)
-                        }}
-                    />
-                </div>
-                <TimeTableCreate
-                    classInput={classInput}
-                    active={currentStatus ? false : isCreate}
-                    setActive={setIsCreate}
-                    onSubmit={onSubmitCreate}
+            <div className={cls.timeTable__table}>
+                <TimeTableList
+                    data={data}
+                    setIsChange={setIsChange}
                     loading={loading}
+                    setStatus={setCurrentStatus}
                 />
-                <TimeTableChange
-                    classInput={classInput}
-                    active={currentStatus ? false : isChange}
-                    setActive={setIsChange}
-                    onSubmit={onSubmitChange}
-                    loading={loading}
-                    onDelete={onDeleteStatus}
-                />
-                <ConfirmModal
-                    type={"danger"}
-                    active={isDeleted}
-                    setActive={setIsDeleted}
-                    onClick={onDeleteTimeTable}
+                <Pagination
+                    totalCount={dataCount}
+                    currentPage={currentPage}
+                    pageSize={PageSize}
+                    onPageChange={page => {
+                        setCurrentPage(page)
+                    }}
                 />
             </div>
+            <TimeTableCreate
+                classInput={classInput}
+                active={currentStatus ? false : isCreate}
+                setActive={setIsCreate}
+                onSubmit={onSubmitCreate}
+                loading={loading}
+            />
+            <TimeTableChange
+                classInput={classInput}
+                active={currentStatus ? false : isChange}
+                setActive={setIsChange}
+                onSubmit={onSubmitChange}
+                loading={loading}
+                onDelete={onDeleteStatus}
+            />
+            <ConfirmModal
+                type={"danger"}
+                active={isDeleted}
+                setActive={setIsDeleted}
+                onClick={onDeleteTimeTable}
+            />
+        </div>
         // </DynamicModuleLoader>
     )
 }

@@ -1,0 +1,108 @@
+name: Production Deploy (Frontend)
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: CI=false npm run build
+
+      - name: Clean old build files
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            cd ${{ secrets.TARGET_DIR }}
+            rm -f index.html
+            rm -rf assets/
+            echo "✅ Old files removed (index.html, assets/)"
+
+      - name: Deploy to Server via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          source: "build/*"
+          target: ${{ secrets.TARGET_DIR }}
+          strip_components: 1
+          overwrite: true
+
+      - name: Gather deployment info
+        if: always()
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            DEPLOY_TIME=$(date "+%Y-%m-%d %H:%M:%S")
+            CONTRIBUTOR="${{ github.actor }}"
+            COMMIT_MESSAGE="${{ github.event.head_commit.message }}"
+            COMMIT_SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+            BRANCH="${{ github.ref_name }}"
+            REPO="${{ github.repository }}"
+            
+            if [ -d "${{ secrets.TARGET_DIR }}" ]; then
+              FILE_COUNT=$(find "${{ secrets.TARGET_DIR }}" -type f | wc -l)
+              ASSETS_SIZE=$(du -sh "${{ secrets.TARGET_DIR }}/assets" 2>/dev/null | cut -f1 || echo "N/A")
+            else
+              FILE_COUNT="0"
+              ASSETS_SIZE="N/A"
+            fi
+            
+            # Deploy status
+            if [ "${{ job.status }}" = "success" ]; then
+              STATUS_EMOJI="✅"
+              STATUS_TEXT="SUCCESSFUL"
+            else
+              STATUS_EMOJI="❌"
+              STATUS_TEXT="FAILED"
+            fi
+            
+            html_escape() {
+              echo "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g'
+            }
+            
+            SAFE_COMMIT=$(html_escape "$COMMIT_MESSAGE")
+            
+            {
+              echo "<b>$STATUS_EMOJI Frontend Deploy $STATUS_TEXT</b>"
+              echo ""
+              echo "🕒 <b>Time:</b> $DEPLOY_TIME"
+              echo "👤 <b>Contributor:</b> $CONTRIBUTOR"
+              echo "🌿 <b>Branch:</b> $BRANCH"
+              echo "📝 <b>Commit:</b> <code>$COMMIT_SHORT_SHA</code>"
+              echo "💬 <b>Message:</b> $SAFE_COMMIT"
+              echo ""
+              echo "<b>📊 Build Info:</b>"
+              echo "📦 <b>Files deployed:</b> $FILE_COUNT"
+              echo "📂 <b>Assets size:</b> $ASSETS_SIZE"
+              echo ""
+              if [ "${{ job.status }}" != "success" ]; then
+                echo "🔗 <b>Logs:</b> https://github.com/$REPO/actions/runs/${{ github.run_id }}"
+              fi
+            } > /tmp/deploy_message.txt
+            
+            curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+              -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+              -d parse_mode=HTML \
+              --data-urlencode text@/tmp/deploy_message.txt
+            
+            rm -f /tmp/deploy_message.txt

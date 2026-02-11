@@ -1,4 +1,3 @@
-import {AnimatedMulti} from "features/workerSelect";
 import {memo, useEffect, useMemo, useState} from 'react';
 import {useForm} from "react-hook-form";
 
@@ -9,16 +8,21 @@ import {Button} from "shared/ui/button";
 import {MiniLoader} from "shared/ui/miniLoader";
 
 import cls from "./timeTableChange.module.sass";
-import {Select} from "shared/ui/select";
 import {updateTimeTable} from "pages/timeTableListPage/model/timeTableListThunk/timeTableListThunk.js";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
-import {useDispatch} from "react-redux";
-import {API_URL, headers, useHttp} from "shared/api/base.js";
+import {useDispatch, useSelector} from "react-redux";
+import {useHttp} from "shared/api/base.js";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
 
 export const TimeTableChange = memo((props) => {
 
     const {request} = useHttp()
     const dispatch = useDispatch()
+
+    const branch = useSelector(getUserBranchId)
+    const selectedBranch = useSelector(getSelectedLocations);
+    const branchForFilter = selectedBranch?.id ?? branch;
     const {
         register,
         handleSubmit,
@@ -76,7 +80,7 @@ export const TimeTableChange = memo((props) => {
     }, [])
 
     const onSubmitChange = (dataForm) => {
-        dispatch(updateTimeTable({id: active?.id, obj: dataForm}))
+        dispatch(updateTimeTable({id: active?.id, obj: dataForm, branch: branchForFilter}))
         dispatch(onAddAlertOptions({
             type: "success",
             status: true,
@@ -134,12 +138,12 @@ export const TimeTableChange = memo((props) => {
                         // value={name}
                         required
                     />
-                    <AnimatedMulti
-                        options={classInputData}
-                        onChange={setSelectedCI}
-                        value={selectedCI}
-                        fontSize={15}
-                    />
+                    {/*<AnimatedMulti*/}
+                    {/*    options={classInputData}*/}
+                    {/*    onChange={setSelectedCI}*/}
+                    {/*    value={selectedCI}*/}
+                    {/*    fontSize={15}*/}
+                    {/*/>*/}
 
                     {/*<Select*/}
                     {/*    name={"type"}*/}
