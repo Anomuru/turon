@@ -245,7 +245,7 @@ export const GroupExams = () => {
                                 <tr>
                                     <th>#</th>
                                     <th>O'quvchining ismi</th>
-                                    <th>Imtihon mavzusi</th>
+                                    <th>Imtixon mavzusi</th>
                                     <th>Guruhi</th>
                                     <th>Fani</th>
                                     <th>O'qituvchisi</th>
