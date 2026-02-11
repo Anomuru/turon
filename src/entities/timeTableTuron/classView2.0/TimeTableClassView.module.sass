@@ -72,6 +72,7 @@
   letter-spacing: -0.025em
   user-select: none
   flex-shrink: 0 // Prevent squishing
+  border-right: 2px solid #94a3b8 // Strong vertical divider
   span:last-child
     color: #737373
     margin-top: 2px
@@ -95,6 +96,7 @@
   position: relative
   background-color: white
   flex-shrink: 0 // Prevent squishing
+  border-right: 2px solid #94a3b8 // Strong vertical divider
 
 .flowLesson
   position: absolute
@@ -136,13 +138,13 @@
 .groupName
   font-weight: 700
   font-size: 1em
-  color: #422006
+  // color: #422006
   // Ensure group name is always visible if possible
   flex-shrink: 0
 
 .teacherName
   font-size: 0.85em
-  color: #713f12
+  // color: #713f12
   // Allow to shrink a bit
   flex-shrink: 1
   overflow: hidden
@@ -150,8 +152,8 @@
 .roomName
   font-size: 0.8em
   font-weight: 600
-  color: #854d0e
-  background-color: rgba(255, 255, 255, 0.4)
+  // color: #854d0e
+  //background-color: rgba(255, 255, 255, 0.4)
   padding: 1px 4px
   border-radius: 4px
   margin-top: 2px
@@ -205,7 +207,7 @@
 .singleLesson
   position: absolute
   inset: 0.5rem
-  background-color: #a5f3fc
+  // background-color: #a5f3fc  <-- this is now inline style
   border-radius: 0.75rem
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05)
   display: flex
@@ -215,7 +217,7 @@
   text-align: center
   padding: 0.25rem
   overflow: hidden
-  color: #164e63 // slate-900 or similar dark text for cyan-200
+  // color: #164e63 // Removed to use dynamic color
 
   strong
     display: block

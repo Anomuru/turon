@@ -19,7 +19,7 @@ function hexToBrightness(hex) {
     return 0.299 * r + 0.587 * g + 0.114 * b;
 }
 
-export const TimetableGrid = ({ classes, hours, setActive }) => {
+export const TimeTableClassView = ({ classes, hours, setActive }) => {
     console.log(classes, hours)
     const [scale, setScale] = useState(0.7);
     const [openMoreKey, setOpenMoreKey] = useState(null);
@@ -221,15 +221,15 @@ export const TimetableGrid = ({ classes, hours, setActive }) => {
                 // Check if cell is the start of ANOTHER flow lesson
                 // We allow it if it's the start of THIS lesson (at currentStart or overall minRow?)
                 // Actually, if we are at rowIndex which is a start of *another* flow lesson, we should stop our expansion.
-                // But if it's the start of *this* segment being built? That's fine.
+                // But if it's the start of *this* segment being built? That's fine. 
                 // Wait, if it's another lesson starting here, we can't overlap it.
                 // So if flowStartLimiters has cellKey AND it's NOT (this lesson starting here), it's an obstacle.
 
                 // However, multiple lessons might start at the exact same minRow (e.g. strict overlap).
                 // In that case, they will overlap anyway (usma ust). We can't solve equality without priority.
                 // But if we are expanding into someone else's turf, we stop.
-                // We check if this cell is a limiter.
-                // Exception: if rowIndex IS the very first row we are processing for this lesson, we can't be blocked by "another lesson starting here"
+                // We check if this cell is a limiter. 
+                // Exception: if rowIndex IS the very first row we are processing for this lesson, we can't be blocked by "another lesson starting here" 
                 // unless we want to disappear completely. Let's assume starts can coexist (overlap), but expansions stop.
                 // So checking `rowIndex !== minRowOfThisLesson` prevents stopping at our own start.
 
@@ -325,12 +325,12 @@ export const TimetableGrid = ({ classes, hours, setActive }) => {
                     border: "none",
                     borderRadius: "0.5rem",
                     cursor: "pointer",
-                    fontSize: "1.4rem",
+                    fontSize: "1rem",
                     fontWeight: "600",
                     boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
                 }}
             >
-                Rasm ko'rinishida saqlash
+                Save as PNG
             </button>
             <i onClick={() => {
                 setActive(false)
@@ -458,7 +458,7 @@ export const TimetableGrid = ({ classes, hours, setActive }) => {
                                                         onClick={() =>
                                                             setOpenMoreKey(
                                                                 openMoreKey ===
-                                                                `${clsItem.id}-${h.id}`
+                                                                    `${clsItem.id}-${h.id}`
                                                                     ? null
                                                                     : `${clsItem.id}-${h.id}`
                                                             )
