@@ -1,0 +1,106 @@
+@import "app/styles/abstracts/variables"
+
+
+.paymentTypes
+  display: flex
+  flex-direction: column
+  //align-items: center
+  //justify-content: center
+  gap: 2rem
+  font-size: 2rem
+  &__header
+    display: flex
+    justify-content: center
+    gap: 2rem
+  &__container
+    display: flex
+    flex-direction: column
+    gap: 1rem
+  &__item
+    display: flex
+    align-items: center
+    //justify-content: center
+    gap: 1rem
+
+
+.list
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  padding: 1rem
+
+
+  &__title
+    font-size: 1.8rem
+
+  &__container
+    display: flex
+    gap: 2rem
+
+    .otchot
+      border-radius: 5px
+      padding: 1rem
+      font-weight: bolder
+      font-size: 1.5rem
+      box-shadow: 0 0 3px 0
+      color: rgba(12, 12, 12, 0.6)
+      &__inner
+        color: black
+        font-size: 1.5rem
+
+.header
+  width: 100%
+  display: flex
+  align-items: center
+  justify-content: flex-start
+  margin-top: 2rem
+  .header__item
+    padding: 1rem 2rem
+    font-size: 1.8rem
+    border-bottom: 2px solid white
+    cursor: pointer
+    user-select: none
+    &.active
+      border-bottom: 2px solid $color-main-dark
+
+//.table
+//  width: 100%
+//  border-collapse: collapse
+//  margin-top: 8px
+//  &__wrapper
+//    max-height: 25rem
+//    overflow: auto
+//
+//  th, td
+//    border: 1px solid #ddd
+//    padding: 8px
+//    text-align: left
+//    font-size: 1.5rem
+//    //color: #625959
+//  td
+//    font-size: 1.4rem
+//    font-weight: 500
+//
+//  th
+//    background: none!important
+//    font-weight: 600
+.tableWrapper
+  max-height: calc(100vh - 20rem)   // kerakli balandlik
+  overflow-y: auto
+
+.table
+  width: 100%
+  border-collapse: collapse
+
+  th
+    position: sticky
+    top: -1px
+    background: #fff  // orqa fon bo‘lmasa text aralashib ketadi
+    z-index: 2
+    padding: 8px
+    height: 5rem
+    text-align: left
+
+  td
+    padding: 8px
+    border-top: 1px solid #ddd

@@ -1,0 +1,59 @@
+.tableMain
+  overflow: auto
+  height: calc(100vh - 33rem)
+  padding: 30px 20px
+  &__head
+    thead
+      background-color: #EFF6FF
+      tr
+        border: none
+    tbody
+      tr
+        background: none
+.modal
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  &__error
+    align-self: center
+    color: red
+    font-size: 1.6rem
+  &__form
+    display: flex
+    //align-items: center
+    flex-direction: column
+    gap: 1.5rem
+  &__select
+    width: 100% !important
+  &__radios
+    //padding: 2rem
+    //max-width: 35rem
+    display: flex
+    flex-wrap: wrap
+    gap: 3rem
+    align-self: center
+  &__inner
+    display: flex
+    gap: 1rem
+    align-items: center
+    font-size: 1.8rem
+  &__item
+    margin: 0 !important
+  &__input
+    width: 100% !important
+    margin: 0 !important
+
+.addModal
+  display: flex
+  flex-direction: column
+  gap: 3rem
+  h2
+    font-size: 2rem
+  select
+    width: 45rem
+  button
+    align-self: flex-end
+    //@include btn-active
+    transition: .1s
+.studentsPage
+  padding: 3rem

@@ -1,0 +1,1 @@
+export {default as roomssSlice, roomssReducer} from './ui/roomSlice'

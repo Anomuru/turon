@@ -1,0 +1,185 @@
+import {fetchLanguagesData, fetchSubjectsData, getLanguagesData, getSubjectsData} from "entities/oftenUsed";
+import React, {useCallback, useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
+
+import {Modal} from "shared/ui/modal";
+import {Input} from "shared/ui/input";
+import {Select} from "shared/ui/select";
+import {Switch} from "shared/ui/switch";
+// import {getLanguagesData, getSubjectsData} from "pages/registerPage";
+// import {fetchLanguages, fetchSubjects} from "pages/registerPage";
+import {
+    fetchOnlyDeletedStudentsData,
+    fetchOnlyNewStudentsData,
+    fetchOnlyStudyingStudentsData
+} from "entities/students";
+
+import cls from "../../filters.module.sass";
+import {fetchDeletedNewStudentsThunk} from "entities/students";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {Button} from "shared/ui/button/index.js";
+import {getSearchValue} from "features/searchInput/index.js";
+import {BRANCH} from "shared/const/roles.js";
+import {getSelectedLocations} from "features/locations/index.js";
+import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
+
+export const StudentsFilter = React.memo(({active, setActive, activePage, pageSize, currentPage}) => {
+
+    const search = localStorage.getItem("search")
+
+    const lang = localStorage.getItem("selectedLang")
+    const ageFrom = localStorage.getItem("ageFrom")
+    const ageTo = localStorage.getItem("ageTo")
+    const studentSwitch = localStorage.getItem("studentSwitch")
+    const [selectedAgeFrom, setSelectedAgeFrom] = useState(ageFrom !== null ? ageFrom : "")
+    const [selectedAgeTo, setSelectedAgeTo] = useState(ageTo !== null ? ageTo : "")
+    const [selectedLang, setSelectedLanguage] = useState(lang)
+    const [isSwitch, setIsSwitch] = useState(studentSwitch === "true");
+    const dispatch = useDispatch()
+    const languages = useSelector(getLanguagesData)
+    localStorage.setItem("selectedLang", selectedLang)
+    localStorage.setItem("ageFrom", selectedAgeFrom)
+    localStorage.setItem("ageTo", selectedAgeTo)
+    localStorage.setItem("studentSwitch", `${isSwitch}`)
+
+    const currentBranch = useSelector(getCurrentBranch)
+    const ROLE = localStorage.getItem("job")
+    const userBranchId = localStorage.getItem("branchId")
+    const branchForFilter =
+        ROLE === "director"
+            ? currentBranch
+            : userBranchId;
+
+
+
+
+    useEffect(() => {
+
+        if (activePage === "studying_students") {
+            dispatch(fetchOnlyStudyingStudentsData({
+                language: lang,
+                age: `${selectedAgeFrom}-${selectedAgeTo}`,
+                branch: branchForFilter,
+                offset: search ? 0 : (currentPage - 1) * pageSize,
+                limit: pageSize,
+                search: search === null ? "" : search,
+        }))
+        } else if (activePage === "new_students") {
+
+            if (isSwitch) {
+                dispatch(fetchDeletedNewStudentsThunk({
+                    language: lang,
+                    age: `${selectedAgeFrom}-${selectedAgeTo}`,
+                    // untilAge: selectedAgeTo,
+                    branch: branchForFilter,
+                    offset: search ? 0 : (currentPage - 1) * pageSize,
+                    limit: pageSize,
+                    search: search === null ? "" : search,
+                }));
+
+            } else {
+                dispatch(fetchOnlyNewStudentsData({
+                    language: lang,
+                    age: `${selectedAgeFrom}-${selectedAgeTo}`,
+                    branch: branchForFilter,
+                    offset: search ? 0 : (currentPage - 1) * pageSize,
+                    limit: pageSize,
+                    search: search === null ? "" : search,
+                }))
+            }
+        } else {
+            dispatch(fetchOnlyDeletedStudentsData({
+                language: lang,
+                age: `${selectedAgeFrom}-${selectedAgeTo}`,
+                branch: branchForFilter,
+                offset: search ? 0 : (currentPage - 1) * pageSize,
+                limit: pageSize,
+                search: search === null ? "" : search,
+            }))
+        }
+    }, [selectedLang, selectedAgeTo, selectedAgeFrom, activePage, isSwitch, currentPage, search, branchForFilter])
+
+
+    const handleAgeFromBlur = (e) => {
+        setSelectedAgeFrom(e.target.value);
+
+    }
+
+    const handleAgeToBlur = (e) => {
+        setSelectedAgeTo(e.target.value);
+
+    }
+
+
+    useEffect(() => {
+        dispatch(fetchSubjectsData())
+        dispatch(fetchLanguagesData())
+    }, [dispatch]);
+
+
+    return (
+        <Modal
+            active={active}
+            setActive={setActive}
+        >
+            <div className={cls.filter}>
+                <h1>Filter</h1>
+                <div className={cls.filter__container}>
+                    {/*{*/}
+                    {/*    activePage !== "deleted" ? <Select*/}
+                    {/*        title={"Fan"}*/}
+                    {/*        options={[{name: "Hamma", id: "all"}, ...subjects]}*/}
+                    {/*        extraClass={cls.filter__select}*/}
+                    {/*        onChangeOption={(value) => onSelectSubject(value)}*/}
+                    {/*        defaultValue={selectedSubject}*/}
+                    {/*    /> : null*/}
+                    {/*}*/}
+
+                    {/*{*/}
+                    {/*    activePage === "deleted_students" ? <Select*/}
+                    {/*        title={"Sinf"}*/}
+                    {/*        extraClass={cls.filter__select}*/}
+                    {/*        onChangeOption={setSelectedClass}*/}
+                    {/*        defaultValue={selectedClass}*/}
+                    {/*    /> : null*/}
+                    {/*}*/}
+
+                    <div className={cls.filter__age}>
+                        <Input
+                            type={"number"}
+                            extraClassName={cls.filter__input}
+                            placeholder={"Yosh (От)"}
+                            onChange={(e) => setSelectedAgeFrom(e.target.value)}
+                            onBlur={handleAgeFromBlur}
+                            defaultValue={selectedAgeFrom}
+                        />
+                        <Input
+                            type={"number"}
+                            extraClassName={cls.filter__input}
+                            placeholder={"Yosh (До)"}
+                            onChange={(e) => setSelectedAgeTo(e.target.value)}
+                            onBlur={handleAgeToBlur}
+                            defaultValue={selectedAgeTo}
+                        />
+
+                    </div>
+                    <Button type={"danger"} onClick={() => {
+                        setSelectedAgeTo(null)
+                        setSelectedAgeFrom(null)
+                    }}>Clear (Yoshlarni tozalash)</Button>
+                    <Select
+                        title={"Til"}
+                        options={[{name: "Hamma", id: "all"}, ...languages]}
+                        extraClass={cls.filter__select}
+                        onChangeOption={setSelectedLanguage}
+                        defaultValue={lang}
+                    />
+                    {activePage === "new_students" && <div className={cls.filter__switch}>
+                        <p>O’chirilgan</p>
+                        <Switch onChangeSwitch={setIsSwitch} activeSwitch={isSwitch}/>
+                    </div>}
+                </div>
+            </div>
+        </Modal>
+    );
+})

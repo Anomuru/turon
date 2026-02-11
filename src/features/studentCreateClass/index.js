@@ -1,0 +1,1 @@
+export {StudentCreateClass} from "./ui/studentCreateClass";

@@ -1,0 +1,57 @@
+@import "app/styles/abstracts/variables"
+
+thead
+  position: sticky
+  top: -29px
+  z-index: 100
+.mainContainer_tablePanelBox
+  position: relative
+  //display: flex
+  gap: 4rem
+
+.table
+  &__box
+    display: flex
+    //flex-direction: column
+    box-shadow: 0 0 5px 0
+    padding: 20px
+    border-radius: 5px
+    width: 35rem
+    h2
+      text-transform: capitalize
+      font-size: 2rem
+      color: #7F7F7F
+      padding: 15px 0
+    .img
+      width: 50px
+      height: 50px
+.td
+  position: relative
+  &:hover
+    .popup
+      opacity: 1
+//background-color: #b72f09
+//left: 0
+.popup
+  transition: .4s all
+  background-color: #9f9292
+  width: fit-content
+  padding: .5rem
+  border-radius: 5px
+  position: absolute
+  //left: -20px
+  color: white
+  opacity: 0
+  z-index: 1
+
+.link
+  width: 100%
+
+.xmark
+  color: $error-color
+
+//
+//.thead
+//  position: fixed
+//  width: 100%
+//  top: 0

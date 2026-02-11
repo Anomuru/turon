@@ -1,0 +1,43 @@
+.product
+  &__header
+    display: flex
+    justify-content: space-between
+    &_title
+      font-size: 2.2rem
+      font-weight: bolder
+
+    &_right
+      display: flex
+      gap: 2rem
+      align-items: center
+      & > span
+        align-self: flex-start
+        padding: 5px 0
+        font-size: 1.8rem
+      & > div
+        display: flex
+        flex-direction: column
+        .btn
+          align-self: flex-end
+  &__wrapper
+    display: flex
+    gap: 5rem
+    flex-wrap: wrap
+    .box
+      box-shadow: 0 0 5px 0
+      //padding: 2rem
+      border-radius: 5px
+      overflow: hidden
+      cursor: pointer
+      .box_item
+        padding: 2rem
+      h2
+        margin-bottom: 5px
+      ul
+        display: flex
+        flex-direction: column
+        gap: 1rem
+        list-style: none
+        li
+          font-size: 1.4rem
+

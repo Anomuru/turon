@@ -1,0 +1,1 @@
+export {VacancyWorkList} from './ui/vacancyWorkList'

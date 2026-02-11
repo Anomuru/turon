@@ -1,0 +1,72 @@
+.curriculam
+  display: flex
+  border-radius: 17px
+  background: rgba(0, 27, 97, 1)
+  &__input
+    padding: 6rem
+  &__aside
+    border-radius: 0 1.7rem 1.7rem 0
+    display: flex
+    justify-content: center
+    align-items: center
+    width: 50rem
+    padding-left: 5rem
+    &_img
+      width: 31rem
+      height: 23rem
+.modal
+  &__btn
+    justify-content: flex-end
+  &__btnEdit
+    justify-content: space-between
+    display: flex
+  &__btn , &__btnEdit
+    margin-top: 4.5rem
+    display: flex
+    &_mini
+      display: flex
+    &_add
+      background: rgba(18, 22, 128, 1)
+    &_cancel
+      background: rgba(229, 231, 255, 1)
+      color: rgba(18, 22, 128, 1)
+    &_delete
+      background: rgba(244, 63, 94, 1)
+      color: rgba(231, 231, 231, 1)
+      font-size: 1.4rem
+
+.modalExtra
+  margin: 2.8rem
+  border: 1px solid rgba(234, 236, 240, 1)
+  &__input
+    width: 27.8rem!important
+    margin: 16px
+  &__btn
+    display: flex
+    justify-content: flex-end
+    &_add
+      background: rgba(18, 22, 128, 1)
+    &_cancel
+      background: rgba(229, 231, 255, 1)
+      color: rgba(18, 22, 128, 1)
+
+@media (max-width: 800px)
+  .curriculam
+    &__input
+      padding: 3rem
+    &__aside
+      width: 30rem!important
+      &_img
+        width: 19rem
+
+
+@media (max-width: 500px)
+  .modalExtraClass
+    width: 30rem
+    padding: 2rem
+  .modalExtra
+    margin: 2.8rem 0
+    .dropzone
+      width: 100%
+    &__input
+      width: 23rem!important

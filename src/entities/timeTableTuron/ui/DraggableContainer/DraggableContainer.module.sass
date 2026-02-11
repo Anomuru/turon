@@ -1,0 +1,54 @@
+@import "app/styles/abstracts/variables"
+
+
+.draggableContainer
+  width: 13rem
+  height: 6rem
+  display: flex
+  flex-direction: column
+  background-color: $btn-gennis
+  border-radius: 10px
+  //z-index: 102
+  position: absolute
+  user-select: none
+  //align-items: center
+  justify-content: center
+  top: .5rem
+  padding: .7rem
+  transform: translate(3%, 1%)
+  //border: 1px solid $color-grey-dark
+  .handle
+    position: absolute
+    right: 1rem
+    top: 1rem
+    fill: white
+  .trash
+    position: absolute
+    right: 3rem
+    top: 1rem
+    color: white
+    font-size: 1.8rem
+    &.isNotTeacher
+      right: 1rem
+  &.selected
+    border: 2px solid $color-danger
+    color: #642626
+  h1
+    color: white
+    //text-align: center
+    font-size: 1.4rem
+
+  .info
+    width: 100%
+    display: flex
+    flex-direction: column
+
+    span
+      text-align: center
+      width: 100%
+      white-space: nowrap !important
+      overflow: hidden !important
+      font-size: 1.2rem
+      text-overflow: ellipsis
+      border-radius: 5px
+      color: white

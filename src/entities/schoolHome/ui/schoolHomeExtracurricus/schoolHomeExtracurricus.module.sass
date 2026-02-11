@@ -1,0 +1,69 @@
+.extracurricus
+  padding: 18rem 10rem 5rem 10rem
+  display: flex
+  flex-direction: column
+  gap: 5rem
+  background: #F7FDFF
+  position: relative
+  &__title
+    top: 5rem
+    left: 0
+    position: absolute
+    background: rgba(0, 27, 97, 1)
+    display: flex
+    justify-content: center
+    align-items: center
+    width: 35rem
+    font-size: 3.2rem
+    height: 8.2rem
+    color: rgba(255, 255, 255, 1)
+    font-family: "Blinker", sans-serif
+    font-weight: 600
+    cursor: pointer
+    font-style: normal
+  &__container
+    display: flex
+    justify-content: center
+    gap: 3rem
+    flex-wrap: wrap
+    .item
+      cursor: pointer
+      transition: .3s
+      max-width: 36rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      text-align: center
+      gap: 2rem
+      padding: 3rem
+      border-radius: 1rem
+      box-shadow: 0 4px 8px 0 #0000001A, 0 14px 14px 0 #00000017, 0 32px 19px 0 #0000000D, 0 56px 23px 0 #00000003, 0 88px 25px 0 #00000000
+      &.active
+        background: #001B61
+        color: white
+      &__title
+        font-size: 3.2rem
+        color: #001B61
+        &.active
+          color: white
+      &__text
+        font-size: 1.6rem
+
+@media (max-width: 1024px)
+  .extracurricus
+    padding: 5rem
+    &__container
+      gap: 2rem
+      .item
+        padding: 2.3rem
+        &__title
+          font-size: 2.6rem
+        &__text
+          font-size: 1.5rem
+
+@media (max-width: 768px)
+  .extracurricus
+    &__container
+      .item
+        max-width: 32rem
+

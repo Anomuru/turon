@@ -1,0 +1,1 @@
+export {default as  inkasatsiyaSlice, inkasatsiyaReducer} from "./model/inkasatsiyaSlice"

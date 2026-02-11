@@ -1,0 +1,238 @@
+@import "app/styles/abstracts/variables"
+
+.container
+  //width: 100%
+  //height: 100%
+  background-color: #fafafa
+  //overflow: hidden
+  //position: relative
+
+@import "app/styles/abstracts/variables"
+
+// Ensure box-sizing across the component
+.modalBackdrop *
+  box-sizing: border-box
+
+.modalBackdrop
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  background-color: rgba(0, 0, 0, 0.5)
+  z-index: 1000
+  display: flex
+  align-items: center
+  justify-content: center
+  // Ensure the backdrop itself closes on click
+  cursor: pointer
+
+.modalContent
+  width: 95vw
+  height: 90vh
+  background-color: #fafafa
+  border-radius: 1rem
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25)
+  overflow: hidden
+  position: relative
+  // Global font reset if needed
+  font-family: inherit
+  color: #404040
+  // Prevent closing when clicking content
+  cursor: default
+  display: flex
+  flex-direction: column
+
+.contentWrapper
+  padding: 1rem
+  display: flex
+  flex-direction: column
+  gap: 0.25rem
+  min-width: min-content // Ensure content doesn't shrink below min
+
+.headerRow
+  display: flex
+  position: sticky
+  top: 0
+  z-index: 40
+  background-color: rgba(255, 255, 255, 0.8)
+  backdrop-filter: blur(4px)
+  border-bottom: 1px solid #e5e5e5
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05)
+  // Ensure header aligns perfectly
+  flex-shrink: 0
+
+.headerCell
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  color: #404040
+  font-weight: 600
+  letter-spacing: -0.025em
+  user-select: none
+  flex-shrink: 0 // Prevent squishing
+  border-right: 2px solid #94a3b8 // Strong vertical divider
+  span:last-child
+    color: #737373
+    margin-top: 2px
+
+.classRow
+  display: flex
+  flex-shrink: 0
+
+.classLabel
+  display: flex
+  align-items: center
+  justify-content: center
+  font-weight: 600
+  border-top-left-radius: 0.75rem
+  border-bottom-left-radius: 0.75rem
+  user-select: none
+  flex-shrink: 0 // Prevent squishing
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05)
+
+.gridCell
+  position: relative
+  background-color: white
+  flex-shrink: 0 // Prevent squishing
+  border-right: 2px solid #94a3b8 // Strong vertical divider
+
+.flowLesson
+  position: absolute
+  z-index: 20
+  background-color: #fef9c3
+  border-radius: 0.75rem
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)
+  transition: all 0.2s
+  display: flex
+  align-items: center
+  flex-direction: column
+  justify-content: center
+  padding: 0.25rem
+  text-align: center
+  cursor: pointer
+  color: #000
+  overflow: hidden
+
+  &:hover
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)
+    z-index: 25
+
+.lessonContent
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  width: 100%
+  height: 100%
+  gap: 2px
+
+  span
+    display: block
+    width: 100%
+    white-space: normal // Allow text to wrap
+    line-height: 1.1
+    overflow-wrap: break-word // Break long words if necessary
+
+.groupName
+  font-weight: 700
+  font-size: 1em
+  // color: #422006
+  // Ensure group name is always visible if possible
+  flex-shrink: 0
+
+.teacherName
+  font-size: 0.85em
+  // color: #713f12
+  // Allow to shrink a bit
+  flex-shrink: 1
+  overflow: hidden
+
+.roomName
+  font-size: 0.8em
+  font-weight: 600
+  // color: #854d0e
+  //background-color: rgba(255, 255, 255, 0.4)
+  padding: 1px 4px
+  border-radius: 4px
+  margin-top: 2px
+  // Room name is important, try to keep it visible
+  flex-shrink: 0
+
+.moreBtn
+  position: absolute
+  top: 0.5rem
+  right: 0.5rem
+  z-index: 30
+  background-color: #fde047
+  color: #713f12
+  border-radius: 9999px
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1)
+  transition: all 0.2s
+  display: flex
+  align-items: center
+  justify-content: center
+  cursor: pointer
+  border: none
+  font-weight: 600
+  &:hover
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1)
+    transform: scale(1.05) // Add slight scale on hover
+
+.moreDropdown
+  position: absolute
+  z-index: 50
+  top: 100%
+  right: 0.5rem
+  margin-top: 0.5rem
+  width: 13rem
+  background-color: white
+  border-radius: 0.75rem
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)
+  padding: 0.5rem
+  display: flex
+  flex-direction: column
+  gap: 0.25rem
+  border: 1px solid #e5e5e5
+
+.dropdownItem
+  background-color: #fef9c3
+  border-radius: 0.5rem
+  padding: 0.25rem 0.5rem
+  font-size: 0.75rem
+  color: #000
+  font-weight: 500
+
+.singleLesson
+  position: absolute
+  inset: 0.5rem
+  // background-color: #a5f3fc  <-- this is now inline style
+  border-radius: 0.75rem
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05)
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  text-align: center
+  padding: 0.25rem
+  overflow: hidden
+  // color: #164e63 // Removed to use dynamic color
+
+  strong
+    display: block
+    font-weight: bold
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    width: 100%
+    line-height: 1.2
+
+  span
+    display: block
+    font-size: 0.9em
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+    width: 100%
+    line-height: 1.2

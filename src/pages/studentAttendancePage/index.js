@@ -1,0 +1,1 @@
+export {StudentAttendancePage} from "./ui/studentAttendancePage.jsx";

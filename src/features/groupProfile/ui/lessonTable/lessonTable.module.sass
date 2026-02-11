@@ -1,0 +1,152 @@
+// Variables
+$primary-color: #007bff
+$danger-color: #dc3545
+$gray-100: #f8f9fa
+$gray-200: #e9ecef
+$gray-300: #dee2e6
+$gray-600: #666
+$gray-900: #333
+$white: #fff
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1)
+@import "app/styles/abstracts/variables"
+
+// Mixins
+@mixin hover-effect
+  transition: background-color 0.2s ease
+
+  &:hover
+    background-color: $gray-100
+// Container
+.container
+  max-width: 100%
+  margin: 0 auto
+  background: $white
+  border-radius: 8px
+  overflow: hidden
+  box-shadow: $shadow-sm
+  padding: 2rem
+// Header
+.header
+  background: $gray-100
+  padding: 20px
+  border-bottom: 2px solid $gray-200
+  display: flex
+  align-items: center
+  justify-content: space-between
+
+  h1
+    color: $gray-900
+    font-size: 1.8em
+    margin-bottom: 5px
+    margin: 0
+  p
+    color: $gray-600
+    font-size: 1.4em
+    margin: 5px 0 0 0
+// Table wrapper
+.tableWrapper
+  overflow-x: auto
+  margin-top: 1rem
+  height: calc(100vh - 15rem)
+// Table
+.checkbox__minus
+  height: 30px
+  width: 30px
+  background: #F43F5E
+  display: flex
+  justify-content: center
+  align-items: center
+  border-radius: 5px
+  &.active
+    background: #22C55E
+  //@include btn-active
+  i
+    color: white!important
+.table
+  width: 100%
+  border-collapse: collapse
+  font-size: 14px
+
+  thead
+    background: $gray-200
+    position: sticky
+    top: 0
+    z-index: 10
+
+    th
+      padding: 12px 15px
+      text-align: left
+      font-weight: 600
+      color: $gray-600
+      border-bottom: 2px solid $gray-300
+      border-right: 1px solid $gray-300
+      white-space: nowrap
+
+      &:last-child
+        border-right: none
+  tbody
+    tr
+      border-bottom: 1px solid $gray-200
+      @include hover-effect
+    td
+      padding: 12px 15px
+      color: $gray-900
+      border-right: 1px solid $gray-200
+
+      &:last-child
+        border-right: none
+// Group header
+.groupHeader
+  background: $primary-color
+  color: $white
+  font-weight: 600
+  padding: 10px 15px
+  border-radius: 20px
+  display: inline-block
+  margin: 10px 0
+  font-size: 13px
+.groupRow
+  background: $gray-100
+
+  td
+    padding: 15px
+    border: none
+  &:hover
+    background: $gray-100
+// Cell types
+.numberCell
+  font-weight: 600
+  color: $gray-900
+  text-align: center
+  width: 50px
+.subjectCell
+  font-weight: 600
+  color: $primary-color
+  min-width: 150px
+.timeCell
+  color: $gray-600
+  min-width: 120px
+.roomCell
+  color: $gray-600
+  min-width: 120px
+.teacherCell
+  color: $gray-900
+  min-width: 150px
+.studentCell
+  min-width: 180px
+.scoreCell
+  text-align: center
+  font-weight: 500
+  width: 80px
+// No teacher
+.noTeacher
+  color: $danger-color
+  font-style: italic
+// Responsive
+@media (max-width: 768px)
+  .table
+    font-size: 12px
+
+    thead th,
+    tbody td
+      padding: 8px 10px

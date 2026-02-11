@@ -1,0 +1,51 @@
+@import "app/styles/abstracts/variables"
+
+.classFilter
+  padding-top: 2rem
+  &__wrapper
+    width: 100%
+    &.active
+      display: flex
+      align-items: center
+      justify-content: center
+    .loader
+      display: flex
+      margin-top: 10px
+
+      &__circle
+        animation: ldio-ow3cspdrzfh 1s linear infinite
+        border-radius: 50%
+        width: 40px
+        height: 40px
+        border: 3px solid black
+        border-top-color: transparent
+  ul
+    list-style: none
+    display: flex
+    justify-content: space-around
+    background: #EFF6FF
+    padding: 2rem
+    li
+      cursor: pointer
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      font-weight: bolder
+      font-size: 1.6rem
+      position: relative
+      color: $btn-bg-color
+      div
+        margin-top: 5px
+        span
+          margin-left: 5px
+      &.active:before
+        content: ""
+        display: block
+        width: 100%
+        height: 5px
+        left: 0
+        border-radius: 5px 5px 0 0
+        background: #001B61
+        position: absolute
+        bottom: -2rem

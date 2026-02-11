@@ -1,0 +1,162 @@
+.listItem {
+  color: white;
+  list-style: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  font-weight: 400;
+}
+.listItem.active {
+  font-weight: 700;
+}
+
+.homeHeader {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 2.5rem 10rem;
+  backdrop-filter: blur(10rem);
+  background: rgba(2, 42, 145, 0.9882352941);
+}
+.homeHeader__burger {
+  font-size: 4rem;
+  color: white;
+  align-items: flex-end;
+  display: none;
+}
+.homeHeader__burger.active {
+  width: 3.5rem;
+  visibility: hidden;
+}
+.homeHeader__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.homeHeader__list {
+  display: flex;
+  gap: 4rem;
+}
+.homeHeader__btns {
+  display: flex;
+  gap: 1rem;
+}
+.homeHeader__btns .aplayBtn {
+  color: white;
+  height: fit-content;
+  font-size: 2rem;
+}
+.homeHeader__btns .loginBtn {
+  height: fit-content;
+  background-color: white;
+  color: black;
+  font-size: 2rem;
+}
+
+.homeMenu {
+  width: 100%;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  z-index: 200;
+  top: 0;
+  visibility: hidden;
+}
+.homeMenu.active {
+  visibility: visible;
+}
+.homeMenu__icon {
+  position: absolute;
+  top: 3.5rem;
+  left: 6%;
+  font-size: 4rem;
+  color: white;
+}
+.homeMenu__list {
+  padding-left: 3rem;
+  width: 45%;
+  height: 60%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  position: absolute;
+  top: 8.5rem;
+  left: -100%;
+  transition: 0.5s;
+}
+.homeMenu__list.active {
+  left: 6%;
+}
+.homeMenu__list li {
+  color: black !important;
+  font-size: 2rem !important;
+}
+
+@media (max-width: 1440px) {
+  .homeHeader .logo {
+    width: 6.2rem;
+    height: 5.4rem;
+  }
+  .homeHeader .logoText {
+    width: 7.9rem;
+    height: 5.4rem;
+  }
+}
+@media (max-width: 1024px) {
+  .homeHeader {
+    padding: 3rem 5rem;
+  }
+  .homeHeader .loginBtn {
+    font-size: 1.8rem;
+  }
+  .homeHeader__list {
+    gap: 3rem;
+  }
+  .homeHeader__list .listItem {
+    font-size: 1.5rem;
+  }
+}
+@media (max-width: 768px) {
+  .homeHeader__list {
+    display: none;
+  }
+  .homeHeader__burger {
+    display: flex;
+  }
+}
+@media (max-width: 430px) {
+  .homeHeader {
+    padding: 1.5rem 3rem;
+  }
+  .homeHeader__burger.active {
+    width: 2.625rem;
+  }
+  .homeHeader .logoText {
+    display: none;
+  }
+  .homeHeader .loginBtn {
+    font-size: 1.4rem;
+    height: 3.1rem;
+  }
+  .homeHeader__burger {
+    font-size: 3rem;
+  }
+  .homeMenu__icon {
+    top: 2.2rem;
+  }
+  .homeMenu__list {
+    padding-left: 1.5rem;
+    top: 6.8rem;
+    width: 60%;
+  }
+  .homeMenu__list li {
+    font-size: 1.6rem;
+  }
+}
+
+/*# sourceMappingURL=schoolHomeHeader.module.css.map */

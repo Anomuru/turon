@@ -1,0 +1,204 @@
+.listItem
+  color: white
+  list-style: none
+  font-size: 1.6rem
+  cursor: pointer
+  font-weight: 400
+  position: relative
+
+  .hover
+    border-radius: 5px
+    background: white
+    flex-direction: column
+    gap: 2rem
+    width: fit-content
+    color: black
+    padding: 2rem
+    opacity: 0
+  //display: none
+  &.hoverActive
+    opacity: 1
+    display: flex !important
+  &__summary, &__single
+    &.active
+      font-weight: 700
+
+
+.homeHeader
+  //min-height: 13rem
+  width: 100%
+  height: fit-content
+  z-index: 100
+  display: flex
+  justify-content: space-between
+  align-items: center
+  position: sticky
+  top: 0
+
+  padding: 2.5rem 10rem
+  backdrop-filter: blur(10rem)
+  background: #022a91fc
+
+  &__multi
+    display: flex
+    flex-direction: column
+    align-items: center
+    position: absolute
+    background: white
+    gap: 1rem
+    padding: 1rem
+    top: 3rem
+    left: -4rem
+    border-radius: .2rem
+    box-shadow: 0 0 4rem -1rem rgba(0, 0, 0, 0.6)
+
+    .multiItem
+      width: max-content
+      color: #072E92
+
+  &__burger
+    font-size: 4rem
+    color: white
+    align-items: flex-end
+    display: none
+
+    &.active
+      width: 3.5rem
+      visibility: hidden
+
+  &__logo
+    display: flex
+    align-items: center
+    gap: .5rem
+
+  &__list
+    display: flex
+    gap: 7rem
+
+  &__btns
+    display: flex
+    gap: 1rem
+
+    .aplayBtn
+      color: white
+      height: fit-content
+      font-size: 2rem
+
+    .loginBtn
+      height: fit-content
+      background-color: white
+      color: black
+      font-size: 2rem
+
+.homeMenu
+  width: 100%
+  height: 100dvh
+  background: rgba(0, 0, 0, 0.4)
+  position: fixed
+  z-index: 200
+  top: 0
+  visibility: hidden
+
+  &.active
+    visibility: visible
+
+  &__icon
+    position: absolute
+    top: 3.5rem
+    left: 6%
+    font-size: 4rem
+    color: white
+
+  &__list
+    padding-top: 2rem
+    padding-bottom: 2rem
+    gap: 3rem
+    padding-left: 3rem
+    width: 50%
+    min-height: min-content
+    max-height: max-content
+    background: white
+    display: flex
+    flex-direction: column
+    //justify-content: space-around
+    //align-items: center
+    position: absolute
+    top: 8.5rem
+    left: -100%
+    transition: .5s
+
+    &.active
+      left: 6%
+
+    li
+      color: black !important
+      font-size: 2rem !important
+
+@media (max-width: 1440px)
+  .homeHeader
+    .logo
+      width: 6.2rem
+      height: 5.4rem
+
+    .logoText
+      width: 7.9rem
+      height: 5.4rem
+
+@media (max-width: 1024px)
+  .homeHeader
+    padding: 3rem 5rem
+
+    .loginBtn
+      font-size: 1.8rem
+
+    &__list
+      gap: 3rem
+
+      .listItem
+        font-size: 1.5rem
+
+@media (max-width: 768px)
+  .listItem
+    color: black
+    font-size: 2rem
+    cursor: pointer
+  .homeHeader
+    &__multi
+      position: initial
+      box-shadow: none
+      align-items: flex-start
+    &__list
+      display: none
+
+    &__burger
+      display: flex
+
+@media (max-width: 430px)
+  .homeHeader
+    padding: 1.5rem 3rem
+
+    &__burger
+      &.active
+        width: 2.625rem
+
+    .logoText
+      display: none
+
+    .loginBtn
+      font-size: 1.4rem
+      height: 3.1rem
+
+    &__burger
+      font-size: 3rem
+  .homeMenu
+    &__icon
+      top: 2.2rem
+
+    &__list
+      padding-left: 1.5rem
+      top: 6.8rem
+      width: 60%
+
+      li
+        font-size: 1.6rem
+

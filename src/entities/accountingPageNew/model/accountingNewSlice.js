@@ -1,0 +1,60 @@
+import {createSlice} from "@reduxjs/toolkit";
+import {fetchAccountingData} from "entities/accountingPageNew/model/accountingNewThunk.js";
+
+
+const initialState = {
+    pageType: [
+        {label: "studentPayments" , name: "O'quvchilar tolovlari"},
+        {label: "teacherSalary" , name: "O'qituvchilar oyligi"},
+        {label: "employeesSalary" , name: "Ishchilar oyligi"},
+        {label: "overhead" , name: "Qo'shimcha xarajatlar"},
+        {label: "capital" , name: "Kapital xarajatlari"},
+    ],
+    totalCount: [
+        { name: "Total Amount" ,  totalPayment: 321321213, totalPaymentCount: 12 , type: "amount"},
+        { name: "Cash Payments" ,  totalPayment: 321321213, totalPaymentCount: 12 , type: "cash"},
+        { name: "Click Payments" ,  totalPayment: 321321213, totalPaymentCount: 12 , type: "click"},
+        { name: "Bank Transfers" ,  totalPayment: 321321213, totalPaymentCount: 12 , type: "bank"},
+
+
+    ],
+    data: [],
+
+
+
+
+
+}
+
+
+const accountingNewSlice = createSlice({
+    name: "accountingNewSlice",
+    initialState,
+    reducers: {
+        onAddData: (state, action) => {
+            state.data.results.data = [...state.data.results.data , action.payload]
+        },
+        onDeleteData: (state, action) => {
+            state.data.results.data = state.data.results.data.filter(item => item.id !== action.payload)
+        }
+
+    },
+    extraReducers: builder =>
+        builder
+            .addCase(fetchAccountingData.pending , state => {
+                state.loading = true
+                state.error = false
+            })
+            .addCase(fetchAccountingData.fulfilled , (state, action) => {
+                state.data = action.payload
+                state.totalCount = action?.payload?.results?.totalCount
+                state.loading = false
+                state.error= false
+            })
+            .addCase(fetchAccountingData.rejected , state => {
+                state.loading = false
+                state.error= true
+            })
+})
+export const {onAddData , onDeleteData} = accountingNewSlice.actions
+export const {reducer: accountingNewReducer} = accountingNewSlice

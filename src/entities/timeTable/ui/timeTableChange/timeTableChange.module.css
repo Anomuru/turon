@@ -1,0 +1,13 @@
+.change {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.change__input {
+  margin: 0 !important;
+}
+.change__btn {
+  align-self: flex-end;
+}
+
+/*# sourceMappingURL=timeTableChange.module.css.map */
