@@ -1,0 +1,175 @@
+@import "app/styles/abstracts/variables"
+
+.pageContainer
+  padding: 2rem
+  background-color: #f9fafb
+  min-height: 100vh
+  display: flex
+  flex-direction: column
+  gap: 3rem
+
+.header
+  display: flex
+  justify-content: space-between
+  align-items: center
+  margin-bottom: 1rem
+
+  h1
+    font-size: 2.4rem
+    color: #111827
+    font-weight: 700
+
+.addBtn
+  background-color: #7c3aed !important 
+  color: white
+  padding: 1rem 2rem
+  border-radius: 0.8rem
+  font-weight: 500
+  transition: all 0.2s
+  border: none
+  cursor: pointer
+  display: flex
+  align-items: center
+  gap: 0.8rem
+  font-size: 1.4rem
+  
+  &:hover
+    background-color: #6d28d9 !important
+    transform: translateY(-1px)
+    box-shadow: 0 4px 6px rgba(124, 58, 237, 0.2)
+
+.card
+  background: #ffffff
+  border-radius: 1.6rem
+  padding: 2.4rem
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)
+  border: 1px solid #f3f4f6
+
+.tableContainer
+  @extend .card
+  padding: 0
+  overflow: hidden
+  
+.tableWrapper
+  max-height: calc(100vh - 200px)
+  overflow-y: auto
+  position: relative
+
+.table
+  width: 100%
+  border-collapse: collapse
+  font-size: 1.4rem
+  
+  th
+    position: sticky
+    top: 0
+    background: #f9fafb
+    color: #374151
+    font-weight: 600
+    text-align: left
+    padding: 1.6rem
+    z-index: 10
+    border-bottom: 2px solid #e5e7eb
+    white-space: nowrap
+    
+  td
+    padding: 1.6rem
+    border-bottom: 1px solid #f3f4f6
+    color: #4b5563
+    vertical-align: middle
+    
+  tbody tr
+    transition: background-color 0.15s
+    
+    &:nth-child(even)
+      background-color: #f9fafb
+      
+    &:hover
+      background-color: #f3f4f6
+
+.scoreCell
+  font-weight: 700
+  color: #7c3aed
+  //text-align: center
+
+.actionCell
+  display: flex
+  gap: 1rem
+  width: 100%
+  align-items: center
+  justify-content: center
+
+.actionBtn
+  width: 3.2rem
+  height: 3.2rem
+  border-radius: 0.6rem
+  display: flex
+  align-items: center
+  justify-content: center
+  border: none
+  cursor: pointer
+  transition: all 0.2s
+  
+  &.edit
+    background-color: #eff6ff
+    color: #3b82f6
+    &:hover
+      background-color: #dbeafe
+      
+  &.delete
+    background-color: #fef2f2
+    color: #ef4444
+    &:hover
+      background-color: #fee2e2
+
+// Modal Forms
+.modalForm
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 2rem 4rem
+  padding: 1rem 0
+  &__select
+    width: 35rem
+  
+  @media (max-width: 768px)
+    grid-template-columns: 1fr
+
+.column
+  display: flex
+  flex-direction: column
+  gap: 2rem
+
+.modalHeader
+  margin-bottom: 2rem
+  padding-bottom: 1rem
+  border-bottom: 1px solid #f3f4f6
+  
+  h2
+    font-size: 2rem
+    font-weight: 600
+    color: #111827
+
+.modalActions
+  display: flex
+  justify-content: flex-end
+  gap: 1rem
+  margin-top: 2rem
+  border-top: 1px solid #f3f4f6
+  padding-top: 2rem
+
+.cancelBtn
+  background-color: transparent
+  border: 1px solid #d1d5db
+  color: #374151
+  padding: 0.8rem 2rem
+  border-radius: 0.6rem
+  cursor: pointer
+  font-weight: 500
+  transition: all 0.2s
+  
+  &:hover
+    background-color: #f3f4f6
+
+.submitBtn
+  @extend .addBtn
+  margin: 0

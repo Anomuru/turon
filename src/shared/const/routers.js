@@ -56,7 +56,7 @@ export const getGroupQuarter = (id) => `groups/quarter`
 export const getGroupQuarterShow = (id) => `groups/groupInfo/${id}/quarter/${id}`
 export const getLessonTable = (id) => `groups/groupInfo/${id}/lessonTable/${id}`
 export const getInkasatsiya = (id) => `inkasatsiya/*`
-
+export const getGroupExams = (id) => `groups/exams`
 
 export const getOtchot = () => `accounting/otchot/*`
 

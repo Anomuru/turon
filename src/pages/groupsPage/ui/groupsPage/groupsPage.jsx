@@ -55,6 +55,7 @@ export const GroupsPage = () => {
     const loadingWithFilter = useSelector(getGroupListWithFilterLoading)
     // const {"*": id} = useParams()
 
+
     const userBranchId = useSelector(getUserBranchId)
     const [deletedGroups, setDeletedGroups] = useState([])
     const [active, setActive] = useState(false);
@@ -182,6 +183,11 @@ export const GroupsPage = () => {
                                 >
                                     Time List
                                 </Button>
+                            <Button
+                                type={"login"}
+                                onClick={() => {navigate(`exams`)}}
+                                children={"Imtihonlar"}
+                            />
                             </> :
 
 
