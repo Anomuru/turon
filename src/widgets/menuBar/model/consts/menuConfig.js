@@ -1,4 +1,4 @@
-import { ROLES } from "shared/const/roles";
+import {ROLES} from "shared/const/roles";
 
 export const menuConfig = [
     // {
@@ -51,6 +51,12 @@ export const menuConfig = [
     //     icon: "fa-tasks",
     //     roles: [ROLES.admin]
     // },
+    {
+        to: "surveyResults",
+        name: "So'rovnoma natijalari",
+        icon: "fa-list",
+        roles: [ROLES.admin, ROLES.programmer]
+    },
     {
         to: "calendar",
         name: "Kalendar",

@@ -1,0 +1,277 @@
+.surveyResultsPage
+  padding: 2rem
+  background-color: #F3F4F6
+  min-height: 100vh
+
+  &__header
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: 2rem
+
+    h1
+      font-size: 2.4rem
+      color: #1a222c
+      font-weight: 600
+
+  &__content
+    background: #ffffff
+    border-radius: 1.2rem
+    padding: 1rem
+    box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05)
+    overflow: hidden
+.select
+  width: 35rem
+.modalInner
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  width: 100%
+  max-width: 50rem
+  padding: 1rem
+
+  &__header
+    text-align: center
+    margin-bottom: 1rem
+
+    h3
+      font-size: 2rem
+      color: #1a222c
+      margin-bottom: 0.5rem
+
+    p
+      font-size: 1.4rem
+      color: #8E8E93
+
+  &__form
+    display: flex
+    flex-direction: column
+    gap: 1.5rem
+
+  &__typeSwitch
+    display: flex
+    background: #F3F4F6
+    padding: 0.5rem
+    border-radius: 0.8rem
+    gap: 0.5rem
+
+    button
+      flex: 1
+      padding: 0.8rem
+      border: none
+      border-radius: 0.6rem
+      background: transparent
+      color: #8E8E93
+      font-weight: 500
+      cursor: pointer
+      transition: all 0.2s
+
+      &.active
+        background: #ffffff
+        color: #1A2D60
+        box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.1)
+
+  &__field
+    display: flex
+    flex-direction: column
+    gap: 0.8rem
+
+    label
+      font-size: 1.4rem
+      color: #8E8E93
+      margin-left: 0.5rem
+
+  &__actions
+    display: flex
+    gap: 1rem
+    margin-top: 1rem
+    justify-content: flex-end
+
+.table
+  width: 100%
+  border-collapse: separate
+  border-spacing: 0 1rem
+
+  thead
+    th
+      text-align: left
+      color: #8E8E93
+      font-weight: 500
+      padding: 1rem 2rem
+      font-size: 1.4rem
+
+  tbody
+    tr.teacherRow
+      background: #ffffff
+      transition: transform 0.2s
+      cursor: pointer
+
+      &:hover
+        transform: translateY(-2px)
+        box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05)
+
+      &.expanded
+        transform: none
+        box-shadow: none
+        background: #F3F4F6
+        font-weight: 600
+
+      td
+        padding: 1.5rem 2rem
+        font-size: 1.5rem
+        color: #1a222c
+        border-top: 1px solid #D1D5DB
+        border-bottom: 1px solid #D1D5DB
+
+        &:first-child
+          border-left: 1px solid #D1D5DB
+          border-top-left-radius: 1rem
+          border-bottom-left-radius: 1rem
+
+        &:last-child
+          border-right: 1px solid #D1D5DB
+          border-top-right-radius: 1rem
+          border-bottom-right-radius: 1rem
+
+    tr.accordionRow
+      td
+        padding: 0 2rem 2rem 2rem
+        border: none
+
+.accordionContent
+  background: #F3F4F6
+  padding: 2rem
+  width: 100%
+  border-radius: 1rem
+  border: 1px solid #D1D5DB
+  margin-top: -1rem
+
+  box-shadow: inset 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05)
+
+  &__header
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: 2rem
+    padding-bottom: 1rem
+    border-bottom: 1px solid #D1D5DB
+
+    h3
+      font-size: 1.8rem
+      color: #1a222c
+      margin: 0
+
+.survey
+  display: flex
+  justify-content: space-between
+
+.resultList
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
+  gap: 1.5rem
+
+.resultItem
+  background: #ffffff
+  padding: 1.5rem
+  border-radius: 1rem
+  display: flex
+  flex-direction: column
+  border: 1px solid #D1D5DB
+  transition: all 0.2s
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08)
+
+  &__content
+    flex: 1
+
+    .header
+      display: flex
+      justify-content: space-between
+      align-items: center
+      margin-bottom: 1rem
+
+      .name
+        font-weight: 600
+        font-size: 1.4rem
+        color: #1a222c
+        display: flex
+        align-items: center
+        gap: 0.5rem
+
+        i
+          font-size: 1.2rem
+          color: #1A2D60
+
+      .date
+        font-size: 1.2rem
+        color: #8E8E93
+        background: #F3F4F6
+        padding: 0.3rem 0.8rem
+        border-radius: 0.4rem
+
+    .status
+      display: inline-block
+      padding: 0.4rem 1rem
+      border-radius: 0.6rem
+      font-size: 1.3rem
+      font-weight: 500
+      margin-bottom: 1rem
+      width: fit-content
+
+      &.good
+        background: rgba(34, 197, 94, 0.1)
+        color: #22C55E
+
+      &.average
+        background: rgba(234, 179, 8, 0.1)
+        color: #EAB308
+
+      &.bad
+        background: rgba(244, 63, 94, 0.1)
+        color: #F43F5E
+
+    .comment
+      font-size: 1.4rem
+      color: #1a222c
+      line-height: 1.5
+      background: #F3F4F6
+      padding: 1rem
+      border-radius: 0.8rem
+      margin-bottom: 1rem
+      font-style: italic
+
+  &__actions
+    display: flex
+    gap: 1rem
+    justify-content: flex-end
+    border-top: 1px solid #D1D5DB
+    padding-top: 1rem
+    margin-top: auto
+
+    button
+      padding: 0.6rem 1rem
+      border: 1px solid #D1D5DB
+      border-radius: 0.6rem
+      background: transparent
+      cursor: pointer
+      color: #8E8E93
+      transition: all 0.2s
+      display: flex
+      align-items: center
+      gap: 0.5rem
+      font-size: 1.2rem
+
+      &:hover
+        color: #1A2D60
+        border-color: #1A2D60
+        background: rgba(0, 194, 255, 0.05)
+
+      &.deleteBtn:hover
+        color: #F43F5E
+        border-color: #F43F5E
+        background: rgba(244, 63, 94, 0.05)
+
+      i
+        font-size: 1.4rem

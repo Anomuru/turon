@@ -25,6 +25,10 @@ const categoies = [
     {
         value: "student_results",
         name: "Student Results"
+    },
+    {
+        value: "satisfaction",
+        name: "Satisfaction"
     }
 ]
 
@@ -59,7 +63,16 @@ export const RatingForTeachers = () => {
         setLoading(true)
 
         request(url, "GET", null, headers())
-            .then(res => setData(res))
+            .then(res =>
+            {
+                if (value === "satisfaction") {
+                    const sorted = [...res].sort((a, b) => b.ball - a.ball);
+                    setData(sorted);
+                } else {
+                    setData(res);
+                }
+            }
+            )
             .catch(err => console.error("Teacher rating error:", err))
             .finally(() => setLoading(false));
 
@@ -117,6 +130,15 @@ export const RatingForTeachers = () => {
                         </>
                     )
                 }
+                {
+                    value === "satisfaction" && (
+                        <>
+                            <td>{item?.count}</td>
+                            <td>{item?.ball}</td>
+
+                        </>
+                    )
+                }
 
             </tr>
         ));
@@ -156,13 +178,28 @@ export const RatingForTeachers = () => {
                             <th>Ball ko'rsatkichi</th>
                         )}
 
-                        {value === "lesson_plan" || "student_results" &&  (
+                        {value === "lesson_plan" &&  (
                             <>
                                 <th>Jami plan</th>
                                 <th>Bajarilgan</th>
                                 <th>Foiz (%)</th>
                             </>
                         )}
+                        {value === "student_results" &&  (
+                            <>
+                                <th>Jami plan</th>
+                                <th>Bajarilgan</th>
+                                <th>Foiz (%)</th>
+                            </>
+                        )}
+                        {
+                            value === "satisfaction" && (
+                                <>
+                                    <th>Ovozlar soni</th>
+                                    <th>Ball ko'rsatkichi</th>
+                                </>
+                            )
+                        }
                     </tr>
                     </thead>
                     <tbody>
