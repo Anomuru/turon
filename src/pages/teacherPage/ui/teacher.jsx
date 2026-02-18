@@ -117,7 +117,7 @@ export const TeachersPage = () => {
                 <div className={cls.table}>
 
                     <div style={{display: "flex" , justifyContent: "space-between"}}>
-                        <h2>{activeCategory ? "Toifa " : employerSwitch ? "Employers" : activeSwitch === true ? "Deleted Teachers" : "Teachers"}</h2>
+                        <h2>{activeCategory ? "Toifa " : employerSwitch ? "Hodimlar" : activeSwitch === true ? "O'chirilgan o'qituvchilar" : "O'qituvchilar"}</h2>
                         <h2>{employerSwitch ? totalCountEmployer : totalCount}</h2>
                     </div>
                     {activeCategory ?

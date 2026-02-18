@@ -76,7 +76,7 @@ export const TeacherProfileInfo = memo(({active, setActive, setActiveModal, newI
                         <img
                             onClick={() => setActiveModal("changeImage")}
                             className={cls.info__image}
-                            src={teacherId?.user?.profile_img ?? defaultUserImg}
+                            src={`${teacherId?.user?.profile_img}` ?? defaultUserImg}
                             alt=""
                         />
                         <span className={cls.info__avatar__medal}>

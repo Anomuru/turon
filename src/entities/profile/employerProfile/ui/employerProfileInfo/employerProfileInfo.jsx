@@ -44,6 +44,8 @@ export const EmployerProfileInfo = memo(({active, setActive, setActiveModal, new
         }))
     }
 
+    console.log(employerId, "log")
+
     return (
         <DynamicModuleLoader reducers={reducers}>
             <EditableCard

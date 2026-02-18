@@ -12,6 +12,7 @@ import {API_URL, useHttp} from "shared/api/base";
 import {getUserData} from "../model/loginSlice";
 
 import gennisImg from "shared/assets/images/logo.svg"
+import turonImg from "shared/assets/logo/turon.png"
 import loginAside from "shared/assets/images/login-page-4468581-3783954-1.svg"
 import "./login.sass"
 
@@ -106,10 +107,10 @@ export const Login = () => {
                     <div className={"login__box"}>
 
                         <div className={"box__header_img"}>
-                            <img src={gennisImg} alt=""/>
+                            <img src={turonImg} alt=""/>
                         </div>
                         <h1 className={cls.box__header_title}>
-                            login
+                            Login
                         </h1>
                         {error && error ?
                             <div className={"login__error"}>Username yoki Parol noto'g'ri !</div> : null}

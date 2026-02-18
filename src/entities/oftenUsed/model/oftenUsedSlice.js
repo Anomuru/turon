@@ -42,6 +42,7 @@ const initialState = {
     groupsLoading: false,
     groupsError: null,
     groups: [],
+    currentBranchId: null,
 
     branchesLoading: false,
     branchesError: null,
@@ -71,7 +72,11 @@ const initialState = {
 const oftenUsedSlice = createSlice({
     name: "oftenUsedSlice",
     initialState,
-    reducers: {},
+    reducers: {
+        setCurrentBranchId: (state, action) => {
+            state.currentBranchId = action.payload;
+        },
+    },
     extraReducers: builder =>
         builder
             .addCase(fetchSubjectsData.pending, (state) => {
@@ -259,4 +264,5 @@ const oftenUsedSlice = createSlice({
 })
 
 export const oftenUsedReducer = oftenUsedSlice.reducer;
+export const { setCurrentBranchId } = oftenUsedSlice.actions;
 export default oftenUsedSlice.reducer

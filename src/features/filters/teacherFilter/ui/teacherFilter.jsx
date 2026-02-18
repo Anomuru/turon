@@ -19,6 +19,7 @@ import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Button} from "shared/ui/button/index.js";
 import {getSearchValue} from "features/searchInput/index.js";
 import {getSelectedLocations} from "features/locations/index.js";
+import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setActiveSwitch , activeSwitch , currentPage , pageSize}) => {
     const search = useSelector(getSearchValue);
@@ -32,15 +33,20 @@ export const TeacherFilter = React.memo(({active, setActive, setIsFilter , setAc
     const dispatch = useDispatch()
     const languages = useSelector(getLanguagesData)
     const subjects = useSelector(getSubjectsData)
-    const userBranchId = useSelector(getUserBranchId)
+    // const userBranchId = useSelector(getUserBranchId)
     const [selectedAgeFrom, setSelectedAgeFrom] = useState(teacherAgeFrom)
     const [selectedAgeTo, setSelectedAgeTo] = useState(teacherAgeTo)
     const [selectedSubject, setSelectedSubject] = useState(teacherSubject)
     const [selectedLanguage, setSelectedLanguage] = useState(teacherLanguage)
     const {"*": id} = useParams()
-    const branchId = localStorage.getItem("branchId")
-    const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id ?? userBranchId;
+    // const branchId = localStorage.getItem("branchId")
+    const currentBranch = useSelector(getCurrentBranch)
+    const ROLE = localStorage.getItem("job")
+    const userBranchId = localStorage.getItem("branchId")
+    const branchForFilter =
+        ROLE === "director"
+            ? currentBranch
+            : userBranchId;
 
 
     //

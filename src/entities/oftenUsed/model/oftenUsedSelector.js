@@ -111,3 +111,6 @@ export const getTeacherError = (state) =>
 export const getStatusList = (state) =>
     state.oftenUsedSlice.statusList
 
+export const getCurrentBranch = (state) =>
+    state.oftenUsedSlice.currentBranchId
+

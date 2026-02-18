@@ -164,7 +164,7 @@ export const AppRouter = () => {
     );
 
     return (
-        <div className={classNames("app", "app_center_theme")}>
+        <div className={classNames("app", "app_school_theme")}>
             <Suspense fallback={<DefaultPageLoader />}>
                 <RouterProvider router={router} />
             </Suspense>

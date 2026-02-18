@@ -954,7 +954,7 @@ export const TimeTableTuronPage = () => {
             <Modal status={true}  active={classView} setActive={setClassView} type={"other"}>
                 <TimetableGrid classes={classViewData} hours={hours} setActive={setClassView}/>
 
-                {/**/}
+
                 {/*<TimeTableClassView*/}
                 {/*    lessons={classViewData}*/}
                 {/*    hours={hours}*/}

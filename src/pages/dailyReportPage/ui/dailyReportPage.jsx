@@ -6,6 +6,7 @@ import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 import {Input} from "shared/ui/input/index.js";
 import { Select } from "shared/ui/select/index.js";
 import cls from "./dailyReport.module.sass";
+import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 const reportData = [
     {
@@ -75,17 +76,24 @@ export const DailyReportPage = () => {
 
 
     const { request } = useHttp();
+    const currentBranch = useSelector(getCurrentBranch)
+    const ROLE = localStorage.getItem("job")
     const branchId = useSelector(getUserBranchId);
+    const branchForFilter =
+        ROLE === "director"
+            ? currentBranch
+            : branchId;
+
 
     useEffect(() => {
-        if (!selectedMonth || !branchId) return;
+        if (!selectedMonth || !branchForFilter) return;
 
         const [year, month] = selectedMonth.split("-");
 
         setLoading(true);
 
         request(
-            `${API_URL}Encashment/daily-summary/?branch_id=${branchId}&year=${year}&month=${Number(month)}`, "GET", null, headers()
+            `${API_URL}Encashment/daily-summary/?branch_id=${branchForFilter}&year=${year}&month=${Number(month)}`, "GET", null, headers()
         )
             .then((res) => {
                 console.log(res);
@@ -95,7 +103,7 @@ export const DailyReportPage = () => {
                 setError(true)
             })
             .finally(() => setLoading(false));
-    }, [selectedMonth, branchId]);
+    }, [selectedMonth, branchForFilter]);
 
 
 

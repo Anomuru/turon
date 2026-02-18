@@ -11,12 +11,20 @@ import {API_URL, useHttp} from "../../../../shared/api/base";
 import {useSelector} from "react-redux";
 import {getBranch} from "../../../../features/branchSwitcher";
 import {Modal} from "shared/ui/modal/index.js";
+import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onClick , setActiveClass , totalCount , loadingStudents}) => {
 
 
 
     const branchID = useSelector(getBranch)
+    const currentBranch = useSelector(getCurrentBranch)
+    const ROLE = localStorage.getItem("job")
+    const userBranchId = localStorage.getItem("branchId")
+    const branchForFilter =
+        ROLE === "director"
+            ? currentBranch
+            : userBranchId;
 
 
     const [activeModal , setActiveModal] = useState(false)
@@ -55,9 +63,9 @@ export const StudentsHeader = ({onChange, selectedRadio, peoples, setActive, onC
                     </Button>
 
                     <a style={{color: "white"}}
-                       href={`${API_URL}Students/export-students/?branch=${branchID?.id}&format=json`}>
+                       href={`${API_URL}Students/export-students/?branch=${branchForFilter}&format=json`}>
                         <Button type={"simple"}>
-                            Exel
+                            Excel
                         </Button>
                     </a>
                     {/*</Link>*/}

@@ -108,7 +108,6 @@ export const Register = () => {
         label: subject?.name,
     }));
 
-    const branches = useSelector(getBranchesSelect)
     const filteredJobOptions = jobOptions.filter(
         job => job.name.toLowerCase() !== 'admin' && job.name.toLowerCase() !== 'director'
     );

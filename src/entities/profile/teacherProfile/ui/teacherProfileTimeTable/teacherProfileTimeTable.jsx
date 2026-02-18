@@ -227,6 +227,7 @@ export const TeacherProfileTimeTable = () => {
   }
 
   const { time_tables, hours_list } = data
+    console.log(data, "timetable data")
 
   // Get lessons for a specific hour and date
   const getLessonsForCell = (hourId, date) => {
@@ -265,7 +266,7 @@ export const TeacherProfileTimeTable = () => {
 
   const renderCell = (hourId, date) => {
     const lessons = getLessonsForCell(hourId, date)
-    console.log(lessons);
+
     
 
     if (lessons.length === 0) {

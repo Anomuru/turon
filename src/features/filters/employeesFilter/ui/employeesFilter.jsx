@@ -20,6 +20,7 @@ import {saveFilter, getSavedFilters, removeFilter} from "shared/lib/components/f
 
 import cls from "../../filters.module.sass";
 import {getSelectedLocations} from "features/locations/index.js";
+import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 export const EmployeesFilter = React.memo(({active, setActive, currentPage, pageSize}) => {
     const dispatch = useDispatch();
@@ -27,7 +28,13 @@ export const EmployeesFilter = React.memo(({active, setActive, currentPage, page
     const jobsData = useSelector(getVacancyData);
     const branch = useSelector(getUserBranchId);
     const selectedBranch = useSelector(getSelectedLocations);
-    const branchForFilter = selectedBranch?.id ?? branch;
+    const currentBranch = useSelector(getCurrentBranch)
+    const ROLE = localStorage.getItem("job")
+    const userBranchId = localStorage.getItem("branchId")
+    const branchForFilter =
+        ROLE === "director"
+            ? currentBranch
+            : userBranchId;
     const saved = getSavedFilters()["employeesFilter"] ?? {};
     const {
         selectedJob: job,

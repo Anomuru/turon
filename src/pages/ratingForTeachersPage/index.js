@@ -1,0 +1,1 @@
+export {RatingForTeachersPage} from './ui/ratingForTeachersPage.jsx'
