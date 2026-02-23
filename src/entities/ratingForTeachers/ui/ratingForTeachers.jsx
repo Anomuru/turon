@@ -29,6 +29,10 @@ const categoies = [
     {
         value: "satisfaction",
         name: "Satisfaction"
+    },
+    {
+        value: "contribution",
+        name: "Contribution"
     }
 ]
 
@@ -139,6 +143,15 @@ export const RatingForTeachers = () => {
                         </>
                     )
                 }
+                {
+                    value === "contribution" && (
+                        <>
+                            <td>{item?.count}</td>
+                            <td>{item?.ball}</td>
+
+                        </>
+                    )
+                }
 
             </tr>
         ));
@@ -196,6 +209,14 @@ export const RatingForTeachers = () => {
                             value === "satisfaction" && (
                                 <>
                                     <th>Ovozlar soni</th>
+                                    <th>Ball ko'rsatkichi</th>
+                                </>
+                            )
+                        }
+                        {
+                            value === "contribution" && (
+                                <>
+                                    <th>Baholar soni</th>
                                     <th>Ball ko'rsatkichi</th>
                                 </>
                             )

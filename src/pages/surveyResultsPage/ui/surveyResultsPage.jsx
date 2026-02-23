@@ -19,12 +19,19 @@ import {getParentsList} from "entities/parents/model/parentSelector";
 import {API_URL, headers, ParamUrl, useHttp} from "shared/api/base";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {ConfirmModal} from "shared/ui/confirmModal/index.js";
+import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 
 export const SurveyResultsPage = () => {
     const dispatch = useDispatch();
     const [data, setData] = useState([]);
-    const branchId = localStorage.getItem("branchId");
+    const currentBranch = useSelector(getCurrentBranch)
+    const ROLE = localStorage.getItem("job")
+    const userBranchId = localStorage.getItem("branchId")
+    const branchForFilter =
+        ROLE === "director"
+            ? currentBranch
+            : userBranchId;
     const teachersList = useSelector(getTeachers);
 
     const parentsList = useSelector(getParentsList);
@@ -49,15 +56,15 @@ export const SurveyResultsPage = () => {
     const [editingId, setEditingId] = useState(null);
 
     useEffect(() => {
-        if (branchId) {
-            dispatch(fetchTeachersData({userBranchId: branchId}));
-            dispatch(fetchParentList({branchId, deleted: "False"}));
-            dispatch(fetchParentList({branchId}))
+        if (branchForFilter) {
+            dispatch(fetchTeachersData({userBranchId: branchForFilter}));
+            dispatch(fetchParentList({branchForFilter, deleted: "False"}));
+            dispatch(fetchParentList({branchForFilter}))
         }
-    }, [branchId]);
+    }, [branchForFilter]);
 
     useEffect(() => {
-        request(`${API_URL}Students/active-students/?branch=${branchId}`, "GET", null, headers())
+        request(`${API_URL}Students/active-students/?branch=${branchForFilter}`, "GET", null, headers())
             .then(res => {
                 setData(res);
             })

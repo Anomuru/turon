@@ -1,4 +1,5 @@
 import {ROLES} from "shared/const/roles";
+import React from "react";
 
 export const menuConfig = [
     // {
@@ -55,7 +56,13 @@ export const menuConfig = [
         to: "surveyResults",
         name: "So'rovnoma natijalari",
         icon: "fa-list",
-        roles: [ROLES.admin, ROLES.programmer]
+        roles: [ROLES.admin, ROLES.programmer, ROLES.director]
+    },
+    {
+        to: "teacherRating",
+        name: "O'qituvchini baholash",
+        icon: "fa-star",
+        roles: [ROLES.director, ROLES.programmer]
     },
     {
         to: "calendar",

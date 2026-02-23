@@ -48,6 +48,7 @@ const StatisticsPage = lazyPage(() => import("pages/statisticsPage"), "Statistic
 const QuarterMaster = lazyPage(() => import("pages/quarterMasterPage"), "QuarterMasterPage");
 const RatingForTeachersPage = lazyPage(() => import("pages/ratingForTeachersPage"), "RatingForTeachersPage");
 const SurveyResultsPage = lazyPage(() => import("pages/surveyResultsPage"), "SurveyResultsPage");
+const ContributionsPage = lazyPage(() => import("pages/contributionsPage"), "ContributionsPage");
 
 export const routersConfigList = [
     {
@@ -201,6 +202,11 @@ export const routersConfigList = [
         name: "So'rovnoma natijalari",
         path: "surveyResults",
         element: <SurveyResultsPage/>
+    },
+    {
+        name: "O'qituvchini baholash",
+        path: "teacherRating",
+        element: <ContributionsPage/>
     }
 
 ]
