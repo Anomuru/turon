@@ -33,6 +33,10 @@ const categoies = [
     {
         value: "contribution",
         name: "Contribution"
+    },
+    {
+        value: "professionalism",
+        name: "Professionalism"
     }
 ]
 
@@ -152,6 +156,15 @@ export const RatingForTeachers = () => {
                         </>
                     )
                 }
+                {
+                    value === "professionalism" && (
+                        <>
+                            <td>{item?.count}</td>
+                            <td>{item?.ball}</td>
+
+                        </>
+                    )
+                }
 
             </tr>
         ));
@@ -215,6 +228,14 @@ export const RatingForTeachers = () => {
                         }
                         {
                             value === "contribution" && (
+                                <>
+                                    <th>Baholar soni</th>
+                                    <th>Ball ko'rsatkichi</th>
+                                </>
+                            )
+                        }
+                        {
+                            value === "professionalism" && (
                                 <>
                                     <th>Baholar soni</th>
                                     <th>Ball ko'rsatkichi</th>
