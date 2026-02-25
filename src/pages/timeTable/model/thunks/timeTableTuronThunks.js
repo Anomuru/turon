@@ -12,9 +12,9 @@ export const  fetchTimeTableWeekDays = createAsyncThunk(
 
 export const fetchTimeTableTypesData = createAsyncThunk(
     "TimeTableTuronSlice/fetchTimeTableTypesData",
-    async ({type, branch}) => {
+    async ({type, branch, teacher}) => {
         const {request} = useHttp()
-        return await  request(`${API_URL}SchoolTimeTable/timetable-class-flow/?branch=${branch}&type=${type}`, "GET", null, headers())
+        return await  request(`${API_URL}SchoolTimeTable/timetable-class-flow/?${ParamUrl({branch, type, teacher})}`, "GET", null, headers())
     }
 )
 

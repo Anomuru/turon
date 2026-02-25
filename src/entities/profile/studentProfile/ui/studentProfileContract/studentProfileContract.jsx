@@ -29,6 +29,8 @@ export const StudentProfileContract = memo(({ setActive, active }) => {
     const [untilDate, setUnitlDate] = useState("");
     const [contractLink, setContractLink] = useState(null);
     const [files, setFiles] = useState(null);
+    const job = localStorage.getItem("job");
+
 
     const getLink = useSelector(getStudentContract);
     const pathArray = window.location.pathname.split('/');
@@ -95,8 +97,10 @@ export const StudentProfileContract = memo(({ setActive, active }) => {
                             <Input {...register("untile_date")} title={"Gacha"} type={"date"} required onChange={(e) => setUnitlDate(e.target.value)} />
                         </div>
                     </div>
-                    <Button extraClass={cls.btn__button}>Tasdiqlash</Button>
 
+                    {job === "spiritualist" ? "" :
+                    <Button extraClass={cls.btn__button}>Tasdiqlash</Button>
+                    }
 
                 </Form>
 
@@ -119,7 +123,11 @@ export const StudentProfileContract = memo(({ setActive, active }) => {
                         classes={cls.fileUploader}
                         label="Pdf fayl kiriting yoki bu yerga tortib qo'ying"
                     />
-                    <Button extraClass={cls.fileDrop__button}>Yuklash</Button>
+                    {job === "spiritualist" ? "" :
+                        <Button extraClass={cls.fileDrop__button}>Yuklash</Button>
+                    }
+
+
                 </Form>
 
             </div>

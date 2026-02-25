@@ -69,7 +69,8 @@ export const StudentProfileInfo = memo(({
             })
     }
 
-    console.log(data, "data")
+
+    const role = localStorage.getItem("job")
 
     return (
         <EditableCard
@@ -207,6 +208,17 @@ export const StudentProfileInfo = memo(({
                                     )
                                     : null
                             }
+                            {role === "advertising" ? null :
+
+                            role === "spiritualist" ?  <div className={cls.info__div__avatar__box__source__payment}>
+                                <span  title={"To'lov qilish"}
+                                      className={cls.info__div__avatar__box__source__payment__clicker}></span>
+                                <h1 title={"To'lovlar ro'yxati"}
+                                    className={cls.info__div__avatar__box__source__payment__text}>{formattedNumber} so'm</h1>
+                                <img draggable="false" className={cls.info__div__avatar__box__source__payment__img}
+                                     src={visa} alt="" />
+                            </div> :
+
                             <div className={cls.info__div__avatar__box__source__payment}>
                                 <span onClick={() => setActive("balanceIn")} title={"To'lov qilish"}
                                     className={cls.info__div__avatar__box__source__payment__clicker}></span>
@@ -214,7 +226,7 @@ export const StudentProfileInfo = memo(({
                                     className={cls.info__div__avatar__box__source__payment__text}>{formattedNumber} so'm</h1>
                                 <img draggable="false" className={cls.info__div__avatar__box__source__payment__img}
                                     src={visa} alt="" />
-                            </div>
+                            </div>}
                         </div>
                     </div>
                 </div>

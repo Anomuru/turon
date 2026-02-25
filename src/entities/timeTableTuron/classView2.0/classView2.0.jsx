@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useRef } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
+import html2canvas from "html2canvas";
 import cls from "./TimeTableClassView.module.sass";
 
 const ROW_HEIGHT = 64;
@@ -22,8 +23,97 @@ export const TimetableGrid = ({ classes, hours, setActive }) => {
     console.log(classes, hours)
     const [scale, setScale] = useState(0.7);
     const [openMoreKey, setOpenMoreKey] = useState(null);
+    const contentRef = useRef(null);
 
     const fontScale = Math.max(0.75, Math.min(1, 1 / scale));
+
+    const handleSavePng = async () => {
+        if (!contentRef.current) return;
+        try {
+            // Create a clone of the element to modify styles for export without affecting UI
+            const element = contentRef.current;
+            const clone = element.cloneNode(true);
+
+            // Create a temporary container to hold the clone
+            const container = document.createElement("div");
+            container.style.position = "absolute";
+            container.style.top = "-9999px";
+            container.style.left = "-9999px";
+            // Ensure container matches the full scroll size of the content
+            container.style.width = `${element.scrollWidth}px`;
+            container.style.height = `${element.scrollHeight}px`;
+            container.appendChild(clone);
+            document.body.appendChild(container);
+
+            // --- MODIFY CLONE STYLES FOR PERFECT EXPORT ---
+
+            // 1. Fix Sticky Header: Change to static so it renders at the top correctly in the image
+            const headerRow = clone.querySelector(`.${cls.headerRow}`);
+            if (headerRow) {
+                headerRow.style.position = "static";
+                headerRow.style.width = "100%";
+                headerRow.style.transform = "none"; // Remove any transforms
+            }
+
+            // 2. Normalize Fonts: Force readable sizes (14px/12px) ignoring current zoom scale
+
+            // Header Cells
+            const headerCells = clone.querySelectorAll(`.${cls.headerCell}`);
+            headerCells.forEach(cell => {
+                cell.style.fontSize = "14px";
+                const sub = cell.querySelector("span:last-child");
+                if (sub) sub.style.fontSize = "12px";
+            });
+
+            // Class Labels (left column)
+            const classLabels = clone.querySelectorAll(`.${cls.classLabel}`);
+            classLabels.forEach(label => {
+                label.style.fontSize = "14px";
+            });
+
+            // Flow Lessons
+            const flowLessons = clone.querySelectorAll(`.${cls.flowLesson}`);
+            flowLessons.forEach(lesson => {
+                lesson.style.fontSize = "12px";
+            });
+
+            // Single Lessons
+            const singleLessons = clone.querySelectorAll(`.${cls.singleLesson}`);
+            singleLessons.forEach(lesson => {
+                lesson.style.fontSize = "12px";
+                // Ensure position/transform doesn't break
+            });
+
+            // Helper: Reset specific text elements inside lessons if needed
+            const teacherNames = clone.querySelectorAll(`.${cls.teacherName}`);
+            teacherNames.forEach(el => el.style.fontSize = "11px");
+
+            const roomNames = clone.querySelectorAll(`.${cls.roomName}`);
+            roomNames.forEach(el => el.style.fontSize = "10px");
+
+            // Capture the clone
+            const canvas = await html2canvas(clone, {
+                scale: 3, // High quality
+                useCORS: true,
+                backgroundColor: "#ffffff",
+                width: element.scrollWidth,
+                height: element.scrollHeight,
+                windowWidth: element.scrollWidth,
+                windowHeight: element.scrollHeight
+            });
+
+            // Cleanup
+            document.body.removeChild(container);
+
+            // Download
+            const link = document.createElement("a");
+            link.download = `timetable-${new Date().getTime()}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        } catch (error) {
+            console.error("Failed to save image", error);
+        }
+    };
 
     const classIndexMap = useMemo(() => {
         const map = new Map();
@@ -222,6 +312,26 @@ export const TimetableGrid = ({ classes, hours, setActive }) => {
     return (
         <div className={cls.container}>
 
+            <button
+                onClick={handleSavePng}
+                style={{
+                    position: "absolute",
+                    right: "6rem",
+                    top: "3rem",
+                    zIndex: "222222222",
+                    padding: "0.5rem 1rem",
+                    backgroundColor: "#2563eb",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "0.5rem",
+                    cursor: "pointer",
+                    fontSize: "1.4rem",
+                    fontWeight: "600",
+                    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+                }}
+            >
+                Rasm ko'rinishida saqlash
+            </button>
             <i onClick={() => {
                 setActive(false)
                 console.log("dasdsa")
@@ -234,7 +344,7 @@ export const TimetableGrid = ({ classes, hours, setActive }) => {
                 onTransformed={(e) => setScale(e.instance.transformState.scale)}
             >
                 <TransformComponent>
-                    <div className={cls.contentWrapper}>
+                    <div className={cls.contentWrapper} ref={contentRef}>
                         {/* ================= HEADER ================= */}
                         <div
                             className={cls.headerRow}
@@ -386,8 +496,8 @@ export const TimetableGrid = ({ classes, hours, setActive }) => {
                                                     className={cls.singleLesson}
                                                     style={{
                                                         fontSize: 12 * fontScale,
-                                                        backgroundColor: clsItem.color,
-                                                        color: hexToBrightness(clsItem.color) > 125 ? "#000" : "#fff",
+                                                        backgroundColor: "#a5f3fc",
+                                                        color: "#000",
                                                     }}
                                                 >
 

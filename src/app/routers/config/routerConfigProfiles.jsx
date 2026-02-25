@@ -27,12 +27,14 @@ import {
     getRouteTaskManager,
     getRouteFilteredLeads,
     getAccounting,
-    getGroupQuarter, getGroupQuarterShow, getGroupObserve, getLessonTable
+    getGroupQuarter, getGroupQuarterShow, getGroupObserve, getLessonTable, getGroupExams, getCvSubmissons, getParty
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
 import {AccountingPageMainIndex} from "pages/accountingPage/index.js";
 import {LessonsTable} from "features/groupProfile/ui/lessonTable/lessonTable.jsx";
+import {CvSubmissions} from "pages/cvSubmissions/index.js";
+import {PartyPage} from "pages/partyPage/partyPage.jsx";
 const AccountingPageNew = lazyPage(() => import("pages/accountingPage2.0") , "AccountingPageNew");
 // import {GroupQuarterShow} from "pages/groupsPage/index.js";
 
@@ -79,6 +81,7 @@ const AdminTaskManager = lazyPage(() => import("pages/adminTaskManager"), "Admin
 
 const FilteredLeadsPage = lazyPage(() => import("pages/filteredLeadsPage"), "FilteredLeadsPage");
 const GroupProfileQuarter = lazyPage(() => import("features/groupProfile"), "GroupProfileQuarter");
+const GroupExams = lazyPage(() => import("pages/groupsPage"), "GroupExams");
 
 // const GroupProfileQuarter = lazyPage(() => import("features/groupProfile/ui/groupProfileQuarter"))
 const GroupObservePage = lazyPage(() => import("pages/groupsPage/ui/groupObserve/groupObserve.jsx"), "GroupObservePage");
@@ -242,6 +245,12 @@ export const routersConfigProfile = [
         element: <GroupQuarterShow/>,
     },
     {
+        name: "Group exams",
+        path: getGroupExams(":id"),
+        element: <GroupExams/>
+    },
+
+    {
         name: "GroupObserve",
         path: getGroupObserve(":id"),
         element: <GroupObservePage/>
@@ -256,6 +265,11 @@ export const routersConfigProfile = [
         path: getLessonTable(":id"),
         element: <LessonsTable/>
     },
+    {
+        path: getParty(":id"),
+        element: <PartyPage/>
+    },
+
 
 
     // {

@@ -21,6 +21,10 @@ const categoies = [
     {
         value: "lesson_plan",
         name: "Lesson Plan"
+    },
+    {
+        value: "student_results",
+        name: "Student Results"
     }
 ]
 
@@ -103,6 +107,16 @@ export const RatingForTeachers = () => {
                         </>
                     )
                 }
+                {
+                    value === "student_results" && (
+                        <>
+                            <td>{item?.total}</td>
+                            <td>{item?.done}</td>
+                            <td>{item?.percent}%</td>
+
+                        </>
+                    )
+                }
 
             </tr>
         ));
@@ -142,7 +156,7 @@ export const RatingForTeachers = () => {
                             <th>Ball ko'rsatkichi</th>
                         )}
 
-                        {value === "lesson_plan" && (
+                        {value === "lesson_plan" || "student_results" &&  (
                             <>
                                 <th>Jami plan</th>
                                 <th>Bajarilgan</th>

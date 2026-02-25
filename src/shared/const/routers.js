@@ -56,7 +56,7 @@ export const getGroupQuarter = (id) => `groups/quarter`
 export const getGroupQuarterShow = (id) => `groups/groupInfo/${id}/quarter/${id}`
 export const getLessonTable = (id) => `groups/groupInfo/${id}/lessonTable/${id}`
 export const getInkasatsiya = (id) => `inkasatsiya/*`
-
+export const getGroupExams = (id) => `groups/exams`
 
 export const getOtchot = () => `accounting/otchot/*`
 
@@ -70,5 +70,10 @@ export const getRouteStudentAttendance = () => `students/attendance/*`
 export const getQuarterMaster = () => `quarterMaster`
 
 export const getGroupObserve = (id) => `time/observe/${id}`
+export const getCvSubmissons = (id) => `cvShow`
+export const getHomeMessage = (id) => `messages`
+export const getHomeNews = (id) => `news`
+export const getParty = (id) => `party/*`
+
 
 

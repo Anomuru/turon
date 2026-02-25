@@ -29,6 +29,7 @@ export const TeacherProfileInfo = memo(({active, setActive, setActiveModal, newI
     const id = localStorage.getItem("branchId")
 
 
+    const role = localStorage.getItem("job")
 
 
     useEffect(() => {
@@ -103,10 +104,10 @@ export const TeacherProfileInfo = memo(({active, setActive, setActiveModal, newI
                                 <i style={{fontSize: "1.9rem"}} className="fa-solid fa-book-open-reader"></i>
                                 <h2>{teacherId?.subject?.[0]?.name}</h2>
                             </Button>
-                            <Button onClick={() => navigate(`teacherSalaryPage/${teacherId?.id}`)} extraClass={cls.info__teacherSource__header__balance}>
+                            {role !== "spiritualist" && <Button onClick={() => navigate(`teacherSalaryPage/${teacherId?.id}`)} extraClass={cls.info__teacherSource__header__balance}>
                                 <i style={{fontSize: "1.9rem"}} className="fa-solid fa-dollar-sign"></i>
                                 <h2>Balans</h2>
-                            </Button>
+                            </Button>}
                             <Button onClick={() => setCurrentTab("time")} extraClass={classNames(cls.info__teacherSource__header__time, { [cls.active]: currentTab === "time" })}>
                                 <i style={{fontSize: "1.9rem"}} className="fa-solid fa-table"></i>
                                 <h2>Time table</h2>

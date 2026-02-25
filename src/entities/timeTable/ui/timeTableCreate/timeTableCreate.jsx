@@ -1,7 +1,5 @@
-import {AnimatedMulti} from "features/workerSelect";
 import {memo, useEffect, useState} from 'react';
 import {useForm} from "react-hook-form";
-import {useDispatch} from "react-redux";
 
 import {Modal} from "shared/ui/modal";
 import {Form} from "shared/ui/form";
@@ -10,7 +8,6 @@ import {Button} from "shared/ui/button";
 import {MiniLoader} from "shared/ui/miniLoader";
 
 import cls from "./timeTableCreate.module.sass";
-import {Select} from "shared/ui/select";
 
 export const TimeTableCreate = memo((props) => {
 
@@ -98,12 +95,12 @@ export const TimeTableCreate = memo((props) => {
                     {/*    required*/}
                     {/*    options={optionsType}*/}
                     {/*/>*/}
-                    <AnimatedMulti
-                        options={classInputData}
-                        onChange={setSelectedCI}
-                        value={selectedCI}
-                        fontSize={15}
-                    />
+                    {/*<AnimatedMulti*/}
+                    {/*    options={classInputData}*/}
+                    {/*    onChange={setSelectedCI}*/}
+                    {/*    value={selectedCI}*/}
+                    {/*    fontSize={15}*/}
+                    {/*/>*/}
                     {
                         loading ? <MiniLoader/> :
                             <Button

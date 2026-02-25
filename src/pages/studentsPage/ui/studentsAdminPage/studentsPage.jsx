@@ -6,24 +6,20 @@ import {useDispatch, useSelector} from "react-redux";
 
 import {
     DeletedStudents,
+    getNewStudentsData,
+    getOnlyDeletedStudents,
+    getStudyingStudents,
     NewStudents,
     Students,
-    fetchOnlyStudyingStudentsData,
-    fetchOnlyDeletedStudentsData,
-    getNewStudentsData,
-    getStudyingStudents,
-    getOnlyDeletedStudents, fetchOnlyNewStudentsData,
+    StudentsHeader,
 } from "entities/students";
-import {StudentsHeader} from "entities/students";
 import {StudentsFilter} from "features/filters/studentsFilter";
 
 import {Pagination} from "features/pagination";
-import {useNavigate} from "react-router";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import {Modal} from "shared/ui/modal";
 import {Form} from "shared/ui/form";
 import {Select} from "shared/ui/select";
-import {fetchTeachersData, getTeachers} from "entities/teachers";
 import {useForm} from "react-hook-form";
 import {
     getLoadingStudyingStudents,
@@ -34,24 +30,18 @@ import {
 } from "entities/students/model/selector/studentsSelector";
 import {fetchStudentsByClass, fetchUpdateClassStudent} from "entities/students/model/studentsThunk";
 import {Radio} from "shared/ui/radio";
-import {Input} from "shared/ui/input";
-import {useTheme} from "shared/lib/hooks/useTheme";
 import {getSearchValue} from "features/searchInput";
 
 import {useSearchParams} from "react-router-dom";
 
 import {API_URL, headers, useHttp} from "shared/api/base";
+import {savePageTypeToLocalStorage,} from "features/pagesType";
 import {
-    savePageTypeToLocalStorage,
-    getPageTypeFromLocalStorage,
-
-} from "features/pagesType";
-import {
-    fetchLanguagesData,
     fetchClassColorData,
     fetchClassNumberData,
-    getClassNumberData,
+    fetchLanguagesData,
     getClassColorData,
+    getClassNumberData,
     getLanguagesData
 } from "entities/oftenUsed"
 
@@ -60,17 +50,25 @@ import {getTeachersSelect} from "entities/oftenUsed/model/oftenUsedSelector";
 import {fetchTeachersForSelect} from "entities/oftenUsed/model/oftenUsedThunk";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {studentsReducer} from "entities/students/model/studentsSlice.js";
-import {getUserBranchId} from "entities/profile/userProfile/index.js";
 import {Table} from "shared/ui/table/index.js";
-import {classTypeNumber} from "entities/class/model/selector/classSelector.js";
 import {Button} from "shared/ui/button/index.js";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
-import {BRANCH} from "shared/const/roles.js";
 
 const studentsFilter = [
     {name: "new_students", label: "New Students"},
     {name: "studying_students", label: "Studying Students"},
     {name: "deleted_students", label: "Deleted Students"},
+];
+
+const studentsFilter2 = [
+    // {name: "new_students", label: "New Students"},
+    {name: "studying_students", label: "Studying Students"},
+    {name: "deleted_students", label: "Deleted Students"},
+];
+const studentsFilter3 = [
+    // {name: "new_students", label: "New Students"},
+    {name: "studying_students", label: "Studying Students"},
+    // {name: "deleted_students", label: "Deleted Students"},
 ];
 
 const branches = [
@@ -85,6 +83,7 @@ const initialReducers = {
 };
 
 export const StudentsPage = () => {
+    const job = localStorage.getItem("job")
 
     const dispatch = useDispatch()
     const [searchParams] = useSearchParams();
@@ -106,7 +105,7 @@ export const StudentsPage = () => {
     const [selectedColor, setSelectedColor] = useState(null)
 
 
-    const [selectedRadio, setSelectedRadio] = useState(getPageTypeFromLocalStorage("selectedRadio") || studentsFilter[0].name);
+    const [selectedRadio, setSelectedRadio] = useState(job === "spiritualist" ? studentsFilter2[0].name : job === "advertising" ? studentsFilter3[0].name : studentsFilter[0].name);
     const [data, setData] = useState({})
     const [selectColor, setSelectColor] = useState();
     const [colorError, setColorError] = useState(false);
@@ -130,7 +129,6 @@ export const StudentsPage = () => {
     const studentClassUpdateLoading = useSelector(getStudentClassUpdateLoading)
     const studentClassUpdateCount = useSelector(getStudentClassUpdateCount)
     const [currentPageClassUpdate, setCurrentPageClassUpdate] = useState(1);
-
 
 
     // useEffect(() => {
@@ -235,8 +233,6 @@ export const StudentsPage = () => {
     };
 
 
-
-
     const renderStudents = useCallback(() => {
         switch (selectedRadio) {
             case "new_students":
@@ -268,22 +264,7 @@ export const StudentsPage = () => {
     const renderNewStudents = renderStudents()
 
 
-    const types = useMemo(() => {
-        return [
-            {
-                name: "Yangi o'quvchilar",
-                type: "new_students"
-            },
-            {
-                name: "O'chirilgan o'quvchilar",
-                type: "deleted_students"
-            },
-            {
-                name: "O'qiyotgan o'quvchilar",
-                type: "studying_students"
-            }
-        ]
-    }, [])
+
 
     const {request} = useHttp()
 
@@ -330,8 +311,6 @@ export const StudentsPage = () => {
         <DynamicModuleLoader reducers={initialReducers}>
 
 
-
-
             <StudentsHeader
                 totalCount={totalCount}
                 loadingStudents={loadingStudents}
@@ -343,7 +322,7 @@ export const StudentsPage = () => {
                 onChange={handleChange}
                 selectedRadio={selectedRadio}
                 // setSelectedRadio={setSelectedRadio}
-                peoples={studentsFilter}
+                peoples={job === "spiritualist" ? studentsFilter2 : job === "advertising" ? studentsFilter3 : studentsFilter}
                 // theme={__THEME__ === "app_school_theme"}
                 onClick={setActiveModal}
                 setActiveClass={setActiveClass}
@@ -468,7 +447,7 @@ export const StudentsPage = () => {
 
 
                 <div style={{marginBottom: "1rem"}}>
-                    <h2 style={{marginBottom: ".3rem" , color: "#444343"}}>O'zgartiriladigan sinf raqami</h2>
+                    <h2 style={{marginBottom: ".3rem", color: "#444343"}}>O'zgartiriladigan sinf raqami</h2>
                     <Select options={schoolClassNumbers} onChangeOption={setSelectClass} defaultValue={selectClass}/>
                 </div>
 

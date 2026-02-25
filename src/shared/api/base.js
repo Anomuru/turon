@@ -7,7 +7,7 @@
 // export const API_URL_DOC = `https://school.gennis.uz/`
 
 // export const API_URL_DOC = `http://26.253.30.50:8000/`//
-// export const API_URL_DOC = `http://26.107.238.217:8000/`
+// export const API_URL_DOC = `http://localhost:8001/`
 
 export const API_URL_DOC = `https://school.gennis.uz/`
 
@@ -60,9 +60,9 @@ export const branchQueryId = () => {
 
 
 export const useHttp = () => {
-    const request = async (url, method = 'GET', body = null, headers = { 'Content-Type': 'application/json' }) => {
+    const request = async (url, method = 'GET', body = null, headers = {'Content-Type': 'application/json'}) => {
         try {
-            const response = await fetch(url, { method, mode: 'cors', body, headers });
+            const response = await fetch(url, {method, mode: 'cors', body, headers});
 
             if (!response.ok) {
                 throw new Error(`Could not fetch ${url}, status: ${response.status}`);
@@ -75,7 +75,7 @@ export const useHttp = () => {
         }
     }
 
-    return { request }
+    return {request}
 }
 
 export const ParamUrl = (params = {}) => {
