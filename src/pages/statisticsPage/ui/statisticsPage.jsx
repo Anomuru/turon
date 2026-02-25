@@ -13,7 +13,6 @@ import {fetchStatistics} from "entities/statistics/model/statisticsThunk.js";
 import {getPaymentType} from "entities/capital/model/thunk/capitalThunk.js";
 import {capitalReducer, getCapitalTypes} from "entities/capital/index.js";
 import {Radio} from "shared/ui/radio/index.js";
-import {getSelectedLocations} from "features/locations/index.js";
 import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 const reducers = {

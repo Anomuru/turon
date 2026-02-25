@@ -34,6 +34,7 @@ import { quarterMasterReducer } from "pages/quarterMasterPage/model/quarterMaste
 import { locationsReducer } from "features/locations/model/slice/locationsSlice.js";
 import { parentReducer } from "entities/parents/model/parentSlice.js";
 import { todoistReducer } from 'pages/todoistPage';
+import newsSlice from "pages/newsPage/model/newsSlice.js";
 
 
 export function createReduxStore(
@@ -73,7 +74,8 @@ export function createReduxStore(
         parentSlice: parentReducer,
         parentsProfileSlice: parentsProfileReducer,
         todoistSlice: todoistReducer,
-        teacherAttendanceSlice
+        teacherAttendanceSlice,
+        newsSlice
 
 
 
