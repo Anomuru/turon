@@ -358,7 +358,7 @@ export const NewsPage = () => {
             })
     }
 
-    console.log(data[0].image)
+    console.log(data[0]?.image)
     return (
         <div style={S.page}>
             {/* Header */}
