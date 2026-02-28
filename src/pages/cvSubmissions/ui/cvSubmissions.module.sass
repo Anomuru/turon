@@ -1,0 +1,182 @@
+.page
+  font-family: "Segoe UI", sans-serif
+  padding: 32px
+  background-color: #f3f4f6
+  //min-height: 100vh
+
+.header
+  display: flex
+  justify-content: space-between
+  align-items: center
+  margin-bottom: 24px
+  flex-wrap: wrap
+  gap: 16px
+
+.title
+  font-size: 28px
+  font-weight: 700
+  color: #111827
+  margin: 0
+
+.subtitle
+  font-size: 14px
+  color: #6b7280
+  margin: 4px 0 0 0
+
+.searchInput
+  padding: 10px 16px
+  border: 1px solid #e5e7eb
+  border-radius: 8px
+  font-size: 14px
+  width: 280px
+  background-color: #fff
+  outline: none
+
+.tableWrapper
+  background-color: #fff
+  border-radius: 12px
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+  overflow: auto
+  height: calc(100vh - 23rem)
+
+.table
+  width: 100%
+  border-collapse: collapse
+
+.thead
+  background-color: #1e293b
+
+.th
+  padding: 14px 16px
+  text-align: left
+  font-size: 12px
+  font-weight: 600
+  color: #94a3b8
+  text-transform: uppercase
+  letter-spacing: 0.05em
+
+.tr
+  border-bottom: 1px solid #f1f5f9
+  transition: background 0.15s
+  cursor: pointer
+
+  &:nth-child(even)
+    background-color: #f9fafb
+
+.td
+  padding: 14px 16px
+  font-size: 14px
+  color: #374151
+
+.bold
+  font-weight: 600
+
+.fileChip
+  background-color: #f0fdf4
+  color: #166534
+  padding: 3px 10px
+  border-radius: 20px
+  font-size: 12px
+
+.statusBadge
+  padding: 4px 12px
+  border-radius: 20px
+  font-size: 12px
+  font-weight: 600
+  display: inline-block
+
+.select
+  padding: 6px 10px
+  border-radius: 6px
+  border: 1px solid #e5e7eb
+  font-size: 13px
+  background-color: #fff
+  cursor: pointer
+
+.empty
+  text-align: center
+  padding: 40px
+  color: #9ca3af
+  font-size: 15px
+
+/* Modal */
+
+.overlay
+  position: fixed
+  inset: 0
+  background-color: rgba(0, 0, 0, 0.5)
+  display: flex
+  align-items: center
+  justify-content: center
+  z-index: 1000
+
+.modal
+  background-color: #fff
+  border-radius: 16px
+  width: 90%
+  max-width: 520px
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3)
+
+.modalHeader
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 20px 24px
+  border-bottom: 1px solid #f1f5f9
+
+.modalTitle
+  font-size: 20px
+  font-weight: 700
+  color: #111827
+  margin: 0
+
+.closeBtn
+  background: none
+  border: none
+  font-size: 18px
+  cursor: pointer
+  color: #6b7280
+
+.modalBody
+  padding: 24px
+
+.detailRow
+  display: flex
+  align-items: center
+  gap: 12px
+  margin-bottom: 14px
+
+.detailLabel
+  font-size: 13px
+  color: #6b7280
+  font-weight: 600
+  min-width: 100px
+
+.detailValue
+  font-size: 14px
+  color: #111827
+
+.coverLetterText
+  margin-top: 8px
+  padding: 14px
+  background-color: #f9fafb
+  border-radius: 8px
+  font-size: 14px
+  color: #374151
+  line-height: 1.6
+  border: 1px solid #e5e7eb
+
+.modalActions
+  display: flex
+  gap: 12px
+  margin-top: 24px
+
+.actionBtn
+  flex: 1
+  padding: 12px
+  border-radius: 8px
+  border: none
+  color: #fff
+  font-weight: 600
+  font-size: 14px
+  cursor: pointer

@@ -40,6 +40,39 @@ export const menuConfig = [
         // roles: true
     },
     {
+        to: "cvShow",
+        name: "CV Submissions ",
+        icon: "fa-file",
+        roles: [ROLES.director, ROLES.admin]
+        // roles: true
+    },
+    {
+        to: "messages",
+        name: "Xabarlar",
+        icon: "fa-message",
+        roles: [ROLES.director, ROLES.admin]
+        // roles: true
+    },
+
+    {
+        to: "news",
+        name: "Yangiliklar",
+        icon: "fa-brands fa-neos",
+        roles: [ROLES.director, ROLES.admin]
+        // roles: true
+    },
+
+
+
+    {
+        to: "party",
+        name: "Partiyalar",
+        icon: "fa-solid fa-group-arrows-rotate",
+        roles: [ROLES.director , ROLES.admin]
+        // roles: true
+    },
+
+    {
         to: "todoist",
         name: "Todoist",
         icon: "fa-circle-check",
@@ -68,14 +101,14 @@ export const menuConfig = [
         to: "calendar",
         name: "Kalendar",
         icon: "fas fa-calendar-times",
-        roles: [ROLES.director, ROLES.admin],
+        roles: [ROLES.director, ROLES.admin , ROLES.spiritualist , ROLES.advertising],
 
     },
     {
         to: "students",
         name: "O'quvchilar",
         icon: "fa-user-graduate",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.zavuch],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.zavuch , ROLES.spiritualist , ROLES.advertising],
         branches: true
     },
     // {
@@ -92,7 +125,7 @@ export const menuConfig = [
         to: "teacher",
         name: "O'qituvchilar",
         icon: "fa-user-tie",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer,  ROLES.spiritualist],
         branches: true
 
     },
@@ -116,7 +149,7 @@ export const menuConfig = [
         to: "groups",
         name: "Sinflar",
         icon: "fa-users",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.teacher, ROLES.zavuch],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.teacher, ROLES.zavuch ,  ROLES.spiritualist],
         branches: true
 
     },
@@ -140,7 +173,7 @@ export const menuConfig = [
         to: "time",
         name: "Time Table",
         icon: "fa-clock",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.zavuch],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.zavuch, ROLES.spiritualist],
         branches: true
     },
     // {

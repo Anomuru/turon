@@ -14,5 +14,7 @@ export const ROLES = {
     accountant : "accountant",
     operator : "operator",
     zavxos: "Zavxos",
-    zavuch: "Zavuch"
+    zavuch: "Zavuch",
+    spiritualist: "spiritualist",
+    advertising: "advertising"
 }

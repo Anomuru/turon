@@ -20,11 +20,14 @@ import {
     getRouteCalendar,
     getRouteMain,
     getRouteRegister,
-    getQuarterMaster
+    getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews
 
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import Register from "pages/registerPage/index.js";
+import {CvSubmissions} from "pages/cvSubmissions/index.js";
+import {HomeMessages} from "pages/homeMessages/index.js";
+import {NewsPage} from "pages/newsPage/newsPage.jsx";
 
 
 const StudentsPage = lazyPage(() => import("pages/studentsPage"), "StudentsPage");
@@ -197,6 +200,18 @@ export const routersConfigList = [
         name: "daily report",
         path: "dailyReport",
         element: <DailyReportPage/>
+    },
+    {
+        path: getCvSubmissons(":id"),
+        element: <CvSubmissions/>
+    },
+    {
+        path: getHomeMessage(":id"),
+        element: <HomeMessages/>
+    },
+    {
+        path: getHomeNews(":id"),
+        element: <NewsPage/>
     },
     {
         name: "So'rovnoma natijalari",
