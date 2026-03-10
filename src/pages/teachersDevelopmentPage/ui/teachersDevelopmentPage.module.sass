@@ -1,0 +1,701 @@
+// ─── Design Tokens ─────────────────────────────────────────────
+$bg:          white
+$surface:     white
+$surface2:    white
+$border: rgb(41, 41, 41)
+$accent:      #6c63ff
+$accent2:     #4facfe
+$danger:      #ff4757
+$success:     #2ed573
+$text:        black
+$text-dim:    #8891a9
+$radius:      14px
+$radius-sm:   8px
+$shadow:      0 8px 32px rgba(0,0,0,.45)
+$trans:       .22s ease
+
+// ─── Page Shell ────────────────────────────────────────────────
+.page
+  min-height: 100vh
+  background: $bg
+  color: $text
+  font-family: 'Inter', sans-serif
+  padding: 28px 24px
+
+// ─── Header ────────────────────────────────────────────────────
+.page__header
+  display: flex
+  align-items: center
+  justify-content: space-between
+  flex-wrap: wrap
+  gap: 16px
+  margin-bottom: 32px
+
+.page__headerLeft
+  display: flex
+  align-items: center
+  gap: 16px
+
+.page__headerIcon
+  width: 52px
+  height: 52px
+  border-radius: 14px
+  background: linear-gradient(135deg, $accent, $accent2)
+  display: flex
+  align-items: center
+  justify-content: center
+  box-shadow: 0 4px 20px rgba(108,99,255,.4)
+  flex-shrink: 0
+  i
+    font-size: 22px
+    color: #fff
+
+.page__headerLeft h1
+  font-size: 22px
+  font-weight: 700
+  margin: 0 0 4px
+  background: linear-gradient(90deg, $accent, $accent2)
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+
+.page__headerLeft p
+  font-size: 13px
+  color: $text-dim
+  margin: 0
+
+.page__headerRight
+  display: flex
+  align-items: center
+  gap: 14px
+
+.statCard
+  background: $surface
+  border: 1px solid $border
+  border-radius: $radius-sm
+  padding: 10px 20px
+  text-align: center
+
+.statCard__num
+  display: block
+  font-size: 24px
+  font-weight: 700
+  color: $accent
+
+.statCard__label
+  font-size: 11px
+  color: $text-dim
+  text-transform: uppercase
+  letter-spacing: .8px
+
+.addBtn
+  display: flex
+  align-items: center
+  gap: 8px
+  padding: 10px 20px
+  border: none
+  border-radius: $radius-sm
+  background: linear-gradient(135deg, $accent, $accent2)
+  color: #fff
+  font-size: 14px
+  font-weight: 600
+  cursor: pointer
+  transition: $trans
+  box-shadow: 0 4px 14px rgba(108,99,255,.35)
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 6px 20px rgba(108,99,255,.5)
+  i
+    font-size: 13px
+
+// ─── Grid of Cards ─────────────────────────────────────────────
+.page__content
+  width: 100%
+
+.grid
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr))
+  gap: 20px
+
+// ─── PD Card ───────────────────────────────────────────────────
+.card
+  background: $surface
+  border: 1px solid $border
+  border-radius: $radius
+  padding: 22px
+  cursor: pointer
+  transition: $trans
+  display: flex
+  flex-direction: column
+  gap: 12px
+  &:hover
+    border-color: rgba(108,99,255,.5)
+    transform: translateY(-4px)
+    box-shadow: $shadow
+
+.card__top
+  display: flex
+  align-items: center
+  justify-content: space-between
+
+.card__icon
+  width: 40px
+  height: 40px
+  border-radius: $radius-sm
+  background: linear-gradient(135deg, rgba(108,99,255,.25), rgba(79,172,254,.15))
+  display: flex
+  align-items: center
+  justify-content: center
+  i
+    font-size: 18px
+    color: $accent
+
+.card__actions
+  display: flex
+  gap: 6px
+  opacity: 0
+  .card:hover &
+    opacity: 1
+  transition: opacity $trans
+
+.editBtn, .deleteBtn
+  width: 32px
+  height: 32px
+  border: none
+  border-radius: $radius-sm
+  cursor: pointer
+  display: flex
+  align-items: center
+  justify-content: center
+  transition: $trans
+
+.editBtn
+  background: rgba(108,99,255,.15)
+  color: $accent
+  &:hover
+    background: rgba(108,99,255,.3)
+
+.deleteBtn
+  background: rgba(255,71,87,.12)
+  color: $danger
+  &:hover
+    background: rgba(255,71,87,.28)
+
+.card__title
+  font-size: 16px
+  font-weight: 700
+  margin: 0
+  line-height: 1.35
+  color: $text
+
+.card__desc
+  font-size: 13px
+  color: $text-dim
+  margin: 0
+  line-height: 1.6
+  display: -webkit-box
+  -webkit-line-clamp: 2
+  -webkit-box-orient: vertical
+  overflow: hidden
+
+.card__meta
+  display: flex
+  flex-direction: column
+  gap: 6px
+
+.card__metaItem
+  font-size: 12px
+  color: $text-dim
+  display: flex
+  align-items: center
+  gap: 7px
+  i
+    color: $accent2
+    width: 14px
+    text-align: center
+
+.card__avatars
+  display: flex
+  gap: -8px
+
+// ─── Avatar ────────────────────────────────────────────────────
+.avatar
+  width: 34px
+  height: 34px
+  border-radius: 50%
+  background: linear-gradient(135deg, $accent, $accent2)
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 12px
+  font-weight: 700
+  color: #fff
+  border: 2px solid $surface
+  flex-shrink: 0
+
+.avatarSm
+  width: 28px
+  height: 28px
+  font-size: 10px
+
+.avatarMore
+  background: $surface2
+  color: $text-dim
+  font-size: 10px
+
+// ─── Empty ─────────────────────────────────────────────────────
+.empty
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 14px
+  padding: 80px 0
+  color: $text-dim
+  i
+    font-size: 48px
+    opacity: .35
+  p
+    font-size: 15px
+    margin: 0
+  button
+    padding: 10px 24px
+    border: 1px solid $accent
+    border-radius: $radius-sm
+    background: transparent
+    color: $accent
+    font-size: 14px
+    cursor: pointer
+    transition: $trans
+    &:hover
+      background: rgba(108,99,255,.12)
+
+.spinner
+  display: flex
+  justify-content: center
+  padding: 80px 0
+  color: $accent
+  font-size: 32px
+
+// ─── Detail Drawer ─────────────────────────────────────────────
+.overlay
+  position: fixed
+  inset: 0
+  background: rgba(0,0,0,.55)
+  backdrop-filter: blur(4px)
+  z-index: 1000
+  display: flex
+  justify-content: flex-end
+
+.drawer
+  width: min(480px, 100vw)
+  height: 100%
+  background: $surface
+  border-left: 1px solid $border
+  display: flex
+  flex-direction: column
+  gap: 0
+  overflow-y: auto
+  animation: slideIn .25s ease
+
+@keyframes slideIn
+  from
+    transform: translateX(100%)
+  to
+    transform: translateX(0)
+
+.drawer__header
+  display: flex
+  align-items: flex-start
+  gap: 14px
+  padding: 28px 24px 20px
+  border-bottom: 1px solid $border
+  background: linear-gradient(135deg, rgba(108,99,255,.08), rgba(79,172,254,.05))
+  position: sticky
+  top: 0
+  z-index: 1
+
+.drawer__icon
+  width: 44px
+  height: 44px
+  border-radius: 12px
+  background: linear-gradient(135deg, $accent, $accent2)
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-shrink: 0
+  i
+    font-size: 20px
+    color: #fff
+
+.drawer__header h2
+  font-size: 17px
+  font-weight: 700
+  margin: 0 0 4px
+  color: $text
+  flex: 1
+
+.drawer__header span
+  font-size: 12px
+  color: $text-dim
+
+.drawer__close
+  width: 34px
+  height: 34px
+  border: none
+  background: rgba(255,255,255,.06)
+  border-radius: $radius-sm
+  cursor: pointer
+  color: $text-dim
+  display: flex
+  align-items: center
+  justify-content: center
+  margin-left: auto
+  flex-shrink: 0
+  transition: $trans
+  &:hover
+    background: rgba(255,71,87,.18)
+    color: $danger
+
+.drawer__desc
+  padding: 16px 24px
+  font-size: 14px
+  color: $text-dim
+  line-height: 1.65
+  margin: 0
+  border-bottom: 1px solid $border
+
+.drawer__section
+  padding: 18px 24px
+  h4
+    font-size: 13px
+    font-weight: 600
+    color: $accent2
+    margin: 0 0 12px
+    display: flex
+    align-items: center
+    gap: 8px
+    text-transform: uppercase
+    letter-spacing: .6px
+
+.drawer__teacher
+  display: flex
+  align-items: center
+  gap: 12px
+  padding: 10px 14px
+  background: $surface2
+  border-radius: $radius-sm
+  margin-bottom: 8px
+  div:not(.avatar)
+    display: flex
+    flex-direction: column
+    gap: 2px
+    strong
+      font-size: 14px
+      color: $text
+    span
+      font-size: 12px
+      color: $text-dim
+
+.drawer__participants
+  display: flex
+  flex-direction: column
+  gap: 0
+
+.drawer__footer
+  margin-top: auto
+  display: flex
+  gap: 10px
+  padding: 20px 24px
+  border-top: 1px solid $border
+  background: $surface
+
+.editBtn2, .deleteBtn2
+  flex: 1
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 8px
+  padding: 11px 0
+  border: none
+  border-radius: $radius-sm
+  font-size: 14px
+  font-weight: 600
+  cursor: pointer
+  transition: $trans
+
+.editBtn2
+  background: rgba(108,99,255,.15)
+  color: $accent
+  border: 1px solid rgba(108,99,255,.3)
+  &:hover
+    background: rgba(108,99,255,.3)
+
+.deleteBtn2
+  background: rgba(255,71,87,.12)
+  color: $danger
+  border: 1px solid rgba(255,71,87,.25)
+  &:hover
+    background: rgba(255,71,87,.28)
+
+// ─── Modal ─────────────────────────────────────────────────────
+.modal
+  width: min(520px, 90vw)
+  max-height: 85vh
+  overflow-y: auto
+  padding: 12px
+
+.modal__header
+  display: flex
+  align-items: center
+  gap: 14px
+  margin-bottom: 24px
+
+.modal__icon
+  width: 44px
+  height: 44px
+  border-radius: 12px
+  background: linear-gradient(135deg, $accent, $accent2)
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-shrink: 0
+  i
+    font-size: 20px
+    color: #fff
+
+.modal__header h3
+  font-size: 18px
+  font-weight: 700
+  margin: 0
+  color: black
+
+.modal__form
+  display: flex
+  flex-direction: column
+  gap: 16px
+
+.modal__field
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 8px
+  &__label
+    width: 100%
+    font-size: 13px
+    font-weight: 500
+    color: $text-dim
+    display: flex
+    align-items: center
+    gap: 7px
+    i
+      color: $accent
+      width: 14px
+      text-align: center
+
+.select
+  width: 500px !important
+
+.nativeSelect
+  width: 500px
+  padding: 10px 14px
+  background: $surface2
+  //border: 1px solid $border
+  border-radius: $radius-sm
+  color: black
+  font-size: 14px
+  outline: none
+  transition: $trans
+  appearance: none
+  cursor: pointer
+  &:focus
+    border-color: $accent
+    box-shadow: 0 0 0 3px rgba(108,99,255,.15)
+  option
+    background: $surface2
+    color: black
+
+
+.participantList
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr))
+  gap: 8px
+  width: 100%
+  max-height: 200px
+  overflow-y: auto
+  padding: 4px 0
+
+.participantItem
+  display: flex
+  align-items: center
+  gap: 10px
+  padding: 8px 12px
+  background: $surface2
+  border: 1px solid $border
+  border-radius: $radius-sm
+  cursor: pointer
+  transition: $trans
+  input[type="checkbox"]
+    display: none
+  span
+    font-size: 13px
+    color: black
+    flex: 1
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+
+.participantItemChecked
+  border-color: rgba(108,99,255,.5)
+  background: rgba(108,99,255,.1)
+  span
+    color: $text
+
+.noTeachers
+  font-size: 13px
+  color: $text-dim
+  padding: 10px 0
+  margin: 0
+
+.modal__actions
+  display: flex
+  gap: 10px
+  justify-content: flex-end
+  padding-top: 6px
+
+// ─── Participant Edit Section ───────────────────────────────────
+.participantEditSection
+  display: flex
+  flex-direction: column
+  width: 100%
+  gap: 10px
+
+.participantJoined
+  display: flex
+  align-items: center
+  gap: 10px
+  padding: 8px 12px
+  background: rgba(108,99,255,.08)
+  border: 1px solid rgba(108,99,255,.25)
+  border-radius: $radius-sm
+  transition: $trans
+  position: relative
+  &:hover
+    background: rgba(108,99,255,.14)
+    .participantRemoveBtn
+      opacity: 1
+      pointer-events: auto
+  span
+    font-size: 13px
+    color: black
+    flex: 1
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+
+.participantRemoveBtn
+  width: 24px
+  height: 24px
+  border: none
+  border-radius: 6px
+  background: rgba(255,71,87,.15)
+  color: $danger
+  display: flex
+  align-items: center
+  justify-content: center
+  cursor: pointer
+  opacity: 0
+  pointer-events: none
+  transition: $trans
+  flex-shrink: 0
+  font-size: 11px
+  &:hover
+    background: rgba(255,71,87,.32)
+
+.addMoreBtn
+  display: flex
+  align-items: center
+  gap: 7px
+  padding: 8px 14px
+  border: 1px dashed rgba(108,99,255,.4)
+  border-radius: $radius-sm
+  background: transparent
+  color: $accent
+  font-size: 13px
+  font-weight: 500
+  cursor: pointer
+  transition: $trans
+  align-self: flex-start
+  &:hover
+    background: rgba(108,99,255,.1)
+    border-style: solid
+  i
+    font-size: 11px
+
+// ─── Attendance (Drawer) ────────────────────────────────────────
+.drawer__teacherAttend
+  justify-content: space-between
+  transition: $trans
+  border-left: 3px solid transparent
+
+.drawer__teacherCame
+  border-left-color: $success
+  background: rgba(46,213,115,.07)
+
+.drawer__teacherAbsent
+  border-left-color: $danger
+  background: rgba(255,71,87,.06)
+
+.attendanceBtn
+  display: flex
+  align-items: center
+  gap: 5px
+  padding: 5px 12px
+  border: none
+  border-radius: 20px
+  font-size: 12px
+  font-weight: 600
+  cursor: pointer
+  transition: $trans
+  white-space: nowrap
+  flex-shrink: 0
+  i
+    font-size: 11px
+
+.attendanceBtnCame
+  background: rgba(46,213,115,.18)
+  color: $success
+  &:hover
+    background: rgba(46,213,115,.35)
+
+.attendanceBtnAbsent
+  background: rgba(255,71,87,.14)
+  color: $danger
+  &:hover
+    background: rgba(255,71,87,.3)
+
+.attendanceBtnPending
+  background: rgba(136,145,169,.14)
+  color: $text-dim
+  &:hover
+    background: rgba(108,99,255,.14)
+    color: $accent
+
+.attendanceSummary
+  display: inline-flex
+  align-items: center
+  gap: 6px
+  margin-left: 8px
+  font-size: 11px
+  font-weight: 500
+  letter-spacing: 0
+
+.attendanceCame
+  padding: 2px 8px
+  background: rgba(46,213,115,.15)
+  color: $success
+  border-radius: 10px
+
+.attendanceAbsent
+  padding: 2px 8px
+  background: rgba(255,71,87,.12)
+  color: $danger
+  border-radius: 10px

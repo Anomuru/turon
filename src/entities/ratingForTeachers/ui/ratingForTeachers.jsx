@@ -1,258 +1,137 @@
-import React, {useEffect, useState} from 'react';
-import {API_URL, headers, useHttp} from "shared/api/base.js";
-import cls from './ratingForTeachers.module.sass'
-import {Select} from "shared/ui/select/index.js";
-import {Input} from "shared/ui/input/index.js";
-import {Button} from "shared/ui/button/index.js";
-import {Table} from "shared/ui/table/index.js";
-import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
-import {MiniLoader} from "shared/ui/miniLoader/index.js";
-import {EditableCard} from "shared/ui/editableCard/index.js";
-import {Switch} from "shared/ui/switch/index.js";
-import {useSelector} from "react-redux";
-import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
+import React from 'react';
+import cls from './ratingForTeachers.module.sass';
+import { MiniLoader } from 'shared/ui/miniLoader/index.js';
 
 
-const categoies = [
-    {
-        value: "observation",
-        name: "Observation"
-    },
-    {
-        value: "lesson_plan",
-        name: "Lesson Plan"
-    },
-    {
-        value: "student_results",
-        name: "Student Results"
-    },
-    {
-        value: "satisfaction",
-        name: "Satisfaction"
-    },
-    {
-        value: "contribution",
-        name: "Contribution"
-    },
-    {
-        value: "professionalism",
-        name: "Professionalism"
+
+const getScoreColor = (value, category) => {
+    if (category === 'lesson_plan' || category === 'student_results') {
+        const pct = parseFloat(value);
+        if (pct >= 80) return cls.scoreGreen;
+        if (pct >= 50) return cls.scoreYellow;
+        return cls.scoreRed;
     }
-]
+    return '';
+};
 
-
-export const RatingForTeachers = () => {
-
-    const {request} = useHttp()
-    const [dateValue, setDateValue] = useState("");
-    const [data, setData] = useState([])
-
-    const [value, setValue] = useState("")
-    const [year, setYear] = useState("")
-    const [month, setMonth] = useState("")
-    const [loading, setLoading] = useState(false);
-    const [active, setActive] = useState(true)
-    const currentBranch = useSelector(getCurrentBranch)
-    const ROLE = localStorage.getItem("job")
-    const userBranchId = localStorage.getItem("branchId")
-    const branchForFilter =
-        ROLE === "director"
-            ? currentBranch
-            : userBranchId;
-
-    useEffect(() => {
-        if (!branchForFilter || !value) return;
-
-        let url = `${API_URL}Teachers/teacher-rating/?branch=${branchForFilter}&category=${value}`;
-        if (year && month) {
-            url += `&year=${year}&month=${month}`;
-        }
-
-        setLoading(true)
-
-        request(url, "GET", null, headers())
-            .then(res =>
+const TableHeaders = ({ category }) => {
+    const base = (
+        <tr>
+            <th className={cls.thNum}>#</th>
+            <th>O'qituvchi</th>
+            {category === 'observation' && <th>Ball</th>}
+            {(category === 'lesson_plan' || category === 'student_results') && (
+                <>
+                    <th>Jami</th>
+                    <th>Bajarilgan</th>
+                    <th>Foiz</th>
+                </>
+            )}
+            {(category === 'satisfaction' || category === 'contribution' || category === 'professionalism') && (
+                <>
+                    <th>Soni</th>
+                    <th>Ball</th>
+                </>
+            )}
             {
-                if (value === "satisfaction") {
-                    const sorted = [...res].sort((a, b) => b.ball - a.ball);
-                    setData(sorted);
-                } else {
-                    setData(res);
-                }
+                (category === "pd") && (
+                    <>
+                        <th>Ma'ruzalar soni</th>
+                        <th>Qatnashgan ma'ruzalar soni</th>
+                        <th>Qatnashmagan ma'ruzalar soni</th>
+                    </>
+                )
+
             }
-            )
-            .catch(err => console.error("Teacher rating error:", err))
-            .finally(() => setLoading(false));
+        </tr>
+    );
+    return <thead>{base}</thead>;
+};
 
-    }, [branchForFilter, value, year, month, active]);
-
-    const handleSwitch = (state) => {
-        setActive(state)
-
-        if (state) {
-            setDateValue("")
-            setYear("")
-            setMonth("")
-        }
-    }
-
-    const handleDateChange = (e) => {
-        const fullDate = e.target.value;
-        setDateValue(fullDate);
-
-        if (fullDate) {
-            const [onlyYear, onlyMonth] = fullDate.split("-");
-            setYear(onlyYear);
-            setMonth(onlyMonth);
-            setActive(false);
-        }
-    }
-
-    const renderTableRows = (data) => {
-        return data?.map((item, index) => (
-            <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{item.name} {item.surname}</td>
-                {
-                    value === "observation" && (
-                        <td>{item?.ball}</td>
-                    )
-                }
-                {
-                    value === "lesson_plan" && (
-                        <>
-                            <td>{item?.total}</td>
-                            <td>{item?.done}</td>
-                            <td>{item?.percent}%</td>
-
-                        </>
-                    )
-                }
-                {
-                    value === "student_results" && (
-                        <>
-                            <td>{item?.total}</td>
-                            <td>{item?.done}</td>
-                            <td>{item?.percent}%</td>
-
-                        </>
-                    )
-                }
-                {
-                    value === "satisfaction" && (
-                        <>
-                            <td>{item?.count}</td>
-                            <td>{item?.ball}</td>
-
-                        </>
-                    )
-                }
-                {
-                    value === "contribution" && (
-                        <>
-                            <td>{item?.count}</td>
-                            <td>{item?.ball}</td>
-
-                        </>
-                    )
-                }
-                {
-                    value === "professionalism" && (
-                        <>
-                            <td>{item?.count}</td>
-                            <td>{item?.ball}</td>
-
-                        </>
-                    )
-                }
-
-            </tr>
-        ));
-    }
+const TableRow = ({ item, index, category }) => {
 
 
     return (
-        <div className={cls.rating}>
-            <div className={cls.rating__header}>
-                <div className={cls.rating__header__inner}>
-                    <Select
-                        title={"Kategoriya"}
-                        options={categoies} defaultValue={"observation"}
-                        onChangeOption={(value) => setValue(value)}
-                        extraClass={cls.rating__header__inner__select}
-                    />
-                    <Input title={"Yil va oy "}
-                           type={"month"}
-                           value={dateValue}
-                           extraClassName={cls.rating__header__inner__input}
-                           onChange={handleDateChange}
-                    />
-                    <span className={cls.rating__header__inner__box}>
-                        <p>Hozirgi oyni ko'rish</p>
-                    <Switch onChangeSwitch={handleSwitch}  activeSwitch={active}/>
-                    </span>
+        <tr className={cls.tableRow}>
+            <td>
+                <span className={`${cls.rank} ${cls.rankNormal}`}>
+                    {index + 1}
+                </span>
+            </td>
+            <td className={cls.nameCell}>
+                <div className={cls.avatar}>
+                    {item.name?.[0]}{item.surname?.[0]}
                 </div>
-                {/*<hr/>*/}
-            </div>
-            <EditableCard extraClass={cls.rating__header__seconder} titleType={""}>
-                <Table>
-                    <thead style={{position: "relative"}}>
-                    <tr style={{position: "sticky", top: "-2rem"}}>
-                        <th>T/r</th>
-                        <th>Ism-familiyasi</th>
-                        {value === "observation" && (
-                            <th>Ball ko'rsatkichi</th>
-                        )}
+                <span>{item.name} {item.surname}</span>
+            </td>
 
-                        {value === "lesson_plan" &&  (
-                            <>
-                                <th>Jami plan</th>
-                                <th>Bajarilgan</th>
-                                <th>Foiz (%)</th>
-                            </>
-                        )}
-                        {value === "student_results" &&  (
-                            <>
-                                <th>Jami plan</th>
-                                <th>Bajarilgan</th>
-                                <th>Foiz (%)</th>
-                            </>
-                        )}
-                        {
-                            value === "satisfaction" && (
-                                <>
-                                    <th>Ovozlar soni</th>
-                                    <th>Ball ko'rsatkichi</th>
-                                </>
-                            )
-                        }
-                        {
-                            value === "contribution" && (
-                                <>
-                                    <th>Baholar soni</th>
-                                    <th>Ball ko'rsatkichi</th>
-                                </>
-                            )
-                        }
-                        {
-                            value === "professionalism" && (
-                                <>
-                                    <th>Baholar soni</th>
-                                    <th>Ball ko'rsatkichi</th>
-                                </>
-                            )
-                        }
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {loading ? <div style={{display: "flex", alignSelf: "center", marginLeft: "70rem"}}>
-                        <MiniLoader/>
-                    </div> : renderTableRows(data)}
-                    </tbody>
-                </Table>
-            </EditableCard>
-
-        </div>
+            {category === 'observation' && (
+                <td>
+                    <span className={cls.badge}>{item?.ball ?? '–'}</span>
+                </td>
+            )}
+            {(category === 'lesson_plan' || category === 'student_results') && (
+                <>
+                    <td>{item?.total ?? '–'}</td>
+                    <td>{item?.done ?? '–'}</td>
+                    <td>
+                        <span className={`${cls.badge} ${getScoreColor(`${item?.percent}`, category)}`}>
+                            {item?.percent != null ? `${item.percent}%` : '–'}
+                        </span>
+                    </td>
+                </>
+            )}
+            {(category === 'satisfaction' || category === 'contribution' || category === 'professionalism') && (
+                <>
+                    <td>{item?.count ?? '–'}</td>
+                    <td>
+                        <span className={cls.badge}>{item?.ball ?? '–'}</span>
+                    </td>
+                </>
+            )}
+            {
+                (category === "pd") && (
+                    <>
+                        <td>{item?.speaker_pd_count}</td>
+                        <td>{item?.attended_pd_count}</td>
+                        <td>{item?.absent_pd_count}</td>
+                    </>
+                )
+            }
+        </tr>
     );
 };
 
+export const RatingTable = ({ data, loading, category }) => {
+    if (loading) {
+        return (
+            <div className={cls.loaderWrap}>
+                <MiniLoader />
+                <p className={cls.loaderText}>Ma'lumotlar yuklanmoqda…</p>
+            </div>
+        );
+    }
+
+    if (!data || data.length === 0) {
+        return (
+            <div className={cls.empty}>
+                <span className={cls.emptyIcon}>📊</span>
+                <p>Ma'lumot topilmadi</p>
+                <small>Kategoriya va oy/yilni tanlang</small>
+            </div>
+        );
+    }
+
+    return (
+        <div className={cls.tableWrap}>
+            <table className={cls.table}>
+                <TableHeaders category={category} />
+                <tbody>
+                    {data.map((item, index) => (
+                        <TableRow key={item.id ?? index} item={item} index={index} category={category} />
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
