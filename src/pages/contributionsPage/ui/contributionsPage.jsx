@@ -15,6 +15,14 @@ import { API_URL, headers, useHttp } from 'shared/api/base';
 import { onAddAlertOptions } from 'features/alert/model/slice/alertSlice';
 import { getCurrentBranch } from 'entities/oftenUsed/model/oftenUsedSelector.js';
 
+const STATUS_OPTIONS = [
+    { value: 'good', label: 'Yaxshi', icon: 'fas fa-smile', color: '#16a34a', bg: 'rgba(34,197,94,0.12)' },
+    { value: 'average', label: 'Ortacha', icon: 'fas fa-meh', color: '#ca8a04', bg: 'rgba(234,179,8,0.12)' },
+    { value: 'bad', label: 'Yomon', icon: 'fas fa-frown', color: '#dc2626', bg: 'rgba(239,68,68,0.12)' },
+];
+
+const getStatusMeta = (status) => STATUS_OPTIONS.find((s) => s.value === status) ?? STATUS_OPTIONS[1];
+
 export const ContributionsPage = () => {
     const dispatch = useDispatch();
     const { request } = useHttp();
@@ -27,7 +35,7 @@ export const ContributionsPage = () => {
 
     const [activeTab, setActiveTab] = useState('contributions');
 
-
+    // ── Contributions ──────────────────────────────────────────────────────────
     const [contributions, setContributions] = useState([]);
     const [expandedTeacherId, setExpandedTeacherId] = useState(null);
     const [selectedTeacher, setSelectedTeacher] = useState(null);
@@ -38,7 +46,7 @@ export const ContributionsPage = () => {
     const [editingId, setEditingId] = useState(null);
     const [formData, setFormData] = useState({ score: '', text: '', datetime: '' });
 
-
+    // ── Professionalism ────────────────────────────────────────────────────────
     const [professionalisms, setProfessionalisms] = useState([]);
     const [expandedProfTeacherId, setExpandedProfTeacherId] = useState(null);
     const [selectedProfTeacher, setSelectedProfTeacher] = useState(null);
@@ -49,12 +57,33 @@ export const ContributionsPage = () => {
     const [editingProfId, setEditingProfId] = useState(null);
     const [profFormData, setProfFormData] = useState({ score: '', text: '', datetime: '' });
 
+    // ── Teacher Conduct ────────────────────────────────────────────────────────
+    const [conducts, setConducts] = useState([]);
+    const [expandedConductTeacherId, setExpandedConductTeacherId] = useState(null);
+    const [selectedConductTeacher, setSelectedConductTeacher] = useState(null);
+    const [conductModalActive, setConductModalActive] = useState(false);
+    const [conductDeleteModalActive, setConductDeleteModalActive] = useState(false);
+    const [deleteConductItemId, setDeleteConductItemId] = useState(null);
+    const [deleteConductTeacherId, setDeleteConductTeacherId] = useState(null);
+    const [editingConductId, setEditingConductId] = useState(null);
+    const [conductFormData, setConductFormData] = useState({ status: 'good', datetime: '', comment: '' });
+
+    // ── Teacher Feedback ───────────────────────────────────────────────────────
+    const [feedbacks, setFeedbacks] = useState([]);
+    const [expandedFeedbackTeacherId, setExpandedFeedbackTeacherId] = useState(null);
+    const [selectedFeedbackTeacher, setSelectedFeedbackTeacher] = useState(null);
+    const [feedbackModalActive, setFeedbackModalActive] = useState(false);
+    const [feedbackDeleteModalActive, setFeedbackDeleteModalActive] = useState(false);
+    const [deleteFeedbackItemId, setDeleteFeedbackItemId] = useState(null);
+    const [deleteFeedbackTeacherId, setDeleteFeedbackTeacherId] = useState(null);
+    const [editingFeedbackId, setEditingFeedbackId] = useState(null);
+    const [feedbackFormData, setFeedbackFormData] = useState({ status: 'average', datetime: '', comment: '' });
+
     useEffect(() => {
         if (branchForFilter) {
             dispatch(fetchTeachersData({ userBranchId: branchForFilter }));
         }
     }, [branchForFilter]);
-
 
     const nowIso = () => {
         const now = new Date();
@@ -68,7 +97,7 @@ export const ContributionsPage = () => {
         return 'low';
     };
 
-
+    // ── Contributions handlers ─────────────────────────────────────────────────
     const resetForm = useCallback(() => {
         setFormData({ score: '', text: '', datetime: nowIso() });
         setEditingId(null);
@@ -76,12 +105,7 @@ export const ContributionsPage = () => {
 
     const fetchContributions = useCallback(
         (teacherId) => {
-            request(
-                `${API_URL}Teachers/teacher-contributions/?teacher=${teacherId}`,
-                'GET',
-                null,
-                headers()
-            )
+            request(`${API_URL}Teachers/teacher-contributions/?teacher=${teacherId}`, 'GET', null, headers())
                 .then((res) => setContributions(res))
                 .catch((err) => console.error('Failed to fetch contributions', err));
         },
@@ -112,11 +136,7 @@ export const ContributionsPage = () => {
         e.stopPropagation();
         setSelectedTeacher(teacher);
         setEditingId(item.id);
-        setFormData({
-            score: item.score ?? '',
-            text: item.text ?? '',
-            datetime: item.datetime ? item.datetime.slice(0, 16) : '',
-        });
+        setFormData({ score: item.score ?? '', text: item.text ?? '', datetime: item.datetime ? item.datetime.slice(0, 16) : '' });
         setActiveModal(true);
     };
 
@@ -130,18 +150,9 @@ export const ContributionsPage = () => {
             dispatch(onAddAlertOptions({ type: 'warning', status: true, msg: "Iltimos, barcha majburiy maydonlarni to'ldiring" }));
             return;
         }
-        const payload = {
-            teacher: selectedTeacher.id,
-            score: Number(formData.score),
-            text: formData.text,
-            datetime: formData.datetime,
-            user: userId,
-        };
+        const payload = { teacher: selectedTeacher.id, score: Number(formData.score), text: formData.text, datetime: formData.datetime, user: userId };
         const method = editingId ? 'PATCH' : 'POST';
-        const url = editingId
-            ? `${API_URL}Teachers/teacher-contributions/${editingId}/`
-            : `${API_URL}Teachers/teacher-contributions/`;
-
+        const url = editingId ? `${API_URL}Teachers/teacher-contributions/${editingId}/` : `${API_URL}Teachers/teacher-contributions/`;
         request(url, method, JSON.stringify(payload), headers())
             .then(() => {
                 dispatch(onAddAlertOptions({ type: 'success', status: true, msg: editingId ? 'Muvaffaqiyatli yangilandi' : 'Muvaffaqiyatli saqlandi' }));
@@ -162,6 +173,7 @@ export const ContributionsPage = () => {
             .catch(() => dispatch(onAddAlertOptions({ type: 'error', status: true, msg: 'Xatolik yuz berdi' })));
     };
 
+    // ── Professionalism handlers ───────────────────────────────────────────────
     const resetProfForm = useCallback(() => {
         setProfFormData({ score: '', text: '', datetime: nowIso() });
         setEditingProfId(null);
@@ -169,12 +181,7 @@ export const ContributionsPage = () => {
 
     const fetchProfessionalisms = useCallback(
         (teacherId) => {
-            request(
-                `${API_URL}Teachers/teacher-professionalism/?teacher=${teacherId}`,
-                'GET',
-                null,
-                headers()
-            )
+            request(`${API_URL}Teachers/teacher-professionalism/?teacher=${teacherId}`, 'GET', null, headers())
                 .then((res) => setProfessionalisms(res))
                 .catch((err) => console.error('Failed to fetch professionalisms', err));
         },
@@ -205,11 +212,7 @@ export const ContributionsPage = () => {
         e.stopPropagation();
         setSelectedProfTeacher(teacher);
         setEditingProfId(item.id);
-        setProfFormData({
-            score: item.score ?? '',
-            text: item.text ?? '',
-            datetime: item.datetime ? item.datetime.slice(0, 16) : '',
-        });
+        setProfFormData({ score: item.score ?? '', text: item.text ?? '', datetime: item.datetime ? item.datetime.slice(0, 16) : '' });
         setProfModalActive(true);
     };
 
@@ -223,18 +226,9 @@ export const ContributionsPage = () => {
             dispatch(onAddAlertOptions({ type: 'warning', status: true, msg: "Iltimos, barcha majburiy maydonlarni to'ldiring" }));
             return;
         }
-        const payload = {
-            teacher: selectedProfTeacher.id,
-            score: Number(profFormData.score),
-            text: profFormData.text,
-            datetime: profFormData.datetime,
-            user: userId,
-        };
+        const payload = { teacher: selectedProfTeacher.id, score: Number(profFormData.score), text: profFormData.text, datetime: profFormData.datetime, user: userId };
         const method = editingProfId ? 'PATCH' : 'POST';
-        const url = editingProfId
-            ? `${API_URL}Teachers/teacher-professionalism/${editingProfId}/`
-            : `${API_URL}Teachers/teacher-professionalism/`;
-
+        const url = editingProfId ? `${API_URL}Teachers/teacher-professionalism/${editingProfId}/` : `${API_URL}Teachers/teacher-professionalism/`;
         request(url, method, JSON.stringify(payload), headers())
             .then(() => {
                 dispatch(onAddAlertOptions({ type: 'success', status: true, msg: editingProfId ? 'Muvaffaqiyatli yangilandi' : 'Muvaffaqiyatli saqlandi' }));
@@ -255,17 +249,167 @@ export const ContributionsPage = () => {
             .catch(() => dispatch(onAddAlertOptions({ type: 'error', status: true, msg: 'Xatolik yuz berdi' })));
     };
 
+    // ── Conduct handlers ───────────────────────────────────────────────────────
+    const resetConductForm = useCallback(() => {
+        setConductFormData({ status: 'good', datetime: nowIso(), comment: '' });
+        setEditingConductId(null);
+    }, []);
 
-    const renderTeacherTable = ({
-        expandedId,
-        onTeacherClick,
-        onAddClick,
-        onEditClick,
-        onDeleteClick,
-        items,
-        emptyLabel,
-        addBtnLabel,
-    }) => (
+    const fetchConducts = useCallback(
+        (teacherId) => {
+            request(`${API_URL}Teachers/teacher-conduct/?teacher=${teacherId}`, 'GET', null, headers())
+                .then((res) => setConducts(res))
+                .catch((err) => console.error('Failed to fetch conducts', err));
+        },
+        [request]
+    );
+
+    const handleConductTeacherClick = useCallback(
+        (teacher) => {
+            if (expandedConductTeacherId === teacher.id) {
+                setExpandedConductTeacherId(null);
+                setConducts([]);
+            } else {
+                setExpandedConductTeacherId(teacher.id);
+                fetchConducts(teacher.id);
+            }
+        },
+        [expandedConductTeacherId, fetchConducts]
+    );
+
+    const handleConductAddClick = (e, teacher) => {
+        e.stopPropagation();
+        setSelectedConductTeacher(teacher);
+        resetConductForm();
+        setConductModalActive(true);
+    };
+
+    const handleConductEditClick = (e, item, teacher) => {
+        e.stopPropagation();
+        setSelectedConductTeacher(teacher);
+        setEditingConductId(item.id);
+        setConductFormData({ status: item.status ?? 'good', datetime: item.datetime ? item.datetime.slice(0, 16) : '', comment: item.comment ?? '' });
+        setConductModalActive(true);
+    };
+
+    const handleConductChange = useCallback((key, value) => {
+        setConductFormData((prev) => ({ ...prev, [key]: value }));
+    }, []);
+
+    const handleConductSubmit = (e) => {
+        e.preventDefault();
+        if (!selectedConductTeacher || !conductFormData.datetime) {
+            dispatch(onAddAlertOptions({ type: 'warning', status: true, msg: "Iltimos, barcha majburiy maydonlarni to'ldiring" }));
+            return;
+        }
+        const payload = { teacher: selectedConductTeacher.id, status: conductFormData.status, datetime: conductFormData.datetime, comment: conductFormData.comment };
+        const method = editingConductId ? 'PATCH' : 'POST';
+        const url = editingConductId ? `${API_URL}Teachers/teacher-conduct/${editingConductId}/` : `${API_URL}Teachers/teacher-conduct/`;
+        request(url, method, JSON.stringify(payload), headers())
+            .then(() => {
+                dispatch(onAddAlertOptions({ type: 'success', status: true, msg: editingConductId ? 'Muvaffaqiyatli yangilandi' : 'Muvaffaqiyatli saqlandi' }));
+                if (expandedConductTeacherId === selectedConductTeacher.id) fetchConducts(selectedConductTeacher.id);
+                setConductModalActive(false);
+                resetConductForm();
+            })
+            .catch(() => dispatch(onAddAlertOptions({ type: 'error', status: true, msg: 'Xatolik yuz berdi' })));
+    };
+
+    const handleConductDeleteConfirm = () => {
+        request(`${API_URL}Teachers/teacher-conduct/${deleteConductItemId}/`, 'DELETE', null, headers())
+            .then(() => {
+                dispatch(onAddAlertOptions({ type: 'success', status: true, msg: "Muvaffaqiyatli o'chirildi" }));
+                setConductDeleteModalActive(false);
+                fetchConducts(deleteConductTeacherId);
+            })
+            .catch(() => dispatch(onAddAlertOptions({ type: 'error', status: true, msg: 'Xatolik yuz berdi' })));
+    };
+
+    // ── Feedback handlers ──────────────────────────────────────────────────────
+    const resetFeedbackForm = useCallback(() => {
+        setFeedbackFormData({ status: 'average', datetime: nowIso(), comment: '' });
+        setEditingFeedbackId(null);
+    }, []);
+
+    const fetchFeedbacks = useCallback(
+        (teacherId) => {
+            request(`${API_URL}Teachers/teacher-feedback/?teacher=${teacherId}`, 'GET', null, headers())
+                .then((res) => setFeedbacks(res))
+                .catch((err) => console.error('Failed to fetch feedbacks', err));
+        },
+        [request]
+    );
+
+    const handleFeedbackTeacherClick = useCallback(
+        (teacher) => {
+            if (expandedFeedbackTeacherId === teacher.id) {
+                setExpandedFeedbackTeacherId(null);
+                setFeedbacks([]);
+            } else {
+                setExpandedFeedbackTeacherId(teacher.id);
+                fetchFeedbacks(teacher.id);
+            }
+        },
+        [expandedFeedbackTeacherId, fetchFeedbacks]
+    );
+
+    const handleFeedbackAddClick = (e, teacher) => {
+        e.stopPropagation();
+        setSelectedFeedbackTeacher(teacher);
+        resetFeedbackForm();
+        setFeedbackModalActive(true);
+    };
+
+    const handleFeedbackEditClick = (e, item, teacher) => {
+        e.stopPropagation();
+        setSelectedFeedbackTeacher(teacher);
+        setEditingFeedbackId(item.id);
+        setFeedbackFormData({ status: item.status ?? 'average', datetime: item.datetime ? item.datetime.slice(0, 16) : '', comment: item.comment ?? '' });
+        setFeedbackModalActive(true);
+    };
+
+    const handleFeedbackChange = useCallback((key, value) => {
+        setFeedbackFormData((prev) => ({ ...prev, [key]: value }));
+    }, []);
+
+    const handleFeedbackSubmit = (e) => {
+        e.preventDefault();
+        if (!selectedFeedbackTeacher || !feedbackFormData.datetime) {
+            dispatch(onAddAlertOptions({ type: 'warning', status: true, msg: "Iltimos, barcha majburiy maydonlarni to'ldiring" }));
+            return;
+        }
+        const payload = {
+            user: Number(userId),
+            teacher: selectedFeedbackTeacher.id,
+            status: feedbackFormData.status,
+            comment: feedbackFormData.comment,
+            datetime: feedbackFormData.datetime };
+
+        console.log(payload.datetime)
+        const method = editingFeedbackId ? 'PATCH' : 'POST';
+        const url = editingFeedbackId ? `${API_URL}Teachers/teacher-feedback/${editingFeedbackId}/` : `${API_URL}Teachers/teacher-feedback/`;
+        request(url, method, JSON.stringify(payload), headers())
+            .then(() => {
+                dispatch(onAddAlertOptions({ type: 'success', status: true, msg: editingFeedbackId ? 'Muvaffaqiyatli yangilandi' : 'Muvaffaqiyatli saqlandi' }));
+                if (expandedFeedbackTeacherId === selectedFeedbackTeacher.id) fetchFeedbacks(selectedFeedbackTeacher.id);
+                setFeedbackModalActive(false);
+                resetFeedbackForm();
+            })
+            .catch(() => dispatch(onAddAlertOptions({ type: 'error', status: true, msg: 'Xatolik yuz berdi' })));
+    };
+
+    const handleFeedbackDeleteConfirm = () => {
+        request(`${API_URL}Teachers/teacher-feedback/${deleteFeedbackItemId}/`, 'DELETE', null, headers())
+            .then(() => {
+                dispatch(onAddAlertOptions({ type: 'success', status: true, msg: "Muvaffaqiyatli o'chirildi" }));
+                setFeedbackDeleteModalActive(false);
+                fetchFeedbacks(deleteFeedbackTeacherId);
+            })
+            .catch(() => dispatch(onAddAlertOptions({ type: 'error', status: true, msg: 'Xatolik yuz berdi' })));
+    };
+
+    // ── Score-based accordion cards ────────────────────────────────────────────
+    const renderTeacherTable = ({ expandedId, onTeacherClick, onAddClick, onEditClick, onDeleteClick, items, emptyLabel, addBtnLabel }) => (
         <Table>
             <thead>
                 <tr>
@@ -280,46 +424,25 @@ export const ContributionsPage = () => {
                 {teachersList?.map((teacher, index) => (
                     <React.Fragment key={teacher.id}>
                         <tr
-                            className={classNames(cls.teacherRow, {
-                                [cls.expanded]: expandedId === teacher.id,
-                            })}
+                            className={classNames(cls.teacherRow, { [cls.expanded]: expandedId === teacher.id })}
                             onClick={() => onTeacherClick(teacher)}
                         >
-                            <td>
-                                <span className={cls.index}>{index + 1}</span>
-                            </td>
+                            <td><span className={cls.index}>{index + 1}</span></td>
                             <td>
                                 <div className={cls.teacherInfo}>
-                                    <div className={cls.teacherAvatar}>
-                                        {teacher.name?.charAt(0)}
-                                        {teacher.surname?.charAt(0)}
-                                    </div>
-                                    <span>
-                                        {teacher.name} {teacher.surname}
-                                    </span>
+                                    <div className={cls.teacherAvatar}>{teacher.name?.charAt(0)}{teacher.surname?.charAt(0)}</div>
+                                    <span>{teacher.name} {teacher.surname}</span>
                                 </div>
                             </td>
-                            <td>
-                                <span className={cls.subjectBadge}>
-                                    {teacher.subject?.[0]?.name ?? 'Fan biriktirilmagan'}
-                                </span>
-                            </td>
+                            <td><span className={cls.subjectBadge}>{teacher.subject?.[0]?.name ?? 'Fan biriktirilmagan'}</span></td>
                             <td>{teacher.phone}</td>
                             <td>
                                 <div className={cls.rowActions}>
-                                    <button
-                                        className={cls.addBtn}
-                                        onClick={(e) => onAddClick(e, teacher)}
-                                        title="Baho qo'shish"
-                                    >
+                                    <button className={cls.addBtn} onClick={(e) => onAddClick(e, teacher)} title="Baho qo'shish">
                                         <i style={{ color: 'white' }} className="fas fa-plus" />
                                         Baho qo'shish
                                     </button>
-                                    <span
-                                        className={classNames(cls.chevron, {
-                                            [cls.chevronOpen]: expandedId === teacher.id,
-                                        })}
-                                    >
+                                    <span className={classNames(cls.chevron, { [cls.chevronOpen]: expandedId === teacher.id })}>
                                         <i className="fas fa-chevron-down" />
                                     </span>
                                 </div>
@@ -331,60 +454,30 @@ export const ContributionsPage = () => {
                                 <td colSpan="5">
                                     <div className={cls.accordion}>
                                         <div className={cls.accordion__header}>
-                                            <h3>
-                                                <i className="fas fa-history" />
-                                                Baho tarixi
-                                            </h3>
-                                            <button
-                                                className={cls.addScoreBtn}
-                                                onClick={(e) => onAddClick(e, teacher)}
-                                            >
-                                                <i className="fas fa-plus" />
-                                                Yangi baho
+                                            <h3><i className="fas fa-history" />Baho tarixi</h3>
+                                            <button className={cls.addScoreBtn} onClick={(e) => onAddClick(e, teacher)}>
+                                                <i className="fas fa-plus" />Yangi baho
                                             </button>
                                         </div>
-
                                         {items?.length > 0 ? (
                                             <div className={cls.accordion__grid}>
                                                 {items.map((item) => (
                                                     <div key={item.id} className={cls.scoreCard}>
                                                         <div className={cls.scoreCard__top}>
-                                                            <div
-                                                                className={classNames(
-                                                                    cls.scoreBadge,
-                                                                    cls[getScoreColor(item.score)]
-                                                                )}
-                                                            >
-                                                                <i className="fas fa-star" />
-                                                                {item.score}
+                                                            <div className={classNames(cls.scoreBadge, cls[getScoreColor(item.score)])}>
+                                                                <i className="fas fa-star" />{item.score}
                                                             </div>
                                                             <span className={cls.scoreDate}>
-                                                                <i className="fas fa-calendar-alt" />
-                                                                {item.datetime?.slice(0, 10)}
+                                                                <i className="fas fa-calendar-alt" />{item.datetime?.slice(0, 10)}
                                                             </span>
                                                         </div>
-
-                                                        {item.text && (
-                                                            <p className={cls.scoreText}>{item.text}</p>
-                                                        )}
-
+                                                        {item.text && <p className={cls.scoreText}>{item.text}</p>}
                                                         <div className={cls.scoreCard__actions}>
-                                                            <button
-                                                                className={cls.editBtn}
-                                                                onClick={(e) => onEditClick(e, item, teacher)}
-                                                            >
-                                                                <i className="fas fa-edit" />
-                                                                Tahrirlash
+                                                            <button className={cls.editBtn} onClick={(e) => onEditClick(e, item, teacher)}>
+                                                                <i className="fas fa-edit" />Tahrirlash
                                                             </button>
-                                                            <button
-                                                                className={cls.deleteBtn}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    onDeleteClick(item.id, teacher.id);
-                                                                }}
-                                                            >
-                                                                <i className="fas fa-trash" />
-                                                                O'chirish
+                                                            <button className={cls.deleteBtn} onClick={(e) => { e.stopPropagation(); onDeleteClick(item.id, teacher.id); }}>
+                                                                <i className="fas fa-trash" />O'chirish
                                                             </button>
                                                         </div>
                                                     </div>
@@ -394,9 +487,7 @@ export const ContributionsPage = () => {
                                             <div className={cls.emptyState}>
                                                 <i className="fas fa-inbox" />
                                                 <p>{emptyLabel}</p>
-                                                <button onClick={(e) => onAddClick(e, teacher)}>
-                                                    {addBtnLabel}
-                                                </button>
+                                                <button onClick={(e) => onAddClick(e, teacher)}>{addBtnLabel}</button>
                                             </div>
                                         )}
                                     </div>
@@ -407,18 +498,157 @@ export const ContributionsPage = () => {
                 ))}
 
                 {(!teachersList || teachersList.length === 0) && (
-                    <tr>
-                        <td colSpan="5">
-                            <div className={cls.emptyState}>
-                                <i className="fas fa-search" />
-                                <p>O'qituvchilar topilmadi</p>
-                            </div>
-                        </td>
-                    </tr>
+                    <tr><td colSpan="5">
+                        <div className={cls.emptyState}><i className="fas fa-search" /><p>O'qituvchilar topilmadi</p></div>
+                    </td></tr>
                 )}
             </tbody>
         </Table>
     );
+
+    // ── Status-based accordion cards (conduct & feedback) ─────────────────────
+    const renderStatusTable = ({ expandedId, onTeacherClick, onAddClick, onEditClick, onDeleteClick, items, emptyLabel, addBtnLabel, addBtnIcon }) => (
+        <Table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>F.I.O</th>
+                    <th>Fan</th>
+                    <th>Telefon</th>
+                    <th>Amal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {teachersList?.map((teacher, index) => (
+                    <React.Fragment key={teacher.id}>
+                        <tr
+                            className={classNames(cls.teacherRow, { [cls.expanded]: expandedId === teacher.id })}
+                            onClick={() => onTeacherClick(teacher)}
+                        >
+                            <td><span className={cls.index}>{index + 1}</span></td>
+                            <td>
+                                <div className={cls.teacherInfo}>
+                                    <div className={cls.teacherAvatar}>{teacher.name?.charAt(0)}{teacher.surname?.charAt(0)}</div>
+                                    <span>{teacher.name} {teacher.surname}</span>
+                                </div>
+                            </td>
+                            <td><span className={cls.subjectBadge}>{teacher.subject?.[0]?.name ?? 'Fan biriktirilmagan'}</span></td>
+                            <td>{teacher.phone}</td>
+                            <td>
+                                <div className={cls.rowActions}>
+                                    <button className={cls.addBtn} onClick={(e) => onAddClick(e, teacher)} title="Qo'shish">
+                                        <i style={{ color: 'white' }} className={`fas fa-${addBtnIcon ?? 'plus'}`} />
+                                        Qo'shish
+                                    </button>
+                                    <span className={classNames(cls.chevron, { [cls.chevronOpen]: expandedId === teacher.id })}>
+                                        <i className="fas fa-chevron-down" />
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+
+                        {expandedId === teacher.id && (
+                            <tr className={cls.accordionRow}>
+                                <td colSpan="5">
+                                    <div className={cls.accordion}>
+                                        <div className={cls.accordion__header}>
+                                            <h3><i className="fas fa-history" />Yozuvlar tarixi</h3>
+                                            <button className={cls.addScoreBtn} onClick={(e) => onAddClick(e, teacher)}>
+                                                <i className="fas fa-plus" />Yangi yozuv
+                                            </button>
+                                        </div>
+                                        {items?.length > 0 ? (
+                                            <div className={cls.accordion__grid}>
+                                                {items.map((item) => {
+                                                    const meta = getStatusMeta(item.status);
+                                                    return (
+                                                        <div key={item.id} className={cls.scoreCard}>
+                                                            <div className={cls.scoreCard__top}>
+                                                                <span
+                                                                    className={cls.statusBadge}
+                                                                    style={{ background: meta.bg, color: meta.color }}
+                                                                >
+                                                                    <i className={meta.icon} />{meta.label}
+                                                                </span>
+                                                                <span className={cls.scoreDate}>
+                                                                    <i className="fas fa-calendar-alt" />{item.datetime?.slice(0, 10)}
+                                                                </span>
+                                                            </div>
+                                                            {item.comment && <p className={cls.scoreText}>{item.comment}</p>}
+                                                            <div className={cls.scoreCard__actions}>
+                                                                <button className={cls.editBtn} onClick={(e) => onEditClick(e, item, teacher)}>
+                                                                    <i className="fas fa-edit" />Tahrirlash
+                                                                </button>
+                                                                <button className={cls.deleteBtn} onClick={(e) => { e.stopPropagation(); onDeleteClick(item.id, teacher.id); }}>
+                                                                    <i className="fas fa-trash" />O'chirish
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        ) : (
+                                            <div className={cls.emptyState}>
+                                                <i className="fas fa-inbox" />
+                                                <p>{emptyLabel}</p>
+                                                <button onClick={(e) => onAddClick(e, teacher)}>{addBtnLabel}</button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
+                    </React.Fragment>
+                ))}
+
+                {(!teachersList || teachersList.length === 0) && (
+                    <tr><td colSpan="5">
+                        <div className={cls.emptyState}><i className="fas fa-search" /><p>O'qituvchilar topilmadi</p></div>
+                    </td></tr>
+                )}
+            </tbody>
+        </Table>
+    );
+
+    // ── Status radio/select component ──────────────────────────────────────────
+    const StatusRadio = ({ value, onChange }) => (
+        <div className={cls.statusRadioGroup}>
+            {STATUS_OPTIONS.map((opt) => (
+                <label
+                    key={opt.value}
+                    className={classNames(cls.statusRadioLabel, { [cls.statusRadioChecked]: value === opt.value })}
+                    style={value === opt.value ? { borderColor: opt.color, background: opt.bg } : {}}
+                >
+                    <input
+                        type="radio"
+                        name="status"
+                        value={opt.value}
+                        checked={value === opt.value}
+                        onChange={() => onChange(opt.value)}
+                        className={cls.statusRadioInput}
+                    />
+                    <i className={opt.icon} style={{ color: opt.color }} />
+                    <span style={value === opt.value ? { color: opt.color, fontWeight: 700 } : {}}>{opt.label}</span>
+                </label>
+            ))}
+        </div>
+    );
+
+    const tabConfig = [
+        { key: 'contributions', label: 'Hissa', icon: 'fas fa-star' },
+        { key: 'professionalism', label: 'Professionallik', icon: 'fas fa-award' },
+        { key: 'conduct', label: 'Xulq', icon: 'fas fa-clipboard-check' },
+        { key: 'feedback', label: 'Fikr-mulohaza', icon: 'fas fa-comments' },
+    ];
+
+    const headerTitles = {
+        contributions: { title: "O'qituvchilarni baholash", subtitle: "Direktorning o'qituvchilarga baho berish tizimi", icon: 'fas fa-star' },
+        professionalism: { title: 'Professionallik baholash', subtitle: "O'qituvchilarning professionallik darajasini baholash", icon: 'fas fa-award' },
+        conduct: { title: "Xulq-atvor nazorati", subtitle: "O'qituvchi xulq-atvorini kuzatish va baholash", icon: 'fas fa-clipboard-check' },
+        feedback: { title: "Fikr-mulohazalar", subtitle: "O'qituvchilar haqida fikr va mulohazalar", icon: 'fas fa-comments' },
+    };
+
+    const current = headerTitles[activeTab];
 
     return (
         <div className={cls.page}>
@@ -426,43 +656,26 @@ export const ContributionsPage = () => {
             <div className={cls.page__header}>
                 <div className={cls.page__headerLeft}>
                     <div className={cls.page__headerIcon}>
-                        <i className={activeTab === 'contributions' ? 'fas fa-star' : 'fas fa-award'} />
+                        <i className={current.icon} />
                     </div>
                     <div>
-                        <h1>
-                            {activeTab === 'contributions'
-                                ? "O'qituvchilarni baholash"
-                                : "Professionallik baholash"}
-                        </h1>
-                        <p>
-                            {activeTab === 'contributions'
-                                ? "Direktorning o'qituvchilarga baho berish tizimi"
-                                : "O'qituvchilarning professionallik darajasini baholash"}
-                        </p>
+                        <h1>{current.title}</h1>
+                        <p>{current.subtitle}</p>
                     </div>
                 </div>
 
                 <div className={cls.page__headerRight}>
-
                     <div className={cls.tabSwitch}>
-                        <button
-                            className={classNames(cls.tabBtn, {
-                                [cls.tabBtnActive]: activeTab === 'contributions',
-                            })}
-                            onClick={() => setActiveTab('contributions')}
-                        >
-                            <i className="fas fa-star" />
-                            Hissa
-                        </button>
-                        <button
-                            className={classNames(cls.tabBtn, {
-                                [cls.tabBtnActive]: activeTab === 'professionalism',
-                            })}
-                            onClick={() => setActiveTab('professionalism')}
-                        >
-                            <i className="fas fa-award" />
-                            Professionallik
-                        </button>
+                        {tabConfig.map((tab) => (
+                            <button
+                                key={tab.key}
+                                className={classNames(cls.tabBtn, { [cls.tabBtnActive]: activeTab === tab.key })}
+                                onClick={() => setActiveTab(tab.key)}
+                            >
+                                <i className={tab.icon} />
+                                {tab.label}
+                            </button>
+                        ))}
                     </div>
 
                     <div className={cls.page__headerStats}>
@@ -475,168 +688,164 @@ export const ContributionsPage = () => {
             </div>
 
             <div className={cls.page__content}>
-                {activeTab === 'contributions'
-                    ? renderTeacherTable({
-                          expandedId: expandedTeacherId,
-                          onTeacherClick: handleTeacherClick,
-                          onAddClick: handleAddClick,
-                          onEditClick: handleEditClick,
-                          onDeleteClick: (itemId, teacherId) => {
-                              setDeleteItemId(itemId);
-                              setDeleteTeacherId(teacherId);
-                              setDeleteModalActive(true);
-                          },
-                          items: contributions,
-                          emptyLabel: "Hozircha baholar yo'q",
-                          addBtnLabel: "Birinchi bahoni qo'shing",
-                      })
-                    : renderTeacherTable({
-                          expandedId: expandedProfTeacherId,
-                          onTeacherClick: handleProfTeacherClick,
-                          onAddClick: handleProfAddClick,
-                          onEditClick: handleProfEditClick,
-                          onDeleteClick: (itemId, teacherId) => {
-                              setDeleteProfItemId(itemId);
-                              setDeleteProfTeacherId(teacherId);
-                              setProfDeleteModalActive(true);
-                          },
-                          items: professionalisms,
-                          emptyLabel: "Hozircha professionallik baholari yo'q",
-                          addBtnLabel: "Birinchi bahoni qo'shing",
-                      })}
+                {activeTab === 'contributions' &&
+                    renderTeacherTable({
+                        expandedId: expandedTeacherId,
+                        onTeacherClick: handleTeacherClick,
+                        onAddClick: handleAddClick,
+                        onEditClick: handleEditClick,
+                        onDeleteClick: (itemId, teacherId) => { setDeleteItemId(itemId); setDeleteTeacherId(teacherId); setDeleteModalActive(true); },
+                        items: contributions,
+                        emptyLabel: "Hozircha baholar yo'q",
+                        addBtnLabel: "Birinchi bahoni qo'shing",
+                    })}
+
+                {activeTab === 'professionalism' &&
+                    renderTeacherTable({
+                        expandedId: expandedProfTeacherId,
+                        onTeacherClick: handleProfTeacherClick,
+                        onAddClick: handleProfAddClick,
+                        onEditClick: handleProfEditClick,
+                        onDeleteClick: (itemId, teacherId) => { setDeleteProfItemId(itemId); setDeleteProfTeacherId(teacherId); setProfDeleteModalActive(true); },
+                        items: professionalisms,
+                        emptyLabel: "Hozircha professionallik baholari yo'q",
+                        addBtnLabel: "Birinchi bahoni qo'shing",
+                    })}
+
+                {activeTab === 'conduct' &&
+                    renderStatusTable({
+                        expandedId: expandedConductTeacherId,
+                        onTeacherClick: handleConductTeacherClick,
+                        onAddClick: handleConductAddClick,
+                        onEditClick: handleConductEditClick,
+                        onDeleteClick: (itemId, teacherId) => { setDeleteConductItemId(itemId); setDeleteConductTeacherId(teacherId); setConductDeleteModalActive(true); },
+                        items: conducts,
+                        emptyLabel: "Hozircha xulq yozuvlari yo'q",
+                        addBtnLabel: "Birinchi yozuvni qo'shing",
+                        addBtnIcon: 'clipboard-check',
+                    })}
+
+                {activeTab === 'feedback' &&
+                    renderStatusTable({
+                        expandedId: expandedFeedbackTeacherId,
+                        onTeacherClick: handleFeedbackTeacherClick,
+                        onAddClick: handleFeedbackAddClick,
+                        onEditClick: handleFeedbackEditClick,
+                        onDeleteClick: (itemId, teacherId) => { setDeleteFeedbackItemId(itemId); setDeleteFeedbackTeacherId(teacherId); setFeedbackDeleteModalActive(true); },
+                        items: feedbacks,
+                        emptyLabel: "Hozircha fikr-mulohazalar yo'q",
+                        addBtnLabel: "Birinchi fikrni qo'shing",
+                        addBtnIcon: 'comments',
+                    })}
             </div>
 
+            {/* ── Contributions Modal ── */}
             <Modal active={activeModal} setActive={setActiveModal} type="simple">
                 <div className={cls.modal}>
                     <div className={cls.modal__header}>
-                        <div className={cls.modal__icon}>
-                            <i className="fas fa-star" />
-                        </div>
+                        <div className={cls.modal__icon}><i className="fas fa-star" /></div>
                         <h3>{editingId ? 'Bahoni tahrirlash' : "Baho qo'shish"}</h3>
-                        <p className={cls.modal__teacher}>
-                            {selectedTeacher?.name} {selectedTeacher?.surname}
-                        </p>
+                        <p className={cls.modal__teacher}>{selectedTeacher?.name} {selectedTeacher?.surname}</p>
                     </div>
-
                     <div className={cls.modal__form}>
                         <div className={cls.modal__field}>
-                            <label>
-                                <i className="fas fa-star" /> Ball (0 – 100)
-                            </label>
-                            <Input
-                                type="number"
-                                placeholder="Masalan: 85"
-                                value={formData.score}
-                                extraClassName={cls.select}
-                                onChange={(e) => handleChange('score', e.target.value)}
-                            />
+                            <label><i className="fas fa-star" /> Ball (0 – 100)</label>
+                            <Input type="number" placeholder="Masalan: 85" value={formData.score} extraClassName={cls.select} onChange={(e) => handleChange('score', e.target.value)} />
                         </div>
-
-                        <Textarea
-                            value={formData.text}
-                            extraClassName={cls.select}
-                            onChange={(val) => handleChange('text', val)}
-                            placeholder="Izohlang..."
-                        />
-
+                        <Textarea value={formData.text} extraClassName={cls.select} onChange={(val) => handleChange('text', val)} placeholder="Izohlang..." />
                         <div className={cls.modal__field}>
-                            <label>
-                                <i className="fas fa-calendar-alt" /> Sana va vaqt
-                            </label>
-                            <Input
-                                extraClassName={cls.select}
-                                type="datetime-local"
-                                value={formData.datetime}
-                                onChange={(e) => handleChange('datetime', e.target.value)}
-                            />
+                            <label><i className="fas fa-calendar-alt" /> Sana va vaqt</label>
+                            <Input extraClassName={cls.select} type="datetime-local" value={formData.datetime} onChange={(e) => handleChange('datetime', e.target.value)} />
                         </div>
-
                         <div className={cls.modal__actions}>
-                            <Button type="danger" onClick={() => setActiveModal(false)}>
-                                Bekor qilish
-                            </Button>
-                            <Button type="submit" onClick={handleSubmit}>
-                                {editingId ? 'Yangilash' : 'Saqlash'}
-                            </Button>
+                            <Button type="danger" onClick={() => setActiveModal(false)}>Bekor qilish</Button>
+                            <Button type="submit" onClick={handleSubmit}>{editingId ? 'Yangilash' : 'Saqlash'}</Button>
                         </div>
                     </div>
                 </div>
             </Modal>
+            <ConfirmModal type="danger" title="Bahoni o'chirish" text="Ushbu bahoni o'chirishni tasdiqlaysizmi?" active={deleteModalActive} setActive={setDeleteModalActive} onClick={handleDeleteConfirm} />
 
-            <ConfirmModal
-                type="danger"
-                title="Bahoni o'chirish"
-                text="Ushbu bahoni o'chirishni tasdiqlaysizmi?"
-                active={deleteModalActive}
-                setActive={setDeleteModalActive}
-                onClick={handleDeleteConfirm}
-            />
-
+            {/* ── Professionalism Modal ── */}
             <Modal active={profModalActive} setActive={setProfModalActive} type="simple">
                 <div className={cls.modal}>
                     <div className={cls.modal__header}>
-                        <div className={classNames(cls.modal__icon, cls.modal__iconProf)}>
-                            <i className="fas fa-award" />
-                        </div>
+                        <div className={classNames(cls.modal__icon, cls.modal__iconProf)}><i className="fas fa-award" /></div>
                         <h3>{editingProfId ? 'Bahoni tahrirlash' : "Professionallik baho qo'shish"}</h3>
-                        <p className={cls.modal__teacher}>
-                            {selectedProfTeacher?.name} {selectedProfTeacher?.surname}
-                        </p>
+                        <p className={cls.modal__teacher}>{selectedProfTeacher?.name} {selectedProfTeacher?.surname}</p>
                     </div>
-
                     <div className={cls.modal__form}>
                         <div className={cls.modal__field}>
-                            <label>
-                                <i className="fas fa-award" /> Ball (0 – 100)
-                            </label>
-                            <Input
-                                type="number"
-                                placeholder="Masalan: 85"
-                                value={profFormData.score}
-                                extraClassName={cls.select}
-                                onChange={(e) => handleProfChange('score', e.target.value)}
-                            />
+                            <label><i className="fas fa-award" /> Ball (0 – 100)</label>
+                            <Input type="number" placeholder="Masalan: 85" value={profFormData.score} extraClassName={cls.select} onChange={(e) => handleProfChange('score', e.target.value)} />
                         </div>
-
-                        <Textarea
-                            value={profFormData.text}
-                            extraClassName={cls.select}
-                            onChange={(val) => handleProfChange('text', val)}
-                            placeholder="Izohlang..."
-                        />
-
+                        <Textarea value={profFormData.text} extraClassName={cls.select} onChange={(val) => handleProfChange('text', val)} placeholder="Izohlang..." />
                         <div className={cls.modal__field}>
-                            <label>
-                                <i className="fas fa-calendar-alt" /> Sana va vaqt
-                            </label>
-                            <Input
-                                extraClassName={cls.select}
-                                type="datetime-local"
-                                value={profFormData.datetime}
-                                onChange={(e) => handleProfChange('datetime', e.target.value)}
-                            />
+                            <label><i className="fas fa-calendar-alt" /> Sana va vaqt</label>
+                            <Input extraClassName={cls.select} type="datetime-local" value={profFormData.datetime} onChange={(e) => handleProfChange('datetime', e.target.value)} />
                         </div>
-
                         <div className={cls.modal__actions}>
-                            <Button type="danger" onClick={() => setProfModalActive(false)}>
-                                Bekor qilish
-                            </Button>
-                            <Button type="submit" onClick={handleProfSubmit}>
-                                {editingProfId ? 'Yangilash' : 'Saqlash'}
-                            </Button>
+                            <Button type="danger" onClick={() => setProfModalActive(false)}>Bekor qilish</Button>
+                            <Button type="submit" onClick={handleProfSubmit}>{editingProfId ? 'Yangilash' : 'Saqlash'}</Button>
                         </div>
                     </div>
                 </div>
             </Modal>
+            <ConfirmModal type="danger" title="Bahoni o'chirish" text="Ushbu professionallik bahosini o'chirishni tasdiqlaysizmi?" active={profDeleteModalActive} setActive={setProfDeleteModalActive} onClick={handleProfDeleteConfirm} />
 
-            <ConfirmModal
-                type="danger"
-                title="Bahoni o'chirish"
-                text="Ushbu professionallik bahosini o'chirishni tasdiqlaysizmi?"
-                active={profDeleteModalActive}
-                setActive={setProfDeleteModalActive}
-                onClick={handleProfDeleteConfirm}
-            />
+            {/* ── Conduct Modal ── */}
+            <Modal active={conductModalActive} setActive={setConductModalActive} type="simple">
+                <div className={cls.modal}>
+                    <div className={cls.modal__header}>
+                        <div className={classNames(cls.modal__icon, cls.modal__iconConduct)}><i className="fas fa-clipboard-check" /></div>
+                        <h3>{editingConductId ? 'Xulqni tahrirlash' : "Xulq yozuvi qo'shish"}</h3>
+                        <p className={cls.modal__teacher}>{selectedConductTeacher?.name} {selectedConductTeacher?.surname}</p>
+                    </div>
+                    <div className={cls.modal__form}>
+                        <div className={cls.modal__field}>
+                            <label><i className="fas fa-signal" /> Holat</label>
+                            <StatusRadio value={conductFormData.status} onChange={(v) => handleConductChange('status', v)} />
+                        </div>
+                        <div className={cls.modal__field}>
+                            <label><i className="fas fa-calendar-alt" /> Sana va vaqt</label>
+                            <Input extraClassName={cls.select} type="datetime-local" value={conductFormData.datetime} onChange={(e) => handleConductChange('datetime', e.target.value)} />
+                        </div>
+                        <Textarea value={conductFormData.comment} extraClassName={cls.select} onChange={(val) => handleConductChange('comment', val)} placeholder="Izoh..." />
+                        <div className={cls.modal__actions}>
+                            <Button type="danger" onClick={() => setConductModalActive(false)}>Bekor qilish</Button>
+                            <Button type="submit" onClick={handleConductSubmit}>{editingConductId ? 'Yangilash' : 'Saqlash'}</Button>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+            <ConfirmModal type="danger" title="Xulq yozuvini o'chirish" text="Ushbu xulq yozuvini o'chirishni tasdiqlaysizmi?" active={conductDeleteModalActive} setActive={setConductDeleteModalActive} onClick={handleConductDeleteConfirm} />
+
+            {/* ── Feedback Modal ── */}
+            <Modal active={feedbackModalActive} setActive={setFeedbackModalActive} type="simple">
+                <div className={cls.modal}>
+                    <div className={cls.modal__header}>
+                        <div className={classNames(cls.modal__icon, cls.modal__iconFeedback)}><i className="fas fa-comments" /></div>
+                        <h3>{editingFeedbackId ? 'Fikrni tahrirlash' : "Fikr-mulohaza qo'shish"}</h3>
+                        <p className={cls.modal__teacher}>{selectedFeedbackTeacher?.name} {selectedFeedbackTeacher?.surname}</p>
+                    </div>
+                    <div className={cls.modal__form}>
+                        <div className={cls.modal__field}>
+                            <label><i className="fas fa-signal" /> Holat</label>
+                            <StatusRadio value={feedbackFormData.status} onChange={(v) => handleFeedbackChange('status', v)} />
+                        </div>
+                        <div className={cls.modal__field}>
+                            <label><i className="fas fa-calendar-alt" /> Sana va vaqt</label>
+                            <Input extraClassName={cls.select} type="datetime-local" value={feedbackFormData.datetime} onChange={(e) => handleFeedbackChange('datetime', e.target.value)} />
+                        </div>
+                        <Textarea value={feedbackFormData.comment} extraClassName={cls.select} onChange={(val) => handleFeedbackChange('comment', val)} placeholder="Fikringizni yozing..." />
+                        <div className={cls.modal__actions}>
+                            <Button type="danger" onClick={() => setFeedbackModalActive(false)}>Bekor qilish</Button>
+                            <Button type="submit" onClick={handleFeedbackSubmit}>{editingFeedbackId ? 'Yangilash' : 'Saqlash'}</Button>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+            <ConfirmModal type="danger" title="Fikrni o'chirish" text="Ushbu fikr-mulohazani o'chirishni tasdiqlaysizmi?" active={feedbackDeleteModalActive} setActive={setFeedbackDeleteModalActive} onClick={handleFeedbackDeleteConfirm} />
         </div>
     );
 };

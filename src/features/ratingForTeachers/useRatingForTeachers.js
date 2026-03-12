@@ -11,6 +11,8 @@ export const CATEGORIES = [
     { value: 'contribution', label: 'Hissa (Contribution)' },
     { value: 'professionalism', label: 'Professionallik' },
     { value: 'pd', label: "Ma'ruzalar" },
+    {value: "conduct", label: "Xulq-atvor (Conduct)"},
+    {value: "responsiveness", label: "Fikr-mulohazalar (Feedback)"},
 ];
 
 export const useRatingForTeachers = () => {
