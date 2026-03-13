@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import styles from "./HomeMessages.module.sass";
 import {API_URL, headers, useHttp} from "shared/api/base.js";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
 
 
@@ -28,11 +29,13 @@ export const HomeMessages = () => {
     const [messages, setMessages] = useState([]);
     const [selected, setSelected] = useState(null);
     const {request}=  useHttp()
+    const [loading , setLoading] = useState(true)
 
     useEffect(() => {
         request(`${API_URL}Ui/messages/` , "GET" , null , headers())
             .then(res => {
                 setMessages(res)
+                setLoading(false)
             })
     }, []);
 
@@ -179,11 +182,12 @@ export const HomeMessages = () => {
                     </tbody>
                 </table>
 
-                {filtered.length === 0 && (
+                {!loading && filtered.length === 0 && (
                     <div className={styles.empty}>
                         Hech qanday xabar topilmadi
                     </div>
                 )}
+                {loading && <DefaultPageLoader/>}
             </div>
 
             {/* Modal */}

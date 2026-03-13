@@ -4,9 +4,587 @@
     display: flex
     align-items: center
     justify-content: space-between
+    height: 40px
     &_left
       display: flex
       align-items: center
       gap: 2rem
       & > div
         font-size: 1.4rem
+  &__body
+    padding: 2rem 0
+    display: flex
+    gap: 2rem
+    flex-wrap: wrap
+    &_box
+      border-radius: 18px
+      overflow: hidden
+      width: 260px
+      background: #fff
+      box-shadow: 0 4px 20px rgba(0,0,0,.08)
+      border: 1.5px solid #e2e8f0
+      cursor: pointer
+      transition: transform .18s, box-shadow .18s
+      &:hover
+        transform: translateY(-4px)
+        box-shadow: 0 10px 32px rgba(0,0,0,.13)
+      &_banner
+        height: 90px
+        display: flex
+        align-items: center
+        justify-content: space-between
+        padding: 0 2rem
+        &_emoji
+          width: 50px
+          height: 50px
+          filter: drop-shadow(0 2px 6px rgba(0,0,0,.18))
+          & > img
+            width: 100%
+            height: 100%
+            object-fit: cover
+            border-radius: 5px
+        &_rank
+          font-size: 2.2rem
+          font-weight: 800
+          color: rgba(255,255,255,.75)
+          font-family: 'Unbounded', sans-serif
+      &_content
+        padding: 1.6rem 1.8rem 1.8rem
+        display: flex
+        flex-direction: column
+        gap: 1rem
+      &_name
+        font-size: 1.8rem
+        font-weight: 700
+        color: #1e293b
+      &_desc2
+        font-size: 1.2rem
+        color: #64748b
+        line-height: 1.5
+      &_stars
+        display: flex
+        align-items: center
+        gap: .3rem
+        font-size: 1.4rem
+        &_val
+          font-size: 1.15rem
+          font-weight: 700
+          color: #64748b
+          margin-left: .4rem
+      &_chips
+        display: flex
+        gap: .6rem
+        flex-wrap: wrap
+      &_chip
+        display: flex
+        align-items: center
+        gap: .3rem
+        font-size: 1.1rem
+        font-weight: 600
+        padding: .35rem .8rem
+        border-radius: 20px
+      &_footer
+        display: flex
+        flex-direction: column
+        gap: .6rem
+        margin-top: .4rem
+      &_ball
+        display: flex
+        align-items: baseline
+        gap: .5rem
+        & > span:first-child
+          font-size: 2rem
+          font-weight: 800
+          font-family: 'Unbounded', sans-serif
+        & > span:last-child
+          font-size: 1.1rem
+          color: #94a3b8
+      &_progress
+        width: 100%
+        height: 6px
+        background: #e2e8f0
+        border-radius: 10px
+        overflow: hidden
+        & > div
+          height: 6px
+          border-radius: 10px
+          transition: width .4s
+  &__colorPicker
+    display: flex
+    align-items: center
+    gap: 2rem
+  &__assigment
+    display: flex
+    flex-wrap: wrap
+    gap: 2rem
+    padding: 2rem 0
+    &_box
+      box-shadow: 0 1px 8px rgba(0,0,0,.05)
+      border: 2px solid #e2e8f0
+      width: 300px
+      padding: 2rem
+      border-radius: 10px
+      &_title
+        display: flex
+        justify-content: space-between
+        align-items: center
+        &  >span:nth-child(1)
+          font-size: 1.2rem
+        & > span:nth-child(2)
+          color: grey
+          font-size: 1.4rem
+      &_parties
+        display: flex
+        gap: .5rem
+        flex-wrap: wrap
+        padding: 10px 0 0 0
+        & > div
+          //box-shadow: 0 1px 8px rgba(0,0,0,.05)
+          border: 2px solid #e2e8f0
+          padding: 1rem
+          border-radius: 5px
+      & > h3
+        margin: 10px 0 5px 0
+        color: #96989a
+      &_score
+        width: 100%
+        height: 5px
+        background-color: #e2e8f0
+        border-radius: 10px
+        & > div
+          background-color: red
+          height: 5px
+          border-radius: 10px
+  &__rating
+    padding: 2rem 0
+    display: flex
+    justify-content: space-between
+    &_students
+      width: 60%
+    &_party
+      display: flex
+      flex-direction: column
+      gap: .5rem
+      &_title
+        font-size: 1.6rem
+        font-weight: 600
+      &_list
+        display: flex
+        flex-direction: column
+        gap: 1rem
+        &_box
+          width: 400px
+          border-radius: 10px
+          height: 70px
+          box-shadow: 0 1px 8px rgba(0,0,0,.05)
+          border: 2px solid #e2e8f0
+          display: flex
+          gap: 2rem
+          padding: 2rem
+          align-items: center
+          justify-content: space-between
+          &_info
+            display: flex
+            gap: 1rem
+            align-items: center
+            &_img
+              width: 50px
+              height: 50px
+              border: 1px solid
+              border-radius: 50%
+            &_title
+              //align-self: flex-start
+              font-size: 1.6rem
+              font-weight: 600
+          &_order
+            font-weight: 600
+            font-size: 1.4rem
+          &_score
+            width: 60%
+            //background-color: red
+            height: 100%
+            &_ball
+              font-size: 1.3rem
+              font-weight: 600
+              text-align: end
+              margin-bottom: 4px
+            &_rating
+              width: 100%
+              height: 7px
+              background-color: #e2e8f0
+              border-radius: 5px
+              & > div
+                width: 50%
+                height: 7px
+                background-color: red
+                border-radius: 5px
+.input
+  width: 100%!important
+.ball
+  width: 20%!important
+
+// ─── Party Detail Modal ───────────────────────────────────────────
+.detailOverlay
+  position: fixed
+  inset: 0
+  background: rgba(15,23,42,.45)
+  backdrop-filter: blur(4px)
+  z-index: 1000
+  display: flex
+  align-items: center
+  justify-content: center
+  animation: fadeIn .18s ease
+
+@keyframes fadeIn
+  from
+    opacity: 0
+  to
+    opacity: 1
+
+.detailModal
+  background: #f8fafc
+  border-radius: 20px
+  width: min(96vw, 900px)
+  max-height: 90vh
+  overflow-y: auto
+  box-shadow: 0 24px 80px rgba(0,0,0,.22)
+  animation: slideUp .2s ease
+  scrollbar-width: thin
+  &_header
+    display: flex
+    align-items: flex-start
+    justify-content: space-between
+    gap: 2rem
+    padding: 2.4rem 2.8rem
+    position: relative
+    border-radius: 20px 20px 0 0
+    &_left
+      display: flex
+      align-items: center
+      gap: 2rem
+    &_avatar
+      font-size: 4.5rem
+      background: rgba(255,255,255,.25)
+      border-radius: 16px
+      width: 72px
+      height: 72px
+      display: flex
+      align-items: center
+      justify-content: center
+      flex-shrink: 0
+      box-shadow: 0 2px 12px rgba(0,0,0,.12)
+    &_name
+      font-size: 2rem
+      font-weight: 800
+      color: #fff
+      margin: 0 0 .3rem
+    &_desc
+      font-size: 1.25rem
+      color: rgba(255,255,255,.82)
+      margin: 0 0 .6rem
+    &_stars
+      display: flex
+      align-items: center
+      gap: .2rem
+      font-size: 1.6rem
+      color: #fde68a
+      & > span
+        font-size: 1.2rem
+        color: rgba(255,255,255,.9)
+        margin-left: .5rem
+        font-weight: 700
+    &_actions
+      display: flex
+      flex-direction: column
+      gap: .8rem
+      align-items: flex-end
+      flex-shrink: 0
+    &_btn
+      display: flex
+      align-items: center
+      gap: .6rem
+      padding: .75rem 1.4rem
+      border-radius: 10px
+      border: none
+      background: rgba(255,255,255,.95)
+      color: #1e293b
+      font-size: 1.25rem
+      font-weight: 700
+      cursor: pointer
+      white-space: nowrap
+      transition: opacity .15s
+      &:hover
+        opacity: .85
+    &_btn_outline
+      display: flex
+      align-items: center
+      gap: .6rem
+      padding: .75rem 1.4rem
+      border-radius: 10px
+      border: 1.5px solid rgba(255,255,255,.6)
+      background: transparent
+      color: #fff
+      font-size: 1.25rem
+      font-weight: 600
+      cursor: pointer
+      white-space: nowrap
+      transition: background .15s
+      &:nth-child(1)
+        margin-right: 1.8rem
+      &:hover
+        background: rgba(255,255,255,.15)
+  &_close
+    position: absolute
+    top: 1rem
+    right: 1rem
+    background: rgba(255,255,255,.2)
+    border: none
+    border-radius: 50%
+    width: 34px
+    height: 34px
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    color: #fff
+    transition: background .15s
+    &:hover
+      background: rgba(255,255,255,.35)
+  &_stats
+    display: flex
+    background: #fff
+    border-bottom: 1px solid #e2e8f0
+    & > div
+      flex: 1
+      border-right: 1px solid #e2e8f0
+      &:last-child
+        border-right: none
+  &_stat
+    display: flex
+    flex-direction: column
+    align-items: center
+    padding: 1.6rem 1rem
+    &_val
+      font-size: 1.9rem
+      font-weight: 800
+      font-family: 'Unbounded', sans-serif
+      color: #1e293b
+    &_label
+      font-size: 1rem
+      color: #94a3b8
+      text-transform: uppercase
+      letter-spacing: .5px
+      margin-top: .3rem
+      text-align: center
+  &_section
+    background: #fff
+    margin: 1.4rem 1.6rem
+    position: relative
+    border: 1.5px solid #e2e8f0
+    border-radius: 14px
+    &_title
+      display: flex
+      align-items: center
+      gap: .7rem
+      font-size: 1.45rem
+      font-weight: 700
+      color: #1e293b
+      padding: 1.4rem 1.8rem
+      border-bottom: 1px solid #e2e8f0
+      background: #f8fafc
+    &_header
+      display: flex
+      align-items: center
+      gap: 1rem
+      justify-content: space-between
+      border-bottom: 1px solid #e2e8f0
+      background: #f8fafc
+  &_task
+    display: flex
+    align-items: center
+    gap: 1.2rem
+    padding: 1.2rem 1.8rem
+    border-bottom: 1px solid #f1f5f9
+    &:last-child
+      border-bottom: none
+    &_badge
+      font-size: 1rem
+      font-weight: 700
+      padding: .3rem .7rem
+      border-radius: 6px
+      white-space: nowrap
+      letter-spacing: .4px
+    &_name
+      flex: 1
+      font-size: 1.3rem
+      font-weight: 600
+      color: #1e293b
+    &_date
+      font-size: 1.15rem
+      color: #64748b
+      white-space: nowrap
+    &_ball
+      font-size: 1.3rem
+      font-weight: 800
+      white-space: nowrap
+    &_bar
+      width: 80px
+      height: 5px
+      background: #e2e8f0
+      border-radius: 10px
+      overflow: hidden
+      flex-shrink: 0
+      & > div
+        height: 5px
+        border-radius: 10px
+    &_pct
+      font-size: 1.1rem
+      color: #64748b
+      width: 32px
+      text-align: right
+  &_search
+    display: flex
+    align-items: center
+    gap: .6rem
+    border: 1.5px solid #e2e8f0
+    border-radius: 8px
+    padding: .5rem 1rem
+    background: #fff
+    flex: 1
+    max-width: 220px
+    color: #94a3b8
+    & > input
+      border: none
+      outline: none
+      font-size: 1.25rem
+      width: 100%
+      color: #1e293b
+      background: transparent
+  &_addBtn
+    position: absolute
+    right: 25%
+    display: flex
+    align-items: center
+    gap: .5rem
+    padding: .6rem 1.4rem
+    border-radius: 8px
+    border: none
+    color: #fff
+    font-size: 1.2rem
+    font-weight: 700
+    cursor: pointer
+    white-space: nowrap
+    transition: opacity .15s
+    &:hover
+      opacity: .88
+  &_table
+    width: 100%
+    border-collapse: collapse
+    font-size: 1.25rem
+    & thead tr
+      background: #f0f4f8
+      border-bottom: 1.5px solid #e2e8f0
+    & th
+      padding: 1rem 1.2rem
+      text-align: left
+      font-size: 1.05rem
+      font-weight: 700
+      text-transform: uppercase
+      letter-spacing: .5px
+      color: #64748b
+      white-space: nowrap
+    & td
+      padding: 1rem 1.2rem
+      border-bottom: 1px solid #f1f5f9
+    & tbody tr:last-child td
+      border-bottom: none
+    & tbody tr:hover
+      background: #f8fafc
+  &_member
+    display: flex
+    align-items: center
+    gap: .8rem
+    font-size: 1.3rem
+    font-weight: 600
+    color: #1e293b
+    &_av
+      width: 30px
+      height: 30px
+      border-radius: 50%
+      display: flex
+      align-items: center
+      justify-content: center
+      font-size: 1rem
+      font-weight: 700
+      flex-shrink: 0
+  &_ball_wrap
+    display: flex
+    align-items: center
+    gap: .8rem
+    & > span
+      font-size: 1.2rem
+      font-weight: 600
+      color: #1e293b
+      min-width: 28px
+  &_ball_bar
+    flex: 1
+    height: 6px
+    background: #e2e8f0
+    border-radius: 10px
+    overflow: hidden
+    min-width: 60px
+    & > div
+      height: 6px
+      border-radius: 10px
+  &_level
+    font-size: 1.15rem
+    font-weight: 700
+    color: #4f8ef7
+  &_status
+    font-size: 1.15rem
+    font-weight: 600
+  &_actions
+    display: flex
+    align-items: center
+    gap: .5rem
+  &_act_plus
+    padding: .3rem .7rem
+    border-radius: 6px
+    border: none
+    background: #dcfce7
+    color: #16a34a
+    font-size: 1.1rem
+    font-weight: 700
+    cursor: pointer
+    &:hover
+      background: #bbf7d0
+  &_act_minus
+    padding: .3rem .7rem
+    border-radius: 6px
+    border: none
+    background: #fee2e2
+    color: #dc2626
+    font-size: 1.1rem
+    font-weight: 700
+    cursor: pointer
+    &:hover
+      background: #fecaca
+  &_act_del
+    padding: .3rem .5rem
+    border-radius: 6px
+    border: none
+    background: #fef2f2
+    color: #ef4444
+    display: flex
+    align-items: center
+    cursor: pointer
+    &:hover
+      background: #fee2e2
+
+@keyframes slideUp
+  from
+    transform: translateY(30px)
+    opacity: 0
+  to
+    transform: translateY(0)
+    opacity: 1

@@ -70,6 +70,8 @@ const TimeTableTuronPageFilters = React.memo((props) => {
 
 
     const onChangeDate = (date) => {
+
+
         const currentDate = new Date(date);
         const currentDayOfWeek = currentDate.getDay();
 

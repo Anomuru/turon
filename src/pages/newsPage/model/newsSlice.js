@@ -24,7 +24,8 @@ const newsSlice = createSlice({
             state.data = [...state.data, action.payload]
         },
         onRemoveNews: (state, action) => {
-            state.data.filter(item => item.id !== action.payload)
+            console.log(action.payload)
+            state.data = state.data.filter(item => item.id !== action.payload)
         },
         onEditNews: (state, action) => {
             state.data = [...state.data.filter(item => item.id !== action.payload.id), action.payload.data]

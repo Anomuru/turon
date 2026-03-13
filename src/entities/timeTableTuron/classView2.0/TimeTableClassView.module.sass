@@ -1,11 +1,81 @@
 @import "app/styles/abstracts/variables"
 
 .container
-  //width: 100%
-  //height: 100%
+  display: flex
+  flex-direction: column
+  width: 100%
+  height: 100%
   background-color: #fafafa
-//overflow: hidden
-//position: relative
+  overflow: hidden
+  position: relative
+
+
+.topBar
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: 0.8rem 1.6rem
+  background-color: #fff
+  border-bottom: 1px solid #e5e5e5
+  flex-shrink: 0
+  gap: 1rem
+  z-index: 999
+
+.datePickerWrap
+  display: flex
+  align-items: center
+  gap: 0.8rem
+
+.dateLabel
+  font-size: 1.4rem
+  font-weight: 600
+  color: #374151
+  user-select: none
+
+.dateInput
+  font-size: 1.3rem
+  padding: 0.4rem 0.8rem
+  border: 1.5px solid #d1d5db
+  border-radius: 0.6rem
+  outline: none
+  color: #1f2937
+  background: #f9fafb
+  cursor: pointer
+  &:focus
+    border-color: #2563eb
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.15)
+
+.topBarActions
+  display: flex
+  align-items: center
+  gap: 1.2rem
+
+.savePngBtn
+  padding: 0.5rem 1.2rem
+  background-color: #2563eb
+  color: white
+  border: none
+  border-radius: 0.5rem
+  cursor: pointer
+  font-size: 1.3rem
+  font-weight: 600
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1)
+  white-space: nowrap
+  &:hover
+    background-color: #1d4ed8
+
+.closeBtn
+  font-size: 2.4rem
+  color: #374151
+  cursor: pointer
+  line-height: 1
+  &:hover
+    color: #ef4444
+
+.scaleWrapper
+  flex: 1
+  overflow: hidden
+  position: relative
 
 @import "app/styles/abstracts/variables"
 

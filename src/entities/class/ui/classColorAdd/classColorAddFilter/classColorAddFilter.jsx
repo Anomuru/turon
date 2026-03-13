@@ -20,7 +20,7 @@ export const ClassColorAddFilter = ({color, setEdit, setChangeName, changeName ,
     const renderTable = () => {
 
 
-        return color.map((item, i) => {
+        return color?.map((item, i) => {
 
 
             function hexToRgb(hex) {
@@ -73,7 +73,6 @@ export const ClassColorAddFilter = ({color, setEdit, setChangeName, changeName ,
             <div className={cls.filter__wrapper}>
                 <ul>
                     {render}
-
                 </ul>
             </div>
         </div>

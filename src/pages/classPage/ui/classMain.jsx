@@ -29,6 +29,7 @@ export const ClassMain = () => {
     const [edit, setEdit] = useState({})
     const [activeEdit, setActiveEdit] = useState(false)
 
+    console.log(color)
 
     const userBranchId = useSelector(getUserBranchId)
 
@@ -39,7 +40,7 @@ export const ClassMain = () => {
         if (userBranchId) {
             dispatch(getClassTypes(userBranchId))
             // dispatch(getClassesForClassTypes({branchId: userBranchId}))
-            dispatch(getColor())
+
             dispatch(fetchClassSubjects())
         }
 
