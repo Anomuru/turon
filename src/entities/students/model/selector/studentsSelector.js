@@ -25,6 +25,7 @@ export const getNewStudentsLoading = (state) =>
 export const getStudyingStudents = (state) =>
     state.newStudents?.studyingStudents
 
+
 export const getFilteredStudents = (state) =>
     state.newStudents?.filteredStudents
 

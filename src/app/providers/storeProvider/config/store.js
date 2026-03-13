@@ -36,6 +36,7 @@ import { parentReducer } from "entities/parents/model/parentSlice.js";
 import { todoistReducer } from 'pages/todoistPage';
 import newsSlice from "pages/newsPage/model/newsSlice.js";
 import partySlice from "pages/partyPage/model/partySlice.js";
+import { teacherPDReducer } from 'entities/teacherPD';
 
 
 export function createReduxStore(
@@ -77,6 +78,7 @@ export function createReduxStore(
         todoistSlice: todoistReducer,
         teacherAttendanceSlice,
         newsSlice,
+        teacherPD: teacherPDReducer,
         partySlice
 
 

@@ -1,1 +1,1 @@
-export {RatingForTeachers} from "./ui/ratingForTeachers.jsx"
+export { RatingTable } from './ui/ratingForTeachers.jsx';

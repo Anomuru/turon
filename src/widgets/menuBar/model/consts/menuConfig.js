@@ -1,4 +1,5 @@
-import { ROLES } from "shared/const/roles";
+import {ROLES} from "shared/const/roles";
+import React from "react";
 
 export const menuConfig = [
     // {
@@ -32,6 +33,24 @@ export const menuConfig = [
         roles: [ROLES.director, ROLES.programmer]
     },
     {
+        to: "development",
+        name: "O'qituvchilarni rivojlantirish",
+        icon: "fa-chalkboard-teacher",
+        roles: [ROLES.director]
+    },
+    {
+        to: "surveyResults",
+        name: "So'rovnoma natijalari",
+        icon: "fa-list",
+        roles: [ROLES.admin, ROLES.programmer, ROLES.director]
+    },
+    {
+        to: "teacherRating",
+        name: "O'qituvchini baholash",
+        icon: "fa-star",
+        roles: [ROLES.director, ROLES.programmer]
+    },
+    {
         to: "adminTaskManager",
         name: "Operator Tasks",
         icon: "fa-tasks",
@@ -62,12 +81,11 @@ export const menuConfig = [
     },
 
 
-
     {
         to: "party",
         name: "Partiyalar",
         icon: "fa-solid fa-group-arrows-rotate",
-        roles: [ROLES.director , ROLES.admin]
+        roles: [ROLES.director, ROLES.admin]
         // roles: true
     },
 
@@ -88,14 +106,14 @@ export const menuConfig = [
         to: "calendar",
         name: "Kalendar",
         icon: "fas fa-calendar-times",
-        roles: [ROLES.director, ROLES.admin , ROLES.spiritualist , ROLES.advertising],
+        roles: [ROLES.director, ROLES.admin, ROLES.spiritualist, ROLES.advertising],
 
     },
     {
         to: "students",
         name: "O'quvchilar",
         icon: "fa-user-graduate",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.zavuch , ROLES.spiritualist , ROLES.advertising],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.zavuch, ROLES.spiritualist, ROLES.advertising],
         branches: true
     },
     // {
@@ -112,7 +130,7 @@ export const menuConfig = [
         to: "teacher",
         name: "O'qituvchilar",
         icon: "fa-user-tie",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer,  ROLES.spiritualist],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.spiritualist],
         branches: true
 
     },
@@ -136,7 +154,7 @@ export const menuConfig = [
         to: "groups",
         name: "Sinflar",
         icon: "fa-users",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.teacher, ROLES.zavuch ,  ROLES.spiritualist],
+        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.teacher, ROLES.zavuch, ROLES.spiritualist],
         branches: true
 
     },

@@ -50,6 +50,9 @@ const Settings = lazyPage(() => import("pages/settings"), "Settings");
 const StatisticsPage = lazyPage(() => import("pages/statisticsPage"), "StatisticsPage");
 const QuarterMaster = lazyPage(() => import("pages/quarterMasterPage"), "QuarterMasterPage");
 const RatingForTeachersPage = lazyPage(() => import("pages/ratingForTeachersPage"), "RatingForTeachersPage");
+const SurveyResultsPage = lazyPage(() => import("pages/surveyResultsPage"), "SurveyResultsPage");
+const ContributionsPage = lazyPage(() => import("pages/contributionsPage"), "ContributionsPage");
+const TeachersDevelopmentPage = lazyPage(() => import("pages/teachersDevelopmentPage"), "TeachersDevelopmentPage");
 
 export const routersConfigList = [
     {
@@ -211,5 +214,20 @@ export const routersConfigList = [
         path: getHomeNews(":id"),
         element: <NewsPage/>
     },
+    {
+        name: "So'rovnoma natijalari",
+        path: "surveyResults",
+        element: <SurveyResultsPage/>
+    },
+    {
+        name: "O'qituvchini baholash",
+        path: "teacherRating",
+        element: <ContributionsPage/>
+    },
+    {
+        name: "O'qituvchini rivojlantirish",
+        path: "development",
+        element: <TeachersDevelopmentPage/>
+    }
 
 ]
