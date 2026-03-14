@@ -1,5 +1,5 @@
-import { fetchWeekDays, getSelectedWeekDay } from "entities/profile/groupProfile/index.js";
-import React, { useEffect, useState } from 'react';
+import {fetchWeekDays, getSelectedWeekDay} from "entities/profile/groupProfile/index.js";
+import React, {useEffect, useState} from 'react';
 
 import cls from "./TimeTableTuronPage.module.sass"
 
@@ -12,8 +12,8 @@ import {
     useSensor,
     useSensors
 } from "@dnd-kit/core";
-import { Button } from "shared/ui/button";
-import { useDispatch, useSelector } from "react-redux";
+import {Button} from "shared/ui/button";
+import {useDispatch, useSelector} from "react-redux";
 import {
     fetchTimeTableClassView,
     fetchTimeTableColors,
@@ -42,9 +42,9 @@ import {
     getTimeTableTuronType,
     getTimeTableTuronWeekDay
 } from "pages/timeTable/model/selectors/timeTableTuronSelectors";
-import { API_URL, headers, useHttp } from "shared/api/base";
-import { DefaultLoader } from "shared/ui/defaultLoader";
-import { onAddAlertOptions, onAddMultipleAlertOptions } from "features/alert/model/slice/alertSlice";
+import {API_URL, headers, useHttp} from "shared/api/base";
+import {DefaultLoader} from "shared/ui/defaultLoader";
+import {onAddAlertOptions, onAddMultipleAlertOptions} from "features/alert/model/slice/alertSlice";
 import TimeTableTuronPageFilters from "../TimeTableTuronPageFilters/TimeTableTuronPageFilters";
 import {
     TimeTableDragItem,
@@ -52,17 +52,16 @@ import {
     TimeTableDropContainer,
     TimeTableStudents
 } from "entities/timeTableTuron";
-import { DraggableContainer } from "entities/timeTableTuron/ui/DraggableContainer/DraggableContainer";
-import { Modal } from "shared/ui/modal";
-import { TimeTableFullScreen } from "entities/timeTableTuron/ui/TimeTableFullScreen/TimeTableFullScreen";
-import { TimeTableClassView } from "entities/timeTableTuron/ui/TimeTableClassView/TimeTableClassView";
-import { MiniLoader } from "shared/ui/miniLoader";
-import { onRemoveStudents } from "pages/timeTable/model/slice/timeTableTuronSlice.js";
-import { fetchTeachersForSelect } from "entities/oftenUsed/index.js";
-import { getUserBranchId } from "entities/profile/userProfile/index.js";
-import { ConfirmModal } from "shared/ui/confirmModal/index.js";
-import { getSelectedLocations } from "features/locations/index.js";
-import { TimetableGrid } from "entities/timeTableTuron/classView2.0/classView2.0.jsx";
+import {DraggableContainer} from "entities/timeTableTuron/ui/DraggableContainer/DraggableContainer";
+import {Modal} from "shared/ui/modal";
+import {TimeTableFullScreen} from "entities/timeTableTuron/ui/TimeTableFullScreen/TimeTableFullScreen";
+import {MiniLoader} from "shared/ui/miniLoader";
+import {onRemoveStudents} from "pages/timeTable/model/slice/timeTableTuronSlice.js";
+import {fetchTeachersForSelect} from "entities/oftenUsed/index.js";
+import {getUserBranchId} from "entities/profile/userProfile/index.js";
+import {ConfirmModal} from "shared/ui/confirmModal/index.js";
+import {getSelectedLocations} from "features/locations/index.js";
+import {TimetableGrid} from "entities/timeTableTuron/classView2.0/classView2.0.jsx";
 
 
 const rooms = [
@@ -140,6 +139,8 @@ export const TimeTableTuronPage = () => {
     const selectedBranch = useSelector(getSelectedLocations);
     const branchForFilter = selectedBranch?.id ?? branch;
 
+    const [viewData , setViewData] = useState(null)
+
 
     const dispatch = useDispatch()
 
@@ -157,23 +158,27 @@ export const TimeTableTuronPage = () => {
 
     useEffect(() => {
         if (isDataStatus === "week" && weekDay && branchForFilter) {
-            dispatch(fetchTimeTableData({ week: weekDay, branch: branchForFilter, teacher: filteredTeacher }))
+            dispatch(fetchTimeTableData({week: weekDay, branch: branchForFilter, teacher: filteredTeacher}))
         } else if (isDataStatus === "date" && date && branchForFilter) {
-            dispatch(fetchTimeTableData({ date, branch: branchForFilter, teacher: filteredTeacher }))
+            dispatch(fetchTimeTableData({date, branch: branchForFilter, teacher: filteredTeacher}))
         }
     }, [isDataStatus, date, weekDay, branchForFilter, filteredTeacher])
 
     useEffect(() => {
         if (isDataStatus === "week" && weekDay && branchForFilter && classView) {
-            dispatch(fetchTimeTableClassView({ week: weekDay, branch: branchForFilter }))
+            dispatch(fetchTimeTableClassView({week: weekDay, branch: branchForFilter}))
         } else if (isDataStatus === "date" && date && branchForFilter && classView) {
-            dispatch(fetchTimeTableClassView({ date, branch: branchForFilter }))
+            dispatch(fetchTimeTableClassView({date, branch: branchForFilter}))
         }
     }, [isDataStatus, data, weekDay, branchForFilter, classView])
 
 
     useEffect(() => {
-        if (type && branchForFilter) dispatch(fetchTimeTableTypesData({ type, branch: branchForFilter, teacher: filteredTeacher }))
+        if (type && branchForFilter) dispatch(fetchTimeTableTypesData({
+            type,
+            branch: branchForFilter,
+            teacher: filteredTeacher
+        }))
     }, [type, branchForFilter, filteredTeacher])
 
 
@@ -228,7 +233,7 @@ export const TimeTableTuronPage = () => {
     useEffect(() => {
         if (selectedSubject && branch) {
             setLoading(true)
-            dispatch(fetchTimeTableTeacher({ subject: selectedSubject, branch }))
+            dispatch(fetchTimeTableTeacher({subject: selectedSubject, branch}))
         }
     }, [selectedSubject, branch])
 
@@ -275,7 +280,7 @@ export const TimeTableTuronPage = () => {
 
 
     const onDragStart = (e) => {
-        const { active } = e;
+        const {active} = e;
         const activeTypeItem = active?.data?.current?.type
         setCanDisabled(true)
         if (activeTypeItem === "container") {
@@ -293,7 +298,7 @@ export const TimeTableTuronPage = () => {
     }
 
 
-    const { request } = useHttp()
+    const {request} = useHttp()
     const canSet = async (hour, id, room, type, overItem) => {
 
         const data = {
@@ -359,11 +364,11 @@ export const TimeTableTuronPage = () => {
         let curActive;
         let curOver;
         if (!!event) {
-            let { active, over } = event;
+            let {active, over} = event;
             curActive = active
             curOver = over
         } else {
-            let { active, over } = activeEvent;
+            let {active, over} = activeEvent;
             curActive = active
             curOver = over
         }
@@ -740,7 +745,7 @@ export const TimeTableTuronPage = () => {
             if (item.id === room) {
 
                 const newLessons = item.lessons.map(container => {
-                    let { active: lastActive, over: lastOver } = activeCanSet;
+                    let {active: lastActive, over: lastOver} = activeCanSet;
                     if (lastOver?.data?.current?.room === room && lastOver?.id === dndId) {
                         setActiveCanSet({})
                     }
@@ -839,6 +844,7 @@ export const TimeTableTuronPage = () => {
 
     return (
 
+        classView ? <TimetableGrid classes={classViewData} hours={hours} setActive={setClassView} setViewData={setViewData} viewData={viewData}/> :
         <div className={cls.timeTable}>
             {
                 !isSelected ?
@@ -854,7 +860,7 @@ export const TimeTableTuronPage = () => {
 
             {isSelected && <Button type={"danger"} onClick={onFalseSelected}>Remove Selected</Button>}
 
-            {loading && <DefaultLoader />}
+            {loading && <DefaultLoader/>}
 
 
             <DndContext
@@ -862,13 +868,13 @@ export const TimeTableTuronPage = () => {
                 collisionDetection={rectIntersection}
                 onDragStart={onDragStart}
                 onDragEnd={(event) => {
-                    const { over, active } = event
+                    const {over, active} = event
                     if (active?.data?.current?.type === "container" && over?.data?.current?.type === "container") {
                         setActiveUpdate(true)
                         setActiveEvent(event)
                     } else {
-                        let { active, over } = event
-                        let { active: lastActive, over: lastOver } = activeCanSet;
+                        let {active, over} = event
+                        let {active: lastActive, over: lastOver} = activeCanSet;
                         if (lastActive && lastActive?.id !== active?.id && lastOver?.id === over?.id) {
                             setIsActiveCanSet(true)
                             setActiveEvent(event)
@@ -878,7 +884,7 @@ export const TimeTableTuronPage = () => {
                         }
                     }
                 }}
-            // modifiers={[restrictToFirstScrollableAncestor]}
+                // modifiers={[restrictToFirstScrollableAncestor]}
             >
                 <TimeTableDragItems
                     setSelectedSubject={setSelectedSubject}
@@ -896,7 +902,7 @@ export const TimeTableTuronPage = () => {
                 <div className={cls.wrapper}>
                     {
                         dataStatus === true ?
-                            <MiniLoader />
+                            <MiniLoader/>
                             :
                             <TimeTableDropContainer
                                 onDoubleClickContainer={onDoubleClickContainer}
@@ -906,18 +912,18 @@ export const TimeTableTuronPage = () => {
                                 hours={hours}
                                 canDisabled={canDisabled}
                                 startItem={startItem}
-                            // containers={containers}
+                                // containers={containers}
                             />
                     }
 
-                    {students.length > 0 && <TimeTableStudents students={students} />}
+                    {students.length > 0 && <TimeTableStudents students={students}/>}
                 </div>
 
 
                 <DragOverlay>
                     {
                         startItem?.room ?
-                            <DraggableContainer type={"overlay"} item={startItem} /> :
+                            <DraggableContainer type={"overlay"} item={startItem}/> :
                             startItem?.type === "teacher" ?
                                 <TimeTableDragItem
                                     item={startItem}
@@ -940,8 +946,6 @@ export const TimeTableTuronPage = () => {
             <Modal active={fullScreen} setActive={setFullScreen} type={"other"}>
 
 
-
-
                 <TimeTableFullScreen
                     rooms={rooms}
                     times={times}
@@ -951,23 +955,22 @@ export const TimeTableTuronPage = () => {
 
             </Modal>
 
-            <Modal status={true} active={classView} setActive={setClassView} type={"other"}>
-                <TimetableGrid classes={classViewData} hours={hours} setActive={setClassView} />
+            {/*<Modal status={true} active={classView} setActive={setClassView} type={"other"}>*/}
 
 
-                {/*<TimeTableClassView*/}
-                {/*    lessons={classViewData}*/}
-                {/*    hours={hours}*/}
-                {/*/>*/}
+            {/*<TimeTableClassView*/}
+            {/*    lessons={classViewData}*/}
+            {/*    hours={hours}*/}
+            {/*/>*/}
 
 
-                {/*<TimeTableFullScreen*/}
-                {/*    rooms={rooms}*/}
-                {/*    times={times}*/}
-                {/*    hours={hours}*/}
-                {/*/>*/}
+            {/*<TimeTableFullScreen*/}
+            {/*    rooms={rooms}*/}
+            {/*    times={times}*/}
+            {/*    hours={hours}*/}
+            {/*/>*/}
 
-            </Modal>
+            {/*</Modal>*/}
             <ConfirmModal
                 setActive={setActiveUpdate}
                 active={activeUpdate}

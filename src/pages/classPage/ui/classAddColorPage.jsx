@@ -1,14 +1,15 @@
 import {ClassColorAddFilter} from "entities/class";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {API_URL, headers, useHttp} from "shared/api/base";
 import {useForm} from "react-hook-form";
-import {useDispatch} from "react-redux";
-import {updateColor} from "../../../entities/class/model/thunk/classThunk";
+import {useDispatch, useSelector} from "react-redux";
+import {getColor, updateColor} from "../../../entities/class/model/thunk/classThunk";
 import {onAddAlertOptions} from "../../../features/alert/model/slice/alertSlice";
 import {onDelete} from "../../../entities/class/model/slice/classSlice";
 import { ClassColorEdit} from "../../../features/classModals/ui";
+import {colorItem} from "entities/class/model/selector/classSelector.js";
 
-export const ClassAddColorPage = ({color, setEdit, edit}) => {
+export const ClassAddColorPage = ({ setEdit, edit}) => {
 
     const {register, handleSubmit, setValue} = useForm()
     const [changeName, setChangeName] = useState(false)
@@ -16,7 +17,10 @@ export const ClassAddColorPage = ({color, setEdit, edit}) => {
     const [activeColor, setActiveColor] = useState(false)
     const {request} = useHttp()
     const [colorChange, setColorChange] = useState("")
-
+    const color = useSelector(colorItem)
+    useEffect(() => {
+        dispatch(getColor())
+    }, []);
 
     const changeColor = (data) => {
         const id = edit.id

@@ -194,6 +194,7 @@ const classSlice = createSlice({
             .addCase(getColor.fulfilled, (state, action) => {
                 state.loading = false
                 state.error = false
+                console.log(action.payload , "log")
                 state.color = action.payload
 
             })

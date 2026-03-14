@@ -2,39 +2,9 @@ import {useEffect, useRef, useState} from "react";
 import {API_URL, headers, headersImg, useHttp} from "shared/api/base.js";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchNews, onAddNews, onEditNews, onRemoveNews} from "pages/newsPage/model/newsSlice.js";
+import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 
-/* ─────────────────────────────────────────────
-   MOCK DATA
-───────────────────────────────────────────── */
-const initialNews = [
-    {
-        id: 1,
-        title: "Kompaniyamiz yangi investitsiya oldi",
-        description:
-            "Bugun bizning kompaniyamiz Series A bosqichida $2M investitsiya jalb qildi. Bu mablag' mahsulotni rivojlantirish va jamoa kengaytirishga sarflanadi.",
-        image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&q=80",
-        date: "2024-02-15",
-        status: "published",
-    },
-    {
-        id: 2,
-        title: "Yangi ofis ochildi",
-        description:
-            "Toshkentning markazida yangi zamonaviy ofisimiz eshiklarini ochdi. Ofis 200 dan ortiq xodimni qabul qila oladi.",
-        image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80",
-        date: "2024-02-10",
-        status: "published",
-    },
-    {
-        id: 3,
-        title: "Xalqaro konferensiyada qatnashdik",
-        description:
-            "Jamoamiz Dubai'da bo'lib o'tgan Tech Summit 2024 konferensiyasida qatnashib, mahsulotimizni taqdim etdi.",
-        image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&q=80",
-        date: "2024-01-28",
-        status: "draft",
-    },
-];
+
 
 const emptyForm = {
     title: "",
@@ -44,9 +14,7 @@ const emptyForm = {
     date: new Date().toISOString().slice(0, 10),
 };
 
-/* ─────────────────────────────────────────────
-   CREATE / EDIT MODAL  (shared)
-───────────────────────────────────────────── */
+
 const CreateModal = ({onClose, onSave, editItem}) => {
     const isEdit = !!editItem;
     const [form, setForm] = useState(
@@ -284,7 +252,7 @@ const DetailModal = ({item, onClose, onDelete}) => (
    MAIN PAGE
 ───────────────────────────────────────────── */
 export const NewsPage = () => {
-    const {data} = useSelector(state => state.newsSlice)
+    const {data , loading} = useSelector(state => state.newsSlice)
     const [newsList, setNewsList] = useState([]);
     useEffect(() => {
         setNewsList(data)
@@ -358,7 +326,6 @@ export const NewsPage = () => {
             })
     }
 
-    console.log(data[0]?.image)
     return (
         <div style={S.page}>
             {/* Header */}
@@ -381,7 +348,6 @@ export const NewsPage = () => {
                 </div>
             </div>
             {/* Table */}
-            <img src="https://school.gennis.uz/media/Screenshot_2026-02-10_132143.png" alt="32132"/>
             <div style={S.tableWrap}>
                 <table style={S.table}>
                     <thead>
@@ -395,7 +361,9 @@ export const NewsPage = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {filtered.map((row, i) => {
+                    {loading ? <DefaultPageLoader/> :
+
+                    filtered.map((row, i) => {
                         return (
                             <tr
                                 key={row.id}

@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo, useState, useRef } from "react";
-import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
+import React, { useCallback, useMemo, useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
 import cls from "./TimeTableClassView.module.sass";
+import {onChangeDateTimeTable, onChangeWeekDayTimeTable} from "pages/timeTable/model/slice/timeTableTuronSlice.js";
+import {useDispatch} from "react-redux";
 
 const ROW_HEIGHT = 64;
 const COL_WIDTH = 180;
@@ -19,13 +20,64 @@ function hexToBrightness(hex) {
     return 0.299 * r + 0.587 * g + 0.114 * b;
 }
 
-export const TimetableGrid = ({ classes, hours, setActive }) => {
-    console.log(classes, hours)
-    const [scale, setScale] = useState(0.7);
+export const TimetableGrid = ({ classes, hours, setActive , viewData , setViewData }) => {
     const [openMoreKey, setOpenMoreKey] = useState(null);
-    const contentRef = useRef(null);
 
-    const fontScale = Math.max(0.75, Math.min(1, 1 / scale));
+    const [scale, setScale] = useState(1);
+    const contentRef = useRef(null);
+    const wrapperRef = useRef(null);
+
+    const fontScale = 1;
+
+    // Auto-scale: boshlang'ich miqyosni hisoblash
+
+    const dispatch = useDispatch();
+
+    const onChangeDate = (date) => {
+
+
+        // const currentDate = new Date(date);
+        // const currentDayOfWeek = currentDate.getDay();
+        //
+        // if (currentDayOfWeek === 0) {
+        //     dispatch(onChangeWeekDayTimeTable(7));
+        // } else {
+        //     dispatch(onChangeWeekDayTimeTable(currentDayOfWeek));
+        // }
+        dispatch(onChangeDateTimeTable(date))
+    }
+
+    useEffect(() => {
+        const recalc = () => {
+            if (!contentRef.current || !wrapperRef.current) return;
+            const containerW = wrapperRef.current.clientWidth;
+            const containerH = wrapperRef.current.clientHeight;
+            const contentW = contentRef.current.scrollWidth;
+            const contentH = contentRef.current.scrollHeight;
+            if (contentW === 0 || contentH === 0) return;
+            const newScale = Math.min(containerW / contentW, containerH / contentH, 1);
+            setScale(newScale);
+        };
+        recalc();
+        window.addEventListener("resize", recalc);
+        return () => window.removeEventListener("resize", recalc);
+    }, [classes, hours]);
+
+    // Scroll (wheel) = zoom in/out
+    useEffect(() => {
+        const el = wrapperRef.current;
+        if (!el) return;
+        const onWheel = (e) => {
+            e.preventDefault();
+            const STEP = 0.05;
+            setScale(prev => {
+                const next = e.deltaY < 0 ? prev + STEP : prev - STEP;
+                return Math.min(2, Math.max(0.1, next));
+            });
+        };
+        el.addEventListener("wheel", onWheel, { passive: false });
+        return () => el.removeEventListener("wheel", onWheel);
+    }, []);
 
     const handleSavePng = async () => {
         if (!contentRef.current) return;
@@ -311,211 +363,213 @@ export const TimetableGrid = ({ classes, hours, setActive }) => {
 
     return (
         <div className={cls.container}>
+            {/* TOP BAR */}
+            <div className={cls.topBar}>
+                <div className={cls.datePickerWrap}>
+                    <label htmlFor="cv-date" className={cls.dateLabel}>📅 Kun:</label>
+                    <input
+                        id="cv-date"
+                        type="date"
+                        className={cls.dateInput}
+                        value={viewData}
+                        onChange={(e) => onChangeDate(e.target.value)}
 
-            <button
-                onClick={handleSavePng}
-                style={{
-                    position: "absolute",
-                    right: "6rem",
-                    top: "3rem",
-                    zIndex: "222222222",
-                    padding: "0.5rem 1rem",
-                    backgroundColor: "#2563eb",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "0.5rem",
-                    cursor: "pointer",
-                    fontSize: "1.4rem",
-                    fontWeight: "600",
-                    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
-                }}
-            >
-                Rasm ko'rinishida saqlash
-            </button>
-            <i onClick={() => {
-                setActive(false)
-                console.log("dasdsa")
-            }} style={{ position: "absolute", right: "3rem", color: "black", fontSize: "3rem", top: "3rem", zIndex: "22222222222222222" }} className={"fa fa-times"} />
-            <TransformWrapper
-                initialScale={0.7}
-                minScale={0.3}
-                maxScale={3}
-                doubleClick={{ disabled: true }}
-                onTransformed={(e) => setScale(e.instance.transformState.scale)}
-            >
-                <TransformComponent>
-                    <div className={cls.contentWrapper} ref={contentRef}>
-                        {/* ================= HEADER ================= */}
-                        <div
-                            className={cls.headerRow}
-                            style={{ marginLeft: LABEL_WIDTH }}
-                        >
-                            {hours.map((h) => (
-                                <div
-                                    key={h.id}
-                                    className={cls.headerCell}
-                                    style={{
-                                        width: COL_WIDTH,
-                                        height: ROW_HEIGHT,
-                                        fontSize: 12 * fontScale,
-                                    }}
+                    />
+                </div>
+                <div className={cls.topBarActions}>
+                    <button
+                        onClick={handleSavePng}
+                        className={cls.savePngBtn}
+                    >
+                        Rasm ko'rinishida saqlash
+                    </button>
+                    <i
+                        onClick={() => setActive(false)}
+                        className={"fa fa-times " + cls.closeBtn}
+                    />
+                </div>
+            </div>
+
+            {/* SCALED GRID AREA */}
+            <div className={cls.scaleWrapper} ref={wrapperRef}>
+                <div
+                    className={cls.contentWrapper}
+                    ref={contentRef}
+                    style={{
+                        transform: `scale(${scale})`,
+                        transformOrigin: "top left",
+                    }}
+                >
+                    {/* ================= HEADER ================= */}
+                    <div
+                        className={cls.headerRow}
+                        style={{ marginLeft: LABEL_WIDTH }}
+                    >
+                        {hours.map((h) => (
+                            <div
+                                key={h.id}
+                                className={cls.headerCell}
+                                style={{
+                                    width: COL_WIDTH,
+                                    height: ROW_HEIGHT,
+                                    fontSize: 12 * fontScale,
+                                }}
+                            >
+                                <span>{h.start_time}</span>
+                                <span
+                                    style={{ fontSize: 10 * fontScale }}
                                 >
-                                    <span>{h.start_time}</span>
-                                    <span
-                                        style={{ fontSize: 10 * fontScale }}
-                                    >
-                                        {h.end_time}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-
-                        {classes.map((clsItem) => (
-                            <div key={clsItem.id} className={cls.classRow}>
-                                {/* CLASS LABEL */}
-                                <div
-                                    className={cls.classLabel}
-                                    style={{
-                                        width: LABEL_WIDTH,
-                                        height: ROW_HEIGHT,
-                                        background: clsItem.color,
-                                        color:
-                                            hexToBrightness(clsItem.color) > 125 ? "#000" : "#fff",
-                                        fontSize: 13 * fontScale,
-                                    }}
-                                >
-                                    {clsItem.name}
-                                </div>
-
-                                {hours.map((h) => {
-                                    const flows = getFlowAnchorsForCell(clsItem.id, h.id);
-                                    const occupied = isFlowOccupied(clsItem.id, h.id);
-                                    const nonFlow = getNonFlowLesson(clsItem, h.id);
-
-                                    const visibleFlows = flows.slice(0, MAX_FLOW_COLUMNS);
-                                    const hiddenFlows = flows.slice(MAX_FLOW_COLUMNS);
-                                    const columnCount =
-                                        flows.length > MAX_FLOW_COLUMNS
-                                            ? MAX_FLOW_COLUMNS
-                                            : visibleFlows.length;
-
-                                    return (
-                                        <div
-                                            key={h.id}
-                                            className={cls.gridCell}
-                                            style={{ width: COL_WIDTH, height: ROW_HEIGHT }}
-                                        >
-                                            {/* FLOW LESSONS */}
-                                            {visibleFlows.map((fa, i) => {
-                                                const width = COL_WIDTH / columnCount;
-
-                                                // Calculate background style (solid or gradient)
-                                                const spanColors = [];
-                                                for (let j = 0; j < fa.spanCount; j++) {
-                                                    const idx = fa.startRowIndex + j;
-                                                    if (classes[idx]) spanColors.push(classes[idx].color);
-                                                }
-                                                const uniqueColors = [...new Set(spanColors)];
-
-                                                let backgroundStyle = { backgroundColor: clsItem.color };
-                                                if (uniqueColors.length > 1) {
-                                                    // Create sharp diagonal stripes for mixed colors
-                                                    const stops = uniqueColors.map((c, idx) => {
-                                                        const start = (idx / uniqueColors.length) * 100;
-                                                        const end = ((idx + 1) / uniqueColors.length) * 100;
-                                                        return `${c} ${start}%, ${c} ${end}%`;
-                                                    }).join(', ');
-                                                    backgroundStyle = { background: `linear-gradient(45deg, ${stops})` };
-                                                }
-
-                                                return (
-                                                    <div
-                                                        key={fa.lesson.id}
-                                                        className={cls.flowLesson}
-                                                        style={{
-                                                            left: i * width + 6,
-                                                            top: 6,
-                                                            width: width - 12,
-                                                            height:
-                                                                ROW_HEIGHT * fa.spanCount - 12,
-                                                            fontSize: 12 * fontScale,
-                                                            ...backgroundStyle,
-                                                            color: hexToBrightness(clsItem.color) > 125 ? "#000" : "#fff",
-                                                        }}
-                                                    >
-                                                        <span>{fa.lesson.group?.name}</span>
-                                                        <span className={cls.teacherName}>
-                                                            {fa?.lesson?.teacher?.name} {fa?.lesson?.teacher?.surname}
-                                                        </span>
-                                                        <span className={cls.roomName}>{fa.lesson.room?.name}</span>
-                                                    </div>
-                                                );
-                                            })}
-
-                                            {hiddenFlows.length > 0 && (
-                                                <>
-                                                    <button
-                                                        onClick={() =>
-                                                            setOpenMoreKey(
-                                                                openMoreKey ===
-                                                                `${clsItem.id}-${h.id}`
-                                                                    ? null
-                                                                    : `${clsItem.id}-${h.id}`
-                                                            )
-                                                        }
-                                                        className={cls.moreBtn}
-                                                        style={{
-                                                            width: 28,
-                                                            height: 28,
-                                                            fontSize: 11 * fontScale,
-                                                        }}
-                                                    >
-                                                        +{hiddenFlows.length}
-                                                    </button>
-
-                                                    {openMoreKey ===
-                                                        `${clsItem.id}-${h.id}` && (
-                                                            <div
-                                                                className={cls.moreDropdown}
-                                                            >
-                                                                {hiddenFlows.map((fa) => (
-                                                                    <div
-                                                                        key={fa.lesson.id}
-                                                                        className={cls.dropdownItem}
-                                                                    >
-                                                                        {fa.lesson.group?.name}
-                                                                    </div>
-                                                                ))}
-                                                            </div>
-                                                        )}
-                                                </>
-                                            )}
-
-                                            {!flows.length && !occupied && nonFlow && (
-                                                <div
-                                                    className={cls.singleLesson}
-                                                    style={{
-                                                        fontSize: 12 * fontScale,
-                                                        backgroundColor: "#a5f3fc",
-                                                        color: "#000",
-                                                    }}
-                                                >
-
-                                                    <strong>{nonFlow.room?.name}</strong>
-                                                    <span>{nonFlow.subject?.name}</span>
-                                                    <span className={cls.teacherName}>
-                                                        {nonFlow.teacher?.name} {nonFlow.teacher?.surname}
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
+                                    {h.end_time}
+                                </span>
                             </div>
                         ))}
                     </div>
-                </TransformComponent>
-            </TransformWrapper>
+
+                    {classes.map((clsItem) => (
+                        <div key={clsItem.id} className={cls.classRow}>
+                            {/* CLASS LABEL */}
+                            <div
+                                className={cls.classLabel}
+                                style={{
+                                    width: LABEL_WIDTH,
+                                    height: ROW_HEIGHT,
+                                    background: clsItem.color,
+                                    color:
+                                        hexToBrightness(clsItem.color) > 125 ? "#000" : "#fff",
+                                    fontSize: 13 * fontScale,
+                                }}
+                            >
+                                {clsItem.name}
+                            </div>
+
+                            {hours.map((h) => {
+                                const flows = getFlowAnchorsForCell(clsItem.id, h.id);
+                                const occupied = isFlowOccupied(clsItem.id, h.id);
+                                const nonFlow = getNonFlowLesson(clsItem, h.id);
+
+                                const visibleFlows = flows.slice(0, MAX_FLOW_COLUMNS);
+                                const hiddenFlows = flows.slice(MAX_FLOW_COLUMNS);
+                                const columnCount =
+                                    flows.length > MAX_FLOW_COLUMNS
+                                        ? MAX_FLOW_COLUMNS
+                                        : visibleFlows.length;
+
+                                return (
+                                    <div
+                                        key={h.id}
+                                        className={cls.gridCell}
+                                        style={{ width: COL_WIDTH, height: ROW_HEIGHT }}
+                                    >
+                                        {/* FLOW LESSONS */}
+                                        {visibleFlows.map((fa, i) => {
+                                            const width = COL_WIDTH / columnCount;
+
+                                            // Calculate background style (solid or gradient)
+                                            const spanColors = [];
+                                            for (let j = 0; j < fa.spanCount; j++) {
+                                                const idx = fa.startRowIndex + j;
+                                                if (classes[idx]) spanColors.push(classes[idx].color);
+                                            }
+                                            const uniqueColors = [...new Set(spanColors)];
+
+                                            let backgroundStyle = { backgroundColor: clsItem.color };
+                                            if (uniqueColors.length > 1) {
+                                                // Create sharp diagonal stripes for mixed colors
+                                                const stops = uniqueColors.map((c, idx) => {
+                                                    const start = (idx / uniqueColors.length) * 100;
+                                                    const end = ((idx + 1) / uniqueColors.length) * 100;
+                                                    return `${c} ${start}%, ${c} ${end}%`;
+                                                }).join(', ');
+                                                backgroundStyle = { background: `linear-gradient(45deg, ${stops})` };
+                                            }
+
+                                            return (
+                                                <div
+                                                    key={fa.lesson.id}
+                                                    className={cls.flowLesson}
+                                                    style={{
+                                                        left: i * width + 6,
+                                                        top: 6,
+                                                        width: width - 12,
+                                                        height:
+                                                            ROW_HEIGHT * fa.spanCount - 12,
+                                                        fontSize: 12 * fontScale,
+                                                        ...backgroundStyle,
+                                                        color: hexToBrightness(clsItem.color) > 125 ? "#000" : "#fff",
+                                                    }}
+                                                >
+                                                    <span>{fa.lesson.group?.name}</span>
+                                                    <span className={cls.teacherName}>
+                                                        {fa?.lesson?.teacher?.name} {fa?.lesson?.teacher?.surname}
+                                                    </span>
+                                                    <span className={cls.roomName}>{fa.lesson.room?.name}</span>
+                                                </div>
+                                            );
+                                        })}
+
+                                        {hiddenFlows.length > 0 && (
+                                            <>
+                                                <button
+                                                    onClick={() =>
+                                                        setOpenMoreKey(
+                                                            openMoreKey ===
+                                                                `${clsItem.id}-${h.id}`
+                                                                ? null
+                                                                : `${clsItem.id}-${h.id}`
+                                                        )
+                                                    }
+                                                    className={cls.moreBtn}
+                                                    style={{
+                                                        width: 28,
+                                                        height: 28,
+                                                        fontSize: 11 * fontScale,
+                                                    }}
+                                                >
+                                                    +{hiddenFlows.length}
+                                                </button>
+
+                                                {openMoreKey ===
+                                                    `${clsItem.id}-${h.id}` && (
+                                                        <div
+                                                            className={cls.moreDropdown}
+                                                        >
+                                                            {hiddenFlows.map((fa) => (
+                                                                <div
+                                                                    key={fa.lesson.id}
+                                                                    className={cls.dropdownItem}
+                                                                >
+                                                                    {fa.lesson.group?.name}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                            </>
+                                        )}
+
+                                        {!flows.length && !occupied && nonFlow && (
+                                            <div
+                                                className={cls.singleLesson}
+                                                style={{
+                                                    fontSize: 12 * fontScale,
+                                                    backgroundColor: "#a5f3fc",
+                                                    color: "#000",
+                                                }}
+                                            >
+
+                                                <strong>{nonFlow.room?.name}</strong>
+                                                <span>{nonFlow.subject?.name}</span>
+                                                <span className={cls.teacherName}>
+                                                    {nonFlow.teacher?.name} {nonFlow.teacher?.surname}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };

@@ -74,6 +74,7 @@ export const getCvSubmissons = (id) => `cvShow`
 export const getHomeMessage = (id) => `messages`
 export const getHomeNews = (id) => `news`
 export const getParty = (id) => `party/*`
+export const classView = (id) => `time/classView`
 
 
 
