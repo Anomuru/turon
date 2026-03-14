@@ -79,6 +79,16 @@ export const ContributionsPage = () => {
     const [editingFeedbackId, setEditingFeedbackId] = useState(null);
     const [feedbackFormData, setFeedbackFormData] = useState({ status: 'average', datetime: '', comment: '' });
 
+    const [teamCollab, setTeamCollab] = useState([]);
+    const [expandedTeamCollabTeacherId, setExpandedTeamCollabTeacherId] = useState(null);
+    const [selectedTeamCollabTeacher, setSelectedTeamCollabTeacher] = useState(null);
+    const [teamCollabModalActive, setTeamCollabModalActive] = useState(false);
+    const [teamCollabDeleteModalActive, setTeamCollabDeleteModalActive] = useState(false);
+    const [deleteTeamCollabItemId, setDeleteTeamCollabItemId] = useState(null);
+    const [deleteTeamCollabTeacherId, setDeleteTeamCollabTeacherId] = useState(null);
+    const [editingTeamCollabId, setEditingTeamCollabId] = useState(null);
+    const [teamCollabFormData, setTeamCollabFormData] = useState({ status: 'average', datetime: '', comment: '' });
+
     useEffect(() => {
         if (branchForFilter) {
             dispatch(fetchTeachersData({ userBranchId: branchForFilter }));
@@ -408,6 +418,90 @@ export const ContributionsPage = () => {
             .catch(() => dispatch(onAddAlertOptions({ type: 'error', status: true, msg: 'Xatolik yuz berdi' })));
     };
 
+    //  team collaboration handlers
+
+    const resetTeamCollabForm = useCallback(() => {
+        setTeamCollabFormData({ status: 'average', datetime: nowIso(), comment: '' });
+        setEditingTeamCollabId(null);
+    }, []);
+
+    const fetchTeamCollabs = useCallback(
+        (teacherId) => {
+            request(`${API_URL}Teachers/teacher-collaboration/?teacher=${teacherId}`, 'GET', null, headers())
+                .then((res) => setTeamCollab(res))
+                .catch((err) => console.error('Failed to fetch team collaboration', err));
+        },
+        [request]
+    );
+
+    const handleTeamCollabTeacherClick = useCallback(
+        (teacher) => {
+            if (expandedTeamCollabTeacherId === teacher.id) {
+                setExpandedTeamCollabTeacherId(null);
+                setTeamCollab([]);
+            } else {
+                setExpandedTeamCollabTeacherId(teacher.id);
+                fetchTeamCollabs(teacher.id);
+            }
+        },
+        [expandedTeamCollabTeacherId, fetchTeamCollabs]
+    );
+
+    const handleTeamCollabAddClick = (e, teacher) => {
+        e.stopPropagation();
+        setSelectedTeamCollabTeacher(teacher);
+        resetTeamCollabForm();
+        setTeamCollabModalActive(true);
+    };
+
+    const handleTeamCollabEditClick = (e, item, teacher) => {
+        e.stopPropagation();
+        setSelectedTeamCollabTeacher(teacher);
+        setEditingTeamCollabId(item.id);
+        setTeamCollabFormData({ status: item.status ?? 'average', datetime: item.datetime ? item.datetime.slice(0, 16) : '', comment: item.comment ?? '' });
+        setTeamCollabModalActive(true);
+    };
+
+    const handleTeamCollabChange = useCallback((key, value) => {
+        setTeamCollabFormData((prev) => ({ ...prev, [key]: value }));
+    }, []);
+
+    const handleTeamCollabSubmit = (e) => {
+        e.preventDefault();
+        if (!selectedTeamCollabTeacher || !teamCollabFormData.datetime) {
+            dispatch(onAddAlertOptions({ type: 'warning', status: true, msg: "Iltimos, barcha majburiy maydonlarni to'ldiring" }));
+            return;
+        }
+        const payload = {
+            user: Number(userId),
+            teacher: selectedTeamCollabTeacher.id,
+            status: teamCollabFormData.status,
+            comment: teamCollabFormData.comment,
+            datetime: teamCollabFormData.datetime };
+
+        console.log(payload.datetime)
+        const method = editingTeamCollabId ? 'PATCH' : 'POST';
+        const url = editingTeamCollabId ? `${API_URL}Teachers/teacher-collaboration/${editingTeamCollabId}/` : `${API_URL}Teachers/teacher-collaboration/`;
+        request(url, method, JSON.stringify(payload), headers())
+            .then(() => {
+                dispatch(onAddAlertOptions({ type: 'success', status: true, msg: editingFeedbackId ? 'Muvaffaqiyatli yangilandi' : 'Muvaffaqiyatli saqlandi' }));
+                if (expandedTeamCollabTeacherId === selectedTeamCollabTeacher.id) fetchTeamCollabs(selectedTeamCollabTeacher.id);
+                setTeamCollabModalActive(false);
+                resetTeamCollabForm();
+            })
+            .catch(() => dispatch(onAddAlertOptions({ type: 'error', status: true, msg: 'Xatolik yuz berdi' })));
+    };
+
+    const handleTeamCollabDeleteConfirm = () => {
+        request(`${API_URL}Teachers/teacher-collaboration/${deleteTeamCollabItemId}/`, 'DELETE', null, headers())
+            .then(() => {
+                dispatch(onAddAlertOptions({ type: 'success', status: true, msg: "Muvaffaqiyatli o'chirildi" }));
+                setTeamCollabDeleteModalActive(false);
+                fetchTeamCollabs(deleteTeamCollabTeacherId);
+            })
+            .catch(() => dispatch(onAddAlertOptions({ type: 'error', status: true, msg: 'Xatolik yuz berdi' })));
+    };
+
     // ── Score-based accordion cards ────────────────────────────────────────────
     const renderTeacherTable = ({ expandedId, onTeacherClick, onAddClick, onEditClick, onDeleteClick, items, emptyLabel, addBtnLabel }) => (
         <Table>
@@ -639,6 +733,7 @@ export const ContributionsPage = () => {
         { key: 'professionalism', label: 'Professionallik', icon: 'fas fa-award' },
         { key: 'conduct', label: 'Xulq', icon: 'fas fa-clipboard-check' },
         { key: 'feedback', label: 'Fikr-mulohaza', icon: 'fas fa-comments' },
+        {key: "teamcollab", label: "Jamoa bilan hamkorlik", icon: "fas fa-users"},
     ];
 
     const headerTitles = {
@@ -646,6 +741,7 @@ export const ContributionsPage = () => {
         professionalism: { title: 'Professionallik baholash', subtitle: "O'qituvchilarning professionallik darajasini baholash", icon: 'fas fa-award' },
         conduct: { title: "Xulq-atvor nazorati", subtitle: "O'qituvchi xulq-atvorini kuzatish va baholash", icon: 'fas fa-clipboard-check' },
         feedback: { title: "Fikr-mulohazalar", subtitle: "O'qituvchilar haqida fikr va mulohazalar", icon: 'fas fa-comments' },
+        teamcollab: { title: "Jamoa bilan hamkorlik", subtitle: "O'qituvchilarning jamoa bilan hamkorlik darajasini baholash", icon: "fas fa-users" },
     };
 
     const current = headerTitles[activeTab];
@@ -736,6 +832,18 @@ export const ContributionsPage = () => {
                         emptyLabel: "Hozircha fikr-mulohazalar yo'q",
                         addBtnLabel: "Birinchi fikrni qo'shing",
                         addBtnIcon: 'comments',
+                    })}
+                {activeTab === 'teamcollab' &&
+                    renderStatusTable({
+                        expandedId: expandedTeamCollabTeacherId,
+                        onTeacherClick: handleTeamCollabTeacherClick,
+                        onAddClick: handleTeamCollabAddClick,
+                        onEditClick: handleTeamCollabEditClick,
+                        onDeleteClick: (itemId, teacherId) => { setDeleteTeamCollabItemId(itemId); setDeleteTeamCollabTeacherId(teacherId); setTeamCollabDeleteModalActive(true); },
+                        items: teamCollab,
+                        emptyLabel: "Hozircha ma'lumotlar yo'q",
+                        addBtnLabel: "Birinchi ma'lumotni qo'shing",
+                        addBtnIcon: 'triangle',
                     })}
             </div>
 
@@ -846,6 +954,33 @@ export const ContributionsPage = () => {
                 </div>
             </Modal>
             <ConfirmModal type="danger" title="Fikrni o'chirish" text="Ushbu fikr-mulohazani o'chirishni tasdiqlaysizmi?" active={feedbackDeleteModalActive} setActive={setFeedbackDeleteModalActive} onClick={handleFeedbackDeleteConfirm} />
+
+
+            <Modal active={teamCollabModalActive} setActive={setTeamCollabModalActive} type="simple">
+                <div className={cls.modal}>
+                    <div className={cls.modal__header}>
+                        <div className={classNames(cls.modal__icon, cls.modal__iconFeedback)}><i className="fas fa-comments" /></div>
+                        <h3>{editingFeedbackId ? "Ma'lumotni tahrirlash" : "Ma'lumot qo'shish"}</h3>
+                        <p className={cls.modal__teacher}>{selectedTeamCollabTeacher?.name} {selectedTeamCollabTeacher?.surname}</p>
+                    </div>
+                    <div className={cls.modal__form}>
+                        <div className={cls.modal__field}>
+                            <label><i className="fas fa-signal" /> Holat</label>
+                            <StatusRadio value={teamCollabFormData.status} onChange={(v) => handleTeamCollabChange('status', v)} />
+                        </div>
+                        <div className={cls.modal__field}>
+                            <label><i className="fas fa-calendar-alt" /> Sana va vaqt</label>
+                            <Input extraClassName={cls.select} type="datetime-local" value={teamCollabFormData.datetime} onChange={(e) => handleTeamCollabChange('datetime', e.target.value)} />
+                        </div>
+                        <Textarea value={teamCollabFormData.comment} extraClassName={cls.select} onChange={(val) => handleTeamCollabChange('comment', val)} placeholder="Fikringizni yozing..." />
+                        <div className={cls.modal__actions}>
+                            <Button type="danger" onClick={() => setTeamCollabModalActive(false)}>Bekor qilish</Button>
+                            <Button type="submit" onClick={handleTeamCollabSubmit}>{editingFeedbackId ? 'Yangilash' : 'Saqlash'}</Button>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+            <ConfirmModal type="danger" title="Ma'lumotni o'chirish" text="Ushbu ma'lumotni o'chirishni tasdiqlaysizmi?" active={teamCollabDeleteModalActive} setActive={setTeamCollabDeleteModalActive} onClick={handleTeamCollabDeleteConfirm} />
         </div>
     );
 };

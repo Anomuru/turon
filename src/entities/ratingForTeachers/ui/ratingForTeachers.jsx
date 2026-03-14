@@ -44,7 +44,7 @@ const TableHeaders = ({ category }) => {
 
             }
             {
-                (category === "conduct" || category === "responsiveness") && (
+                (category === "conduct" || category === "responsiveness" || category === "collaboration") && (
                     <>
                         <th>Namunali</th>
                         <th>Qoniqarli</th>
@@ -110,7 +110,7 @@ const TableRow = ({ item, index, category }) => {
                 )
             }
             {
-                (category === "conduct" || category === "responsiveness") && (
+                (category === "conduct" || category === "responsiveness" || category === "collaboration") && (
                     <>
                         <td>{item?.good}</td>
                         <td>{item?.average}</td>
