@@ -843,7 +843,7 @@ export const ContributionsPage = () => {
                         items: teamCollab,
                         emptyLabel: "Hozircha ma'lumotlar yo'q",
                         addBtnLabel: "Birinchi ma'lumotni qo'shing",
-                        addBtnIcon: 'triangle',
+                        addBtnIcon: 'user-group',
                     })}
             </div>
 
