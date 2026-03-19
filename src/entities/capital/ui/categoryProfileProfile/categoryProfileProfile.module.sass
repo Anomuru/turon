@@ -1,0 +1,682 @@
+// ─── Root ───────────────────────────────────────────────────────────────────
+.profile
+  padding: 2.4rem 3rem
+  max-width: 1100px
+  margin: 0 auto
+  display: flex
+  flex-direction: column
+  gap: 2.4rem
+
+
+// ─── Hero Card ───────────────────────────────────────────────────────────────
+.hero
+  display: flex
+  gap: 3rem
+  align-items: flex-start
+  background: #fff
+  border-radius: 20px
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07)
+  padding: 3rem
+  position: relative
+  overflow: hidden
+
+.blob1
+  position: absolute
+  width: 28rem
+  height: 28rem
+  background: radial-gradient(circle, rgba(14,165,233,0.08) 0%, transparent 70%)
+  top: -8rem
+  right: -4rem
+  border-radius: 50%
+  pointer-events: none
+
+.blob2
+  position: absolute
+  width: 20rem
+  height: 20rem
+  background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%)
+  bottom: -6rem
+  left: 8rem
+  border-radius: 50%
+  pointer-events: none
+
+.imageBlock
+  flex-shrink: 0
+  width: 13rem
+  height: 13rem
+  border-radius: 18px
+  overflow: hidden
+  box-shadow: 0 6px 24px rgba(14,165,233,0.18)
+  position: relative
+  z-index: 1
+
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+
+.imgFallback
+  width: 100%
+  height: 100%
+  background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 100%)
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 4.4rem
+  color: #0ea5e9
+
+.heroInfo
+  flex: 1
+  display: flex
+  flex-direction: column
+  gap: 1.4rem
+  position: relative
+  z-index: 1
+
+.titleRow
+  display: flex
+  align-items: flex-start
+  justify-content: space-between
+  gap: 1.6rem
+
+.heroSub
+  font-size: 1.2rem
+  font-weight: 600
+  text-transform: uppercase
+  letter-spacing: 1px
+  color: #0ea5e9
+  margin-bottom: 0.4rem
+
+.title
+  font-size: 2.6rem
+  font-weight: 800
+  color: #0f172a
+  letter-spacing: -0.4px
+  line-height: 1.2
+
+.idBadge
+  display: flex
+  align-items: center
+  gap: 0.5rem
+  font-size: 1.2rem
+  font-weight: 600
+  color: #6366f1
+  background: #eef2ff
+  padding: 0.5rem 1.2rem
+  border-radius: 20px
+  white-space: nowrap
+  flex-shrink: 0
+  margin-top: 0.2rem
+  border: 1px solid rgba(99,102,241,0.2)
+
+.metaRow
+  display: flex
+  gap: 1rem
+  flex-wrap: wrap
+
+.metaChip
+  display: inline-flex
+  align-items: center
+  gap: 0.5rem
+  padding: 0.5rem 1.2rem
+  border-radius: 8px
+  font-size: 1.3rem
+  font-weight: 500
+  color: var(--chip, #0ea5e9)
+  background: color-mix(in srgb, var(--chip, #0ea5e9) 10%, white)
+  border: 1px solid color-mix(in srgb, var(--chip, #0ea5e9) 20%, white)
+
+  i
+    font-size: 1.1rem
+
+.actionButtons
+  display: flex
+  gap: 1rem
+
+.btnEdit
+  display: inline-flex
+  align-items: center
+  gap: 0.6rem
+  padding: 0.9rem 2rem
+  background: linear-gradient(135deg, #6366f1, #818cf8)
+  color: #fff
+  border: none
+  border-radius: 10px
+  font-size: 1.35rem
+  font-weight: 600
+  cursor: pointer
+  transition: all 0.2s ease
+  box-shadow: 0 4px 14px rgba(99,102,241,0.28)
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 8px 20px rgba(99,102,241,0.38)
+
+.btnDelete
+  display: inline-flex
+  align-items: center
+  gap: 0.6rem
+  padding: 0.9rem 2rem
+  background: linear-gradient(135deg, #f43f5e, #fb7185)
+  color: #fff
+  border: none
+  border-radius: 10px
+  font-size: 1.35rem
+  font-weight: 600
+  cursor: pointer
+  transition: all 0.2s ease
+  box-shadow: 0 4px 14px rgba(244,63,94,0.28)
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 8px 20px rgba(244,63,94,0.38)
+
+  &:disabled
+    opacity: 0.6
+    cursor: not-allowed
+    transform: none
+
+
+// ─── Stat Cards ──────────────────────────────────────────────────────────────
+.statsGrid
+  display: grid
+  grid-template-columns: repeat(4, 1fr)
+  gap: 1.6rem
+
+  @media (max-width: 900px)
+    grid-template-columns: repeat(2, 1fr)
+
+.statCard
+  background: #fff
+  border-radius: 16px
+  padding: 2rem 2rem
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05)
+  border: 1px solid #f1f5f9
+  display: flex
+  align-items: center
+  gap: 1.4rem
+  transition: transform 0.2s, box-shadow 0.2s
+  position: relative
+  overflow: hidden
+
+  &::after
+    content: ""
+    position: absolute
+    bottom: 0
+    left: 0
+    right: 0
+    height: 3px
+    background: var(--accent, #0ea5e9)
+    border-radius: 0 0 16px 16px
+
+  &:hover
+    transform: translateY(-3px)
+    box-shadow: 0 10px 28px rgba(0,0,0,0.09)
+
+.statIcon
+  width: 4.6rem
+  height: 4.6rem
+  border-radius: 12px
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 1.8rem
+  flex-shrink: 0
+
+.statBody
+  display: flex
+  flex-direction: column
+  gap: 0.2rem
+
+.statLabel
+  font-size: 1.15rem
+  font-weight: 600
+  color: #94a3b8
+  text-transform: uppercase
+  letter-spacing: 0.5px
+
+.statValue
+  font-size: 1.7rem
+  font-weight: 800
+  color: #0f172a
+
+
+// ─── Bottom 2-column Grid ────────────────────────────────────────────────────
+.bottomGrid
+  display: grid
+  grid-template-columns: 1fr 38rem
+  gap: 2rem
+
+  @media (max-width: 900px)
+    grid-template-columns: 1fr
+
+// Card shared header
+.cardHeader
+  display: flex
+  align-items: center
+  gap: 0.8rem
+  font-size: 1.5rem
+  font-weight: 700
+  color: #0f172a
+  margin-bottom: 1.8rem
+  padding-bottom: 1.2rem
+  border-bottom: 1.5px solid #f1f5f9
+
+  i
+    color: #0ea5e9
+    font-size: 1.4rem
+
+
+// ─── Details Card ────────────────────────────────────────────────────────────
+.detailsCard
+  background: #fff
+  border-radius: 18px
+  padding: 2.4rem
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05)
+  border: 1px solid #f1f5f9
+
+.detailsList
+  display: flex
+  flex-direction: column
+  gap: 0
+
+.detailRow
+  display: flex
+  align-items: center
+  gap: 1.4rem
+  padding: 1.2rem 0
+  border-bottom: 1px solid #f8fafc
+  transition: background 0.15s
+
+  &:last-child
+    border-bottom: none
+
+  &:hover
+    background: #fafbfc
+    border-radius: 10px
+    padding-left: 0.8rem
+    padding-right: 0.8rem
+    margin: 0 -0.8rem
+
+.detailIcon
+  width: 3.4rem
+  height: 3.4rem
+  border-radius: 10px
+  background: color-mix(in srgb, currentColor 10%, white)
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 1.3rem
+  flex-shrink: 0
+
+.detailContent
+  display: flex
+  flex-direction: column
+  gap: 0.2rem
+  flex: 1
+
+.detailLabel
+  font-size: 1.15rem
+  font-weight: 600
+  color: #94a3b8
+  text-transform: uppercase
+  letter-spacing: 0.4px
+
+.detailValue
+  font-size: 1.45rem
+  font-weight: 600
+  color: #1e293b
+
+
+// ─── Right Column ────────────────────────────────────────────────────────────
+.rightCol
+  display: flex
+  flex-direction: column
+  gap: 1.8rem
+
+
+// ─── Pay Analysis Card ────────────────────────────────────────────────────────
+.payCard
+  background: #fff
+  border-radius: 18px
+  padding: 2.4rem
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05)
+  border: 1px solid #f1f5f9
+
+.payBreakdown
+  display: flex
+  flex-direction: column
+  gap: 0
+
+.payRow
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 1rem 1.2rem
+  border-radius: 10px
+  font-size: 1.35rem
+  color: #475569
+
+  span
+    font-weight: 500
+
+  strong
+    font-size: 1.45rem
+    font-weight: 700
+
+.payRowHighlight
+  background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.04))
+  margin-top: 0.4rem
+
+.progressSection
+  display: flex
+  flex-direction: column
+  gap: 1.6rem
+  margin-top: 2rem
+  padding-top: 1.6rem
+  border-top: 1.5px solid #f1f5f9
+
+.progressStat
+  display: flex
+  flex-direction: column
+  gap: 0.6rem
+
+.progressHeader
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+.progressLabel
+  font-size: 1.25rem
+  font-weight: 600
+  color: #64748b
+
+.progressVal
+  font-size: 1.25rem
+  font-weight: 700
+  color: #0f172a
+
+.progressTrack
+  height: 0.7rem
+  background: #f1f5f9
+  border-radius: 99px
+  overflow: hidden
+
+.progressFill
+  height: 100%
+  border-radius: 99px
+  transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1)
+
+
+// ─── Category Card ───────────────────────────────────────────────────────────
+.catCard
+  background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%)
+  border-radius: 18px
+  padding: 2.4rem
+  box-shadow: 0 8px 24px rgba(99,102,241,0.28)
+  color: #fff
+
+  .cardHeader
+    color: rgba(255,255,255,0.85)
+    border-bottom-color: rgba(255,255,255,0.15)
+
+    i
+      color: rgba(255,255,255,0.85)
+
+.catBody
+  display: flex
+  align-items: center
+  gap: 1.6rem
+
+.catIcon
+  width: 5.6rem
+  height: 5.6rem
+  background: rgba(255,255,255,0.18)
+  border-radius: 14px
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 2.4rem
+  color: #fff
+  flex-shrink: 0
+
+.catName
+  font-size: 1.9rem
+  font-weight: 700
+  color: #fff
+  margin-bottom: 0.4rem
+
+.catId
+  font-size: 1.25rem
+  color: rgba(255,255,255,0.7)
+  font-weight: 500
+
+
+// ─── Modals ──────────────────────────────────────────────────────────────────
+.overlay
+  position: fixed
+  inset: 0
+  background: rgba(15,23,42,0.55)
+  backdrop-filter: blur(6px)
+  z-index: 1000
+  display: flex
+  align-items: center
+  justify-content: center
+  animation: fadeIn 0.2s ease
+
+@keyframes fadeIn
+  from
+    opacity: 0
+  to
+    opacity: 1
+
+.modal
+  background: #fff
+  border-radius: 20px
+  padding: 2.8rem
+  width: 100%
+  max-width: 560px
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18)
+  animation: slideUp 0.25s ease
+
+@keyframes slideUp
+  from
+    opacity: 0
+    transform: translateY(30px)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+.modalHeader
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin-bottom: 2.4rem
+
+.modalTitle
+  display: flex
+  align-items: center
+  gap: 0.8rem
+
+  i
+    color: #6366f1
+    font-size: 1.5rem
+
+  h2
+    font-size: 1.9rem
+    font-weight: 700
+    color: #0f172a
+
+.closeBtn
+  width: 3.6rem
+  height: 3.6rem
+  border-radius: 10px
+  border: none
+  background: #f1f5f9
+  display: flex
+  align-items: center
+  justify-content: center
+  cursor: pointer
+  font-size: 1.5rem
+  color: #64748b
+  transition: background 0.2s
+
+  &:hover
+    background: #e2e8f0
+
+.formGrid
+  display: grid
+  grid-template-columns: 1fr 1fr
+  gap: 1.6rem
+
+.formGroup
+  display: flex
+  flex-direction: column
+  gap: 0.6rem
+
+  &.fullWidth
+    grid-column: 1 / -1
+
+  label
+    font-size: 1.25rem
+    font-weight: 600
+    color: #475569
+
+  input
+    padding: 1rem 1.4rem
+    font-size: 1.4rem
+    border: 1.5px solid #e2e8f0
+    border-radius: 10px
+    outline: none
+    color: #0f172a
+    transition: border-color 0.2s, box-shadow 0.2s
+    background: #fafbfc
+
+    &:focus
+      border-color: #6366f1
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.12)
+
+.modalActions
+  display: flex
+  gap: 1.2rem
+  justify-content: flex-end
+  margin-top: 2.2rem
+
+.btnCancel
+  padding: 1rem 2rem
+  background: #f1f5f9
+  border: none
+  border-radius: 10px
+  font-size: 1.4rem
+  font-weight: 600
+  color: #475569
+  cursor: pointer
+  transition: background 0.2s
+
+  &:hover
+    background: #e2e8f0
+
+.btnSave
+  display: inline-flex
+  align-items: center
+  gap: 0.6rem
+  padding: 1rem 2.4rem
+  background: linear-gradient(135deg, #6366f1, #818cf8)
+  color: #fff
+  border: none
+  border-radius: 10px
+  font-size: 1.4rem
+  font-weight: 600
+  cursor: pointer
+  transition: all 0.2s ease
+  box-shadow: 0 4px 14px rgba(99,102,241,0.28)
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 6px 20px rgba(99,102,241,0.38)
+
+  &:disabled
+    opacity: 0.6
+    cursor: not-allowed
+    transform: none
+
+
+// ─── Confirm Modal ───────────────────────────────────────────────────────────
+.confirmModal
+  background: #fff
+  border-radius: 20px
+  padding: 3rem
+  width: 100%
+  max-width: 420px
+  text-align: center
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18)
+  animation: slideUp 0.25s ease
+
+  .confirmIcon
+    width: 6rem
+    height: 6rem
+    background: linear-gradient(135deg, #fda4af, #fb7185)
+    border-radius: 50%
+    display: flex
+    align-items: center
+    justify-content: center
+    margin: 0 auto 1.6rem
+    font-size: 2.4rem
+    color: #fff
+    box-shadow: 0 6px 20px rgba(244,63,94,0.3)
+
+  h3
+    font-size: 1.9rem
+    font-weight: 700
+    color: #0f172a
+    margin-bottom: 0.8rem
+
+  p
+    font-size: 1.4rem
+    color: #64748b
+    line-height: 1.6
+    margin-bottom: 2.2rem
+
+.confirmBtns
+  display: flex
+  gap: 1.2rem
+  justify-content: center
+
+
+// ─── Loading / Empty ─────────────────────────────────────────────────────────
+.loader
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  min-height: 30rem
+  gap: 1.6rem
+  color: #64748b
+  font-size: 1.5rem
+
+  &::before
+    content: ""
+    width: 4rem
+    height: 4rem
+    border: 3px solid #e2e8f0
+    border-top-color: #0ea5e9
+    border-radius: 50%
+    animation: spin 0.7s linear infinite
+
+@keyframes spin
+  to
+    transform: rotate(360deg)
+
+.empty
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  min-height: 30rem
+  gap: 1.2rem
+  font-size: 1.5rem
+  color: #94a3b8
+
+  i
+    font-size: 3.2rem
+    color: #cbd5e1

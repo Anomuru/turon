@@ -28,7 +28,7 @@ import {
     getRouteFilteredLeads,
     getAccounting,
     getGroupQuarter, getGroupQuarterShow, getGroupObserve, getLessonTable, getGroupExams, getCvSubmissons, getParty,
-    classView
+    classView, getCapitalCategoryProfile
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
@@ -37,6 +37,7 @@ import {LessonsTable} from "features/groupProfile/ui/lessonTable/lessonTable.jsx
 import {CvSubmissions} from "pages/cvSubmissions/index.js";
 import {PartyPage} from "pages/partyPage/partyPage.jsx";
 import {TimetableGrid} from "entities/timeTableTuron/classView2.0/classView2.0.jsx";
+// import {CategoryProfile} from "pages/capitalPage/index.js";
 const AccountingPageNew = lazyPage(() => import("pages/accountingPage2.0") , "AccountingPageNew");
 // import {GroupQuarterShow} from "pages/groupsPage/index.js";
 
@@ -60,8 +61,8 @@ const RoomsProfilePage = lazyPage(() => import("pages/roomsProiflePage"), "Rooms
 
 const ContractPage = lazyPage(() => import("pages/contractPage"), "ContractPage");
 
-const CapitalInside = lazyPage(() => import("pages/capitalPage"), "CapitalInside");
-const CapitalPage = lazyPage(() => import("pages/capitalPage"), "CapitalPage");
+// const CapitalInside = lazyPage(() => import("pages/capitalPage"), "CapitalInside");
+const CapitalProfile = lazyPage(() => import("pages/capitalPage/"), "CategoryProfile");
 
 const TeacherSalaryPage = lazyPage(() => import("pages/teacherSalaryPage"), "TeacherSalaryPage");
 const EmployerSalaryPage = lazyPage(() => import("pages/employerSalaryPage"), "EmployerSalaryPage");
@@ -105,13 +106,7 @@ export const routersConfigProfile = [
         path: getRouteFilteredLeads(),
         element: <FilteredLeadsPage/>,
     },
-    {
-        to: "capitalBox",
-        name: "capitalInside",
-        path: getCapitalInside(":id"),
-        element: <CapitalInside/>
 
-    },
     {
         to: 'vacancyPage/vacancyWorkPage',
         path: getVacancyWorkPage(":id"),
@@ -277,12 +272,10 @@ export const routersConfigProfile = [
         element: <TimetableGrid/>
     },
 
-
-
-    // {
-    //     name: "capital category profile",
-    //     path: getCapitalCategoryProfile(":id"),
-    //     element: <CategoryProfile/>
-    // },
+    {
+        name: "capital category profile",
+        path: getCapitalCategoryProfile(":id"),
+        element: <CapitalProfile/>
+    },
 
 ]

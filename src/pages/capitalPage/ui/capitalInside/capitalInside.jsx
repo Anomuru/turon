@@ -32,15 +32,12 @@ import {getLocationThunk} from "../../../../entities/creates/model/createThunk/c
 import {onAddAlertOptions} from "../../../../features/alert/model/slice/alertSlice";
 import {SubCategory} from "../subCategory/subCategory";
 import {getBranch} from "../../../../features/branchSwitcher";
+import {getCurrentBranch} from "entities/oftenUsed/model/oftenUsedSelector.js";
 
 
-const capitalType = [
-    {name: "category", label: "Category"},
-    {name: "subCategory", label: "Sub Category"},
-]
 
 const reducers = {
-    capital: capitalReducer
+    CapitalSlice: capitalReducer
 }
 
 export const CapitalInside = memo(() => {
@@ -52,39 +49,63 @@ export const CapitalInside = memo(() => {
     const {request} = useHttp()
     const navigation = useNavigate()
     const capitalInside = useSelector(getCapitalInside)
+    const [datas, setDatas] = useState([])
+    const [pay, setPay] = useState([])
+    const branchId = localStorage.getItem("branchForDirector")
 
-    const paymentType = useSelector(getCapitalTypes)
+    useEffect(() => {
+        if (id && branchId) {
+            dispatch(getInsideCategory({id, branch: branchId}))
+        }
+    }, [id, branchId]);
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const [category, capital] = await Promise.all([
+                request(`${API_URL}Capital/capital_category/${id}/`, "GET", null, headers()),
+            ]);
+            setDatas(category);
+        };
+        fetchData();
+    }, [id]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await request(`${API_URL}Payments/payment-types/`, "GET", null, headers());
+            setPay(res);
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
         if (id) {
             dispatch(getCapitalInfo(id))
             dispatch(getPaymentType())
-            dispatch(getInsideCategory(id))
         }
 
 
-        // dispatch(getBranchThunk())
     }, [id])
 
 
-    const getCapitalInsideData = useSelector(getCapitalInsideInfo)
+
 
     const loading = useSelector(getLoading)
-    // const branches = useSelector(getLocations)
+
 
 
     const [changeItem, setChangeItem] = useState({})
     const [changedImages, setChangedImages] = useState([])
     const [selectPayment, setSelectPayment] = useState()
-    const [capitalSelect, setSelectedCapital] = useState([])
 
-
-    const [activeMenu, setActiveMenu] = useState(capitalType[0].name)
+    const currentBranch = useSelector(getCurrentBranch);
+    const ROLE = localStorage.getItem('job');
+    const userBranchId = localStorage.getItem('branchId');
+    const branchForFilter = ROLE === 'admin' ? currentBranch : userBranchId;
 
     const [activeModal, setActiveModal] = useState(false)
 
     const [editModal, setEditModal] = useState(false)
-    const [selectedBranches, setSelectedBranches] = useState([])
     const onDelete = () => {
         request(`${API_URL}Capital/capital_category/${id}/`, "DELETE", null, headers())
             .then(res => {
@@ -94,7 +115,7 @@ export const CapitalInside = memo(() => {
                     status: true,
                     msg: res.msg
                 }))
-                navigation(-2)
+                navigation(-1)
             })
             .catch(err => {
                 console.log(err)
@@ -102,26 +123,37 @@ export const CapitalInside = memo(() => {
 
 
     }
+    useEffect(() => {
+        if (changeItem) {
+            setValue("name", changeItem.name)
+            setValue("id_number", changeItem.id_number)
+        }
+    }, [changeItem])
 
-    const onClick = (data) => {
+
+
+    const onClick = async (data) => {
         setActiveModal(false)
 
-        dispatch(createInsideCategory({data, changedImages, selectPayment, selectedBranches, id}));
+        await dispatch(createInsideCategory({data, changedImages, selectPayment, branchForFilter, id}));
 
-        // dispatch(getInsideCategory(id))
+        // dispach(getInsideCategory(id))
         setValue("name", "")
         setValue("id_number", "")
         setValue("price", "")
         setValue("total_down_cost", "")
         setValue("term", "")
         setValue("curriculum_hours", "")
+
     };
     const capitalItem = () => {
         return loading ? <DefaultPageLoader/> : (
             <>
-                <CapitalInsideSecond onDelete={onDelete} editModal={editModal}
-                                     setEditModal={() => setEditModal(!editModal)}
-                                     capitalData={getCapitalInsideData}/>
+                <CapitalInsideSecond
+                    setChangeItem={setChangeItem}
+                    onDelete={onDelete} editModal={editModal}
+                    setEditModal={() => setEditModal(!editModal)}
+                    capitalData={datas}/>
                 <CapitalInsideProduct addModal={activeModal} setAddModal={setActiveModal}
                                       capitalData={capitalInside}/>
             </>
@@ -129,27 +161,37 @@ export const CapitalInside = memo(() => {
     }
 
 
-    const onChange = (data) => {
-        setEditModal(!editModal)
-        dispatch(changeCapitalInfoThunk({data, id: id}))
+    const onChange = async (data) => {
+        await dispatch(changeCapitalInfoThunk({data, id}))
+            .then(() => {
+                dispatch(onAddAlertOptions({type: 'success', status: true, msg: "Ma'lumot yangilandi"}))
+            })
+
+        const category = await request(
+            `${API_URL}Capital/capital_category/${id}/`,
+            "GET",
+            null,
+            headers()
+        )
+
+        setDatas(category)
+
+        setEditModal(false)
+
         setValue("name", "")
         setValue("id_number", "")
     }
 
-
-    const capitalItemRender = capitalItem()
-
     return (
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.capitalInside}>
-                <CapitalInsideHeader
-                    activeMenu={activeMenu}
-                    setActiveMenu={setActiveMenu}
-                    categoryMenu={capitalType}
-
-                />
+                {/*<CapitalInsideHeader*/}
+                {/*    activeMenu={activeMenu}*/}
+                {/*    setActiveMenu={setActiveMenu}*/}
+                {/*    categoryMenu={capitalType}*/}
+                {/*/>*/}
                 {
-                    activeMenu === "category" ? capitalItemRender : <SubCategory/>
+                     capitalItem()
                 }
 
 
@@ -162,9 +204,9 @@ export const CapitalInside = memo(() => {
                     setActiveModal={setActiveModal}
                     setChangedImages={setChangedImages}
                     changeItem={changeItem}
-                    options={paymentType}
-                    // branches={branches}
-                    setSelectedBranches={setSelectedBranches}
+                    options={pay}
+
+
                 />
                 <EditModal register={register} handleSubmit={handleSubmit} onClick={onChange} editModal={editModal}
                            setEditModal={setEditModal} setChangedImages={setChangedImages} changeItem={changeItem}/>

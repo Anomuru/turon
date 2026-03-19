@@ -5,7 +5,8 @@ import {
     getCapitalInfo,
     changeCapitalInfoThunk,
     getInsideCategory,
-    getPaymentType, createInsideCategory, getCapitalCategory
+    getPaymentType, createInsideCategory, getCapitalCategory,
+    deleteCapitalItem, updateCapitalItem
 } from "../thunk/capitalThunk";
 
 
@@ -30,6 +31,9 @@ export const CapitalSlice = createSlice({
             const id = action.payload.id;
             state.capitalCategoryInfo = action.payload
         },
+        onUpdateCapitalProfile: (state, action) => {
+            state.capitalCategory = action.payload
+        }
     },
     extraReducers: builder =>
         builder
@@ -42,7 +46,7 @@ export const CapitalSlice = createSlice({
             .addCase(getCapitalDataThunk.fulfilled , (state, action) => {
                 state.loading = false
                 state.capitalsData = action.payload
-                // state.capitalPermission = action.payload?.permissions
+                state.capitalPermission = action.payload?.permissions
             })
             .addCase(getCapitalDataThunk.rejected , (state, action) => {
                 state.error = action.payload ?? null
@@ -168,9 +172,32 @@ export const CapitalSlice = createSlice({
                 state.error = "error"
                 state.loading = false
             })
+
+
+
+            .addCase(deleteCapitalItem.fulfilled , state => {
+                state.capitalCategory = null
+                state.loading = false
+            })
+
+
+
+            .addCase(updateCapitalItem.pending , state => {
+                state.loading = true
+                state.error = false
+            })
+            .addCase(updateCapitalItem.fulfilled , (state, action) => {
+                state.capitalCategory = action.payload
+                state.loading = false
+                state.error = false
+            })
+            .addCase(updateCapitalItem.rejected , state => {
+                state.error = "error"
+                state.loading = false
+            })
 })
 
-export const {onDeleteBranch}  =CapitalSlice.actions
+export const {onDeleteBranch, onUpdateCapitalProfile}  = CapitalSlice.actions
 export const {reducer: capitalReducer} = CapitalSlice
 
 export default CapitalSlice.reducer

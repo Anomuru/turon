@@ -1,24 +1,25 @@
 import {Button} from "shared/ui/button";
+import cls from "./capitalOutsideHeader.module.sass"
 
-
-export const CapitalOutsideHeader = ({caunt , active , setActiveModal, isCanAdd}) => {
+export const CapitalOutsideHeader = ({caunt, active, setActiveModal, isCanAdd}) => {
     return (
-        <div>
-            <div style={{display: "flex" , justifyContent: "flex-end"}}>
+        <div className={cls.header}>
+            <div className={cls.header__top}>
                 {/*<RequirePermission permission={isCanAdd}>*/}
                     <Button
-                        onClick={() => setActiveModal(!active) }
+                        onClick={() => setActiveModal(!active)}
                         children={<i className={"fa fa-plus"}/>} type={"editPlus"}
                     />
                 {/*</RequirePermission>*/}
             </div>
 
-            <div style={{padding: "2rem 0" , display: "flex" , flexDirection: "column" , gap: "1rem"}}>
-                <h1 style={{fontWeight: "bolder"}}>Capital</h1>
-                <span style={{fontSize: "1.8rem" ,display: "flex" , gap: "4rem"}}>Jami (Down cost): {caunt}</span>
+            <div className={cls.header__info}>
+                <h1 className={cls.header__title}>Capital</h1>
+                <span className={cls.header__count}>
+                    Jami (Down cost):
+                    <strong>{caunt}</strong>
+                </span>
             </div>
-
         </div>
     );
 };
-

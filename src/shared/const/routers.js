@@ -58,13 +58,14 @@ export const getLessonTable = (id) => `groups/groupInfo/${id}/lessonTable/${id}`
 export const getInkasatsiya = (id) => `inkasatsiya/*`
 export const getGroupExams = (id) => `groups/exams`
 
+
 export const getOtchot = () => `accounting/otchot/*`
 
 
 export const getGroupHistory = (id) => `students/profile/history/${id}`
 
 export const getRouteClassProfile = (id) => `groups/classProfile/${id}`
-export const getCapitalCategoryProfile = (id) => `capital/:id/capitalBoxProfile/:id/categoryProfile/${id}`
+export const getCapitalCategoryProfile = (id) => `capital/capitalBoxProfile/:id/profile/${id}`
 export const getRouteRGBData = () => `students/RGBData/*`
 export const getRouteStudentAttendance = () => `students/attendance/*`
 export const getQuarterMaster = () => `quarterMaster`
