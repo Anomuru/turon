@@ -20,7 +20,8 @@ import {
     getRouteCalendar,
     getRouteMain,
     getRouteRegister,
-    getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews, getCapitalCategoryProfile, getCapitalInside
+    getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews, getCapitalCategoryProfile, getCapitalInside,
+    getDashboard
 
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
@@ -54,6 +55,7 @@ const SurveyResultsPage = lazyPage(() => import("pages/surveyResultsPage"), "Sur
 const ContributionsPage = lazyPage(() => import("pages/contributionsPage"), "ContributionsPage");
 const TeachersDevelopmentPage = lazyPage(() => import("pages/teachersDevelopmentPage"), "TeachersDevelopmentPage");
 const CapitalInside = lazyPage(() => import("pages/capitalPage"), "CapitalInside");
+const DirectorDashboardPage = lazyPage(() => import("pages/directorDashboardPage"), "DirectorDashboardPage");
 
 
 export const routersConfigList = [
@@ -238,5 +240,11 @@ export const routersConfigList = [
         element: <CapitalInside/>
 
     },
+    {
+        to: "dashboard",
+        name: "dashboard",
+        path: getDashboard(),
+        element: <DirectorDashboardPage/>
+    }
 
 ]

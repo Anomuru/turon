@@ -40,11 +40,12 @@ import "app/styles/index.sass";
 import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
 import { DefaultLoader, DefaultPageLoader } from "shared/ui/defaultLoader/index.js";
 import { NotificationPage, TodoistPage } from 'pages/todoistPage';
+import {ROLES} from "shared/const/roles.js";
 
 
 export const AppRouter = () => {
 
-
+    const job = localStorage.getItem("job");
     const router = createBrowserRouter(
         createRoutesFromElements(
             <>
@@ -149,9 +150,11 @@ export const AppRouter = () => {
 
 
                         <Route
-                            index
-                            element={<Navigate to={"register"} />}
-                        />
+                                index
+                                element={<Navigate to={"register"} />}
+                            />
+
+
                     </Route>
                 </Route>
 

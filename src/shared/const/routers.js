@@ -36,6 +36,7 @@ export const getCapital = (id) => `capital/*`
 
 export const getCapitalInside = (id) => `capital/capitalBoxProfile/${id}`
 
+export const getDashboard = (id) => `dashboard`
 
 
 
