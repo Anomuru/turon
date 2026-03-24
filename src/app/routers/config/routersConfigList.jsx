@@ -20,7 +20,8 @@ import {
     getRouteCalendar,
     getRouteMain,
     getRouteRegister,
-    getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews
+    getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews, getCapitalCategoryProfile, getCapitalInside,
+    getDashboard
 
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
@@ -53,6 +54,9 @@ const RatingForTeachersPage = lazyPage(() => import("pages/ratingForTeachersPage
 const SurveyResultsPage = lazyPage(() => import("pages/surveyResultsPage"), "SurveyResultsPage");
 const ContributionsPage = lazyPage(() => import("pages/contributionsPage"), "ContributionsPage");
 const TeachersDevelopmentPage = lazyPage(() => import("pages/teachersDevelopmentPage"), "TeachersDevelopmentPage");
+const CapitalInside = lazyPage(() => import("pages/capitalPage"), "CapitalInside");
+const DirectorDashboardPage = lazyPage(() => import("pages/directorDashboardPage"), "DirectorDashboardPage");
+
 
 export const routersConfigList = [
     {
@@ -228,6 +232,19 @@ export const routersConfigList = [
         name: "O'qituvchini rivojlantirish",
         path: "development",
         element: <TeachersDevelopmentPage/>
+    },
+    {
+        to: "capitalBox",
+        name: "capitalInside",
+        path: getCapitalInside(":id"),
+        element: <CapitalInside/>
+
+    },
+    {
+        to: "dashboard",
+        name: "dashboard",
+        path: getDashboard(),
+        element: <DirectorDashboardPage/>
     }
 
 ]

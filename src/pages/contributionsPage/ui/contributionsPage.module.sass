@@ -572,3 +572,62 @@
     gap: 1rem
     justify-content: flex-end
     margin-top: 0.5rem
+
+// ── Conduct modal icon ──────────────────────────────────────────────────────
+.modal__iconConduct
+  background: linear-gradient(135deg, #7c3aed, #a855f7) !important
+  box-shadow: 0 0.6rem 1.6rem rgba(168, 85, 247, 0.3) !important
+
+// ── Feedback modal icon ─────────────────────────────────────────────────────
+.modal__iconFeedback
+  background: linear-gradient(135deg, #0891b2, #06b6d4) !important
+  box-shadow: 0 0.6rem 1.6rem rgba(6, 182, 212, 0.3) !important
+
+// ── Status badge (pill used inside accordion cards) ─────────────────────────
+.statusBadge
+  display: inline-flex
+  align-items: center
+  gap: 0.5rem
+  padding: 0.5rem 1.2rem
+  border-radius: 2rem
+  font-size: 1.4rem
+  font-weight: 600
+
+  i
+    font-size: 1.3rem
+
+// ── Status radio group ──────────────────────────────────────────────────────
+.statusRadioGroup
+  display: flex
+  gap: 1rem
+
+.statusRadioLabel
+  flex: 1
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 0.7rem
+  padding: 1rem 1.4rem
+  border-radius: 1rem
+  border: 2px solid #e2e8f0
+  background: #f8fafc
+  cursor: pointer
+  font-size: 1.4rem
+  font-weight: 500
+  color: #475569
+  transition: all 0.18s
+  user-select: none
+
+  &:hover
+    border-color: #93c5fd
+    background: rgba(37, 99, 235, 0.05)
+
+  i
+    font-size: 1.5rem
+
+.statusRadioChecked
+  font-weight: 700
+  box-shadow: 0 0.3rem 1rem rgba(0,0,0,0.1)
+
+.statusRadioInput
+  display: none

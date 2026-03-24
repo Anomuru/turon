@@ -1,15 +1,16 @@
 // export const API_URL_DOC = `http://192.168.0.100:8000/`
 // export const API_URL_DOC = `http://26.196.249.247:8000/`
+export const API_URL_FOR_DOC = `https://school.gennis.uz`
 
 // export const API_URL_DOC = `http://26.131.144.13:8001/`//
 // export const API_URL_DOC = `http://192.168.1.2:8000/`
 //
-// export const API_URL_DOC = `https://school.gennis.uz/`
+export const API_URL_DOC = `https://school.gennis.uz/`
 
 // export const API_URL_DOC = `http://26.131.144.13:8001/`//
 // export const API_URL_DOC = `http://localhost:8001/`
 
-export const API_URL_DOC = `https://school.gennis.uz/`
+// export const API_URL_DOC = `https://school.gennis.uz/`
 
 export const API_URL = `${API_URL_DOC}api/`
 

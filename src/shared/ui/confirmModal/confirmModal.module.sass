@@ -1,96 +1,116 @@
 @import "app/styles/abstracts/variables"
-.filter
+.overlay
+  position: fixed
+  inset: 0
+  background: rgba(62, 80, 122, 0.55)
+  backdrop-filter: blur(6px)
+  z-index: 1000
   display: flex
-  flex-direction: column
-  gap: 3rem
-  width: 440px
+  align-items: center
+  justify-content: center
+  animation: fadeIn 0.2s ease
 
-  //&__title
-    ali
+@keyframes fadeIn
+  from
+    opacity: 0
+  to
+    opacity: 1
 
-  &__container
+.modal
+  background: #fff
+  border-radius: 20px
+  padding: 2.8rem
+  width: 100%
+  max-width: 560px
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18)
+  animation: slideUp 0.25s ease
+
+@keyframes slideUp
+  from
+    opacity: 0
+    transform: translateY(30px)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+.confirmModal
+  background: #fff
+  border-radius: 20px
+  padding: 3rem
+  width: 100%
+  max-width: 420px
+  text-align: center
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18)
+  animation: slideUp 0.25s ease
+
+  .confirmIcon
+    width: 6rem
+    height: 6rem
+    border-radius: 50%
     display: flex
-    flex-direction: column
-    gap: 2rem
-    font-size: 1.6rem
-
-  &__select
-    width: 100% !important
-
-  &__age
-    display: flex
-    gap: 2rem
-
-  &__input
-    width: 200px !important
-    margin: 0 !important
-  //padding: 0 !important
-
-  &__status
-    display: flex
-    gap: 3rem
+    align-items: center
     justify-content: center
+    margin: 0 auto 1.6rem
+    font-size: 2.4rem
+    color: #fff
 
-  &__inner
-    display: flex
-    align-items: center
-    gap: .5rem
-    color: #22C55E
+    &.success
+      background: linear-gradient(135deg, #4ade80, #22c55e)
+      box-shadow: 0 6px 20px rgba(34,197,94,0.3)
 
-  &__radio
-    margin: 0 !important
-    color: #22C55E !important
+    &.danger
+      background: linear-gradient(135deg, #fda4af, #fb7185)
+      box-shadow: 0 6px 20px rgba(244,63,94,0.3)
 
-  .yellow
-    color: #EAB308 !important
+  h3
+    font-size: 1.9rem
+    font-weight: 700
+    color: #0f172a
+    margin-bottom: 0.8rem
 
-  .red
-    color: #F43F5E !important
+  p
+    font-size: 1.4rem
+    color: #64748b
+    line-height: 1.6
+    margin-bottom: 2.2rem
 
-  &__switch
-    display: flex
-    justify-content: space-between
-    align-items: center
-
-.buttonStyle
-  background: #49454F
-
-.deleteHead
-  width: 100%
-  height: 20px
+.confirmBtns
   display: flex
-  align-items: center
-  gap: 20px
-  padding-right: 2.5rem
-  h2
-    font-weight: 600
-    font-size: 1.8rem
-    color: #3C3C3C
+  gap: 1.2rem
+  justify-content: center
+.btnCancel
+  padding: 1rem 2rem
+  background: #f1f5f9
+  border: none
+  border-radius: 10px
+  font-size: 1.4rem
+  font-weight: 600
+  color: #475569
+  cursor: pointer
+  transition: background 0.2s
 
-//padding: 4rem
-
-.deleteText
-  width: 100%
-  height: 20px
-  display: flex
-  align-items: center
-  span
-    font-size: 1.8rem
-    color: #656565
-    margin-left: 5rem
-.deleteButtons
-  width: 100%
-  height: auto
-  display: flex
-  align-items: center
-  justify-content: end
-  gap: 10px
-
-.deleteButton
-  background: $error-color
-
-.cancelButton
-  background: #ECD0D7
-  color: #DF184F
   &:hover
-    color: #DF184F
+    background: #e2e8f0
+.btnDelete
+  display: inline-flex
+  align-items: center
+  gap: 0.6rem
+  padding: 0.9rem 2rem
+  background: linear-gradient(135deg, #f43f5e, #fb7185)
+  color: #fff
+  border: none
+  border-radius: 10px
+  font-size: 1.35rem
+  font-weight: 600
+  cursor: pointer
+  transition: all 0.2s ease
+  box-shadow: 0 4px 14px rgba(244,63,94,0.28)
+  &.success
+    background: linear-gradient(135deg, #4ade80, #22c55e)
+    box-shadow: 0 6px 20px rgba(34,197,94,0.3)
+    &:hover
+      transform: translateY(-2px)
+      box-shadow: 0 8px 20px rgba(63, 244, 99, 0.38)
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 8px 20px rgba(244,63,94,0.38)

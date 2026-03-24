@@ -25,10 +25,11 @@ import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/Dyn
 import {Employers, employersReducer, getEmployersCount} from "entities/employer/index.js";
 import {getEmployersData} from "entities/employer/model/selector/employersSelector.js";
 import {EmployeesFilter} from "features/filters/employeesFilter/index.js";
+import {capitalReducer, getCapitalData} from "entities/capital/index.js";
 
 
 const reducers = {
-    employers: employersReducer
+    employers: employersReducer,
 }
 
 export const TeachersPage = () => {
@@ -58,6 +59,7 @@ export const TeachersPage = () => {
             setCurrentPage(1)
 
     }, [employerSwitch])
+
 
     useEffect(() => {
         localStorage.setItem("userPage", employerSwitch);

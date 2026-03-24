@@ -43,6 +43,17 @@ const TableHeaders = ({ category }) => {
                 )
 
             }
+            {
+                (category === "conduct" || category === "responsiveness" || category === "collaboration") && (
+                    <>
+                        <th>Namunali</th>
+                        <th>Qoniqarli</th>
+                        <th>Qoniqarsiz</th>
+                        <th>Ball</th>
+
+                    </>
+                )
+            }
         </tr>
     );
     return <thead>{base}</thead>;
@@ -95,6 +106,16 @@ const TableRow = ({ item, index, category }) => {
                         <td>{item?.speaker_pd_count}</td>
                         <td>{item?.attended_pd_count}</td>
                         <td>{item?.absent_pd_count}</td>
+                    </>
+                )
+            }
+            {
+                (category === "conduct" || category === "responsiveness" || category === "collaboration") && (
+                    <>
+                        <td>{item?.good}</td>
+                        <td>{item?.average}</td>
+                        <td>{item?.bad}</td>
+                        <td>{item?.rating}</td>
                     </>
                 )
             }

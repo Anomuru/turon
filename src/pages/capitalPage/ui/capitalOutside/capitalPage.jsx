@@ -17,6 +17,8 @@ import {DefaultPageLoader} from "shared/ui/defaultLoader";
 import {AddCategoryModal, CreateCapitalModal} from "features/createCapitalModal";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {getSearchValue} from "features/searchInput/index.js";
+import {API_URL, headers, useHttp} from "shared/api/base.js";
+import {onAddAlertOptions} from "features/alert/index.js";
 
 
 const img = {
@@ -26,7 +28,7 @@ const img = {
 };
 
 const reducers = {
-    capital: capitalReducer
+    CapitalSlice: capitalReducer
 }
 
 
@@ -38,65 +40,63 @@ export const CapitalPage = memo(() => {
     const loading = useSelector(getLoading)
     const dispatch = useDispatch()
     const [activeModal, setActiveModal] = useState(false)
-
-
+    const capital = useSelector(getCapitalData)
     const [changeItem, setChangeItem] = useState({})
     const [changedImages, setChangedImages] = useState([])
 
-
-    const capitalPermission = useSelector(getCapitalPermission)
     const search = useSelector(getSearchValue)
 
+
+
     useEffect(() => {
-        dispatch(getCapitalDataThunk(search))
-    }, [search])
-    const getCapital = useSelector(getCapitalData)
+        dispatch(getCapitalDataThunk())
+    }, []);
 
-    const onClick = (data) => {
+    console.log(capital)
 
-        setActiveModal(!activeModal)
-        setValue("name", '')
-        setValue("id_number", '')
-        dispatch(createCapitalCategory({data, changedImages}))
+    const onClick = async (data) => {
+        await dispatch(createCapitalCategory({data, changedImages}))
+            .then(() => {
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: "Ma'lumot qo'shildi"
+                }))
+
+
+                setActiveModal(false)
+
+                setValue("name", "")
+                setValue("id_number", "")
+            })
+            .catch((err) => {
+                console.log(err)
+            })
 
 
     }
 
-    const loadingCount = () => {
-        if (loading === true) {
-            return (
-                <div className={cls.loader}>
-                    <div className={cls.loader__circle}>
-                        <div></div>
-                    </div>
-                </div>
-            )
-        } else {
-            return <div>{getCapital?.length}</div>
-        }
-    }
+    const loadingCount = loading ? null : capital?.length ?? 0
 
 
     return (
         <DynamicModuleLoader reducers={reducers}>
             <div className={cls.capitalMain}>
-                {capitalPermission && (
-                    <>
-                        <CapitalOutsideHeader
-                            caunt={loadingCount()}
-                            setActiveModal={setActiveModal}
-                            active={activeModal}
-                            isCanAdd={capitalPermission[0]?.add_capitalcategory}
-                        />
-                        {
-                            loading ? <DefaultPageLoader/> :
-                                <CapitalOutside
-                                    isCanView={capitalPermission[0]?.view_capitalcategory}
-                                    capitalData={getCapital}
-                                />
-                        }
-                    </>
-                )}
+                <>
+                    <CapitalOutsideHeader
+                        caunt={loadingCount}
+                        setActiveModal={setActiveModal}
+                        active={activeModal}
+                        isCanAdd={true}
+                    />
+                    {
+                        loading ? <DefaultPageLoader/> :
+                            <CapitalOutside
+                                isCanView={true}
+                                capitalData={capital}
+                            />
+                    }
+                </>
 
                 <CreateCapitalModal
                     changeItem={changeItem}

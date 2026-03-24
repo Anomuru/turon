@@ -9,12 +9,11 @@ export const CapitalInsideHeader = memo(({activeMenu, setActiveMenu, categoryMen
     const renderTypes = () => {
 
           return categoryMenu.map(item => (
-                <h2 key={item.name} onClick={() => setActiveMenu(item.name)} className={classNames(cls.itemName, {
+                <button key={item.name} type="button" onClick={() => setActiveMenu(item.name)} className={classNames(cls.itemName, {
                     [cls.active]: activeMenu === item.name
                 })}>
                     {item.label}
-
-                </h2>
+                </button>
             ))
 
     }

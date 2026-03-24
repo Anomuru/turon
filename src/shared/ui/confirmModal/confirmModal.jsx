@@ -7,35 +7,51 @@ import { Button } from "../button";
 import React from "react";
 
 export const ConfirmModal = ({ setActive, active, onClick, title = "Rostanham o'chirmoqchimisiz", text, type }) => {
-
+    // const [deleting, setDeleting] = useState(false);
     const renderImg = () => {
         // eslint-disable-next-line default-case
         switch (type) {
             case "danger":
-                return <img src={alertIcon} alt="" />
+                return <div className={`${cls.confirmIcon} ${type === 'success' ? cls.success : cls.danger}`}><i className="fa fa-triangle-exclamation"/></div>
             case "success":
-                return <img src={success} alt="" />
+                return <div className={`${cls.confirmIcon} ${type === 'success' ? cls.success : cls.danger}`}><i className="fa fa-circle-check"></i></div>
             case "warning":
-                return <img src={warning} alt="" />
+                return <img src={warning} alt=""/>
         }
     }
     return (
-        <Modal active={active} setActive={setActive}>
-            <div className={cls.filter}>
-                <div className={cls.deleteHead}>
-                    {renderImg()}
-                    <h2>{title}</h2>
-                </div>
-                {text ?
-                    <div className={cls.deleteText}>
-                        <span>{text}</span>
-                    </div> : null
+        <Modal extraClass={cls.overlay} active={active} setActive={setActive}>
+            <div className={cls.confirmModal} onClick={e => e.stopPropagation()}>
+                {renderImg()}
+                {
+                    type === "danger" ?
+                        <>
+                            <h3>O'chirishni tasdiqlang</h3>
+                            <p>
+                        <strong>{text}</strong> ni o'chirishni xohlaysizmi?
+                        Bu amalni qaytarib bo'lmaydi.
+                    </p> </> : type === "success" ? <> <p>
+                            <h3>Amal muvaffaqiyatli bajarildi !</h3>
+                        Bajarilgan amal muvaffaqiyatli bajarildi. Davom etishni xohlaysizmi?
+                    </p> </> : null
                 }
-                <div className={cls.deleteButtons}>
-                    <Button extraClass={cls.deleteButton} type={type} children={"Xa"} onClick={onClick} />
-                    <Button extraClass={cls.cancelButton} type={type === "success" ? "danger" : null} children={"Yo'q"} onClick={() => setActive(!active)} />
+
+                <div className={cls.confirmBtns}>
+                    {
+                        type === "danger" ? <>
+
+                            <button className={cls.btnCancel} onClick={() => setActive(false)}>Bekor qilish</button>
+                            <button className={`${cls.btnDelete} ${type === 'success' ? cls.success : cls.danger}`} onClick={onClick} >
+                                <><i className="fa fa-trash"/> Ha, o'chirish</>
+                            </button>
+                        </> : type === "success" ? <button className={`${cls.btnDelete} ${type === 'success' ? cls.success : cls.danger}`} onClick={() => setActive(false)} >
+                            <><i className="fa fa-check"/> Ha, tasdiqlash</>
+                        </button> : null
+                    }
+
                 </div>
             </div>
+
         </Modal>
     );
 };

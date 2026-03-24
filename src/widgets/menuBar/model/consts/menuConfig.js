@@ -9,6 +9,12 @@ export const menuConfig = [
     //     roles: true
     // },
     {
+        to: "dashboard",
+        name: "Dashboard",
+        icon: "fa-home",
+        roles: [ROLES.director,]
+    },
+    {
         to: "register",
         name: "Registratsiya",
         icon: "fa-edit",

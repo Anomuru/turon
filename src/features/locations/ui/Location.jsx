@@ -29,8 +29,6 @@ export const Location = () => {
     const userId = useSelector(getUserId)
     const branches = useSelector(getBranchesSelect)
 
-    console.log(currentBranchId, 'director locs');
-
 
     const [isLocal, setIsSetLocal] = useState(false)
 

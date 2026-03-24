@@ -45,23 +45,23 @@ export const changeCapitalInfoThunk = createAsyncThunk(
 
 export const getInsideCategory = createAsyncThunk(
     "capitalSlice/getInsideCategory",
-    async (id) => {
+    async ({id, branch}) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Capital/capital/${id}/`, "GET", null, headers())
+        return await request(`${API_URL}Capital/capital_list/?category=${id}&branch_id=${branch}`, "GET", null, headers())
     }
 )
 
 
 export const createInsideCategory = createAsyncThunk(
     "changeCapitalInfo/createInsideCategory",
-    async ({data, changedImages, selectPayment, selectedBranches, id}) => {
+    async ({data, changedImages, selectPayment, branchForFilter, id}) => {
         const {request} = useHttp();
 
         const formData = new FormData()
         formData.append("name" , data.name)
         formData.append("img" , changedImages)
         formData.append("category" , id)
-        formData.append("branch" , selectedBranches)
+        formData.append("branch" , branchForFilter)
         formData.append("id_number" , data.id_number)
         formData.append("price" , data.price)
         formData.append("total_down_cost" , data.total_down_cost)
@@ -86,5 +86,30 @@ export const getCapitalCategory = createAsyncThunk(
     async (id) => {
         const {request} = useHttp()
         return await request(`${API_URL}Capital/capital_one/${id}/`, "GET", null, headers())
+    }
+)
+
+export const deleteCapitalItem = createAsyncThunk(
+    "changeCapitalInfo/deleteCapitalItem",
+    async (id) => {
+        const {request} = useHttp()
+        await request(`${API_URL}Capital/capital_delete/${id}/`, "DELETE", null, headers())
+        return id
+    }
+)
+
+export const updateCapitalItem = createAsyncThunk(
+    "changeCapitalInfo/updateCapitalItem",
+    async ({id, data}) => {
+        const {request} = useHttp()
+        const formData = new FormData()
+        formData.append("name", data.name)
+        formData.append("id_number", data.id_number)
+        formData.append("price", data.price)
+        formData.append("total_down_cost", data.total_down_cost)
+        formData.append("term", data.term)
+        formData.append("curriculum_hours", data.curriculum_hours)
+        if (data.img) formData.append("img", data.img)
+        return await request(`${API_URL}Capital/capital_update/${id}/`, "PATCH", formData, headersImg())
     }
 )

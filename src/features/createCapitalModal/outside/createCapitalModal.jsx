@@ -85,4 +85,3 @@ const ImageDrop = ({index, setChangedImages, image, status}) => {
         </div>
     )
 }
-
