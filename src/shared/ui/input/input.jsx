@@ -30,6 +30,7 @@ export const Input = React.memo(({
     const [silk, setSilk] = useState("");
 
 
+    console.log(title)
     return register ? (
         <label style={style} className={cls.inputLabel} htmlFor={name}>
             {title || subTitle   ? (

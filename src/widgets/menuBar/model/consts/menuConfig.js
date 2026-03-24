@@ -61,14 +61,14 @@ export const menuConfig = [
         to: "cvShow",
         name: "CV Submissions ",
         icon: "fa-file",
-        roles: [ROLES.director, ROLES.admin]
+        roles: [ROLES.director, ROLES.smm]
         // roles: true
     },
     {
         to: "messages",
         name: "Xabarlar",
         icon: "fa-message",
-        roles: [ROLES.director, ROLES.admin]
+        roles: [ROLES.director, ROLES.smm]
         // roles: true
     },
 
@@ -76,7 +76,7 @@ export const menuConfig = [
         to: "news",
         name: "Yangiliklar",
         icon: "fa-brands fa-neos",
-        roles: [ROLES.director, ROLES.admin]
+        roles: [ROLES.director, ROLES.smm]
         // roles: true
     },
 
@@ -85,7 +85,7 @@ export const menuConfig = [
         to: "party",
         name: "Partiyalar",
         icon: "fa-solid fa-group-arrows-rotate",
-        roles: [ROLES.director, ROLES.admin]
+        roles: [ROLES.director, ROLES.advertising]
         // roles: true
     },
 
@@ -250,11 +250,11 @@ export const menuConfig = [
     //
     // },
 
-    {
-        to: "../../",
-        name: "Web-Sayt",
-        roles: [ROLES.smm]
-    },
+    // {
+    //     to: "../../",
+    //     name: "Web-Sayt",
+    //     roles: [ROLES.smm]
+    // },
 
 
 ];

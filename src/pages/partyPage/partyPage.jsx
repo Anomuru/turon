@@ -5,37 +5,57 @@ import {Button} from "shared/ui/button/index.js";
 import {ColorPicker, Modal, Select, Space} from "antd";
 import {Input} from "shared/ui/input/index.js";
 import {Textarea} from "shared/ui/textArea/index.js";
-import {ClipboardList, Search, Trash2, Trophy, Upload, UserPlus, Users, X} from "lucide-react";
+import {Award, ClipboardList, Medal, Plus, Save, Search, Trash2, Trophy, Upload, UserPlus, Users, X} from "lucide-react";
 import {useForm} from "react-hook-form";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchParty, fetchPartyTask} from "pages/partyPage/model/partyThunk.js";
-import {getParty, getPartyTask} from "pages/partyPage/model/partySelector.js";
-import {onAddParty, onAddPartyTask} from "pages/partyPage/model/partySlice.js";
+import {
+    fetchParty,
+    fetchPartyCompetitions,
+    fetchPartyReyting,
+    fetchPartyTask
+} from "pages/partyPage/model/partyThunk.js";
+import {getParty, getPartyCompetitions, getPartyReyting, getPartyTask} from "pages/partyPage/model/partySelector.js";
+import {
+    onAddCompetitions,
+    onAddParty,
+    onAddPartyTask,
+    onUpdateCompetitionResult,
+    onDeleteCompetitionResult ,
+    onAddCompetitionResult
+} from "pages/partyPage/model/partySlice.js";
 import {API_URL, headers, headersImg, useHttp} from "shared/api/base.js";
 
 const partyHeader = [
     "Partiyalar",
     "Topshiriqlar",
-    "Reyting"
+    "Reyting",
+    "Musobaqalar"
 ]
 
 
 export const PartyPage = () => {
+    const branchId = localStorage.getItem("branchId");
     const [selectedHeader, setSelectedHeader] = useState(partyHeader[0]);
     const [createParty, setCreateParty] = useState(false)
     const [assigment, setCreateAssigment] = useState(false)
+    const [createComp, setCreateComp] = useState(false)
 
     const data = useSelector(getParty)
     const dataTask = useSelector(getPartyTask)
 
 
-    console.log(data , "suhrob")
+
     const dispatch = useDispatch();
     useEffect(() => {
         if (selectedHeader === "Partiyalar") {
-            dispatch(fetchParty())
+            dispatch(fetchParty(branchId))
         } else if (selectedHeader === "Topshiriqlar") {
-            dispatch(fetchPartyTask())
+            dispatch(fetchPartyTask(branchId))
+        } else if (selectedHeader === "Musobaqalar") {
+            dispatch(fetchPartyCompetitions(branchId))
+        }
+        else if (selectedHeader === "Reyting") {
+            dispatch(fetchPartyReyting(branchId))
         }
     }, [selectedHeader]);
 
@@ -50,17 +70,19 @@ export const PartyPage = () => {
                                checked={selectedHeader === item}/>
                     )}
                 </div>
-                {selectedHeader === "Pariyalar" &&
+                {selectedHeader === "Partiyalar" &&
                     <Button onClick={() => setCreateParty(true)}>Yangi partiya qushish</Button>}
                 {selectedHeader === "Topshiriqlar" &&
                     <Button onClick={() => setCreateAssigment(true)}>Yangi topshiriq yaratish</Button>}
                 {selectedHeader === "Reyting" && null}
+                {selectedHeader === "Musobaqalar" && <Button onClick={() => setCreateComp(true)}>Yangi musobaqa turi</Button>}
             </div>
 
 
             {selectedHeader === "Partiyalar" && <Party data={data}/>}
             {selectedHeader === "Topshiriqlar" && <Assigment dataTask={dataTask}/>}
             {selectedHeader === "Reyting" && <Reyting/>}
+            {selectedHeader === "Musobaqalar" && <Competitions createComp={createComp} setCreateComp={setCreateComp}/>}
             <ModalPartyAdd createParty={createParty} setCreateParty={setCreateParty}/>
             <ModalAssignmentCreate assigment={assigment} setCreateAssigment={setCreateAssigment}/>
         </div>
@@ -74,6 +96,7 @@ const avatarColor = (i) => AVATAR_COLORS[i % AVATAR_COLORS.length];
 
 //topshiriq modal
 const ModalAssignmentCreate = ({assigment, setCreateAssigment}) => {
+    const branchId = localStorage.getItem("branchId");
 
     const {register, handleSubmit, setValue} = useForm();
     const [selectedParty, setSelectedParty] = useState([]);
@@ -82,7 +105,7 @@ const ModalAssignmentCreate = ({assigment, setCreateAssigment}) => {
     const dispatch= useDispatch()
     const [options , setOption] = useState([]);
     useEffect(() => {
-        request(`${API_URL}parties/parties/select-options/` , "GET", null , headers())
+        request(`${API_URL}Parties/parties/select-options/?branch_id=${branchId}` , "GET", null , headers())
             .then(res => {
                 setOption(res)
             })
@@ -94,7 +117,7 @@ const ModalAssignmentCreate = ({assigment, setCreateAssigment}) => {
             ...data,
             parties: selectedParty
         }
-        request(`${API_URL}parties/party-tasks/` , "POST", JSON.stringify(res) , headers())
+        request(`${API_URL}Parties/party-tasks/?branch_id=${branchId}` , "POST", JSON.stringify(res) , headers())
             .then(res => {
                 dispatch(onAddPartyTask(res))
                 setCreateAssigment(false)
@@ -144,6 +167,7 @@ const ModalPartyAdd = ({createParty, setCreateParty}) => {
     const [colorHex, setColorHex] = useState('#111F4C');
     const [formatHex, setFormatHex] = useState('hex');
     const formData = new FormData()
+    const branchId = localStorage.getItem("branchId");
 
     const {request} = useHttp()
 
@@ -175,7 +199,7 @@ const ModalPartyAdd = ({createParty, setCreateParty}) => {
         formData.append("image", partyImage2)
         formData.append("color", hexString)
         formData.append("desc", data.desc)
-        request(`${API_URL}parties/parties/`, "POST", formData, headersImg())
+        request(`${API_URL}Parties/parties/?branch_id=${branchId}`, "POST", formData, headersImg())
             .then(res => {
                 dispatch(onAddParty(res))
                 setCreateParty(false);
@@ -261,66 +285,16 @@ const PARTY_COLORS = [
 ];
 
 
-const MOCK_TASKS = [
-    {id: 1, name: "Tarix olimpiadasiga tayyorgarlik", deadline: "2025-05-01", ball: 200, done: 60, level: "yuqori"},
-    {id: 2, name: "Guruh prezentatsiyasi", deadline: "2025-04-25", ball: 150, done: 40, level: "o'rta"},
-];
 
-const MOCK_MEMBERS = [
-    {
-        id: 1,
-        avatar: "AK",
-        name: "Aziz Karimov",
-        cls: "10-A",
-        role: "Kapitan",
-        ball: 320,
-        level: "Ustoz",
-        status: "Faol",
-        statusColor: "#10b981"
-    },
-    {
-        id: 2,
-        avatar: "MY",
-        name: "Malika Yusupova",
-        cls: "10-A",
-        role: "A'zo",
-        ball: 290,
-        level: "Ilg'or",
-        status: "Faol",
-        statusColor: "#10b981"
-    },
-    {
-        id: 3,
-        avatar: "BR",
-        name: "Bobur Rahimov",
-        cls: "10-B",
-        role: "A'zo",
-        ball: 270,
-        level: "Ilg'or",
-        status: "Faol",
-        statusColor: "#10b981"
-    },
-    {
-        id: 4,
-        avatar: "DN",
-        name: "Dilorom Nazarova",
-        cls: "10-B",
-        role: "A'zo",
-        ball: 240,
-        level: "Ilg'or",
-        status: "Ogohlantirish",
-        statusColor: "#f59e0b"
-    },
-];
 
-const PartyDetailModal = ({party, color, onClose}) => {
+const PartyDetailModal = ({party, color, onClose , setSelectedParty}) => {
     const [search, setSearch] = useState("");
     const [activeAddModal, setActiveAddModal] = useState(false);
 
     if (!party) return null;
 
-    const filteredMembers = MOCK_MEMBERS.filter(m =>
-        m.name.toLowerCase().includes(search.toLowerCase())
+    const filteredMembers = party.memberships.filter(m =>
+        m.student_name.toLowerCase().includes(search.toLowerCase())
     );
 
 
@@ -371,35 +345,35 @@ const PartyDetailModal = ({party, color, onClose}) => {
                 </div>
 
                 {/* Assignments */}
-                <div className={cls.detailModal_section}>
-                    <div className={cls.detailModal_section_title}><ClipboardList size={16}/> Topshiriqlar
-                        ({MOCK_TASKS.length})
-                    </div>
-                    <div style={{height: "11rem", overflow: "auto"}}>
-                        {MOCK_TASKS.map(t => (
-                            <div key={t.id} className={cls.detailModal_task}>
-                            <span className={cls.detailModal_task_badge} style={{
-                                background: t.level === "yuqori" ? "#fef3c7" : "",
-                                color: t.level === "yuqori" ? "#d97706" : "#10b981"
-                            }}>{t.level.toUpperCase()}</span>
-                                <span className={cls.detailModal_task_name}>{t?.name}</span>
-                                <span className={cls.detailModal_task_date}>📅 {t?.deadline}</span>
-                                <span className={cls.detailModal_task_ball}
-                                      style={{color: party.color}}>+{t?.ball}</span>
-                                <div className={cls.detailModal_task_bar}>
-                                    <div style={{width: t?.done + "%", background: party.color}}/>
-                                </div>
-                                <span className={cls.detailModal_task_pct}>{t?.done}%</span>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                {/*<div className={cls.detailModal_section}>*/}
+                {/*    <div className={cls.detailModal_section_title}><ClipboardList size={16}/> Topshiriqlar*/}
+                {/*        ({MOCK_TASKS.length})*/}
+                {/*    </div>*/}
+                {/*    <div style={{height: "11rem", overflow: "auto"}}>*/}
+                {/*        {MOCK_TASKS.map(t => (*/}
+                {/*            <div key={t.id} className={cls.detailModal_task}>*/}
+                {/*            <span className={cls.detailModal_task_badge} style={{*/}
+                {/*                background: t.level === "yuqori" ? "#fef3c7" : "",*/}
+                {/*                color: t.level === "yuqori" ? "#d97706" : "#10b981"*/}
+                {/*            }}>{t.level.toUpperCase()}</span>*/}
+                {/*                <span className={cls.detailModal_task_name}>{t?.name}</span>*/}
+                {/*                <span className={cls.detailModal_task_date}>📅 {t?.deadline}</span>*/}
+                {/*                <span className={cls.detailModal_task_ball}*/}
+                {/*                      style={{color: party.color}}>+{t?.ball}</span>*/}
+                {/*                <div className={cls.detailModal_task_bar}>*/}
+                {/*                    <div style={{width: t?.done + "%", background: party.color}}/>*/}
+                {/*                </div>*/}
+                {/*                <span className={cls.detailModal_task_pct}>{t?.done}%</span>*/}
+                {/*            </div>*/}
+                {/*        ))}*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 {/* Members */}
                 <div className={cls.detailModal_section}>
                     <div className={cls.detailModal_section_header}>
                         <div className={cls.detailModal_section_title}><Users size={16}/> A'zolar Ro'yxati
-                            ({MOCK_MEMBERS.length})
+                            ({party.memberships?.length})
                         </div>
                         <div className={cls.detailModal_search}>
                             <Search size={14}/>
@@ -413,7 +387,7 @@ const PartyDetailModal = ({party, color, onClose}) => {
                         <table className={cls.detailModal_table}>
                             <thead>
                             <tr>
-                                {["#", "O'QUVCHI", "SINF", "LAVOZIM", "BALL", "DARAJA", "HOLAT", "AMAL"].map(h => <th
+                                {["#", "O'QUVCHI ISM FAMILIYA", "SINF", ""].map(h => <th
                                     key={h}>{h}</th>)}
                             </tr>
                             </thead>
@@ -428,26 +402,12 @@ const PartyDetailModal = ({party, color, onClose}) => {
                                                      background: color?.light,
                                                      color: color?.accent
                                                  }}>{m?.avatar}</div>
-                                            <span>{m?.name}</span>
+                                            <span>{m?.student_name}</span>
                                         </div>
                                     </td>
-                                    <td>{m?.cls}</td>
-                                    <td>{m?.role}</td>
-                                    <td>
-                                        <div className={cls.detailModal_ball_wrap}>
-                                            <div className={cls.detailModal_ball_bar}>
-                                                <div style={{width: barWidth(m?.ball), background: party.color}}/>
-                                            </div>
-                                            <span>{m?.ball}</span>
-                                        </div>
-                                    </td>
-                                    <td><span className={cls.detailModal_level}>{m?.level}</span></td>
-                                    <td><span className={cls.detailModal_status}
-                                              style={{color: m?.statusColor}}>● {m?.status}</span></td>
+                                    <td>{m?.student_class}</td>
                                     <td>
                                         <div className={cls.detailModal_actions}>
-                                            <button className={cls.detailModal_act_plus}>+10</button>
-                                            <button className={cls.detailModal_act_minus}>-10</button>
                                             <button className={cls.detailModal_act_del}><Trash2 size={11}/></button>
                                         </div>
                                     </td>
@@ -458,7 +418,7 @@ const PartyDetailModal = ({party, color, onClose}) => {
                     </div>
                 </div>
             </div>
-            <AddStudentsParty setActiveAddModal={setActiveAddModal} activeAddModal={activeAddModal}/>
+            <AddStudentsParty partyId={party.id} setActiveAddModal={setActiveAddModal} activeAddModal={activeAddModal} setSelectedParty={setSelectedParty}/>
         </div>
     );
 };
@@ -466,7 +426,16 @@ const PartyDetailModal = ({party, color, onClose}) => {
 const Party = ({data}) => {
     const [selectedParty, setSelectedParty] = useState(null);
     const selectedColor = selectedParty ? PARTY_COLORS[(selectedParty.id - 1) % PARTY_COLORS.length] : null;
+    const branchId = localStorage.getItem("branchId");
 
+    const {request} = useHttp()
+
+    const onClick = (id) => {
+        request(`${API_URL}Parties/parties/${id}/?branch_id=${branchId}` , "GET" , null , headers())
+            .then(res => {
+                setSelectedParty(res);
+            })
+    }
     return (
         <>
             <div className={cls.party__body}>
@@ -474,7 +443,7 @@ const Party = ({data}) => {
                     const color = PARTY_COLORS[i % PARTY_COLORS.length];
                     const progress = Math.min(100, Math.round((party.ball / 2850) * 100));
                     return (
-                        <div key={party.id} className={cls.party__body_box} onClick={() => setSelectedParty(party)}
+                        <div key={party.id} className={cls.party__body_box} onClick={() => onClick(party.id)}
                              style={{"--accent": color.accent, "--light": color.light}}>
                             {/* Card top banner */}
                             <div className={cls.party__body_box_banner} style={{background: party.color}}>
@@ -529,6 +498,7 @@ const Party = ({data}) => {
 
             {selectedParty && (
                 <PartyDetailModal
+                    setSelectedParty={setSelectedParty}
                     party={selectedParty}
                     color={selectedColor}
                     onClose={() => setSelectedParty(null)}
@@ -540,34 +510,129 @@ const Party = ({data}) => {
 
 //topshiriq page
 const Assigment = ({dataTask}) => {
+    // grades: { taskId -> { partyId -> ball } }
+    const [grades, setGrades] = useState({});
+    const [savedGrades, setSavedGrades] = useState({});
+    const branchId = localStorage.getItem("branchId");
+
+    const setGrade = (taskId, partyId, val) => {
+        setGrades(prev => ({
+            ...prev,
+            [taskId]: {...(prev[taskId] || {}), [partyId]: val}
+        }));
+    };
+
+    const saveGrade = async (taskId) => {
+        const taskGrades = grades[taskId] || {};
+
+        // 🔥 kerakli formatga o'tkazish
+        const payload = {
+            grades: Object.entries(taskGrades).map(([partyId, ball]) => ({
+                party: Number(partyId),
+                ball: Number(ball)
+            }))
+        };
+
+        try {
+            const res = await fetch(`${API_URL}Parties/party-tasks/${taskId}/bulk-grade/?branch_id=${branchId}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) throw new Error("Xatolik bor");
+
+            // success bo‘lsa local save
+            setSavedGrades(prev => ({
+                ...prev,
+                [taskId]: taskGrades
+            }));
+
+            console.log("Yuborildi:", payload);
+        } catch (err) {
+            console.error("Xatolik:", err);
+        }
+    };
+
+
     return (
         <div className={cls.party__assigment}>
-
-            {dataTask.map((item, i) => (
-                <div className={cls.party__assigment_box}>
-
-
+            {dataTask.map((item) => (
+                <div key={item.id} className={cls.party__assigment_box}>
                     <div className={cls.party__assigment_box_title}>
                         <span>{item.name}</span>
-                        <span>22.22.2222</span>
+                        <span>📅 {item.deadline || "Muddatsiz"}</span>
                     </div>
-                    {item?.desc}
-                    <div className={cls.party__assigment_box_parties}>
-                        {item.parties_info.map(item => (
-                            <div>
-                                {item.name}
-                            </div>
-                        ))}
+
+                    {item?.desc && <p className={cls.party__assigment_desc}>{item.desc}</p>}
+
+                    <div className={cls.party__assigment_gradeSection}>
+                        <div className={cls.party__assigment_gradeTitle}>
+                            <Trophy size={14} /> Baholash
+                        </div>
+
+                        {item.parties_info.map(party => {
+                            const saved = savedGrades[item.id]?.[party.id];
+                            const current = grades[item.id]?.[party.id] ?? "";
+                            const maxBall =  100;
+                            const progress = Math.min(100, (Number(current) / maxBall) * 100);
+
+                            return (
+                                <div key={party.id} className={cls.party__assigment_partyCard}>
+                                    <div className={cls.party__assigment_partyHeader}>
+                                        <div className={cls.party__assigment_partyName}>
+                                            <Users size={14} style={{color: party.color || "#94a3b8"}}/>
+                                            {party.name}
+                                        </div>
+                                        <div className={cls.party__assigment_status}>
+                                            {saved !== undefined ? (
+                                                <span className={cls.party__assigment_savedBall}>
+                                                    <Medal size={12} /> {saved}
+                                                </span>
+                                            ) : (
+                                                <span style={{color: "#cbd5e1"}}>Baholanmagan</span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    <div className={cls.party__assigment_inputs}>
+                                        <div className={cls.party__assigment_ballInput}>
+                                            <Input
+                                                extraClassName={cls.party__assigment_inputField}
+                                                type="number"
+                                                min="0"
+
+                                                max={maxBall}
+                                                placeholder="Ball..."
+                                                defaultValue={party.ball}
+                                                onChange={e => setGrade(item.id, party.id, e.target.value)}
+                                            />
+                                            <span className={cls.party__assigment_maxBall}>{party.ball}/{maxBall}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className={cls.party__assigment_progressWrap}>
+                                        <div
+                                            className={cls.party__assigment_progressBar}
+                                            style={{
+                                                width: `${progress}%`,
+                                                background: party.color || "#4f8ef7"
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
-                    {/*<h3>Bajarilish</h3>*/}
-                    {/*<div className={cls.party__assigment_box_score}>*/}
 
-                    {/*    <div style={{width: i * 2 * 10 + "%"}}>*/}
-
-                    {/*    </div>*/}
-                    {/*</div>*/}
-
-
+                    <Button
+                        extraClassName={cls.party__assigment_saveBtn}
+                        onClick={() => saveGrade(item.id)}
+                    >
+                        <Save size={18} /> Saqlash
+                    </Button>
                 </div>
             ))}
         </div>
@@ -575,35 +640,19 @@ const Assigment = ({dataTask}) => {
 }
 
 
-const allSt = [
-    {id: 1, name: "Aziz Karimov", avatar: "AK", class: "10-A"},
-    {id: 2, name: "Malika Yusupova", avatar: "MY", class: "10-A"},
-    {id: 3, name: "Bobur Rahimov", avatar: "BR", class: "10-B"},
-    {id: 4, name: "Dilorom Nazarova", avatar: "DN", class: "10-B"},
-    {id: 5, name: "Eldor Toshmatov", avatar: "ET", class: "11-A"},
-    {id: 6, name: "Gulnora Isoqova", avatar: "GI", class: "11-A"},
-    {id: 7, name: "Hamid Olimov", avatar: "HO", class: "11-B"},
-    {id: 8, name: "Iroda Qosimova", avatar: "IQ", class: "11-B"},
-    {id: 9, name: "Jasur Mirzaev", avatar: "JM", class: "10-A"},
-    {id: 10, name: "Kamola Ergasheva", avatar: "KE", class: "10-A"},
-    {id: 11, name: "Lochin Sultanov", avatar: "LS", class: "10-B"},
-    {id: 12, name: "Muazzam Toxirova", avatar: "MT", class: "10-B"},
-    {id: 13, name: "Nodir Holmatov", avatar: "NH", class: "11-A"},
-    {id: 14, name: "Ozoda Yo'ldosheva", avatar: "OY", class: "11-A"},
-    {id: 15, name: "Parvin Nazarov", avatar: "PN", class: "11-B"},
-    {id: 16, name: "Qodir Ismoilov", avatar: "QI", class: "11-B"},
-    {id: 17, name: "Rano Askarova", avatar: "RA", class: "10-A"},
-    {id: 18, name: "Sarvar Kalandarov", avatar: "SK", class: "10-A"},
-    {id: 19, name: "Tabassum Rustamova", avatar: "TR", class: "10-B"},
-    {id: 20, name: "Umid Ibragimov", avatar: "UI", class: "10-B"},
-    {id: 21, name: "Venera Yusupova", avatar: "VY", class: "11-A"},
-    {id: 22, name: "Xurshid Normatov", avatar: "XN", class: "11-A"},
-    {id: 23, name: "Yulduz Tosheva", avatar: "YT", class: "11-B"},
-    {id: 24, name: "Zulfiya Karimova", avatar: "ZK", class: "11-B"},
-];
 
 //reyting
 const Reyting = () => {
+    const branchId = localStorage.getItem("branchId");
+
+    const reyting = useSelector(getPartyReyting)
+    const [students, setStudents] = useState([]);
+    const {request} = useHttp()
+    useEffect(() => {
+        request(`${API_URL}Parties/members/?branch_id=${branchId}` , "GET" , null , headers())
+            .then(res => {
+                setStudents(res)})
+    }, []);
 
 
     return (
@@ -613,7 +662,7 @@ const Reyting = () => {
                     Umumiy Reyting
                 </div>
                 <div className={cls.party__rating_party_list}>
-                    {[1, 2, 3, 4, 5].map((item, index) => (
+                    {reyting.map((item, index) => (
                         <div className={cls.party__rating_party_list_box}>
                             <div className={cls.party__rating_party_list_box_info}>
 
@@ -624,16 +673,16 @@ const Reyting = () => {
 
                                 </div>
                                 <div className={cls.party__rating_party_list_box_info_title}>
-                                    Yulbars
+                                    {item.name}
                                 </div>
                             </div>
 
                             <div className={cls.party__rating_party_list_box_score}>
                                 <div className={cls.party__rating_party_list_box_score_ball}>
-                                    Ball: 2 234 324
+                                    Ball: {item.ball}
                                 </div>
                                 <div className={cls.party__rating_party_list_box_score_rating}>
-                                    <div>
+                                    <div style={{width: item.ball + "%"}}>
 
                                     </div>
                                 </div>
@@ -680,7 +729,7 @@ const Reyting = () => {
                         </tr>
                         </thead>
                         <tbody>
-                        {allSt.map((item, idx) => {
+                        {students.map((item, idx) => {
                             const ac = avatarColor(idx);
                             // if (!item.student) return null;
                             return (
@@ -707,7 +756,7 @@ const Reyting = () => {
                                                 fontWeight: 700,
                                                 flexShrink: 0
                                             }}>{item.avatar}</div>
-                                            <span style={{fontWeight: 600, fontSize: "1.4rem"}}>{item.name}</span>
+                                            <span style={{fontWeight: 600, fontSize: "1.4rem"}}>{item.student_name}</span>
                                         </div>
                                     </td>
                                     <td style={{
@@ -715,19 +764,19 @@ const Reyting = () => {
                                         fontSize: "1.3rem",
                                         fontWeight: 600,
                                         color: "#64748b"
-                                    }}>{item.class}</td>
+                                    }}>{item.student_class}</td>
                                     <td style={{
                                         padding: "10px 14px",
                                         fontSize: "1.3rem",
                                         color: "#64748b"
-                                    }}>{item.emoji} {item.name}</td>
+                                    }}>{item.party_name}</td>
                                     <td style={{
                                         padding: "10px 14px",
                                         fontFamily: "'Unbounded',sans-serif",
                                         fontSize: "1.2rem",
                                         fontWeight: 700,
                                         color: item.color
-                                    }}>3213213
+                                    }}>{item.ball}
                                     </td>
                                 </tr>
                             );
@@ -742,28 +791,46 @@ const Reyting = () => {
     )
 }
 
-const STUDENTS = [
-    {id: 1, firstName: "Jasur", lastName: "Toshmatov"},
-    {id: 2, firstName: "Malika", lastName: "Rahimova"},
-    {id: 3, firstName: "Bobur", lastName: "Karimov"},
-    {id: 4, firstName: "Nilufar", lastName: "Yusupova"},
-    {id: 5, firstName: "Sardor", lastName: "Ergashev"},
-    {id: 6, firstName: "Zulfiya", lastName: "Nazarova"},
-    {id: 7, firstName: "Otabek", lastName: "Mirzayev"},
-    {id: 8, firstName: "Shahlo", lastName: "Hamidova"},
-];
-const AddStudentsParty = ({activeAddModal, setActiveAddModal}) => {
+
+const AddStudentsParty = ({activeAddModal, setActiveAddModal , partyId , setSelectedParty}) => {
     const [selectedIds, setSelectedIds] = useState([]);
-    const allChecked = selectedIds.length === STUDENTS.length;
+    const [students, setStudents] = useState([]);
+    const allChecked = selectedIds.length === students.length;
     const indeterminate = selectedIds.length > 0 && !allChecked;
 
-    const toggleAll = () => setSelectedIds(allChecked ? [] : STUDENTS.map(s => s.id));
+    const branchId = localStorage.getItem("branchId");
+    const {request} = useHttp()
+    useEffect(() => {
+        if (activeAddModal){
+            request(`${API_URL}Parties/students/?branch_id=${branchId}` , "GET" , null , headers())
+                .then(res =>{
+
+                    setStudents(res)
+                })
+
+        }
+    }, [activeAddModal]);
+
+    const toggleAll = () => setSelectedIds(allChecked ? [] : students.map(s => s.id));
     const toggleOne = (id) => setSelectedIds(prev =>
         prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
 
     const handleOk = () => {
-        console.log("Tanlangan o'quvchilar ID lari:", selectedIds);
+
+        const res = {
+            party: partyId ,
+            students: selectedIds,
+        }
+        request(`${API_URL}Parties/members/?branch_id=${branchId}` , "POST" , JSON.stringify(res) , headers())
+            .then(res => {
+                setActiveAddModal(false)
+                request(`${API_URL}Parties/parties/${partyId}/?branch_id=${branchId}` , "GET" , null , headers())
+                    .then(res => {
+                        setSelectedParty(res);
+                        setSelectedIds([])
+                    })
+            })
     };
 
 
@@ -778,7 +845,7 @@ const AddStudentsParty = ({activeAddModal, setActiveAddModal}) => {
                 padding: "10px 24px 6px"
             }}>
           <span style={{fontSize: 13, color: "#999"}}>
-            Jami: <strong style={{color: "#1a1a2e"}}>{STUDENTS.length}</strong> o'quvchi
+            Jami: <strong style={{color: "#1a1a2e"}}>{students.length}</strong> o'quvchi
           </span>
                 {selectedIds.length > 0 && (
                     <span style={{
@@ -789,7 +856,7 @@ const AddStudentsParty = ({activeAddModal, setActiveAddModal}) => {
             </div>
 
             {/* Table */}
-            <div style={{maxHeight: 300, overflowY: "auto"}}>
+            <div style={{maxHeight: "500px", overflowY: "auto"}}>
                 <table style={{width: "100%", borderCollapse: "collapse", fontSize: 14}}>
                     <thead>
                     <tr style={{
@@ -810,7 +877,7 @@ const AddStudentsParty = ({activeAddModal, setActiveAddModal}) => {
                                 style={{width: 16, height: 16, cursor: "pointer", accentColor: "#667eea"}}
                             />
                         </th>
-                        {["#", "Ism", "Familya"].map(h => (
+                        {["#", "Ism Familya"].map(h => (
                             <th key={h} style={{
                                 padding: "11px 14px",
                                 textAlign: "left",
@@ -824,7 +891,7 @@ const AddStudentsParty = ({activeAddModal, setActiveAddModal}) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {STUDENTS.map((student, i) => {
+                    {students.map((student, i) => {
                         const sel = selectedIds.includes(student.id);
                         return (
                             <tr
@@ -855,12 +922,8 @@ const AddStudentsParty = ({activeAddModal, setActiveAddModal}) => {
                                     padding: "10px 14px",
                                     color: "#1a1a2e",
                                     fontWeight: sel ? 600 : 400
-                                }}>{student.firstName}</td>
-                                <td style={{
-                                    padding: "10px 14px",
-                                    color: "#1a1a2e",
-                                    fontWeight: sel ? 600 : 400
-                                }}>{student.lastName}</td>
+                                }}>{student.label}</td>
+
                             </tr>
                         );
                     })}
@@ -875,4 +938,472 @@ const AddStudentsParty = ({activeAddModal, setActiveAddModal}) => {
 //lesson observe
 //statsitic teacher face id
 //2ta haftadan 1ta sida uqtuvchila uchun pdi
-//students bahop quyish page filter 
+//students bahop quyish page filter
+
+// ─── Musobaqalar (Competition Scores) ────────────────────────────────────────
+
+
+
+const QUARTERS = ["1-chorak", "2-chorak", "3-chorak", "4-chorak"];
+
+
+const COMP_COLORS = ["#10b981","#4f8ef7","#f59e0b","#8b5cf6","#ef4444","#06b6d4","#ec4899","#84cc16"];
+
+// Modal: new competition type
+const ModalCompCreate = ({open, onClose, onAdd}) => {
+    const [name, setName]   = useState("");
+    const [color, setColor] = useState(COMP_COLORS[0]);
+
+
+
+    const handleAdd = () => {
+        if (!name.trim()) return;
+        onAdd({name: name.trim(), emoji: "🏆", color});
+        setName(""); setColor(COMP_COLORS[0]);
+
+        onClose();
+    };
+
+    if (!open) return null;
+    return (
+        <div className={cls.musob__overlay} onClick={onClose}>
+            <div className={cls.musob__modal} onClick={e => e.stopPropagation()}>
+                <button className={cls.musob__modal_close} onClick={onClose}><X size={16}/></button>
+                <div className={cls.musob__modal_title}>Yangi Musobaqa Turi</div>
+
+                <div className={cls.musob__modal_label}>Musobaqa Nomi</div>
+                <input
+                    className={cls.musob__modal_input}
+                    type="text" placeholder="masalan: Matematika olimpiadasi"
+                    value={name} onChange={e => setName(e.target.value)}
+                />
+
+                <div className={cls.musob__modal_label}>Rang Tanlang</div>
+                <div className={cls.musob__modal_colorRow}>
+                    {COMP_COLORS.map(c => (
+                        <button key={c}
+                            className={cls.musob__modal_colorDot + (color === c ? " " + cls.musob__modal_colorDot_active : "")}
+                            style={{background: c}}
+                            onClick={() => setColor(c)}
+                        />
+                    ))}
+                </div>
+
+                <button className={cls.musob__modal_ok} onClick={handleAdd} disabled={!name.trim()}>
+                    Qo'shish
+                </button>
+            </div>
+        </div>
+    );
+};
+
+
+
+const Competitions = ({createComp, setCreateComp}) => {
+    const parties = useSelector(getParty);
+    // partiyalarni house formatiga o'tkazamiz
+    const houses = parties.map(p => ({
+        id: p.id,
+        name: p.name,
+        color: p.color || "#4f8ef7",
+        light: (p.color || "#4f8ef7") + "22",
+    }));
+    const competitions = useSelector(getPartyCompetitions)
+
+    const [activeQuarter, setActiveQuarter] = useState(QUARTERS[0]);
+    // accordion: which comp is open
+    const [openComp, setOpenComp] = useState(null);
+    // modal state
+    const [addModal, setAddModal] = useState(null); // { compId }
+    const [modalHouse, setModalHouse] = useState(null);
+    const [modalBall, setModalBall] = useState("");
+    const [modalNote, setModalNote] = useState("");
+    const [scoreMode, setScoreMode] = useState("add");
+    const dispatch = useDispatch();
+    const branchId = localStorage.getItem("branchId");
+
+    const {request} = useHttp()
+
+    // yangi musobaqa turi qo'shish
+    const handleAddCompetition = (newComp) => {
+        request(`${API_URL}Parties/competitions/?branch_id=${branchId}` , "POST" , JSON.stringify(newComp))
+            .then(res => {
+                dispatch(onAddCompetitions(res))
+            })
+
+    };
+
+    // sum balls per house for a quarter based on all competitions
+    const quarterTotals = (quarter) => {
+        const totals = {};
+        houses.forEach(h => totals[h.id] = 0);
+        competitions.forEach(comp => {
+            (comp.results || []).forEach(res => {
+                if (res.quarter === quarter) {
+                    const pId = res.party;
+                    if (pId) {
+                        totals[pId] = (totals[pId] || 0) + Number(res.ball);
+                    }
+                }
+            });
+        });
+        return totals;
+    };
+
+    const getWinner = (quarter) => {
+        const totals = quarterTotals(quarter);
+        let maxBall = 0; let winnerId = null;
+        Object.entries(totals).forEach(([hid, b]) => { if (b > maxBall) { maxBall = b; winnerId = hid; } });
+        if (!winnerId || maxBall === 0) return null;
+        // WinnerId is key of totals, which is string. Find matching house.
+        return {house: houses.find(h => String(h.id) === String(winnerId)), ball: maxBall};
+    };
+
+    const openAdd = (compId) => {
+        setAddModal({compId});
+        setModalHouse(null); setModalBall(""); setModalNote(""); setScoreMode("add");
+    };
+
+    const handleAdd = () => {
+        if (!modalHouse || !modalBall || Number(modalBall) <= 0) return;
+
+        const comp = competitions.find(c => c.id === addModal.compId);
+
+        const existing = comp?.results?.find(r =>
+            String(r.party) === String(modalHouse) &&
+            r.quarter === activeQuarter
+        );
+
+        const newBall = Number(modalBall);
+
+        // 🔁 UPDATE (agar oldin bor bo‘lsa)
+        if (existing) {
+            const updatedBall =
+                scoreMode === "add"
+                    ? Number(existing.ball) + newBall
+                    : newBall;
+
+            request(
+                `${API_URL}Parties/competition-results/${existing.id}/?branch_id=${branchId}`,
+                "PATCH",
+                JSON.stringify({
+                    ball: updatedBall,
+                    note: modalNote
+                })
+            ).then(res => {
+                // 🔥 competitions ni update qilamiz
+                dispatch(onUpdateCompetitionResult({
+                    compId: addModal.compId,
+                    resultId: existing.id,
+                    data: res
+                }));
+
+                setAddModal(null);
+            });
+
+        } else {
+            // ➕ CREATE (yangi bo‘lsa)
+            const payload = {
+                competition: addModal.compId,
+                party: modalHouse,
+                quarter: activeQuarter,
+                ball: newBall,
+                note: modalNote,
+                is_winner: false
+            };
+
+            request(
+                `${API_URL}Parties/competition-results/?branch_id=${branchId}`,
+                "POST",
+                JSON.stringify(payload)
+            ).then(res => {
+                dispatch(onAddCompetitionResult({
+                    compId: addModal.compId,
+                    result: res
+                }));
+
+                setAddModal(null);
+            });
+        }
+    };
+
+    const deleteResult = (compId, resultId) => {
+        request(`${API_URL}Parties/competition-results/${resultId}/?branch_id=${branchId}` , "DELETE" , null , headers())
+
+                dispatch(onDeleteCompetitionResult({compId, resultId}));
+
+
+        // setScores(prev => {
+        //     const next = JSON.parse(JSON.stringify(prev));
+        //     next[activeQuarter][compId] = next[activeQuarter][compId]?.filter(r => r.id !== resultId);
+        //     return next;
+        // });
+    };
+
+    const winner = getWinner(activeQuarter);
+    const totals = quarterTotals(activeQuarter);
+    const maxBall = Math.max(...Object.values(totals), 1);
+
+    return (
+        <div className={cls.musob}>
+            {/* Quarter tabs */}
+            <div className={cls.musob__tabs}>
+                {QUARTERS.map(q => (
+                    <button key={q}
+                        className={cls.musob__tab + (activeQuarter === q ? " " + cls.musob__tab_active : "")}
+                        onClick={() => setActiveQuarter(q)}
+                    >{q}</button>
+                ))}
+            </div>
+
+            <div className={cls.musob__main}>
+                {/* Left: accordion competition cards */}
+                <div className={cls.musob__left}>
+                    {competitions.map(comp => {
+                        const results = (comp.results || []).filter(r => r.quarter === activeQuarter);
+                        const isOpen = openComp === comp.id;
+
+                        return (
+                            <div key={comp.id} className={cls.musob__compCard}>
+                                {/* Accordion header */}
+                                <div className={cls.musob__compCard_header}
+                                     style={{background: comp.color, cursor: "pointer"}}
+                                     onClick={() => setOpenComp(isOpen ? null : comp.id)}>
+                                    <span className={cls.musob__compCard_emoji}>{comp.emoji}</span>
+                                    <span className={cls.musob__compCard_name}>{comp.name}</span>
+                                    <span className={cls.musob__compCard_ball}>
+                                        {results.length} ta natija · {results.reduce((s, r) => s + Number(r.ball), 0)} ball
+                                    </span>
+                                    <button className={cls.musob__compCard_addBtn}
+                                            onClick={e => { e.stopPropagation(); openAdd(comp.id); }}>
+                                        <Plus size={13}/> Natija qo'shish
+                                    </button>
+                                    <span className={cls.musob__compCard_chevron}
+                                          style={{transform: isOpen ? "rotate(180deg)" : "rotate(0deg)"}}>▾</span>
+                                </div>
+
+                                {/* Accordion body */}
+                                {isOpen && (
+                                    <div className={cls.musob__compCard_body}>
+                                        {results.length === 0 ? (
+                                            <div className={cls.musob__compCard_empty}>
+                                                Hali natija kiritilmagan. "Natija qo'shish" tugmasini bosing.
+                                            </div>
+                                        ) : (
+                                            <>
+
+                                                <table className={cls.musob__table}>
+                                                    <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Xaus</th>
+                                                        <th>Ball</th>
+                                                        <th>Izoh</th>
+                                                        <th></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {results.map((r, idx) => {
+                                                        const h = houses.find(x => String(x.id) === String(r.party));
+                                                        return (
+                                                            <tr key={r.id}>
+                                                                <td style={{color: "#94a3b8"}}>{idx + 1}</td>
+                                                                <td>
+                                                                    <div className={cls.musob__houseTag}
+                                                                         style={{background: h?.light, color: comp?.color}}>
+                                                                        {r?.party_name}
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <span className={cls.musob__ballVal}
+                                                                          style={{color: comp.color}}>{r.ball}</span>
+                                                                </td>
+                                                                <td style={{color: "#64748b", fontSize: "1.2rem"}}>{r.note || "—"}</td>
+                                                                <td>
+                                                                    <button className={cls.musob__resetBtn}
+                                                                            onClick={() => deleteResult(comp.id, r.id)}>
+                                                                        <Trash2 size={11}/>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                    </tbody>
+                                                </table>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* Right: leaderboard */}
+                <div className={cls.musob__right}>
+                    {winner ? (
+                        <div className={cls.musob__winner}
+                             style={{background: `linear-gradient(135deg, ${winner.house.color} 0%, ${winner.house.color}cc 100%)`}}>
+                            <Trophy size={28} color="#fde68a"/>
+                            <div className={cls.musob__winner_label}>Hozirgi Golib</div>
+                            <div className={cls.musob__winner_name}>{winner.house.name}</div>
+                            <div className={cls.musob__winner_ball}>{winner.ball} ball</div>
+                        </div>
+                    ) : (
+                        <div className={cls.musob__winner_empty}>
+                            <Trophy size={32} color="#cbd5e1"/>
+                            <span>Natijalar yo'q</span>
+                        </div>
+                    )}
+
+                    <div className={cls.musob__leaderboard}>
+                        <div className={cls.musob__leaderboard_title}>
+                            <Medal size={16}/> {activeQuarter} Reytingi
+                        </div>
+                        {houses.map(h => ({...h, ball: totals[h.id] || 0}))
+                            .sort((a, b) => b.ball - a.ball)
+                            .map((h, idx) => (
+                                <div key={h.id} className={cls.musob__lb_row}>
+                                    <span className={cls.musob__lb_rank} style={idx === 0 ? {color: "#f59e0b"} : {}}>
+                                        {idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : idx + 1}
+                                    </span>
+                                    <span className={cls.musob__lb_name}>{h.name}</span>
+                                    <div className={cls.musob__lb_bar}>
+                                        <div style={{width: Math.round((h.ball / maxBall) * 100) + "%", background: h.color}}/>
+                                    </div>
+                                    <span className={cls.musob__lb_ball} style={{color: h.color}}>{h.ball}</span>
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <div className={cls.musob__summary}>
+                        <div className={cls.musob__leaderboard_title}>
+                            <Award size={16}/> Barcha Chorak Reytingi
+                        </div>
+                        {(() => {
+                            const allTotals = {};
+                            houses.forEach(h => allTotals[h.id] = 0);
+                            QUARTERS.forEach(q => {
+                                const qt = quarterTotals(q);
+                                houses.forEach(h => { allTotals[h.id] += qt[h.id] || 0; });
+                            });
+                            const allMax = Math.max(...Object.values(allTotals), 1);
+                            return houses.map(h => ({...h, ball: allTotals[h.id]}))
+                                .sort((a, b) => b.ball - a.ball)
+                                .map((h, idx) => (
+                                    <div key={h.id} className={cls.musob__lb_row}>
+                                        <span className={cls.musob__lb_rank} style={idx === 0 ? {color: "#f59e0b"} : {}}>{idx + 1}</span>
+                                        <span className={cls.musob__lb_name}>{h.name}</span>
+                                        <div className={cls.musob__lb_bar}>
+                                            <div style={{width: Math.round((h.ball / allMax) * 100) + "%", background: h.color}}/>
+                                        </div>
+                                        <span className={cls.musob__lb_ball} style={{color: h.color}}>{h.ball}</span>
+                                    </div>
+                                ));
+                        })()}
+                    </div>
+                </div>
+            </div>
+
+            {/* Add Result Modal */}
+            {addModal && (
+                <div className={cls.musob__overlay} onClick={() => setAddModal(null)}>
+                    <div className={cls.musob__modal} onClick={e => e.stopPropagation()}>
+                        <button className={cls.musob__modal_close} onClick={() => setAddModal(null)}><X size={16}/></button>
+                        <div className={cls.musob__modal_title}>
+                            {/*{COMPETITIONS.find(c => c.id === addModal.compId)?.emoji}{" "}*/}
+                            {competitions.find(c => c.id === addModal.compId)?.name} — {activeQuarter}
+                        </div>
+
+                        <div className={cls.musob__modal_label}>G'olib / Ball olgan Partiya</div>
+                        <div className={cls.musob__modal_houses}>
+                            {houses.map(h => (
+                                <button key={h.id}
+                                    className={cls.musob__modal_houseBtn + (modalHouse === h.id ? " " + cls.musob__modal_houseBtn_active : "")}
+                                    style={modalHouse === h.id ? {background: h.color, color: "#fff", borderColor: h.color} : {borderColor: h.color, color: h.color}}
+                                    onClick={() => setModalHouse(h.id)}
+                                >{h.name}</button>
+                            ))}
+                        </div>
+
+                        {/*{(() => {*/}
+                        {/*    const comp = competitions.find(c => c.id === addModal?.compId);*/}
+
+                        {/*    const existing = comp?.results?.find(r =>*/}
+                        {/*        String(r.party) === String(modalHouse) &&*/}
+                        {/*        r.quarter === activeQuarter*/}
+                        {/*    );*/}
+
+                        {/*    if (!existing) return null;*/}
+                        {/*    return (*/}
+                        {/*        <div style={{*/}
+                        {/*            background: "#f0f9ff",*/}
+                        {/*            padding: "1rem",*/}
+                        {/*            borderRadius: "10px",*/}
+                        {/*            marginBottom: "1.5rem",*/}
+                        {/*            border: "1px solid #bae6fd"*/}
+                        {/*        }}>*/}
+                        {/*            <div style={{fontSize: "1.2rem", color: "#0369a1", marginBottom: "0.8rem", fontWeight: 600}}>*/}
+                        {/*                ⚠️ Ushbu partiyada allaqachon natija bor: <strong>{existing.ball} ball</strong>*/}
+                        {/*            </div>*/}
+                        {/*            <div style={{display: "flex", gap: "10px"}}>*/}
+                        {/*                <button*/}
+                        {/*                    onClick={() => setScoreMode("add")}*/}
+                        {/*                    style={{*/}
+                        {/*                        flex: 1, padding: "8px", borderRadius: "6px", border: "1.5px solid",*/}
+                        {/*                        cursor: "pointer", fontSize: "1.1rem", fontWeight: 700,*/}
+                        {/*                        background: scoreMode === "add" ? "#0369a1" : "transparent",*/}
+                        {/*                        color: scoreMode === "add" ? "#fff" : "#0369a1",*/}
+                        {/*                        borderColor: "#0369a1"*/}
+                        {/*                    }}*/}
+                        {/*                >Ballga qo'shish</button>*/}
+                        {/*                <button*/}
+                        {/*                    onClick={() => setScoreMode("replace")}*/}
+                        {/*                    style={{*/}
+                        {/*                        flex: 1, padding: "8px", borderRadius: "6px", border: "1.5px solid",*/}
+                        {/*                        cursor: "pointer", fontSize: "1.1rem", fontWeight: 700,*/}
+                        {/*                        background: scoreMode === "replace" ? "#0369a1" : "transparent",*/}
+                        {/*                        color: scoreMode === "replace" ? "#fff" : "#0369a1",*/}
+                        {/*                        borderColor: "#0369a1"*/}
+                        {/*                    }}*/}
+                        {/*                >Ballni yangilash</button>*/}
+                        {/*            </div>*/}
+                        {/*        </div>*/}
+                        {/*    );*/}
+                        {/*})()}*/}
+
+                        <div className={cls.musob__modal_label}>Ball miqdori</div>
+                        <input className={cls.musob__modal_input}
+                               type="number" min="1" placeholder="masalan: 10"
+                               value={modalBall} onChange={e => setModalBall(e.target.value)}/>
+
+                        <div className={cls.musob__modal_label}>Izoh (ixtiyoriy)</div>
+                        <input className={cls.musob__modal_input}
+                               type="text" placeholder="masalan: Futbol finalida g'alaba"
+                               value={modalNote} onChange={e => setModalNote(e.target.value)}/>
+
+                        <button className={cls.musob__modal_ok} onClick={handleAdd}
+                                disabled={!modalHouse || !modalBall || Number(modalBall) <= 0}>
+                            Saqlash
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Musobaqa turi yaratish modali */}
+            <ModalCompCreate
+                open={createComp}
+                onClose={() => setCreateComp(false)}
+                onAdd={handleAddCompetition}
+            />
+        </div>
+    );
+};
+
+
+
+
+
+
+
