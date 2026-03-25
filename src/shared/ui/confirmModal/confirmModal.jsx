@@ -6,7 +6,7 @@ import success from "../../assets/icons/CheckCircle.svg";
 import { Button } from "../button";
 import React from "react";
 
-export const ConfirmModal = ({ setActive, active, onClick, title = "Rostanham o'chirmoqchimisiz", text, type }) => {
+export const ConfirmModal = ({ setActive, active, onClick, title = "Rostanham o'chirmoqchimisiz", text, type = "danger" }) => {
     // const [deleting, setDeleting] = useState(false);
     const renderImg = () => {
         // eslint-disable-next-line default-case
@@ -21,6 +21,7 @@ export const ConfirmModal = ({ setActive, active, onClick, title = "Rostanham o'
     }
     return (
         <Modal extraClass={cls.overlay} active={active} setActive={setActive}>
+
             <div className={cls.confirmModal} onClick={e => e.stopPropagation()}>
                 {renderImg()}
                 {
@@ -28,7 +29,7 @@ export const ConfirmModal = ({ setActive, active, onClick, title = "Rostanham o'
                         <>
                             <h3>O'chirishni tasdiqlang</h3>
                             <p>
-                        <strong>{text}</strong> ni o'chirishni xohlaysizmi?
+                                {text && <><strong>{text}</strong> ni o'chirishni xohlaysizmi?</>}
                         Bu amalni qaytarib bo'lmaydi.
                     </p> </> : type === "success" ? <> <p>
                             <h3>Amal muvaffaqiyatli bajarildi !</h3>
