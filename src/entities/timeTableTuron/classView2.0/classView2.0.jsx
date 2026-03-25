@@ -26,6 +26,7 @@ export const TimetableGrid = ({ classes, hours, setActive , viewData , setViewDa
     const [scale, setScale] = useState(1);
     const contentRef = useRef(null);
     const wrapperRef = useRef(null);
+    const job = localStorage.getItem("job")
 
     const fontScale = 1;
 
@@ -383,10 +384,14 @@ export const TimetableGrid = ({ classes, hours, setActive , viewData , setViewDa
                     >
                         Rasm ko'rinishida saqlash
                     </button>
-                    <i
-                        onClick={() => setActive(false)}
-                        className={"fa fa-times " + cls.closeBtn}
-                    />
+                    {
+                        job === "admin" ? null :
+                            <i
+                                onClick={() => setActive(false)}
+                                className={"fa fa-times " + cls.closeBtn}
+                            />
+                    }
+
                 </div>
             </div>
 

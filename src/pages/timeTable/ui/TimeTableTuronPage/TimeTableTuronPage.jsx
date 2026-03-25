@@ -104,6 +104,9 @@ export const TimeTableTuronPage = () => {
     const [canDisabled, setCanDisabled] = useState(false)
     const [fullScreen, setFullScreen] = useState(false)
     const [classView, setClassView] = useState(false)
+    const job = localStorage.getItem("job")
+
+
     const [selectedSubject, setSelectedSubject] = useState(null)
     const [selectedGroup, setSelectedGroup] = useState(null)
     const [selectedContainerTimeTableId, setSelectedContainerTimeTableId] = useState(null)
@@ -144,6 +147,13 @@ export const TimeTableTuronPage = () => {
 
     const dispatch = useDispatch()
 
+    useEffect(() => {
+        if (job === "admin") {
+            setClassView(true)
+        } else {
+            setClassView(false)
+        }
+    }, [job])
     useEffect(() => {
         dispatch(fetchTimeTableColors())
         dispatch(fetchWeekDays())
@@ -886,19 +896,24 @@ export const TimeTableTuronPage = () => {
                 }}
                 // modifiers={[restrictToFirstScrollableAncestor]}
             >
-                <TimeTableDragItems
+                {
+                    job === "admin" ? null :
+
+                    <TimeTableDragItems
                     setSelectedSubject={setSelectedSubject}
-                    selectedSubject={selectedSubject}
-                    isSelected={isSelected}
-                    groups={groups}
-                    subjects={subjects}
-                    teachers={teachers}
-                    color={color}
-                    type={type}
-                    status={groupsDataStatus}
-                    selectedType={selectedType}
-                    onFilterStudentSubject={onFilterStudentSubject}
-                />
+                selectedSubject={selectedSubject}
+                isSelected={isSelected}
+                groups={groups}
+                subjects={subjects}
+                teachers={teachers}
+                color={color}
+                type={type}
+                status={groupsDataStatus}
+                selectedType={selectedType}
+                onFilterStudentSubject={onFilterStudentSubject}
+            />
+                }
+
                 <div className={cls.wrapper}>
                     {
                         dataStatus === true ?
