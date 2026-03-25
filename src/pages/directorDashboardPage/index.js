@@ -1,0 +1,1 @@
+export {DirectorDashboardPage} from "./ui/directorDashboardPage.jsx"
