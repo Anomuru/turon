@@ -1023,7 +1023,7 @@ export const TodoistPage = () => {
                                                 >
                                                     View More
                                                 </button>
-                                                {(task.creator?.id === userId && !selectedTask.management_id) && (
+                                                {(task.creator?.id === userId && !task?.management_id) && (
                                                     (activeTaskType === "givenTask" && task?.children?.length > 1) ? null : (
                                                         <>
                                                             <button
