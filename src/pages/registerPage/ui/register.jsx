@@ -99,10 +99,9 @@ export const Register = () => {
     const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
     const safeData = Array.isArray(subjects) ? subjects : [subjects];
     const [isDirector, setIsDirector] = useState("")
-    const branchID = localStorage.getItem("branchForDirector")
+    const branchID = localStorage.getItem("branchId")
     const user = useSelector(getUserProfileData)
     const [branchSelect, setBranchSelect] = useState(null)
-
     const subjectOptions = safeData?.map(subject => ({
         value: subject?.id,
         label: subject?.name,
@@ -306,6 +305,7 @@ export const Register = () => {
                     setValue("student_seria_num", "")
                     setValue("student_seria", "")
                     setValue("region", "")
+                    setValue("old_school", "")
                     setValue("district", "")
                     setValue("comment", "")
                 } else {
