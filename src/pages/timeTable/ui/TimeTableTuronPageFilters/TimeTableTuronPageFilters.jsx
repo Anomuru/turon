@@ -52,6 +52,7 @@ const TimeTableTuronPageFilters = React.memo((props) => {
     const weekDay = useSelector(getSelectedWeekDay)
     const selectedWeekDay = useSelector(getTimeTableTuronWeekDay)
     const teachersForSelect = useSelector(getTeachersSelect)
+    const job = localStorage.getItem("job")
 
     const onChangeColor = (id) => {
         dispatch(onChangeColorTimeTable(id))
@@ -148,23 +149,39 @@ const TimeTableTuronPageFilters = React.memo((props) => {
                         id="unique-id"
                         className={cls.navigators__inner}
                     >
-                        <Button
-                            onClick={() => onChangeType("group")}
-                            type={type === "group" ? "simple" : "simple-add"}
-                        >
-                            Class
-                        </Button>
-                        <Button
-                            onClick={() => onChangeType("flow")}
-                            type={type === "flow" ? "simple" : "simple-add"}
-                        >
-                            Flow
-                        </Button>
+                        {
+                            job === "admin" ? null :
+                                <>
+
+                                    <Button
+                                        onClick={() => onChangeType("group")}
+                                        type={type === "group" ? "simple" : "simple-add"}
+                                    >
+                                        Class
+                                    </Button>
+                                    <Button
+                                        onClick={() => onChangeType("flow")}
+                                        type={type === "flow" ? "simple" : "simple-add"}
+                                    >
+                                        Flow
+                                    </Button>
+
+                                </>
+
+                    }
                     </div>
 
                     <div style={{display: "flex"}}>
-                        <Button onClick={() => setFullScreen(true)}>Full screen</Button>
-                        <Button onClick={() => setClassView(true)}>Class view</Button>
+                        {
+                            job === "admin" ? <Button onClick={() => setClassView(true)}>Class view</Button> :
+                                <>
+                                    <Button onClick={() => setClassView(true)}>Class view</Button>
+
+                                    <Button onClick={() => setFullScreen(true)}>Full screen</Button>
+                                </>
+                        }
+
+
                     </div>
                 </div>
 

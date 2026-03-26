@@ -30,7 +30,7 @@ export const menuConfig = [
         to: "statistics",
         name: "Statistika",
         icon: "fa-chart-line",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+        roles: [ROLES.director, ROLES.programmer],
     },
     {
         to: "rating",
@@ -99,7 +99,7 @@ export const menuConfig = [
         to: "todoist",
         name: "Todoist",
         icon: "fa-circle-check",
-        roles: [ROLES.admin, ROLES.teacher, ROLES.accountant, ROLES.methodist, ROLES.director, ROLES.muxarir, ROLES.operator, ROLES.programmer, ROLES.smm, ROLES.teacher, ROLES.zavxos],
+        roles: [ROLES.teacher, ROLES.accountant, ROLES.methodist, ROLES.director, ROLES.muxarir, ROLES.operator, ROLES.programmer, ROLES.smm, ROLES.teacher, ROLES.zavxos],
         // roles: true
     },
     // {
@@ -112,7 +112,7 @@ export const menuConfig = [
         to: "calendar",
         name: "Kalendar",
         icon: "fas fa-calendar-times",
-        roles: [ROLES.director, ROLES.admin, ROLES.spiritualist, ROLES.advertising],
+        roles: [ROLES.director, ROLES.spiritualist, ROLES.advertising],
 
     },
     {
@@ -136,7 +136,7 @@ export const menuConfig = [
         to: "teacher",
         name: "O'qituvchilar",
         icon: "fa-user-tie",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.spiritualist],
+        roles: [ROLES.director, ROLES.programmer, ROLES.spiritualist],
         branches: true
 
     },
@@ -152,7 +152,7 @@ export const menuConfig = [
         to: "parents/",
         name: "Ota-onalar",
         icon: "fa-users",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer],
+        roles: [ROLES.director, ROLES.programmer],
         branches: true
 
     },
@@ -243,7 +243,7 @@ export const menuConfig = [
         to: "quarterMaster",
         name: "Zavxoz profile",
         icon: "fa-toolbox",
-        roles: [ROLES.admin, ROLES.director, ROLES.programmer, ROLES.zavxos],
+        roles: [ROLES.director, ROLES.programmer, ROLES.zavxos],
         branches: true
 
     },

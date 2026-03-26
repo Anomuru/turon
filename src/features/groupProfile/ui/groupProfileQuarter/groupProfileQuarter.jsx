@@ -480,6 +480,7 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
             </Modal>
 
             <ConfirmModal
+type={"danger"}
                 active={deleteActive}
                 setActive={setDeleteActive}
                 onClick={onDeleteTest}

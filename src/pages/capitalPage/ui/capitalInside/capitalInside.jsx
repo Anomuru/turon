@@ -98,10 +98,11 @@ export const CapitalInside = memo(() => {
     const [changedImages, setChangedImages] = useState([])
     const [selectPayment, setSelectPayment] = useState()
 
-    const currentBranch = useSelector(getCurrentBranch);
-    const ROLE = localStorage.getItem('job');
+    // const currentBranch = useSelector(getCurrentBranch);
+    // const ROLE = localStorage.getItem('job');
     const userBranchId = localStorage.getItem('branchId');
-    const branchForFilter = ROLE === 'admin' ? currentBranch : userBranchId;
+    console.log(userBranchId)
+    // const branchForFilter = ROLE === 'admin' ? currentBranch : userBranchId;
 
     const [activeModal, setActiveModal] = useState(false)
 
@@ -135,7 +136,7 @@ export const CapitalInside = memo(() => {
     const onClick = async (data) => {
         setActiveModal(false)
 
-        await dispatch(createInsideCategory({data, changedImages, selectPayment, branchForFilter, id}));
+        await dispatch(createInsideCategory({data, changedImages, selectPayment, userBranchId, id}));
 
         // dispach(getInsideCategory(id))
         setValue("name", "")
