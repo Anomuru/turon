@@ -29,7 +29,6 @@ const reducers = {
 export const GroupProfileQuarter = () => {
     const data = useSelector(getTermData);
     const term = useSelector(getTerm);
-    const [selectedTerm, setSelectedTerm] = useState(null);
 
     const [active, setActive] = useState(false);
     const [activeItems, setActiveItems] = useState({});
@@ -48,6 +47,18 @@ export const GroupProfileQuarter = () => {
     const [quarterYearSelected, setQuarterYearSelected] = useState(null);
 
     const dispatch = useDispatch();
+    const getCurrentTerm = () => {
+        const now = new Date();
+        const month = now.getMonth() + 1; // 1-12
+
+        if (month >= 9 && month <= 10) return 1; // 1-chorak
+        if (month >= 11 && month <= 12) return 2; // 2-chorak
+        if (month >= 1 && month <= 3) return 3; // 3-chorak
+        if (month >= 4 && month <= 5) return 4; // 4-chorak
+
+        return 4; // default
+    };
+    const [selectedTerm, setSelectedTerm] = useState(getCurrentTerm());
 
     useEffect(() => {
         request(`${API_URL}terms/education-years/`, "GET", null, headers())
@@ -60,11 +71,11 @@ export const GroupProfileQuarter = () => {
         }
     }, [quarterYear]);
 
-    useEffect(() => {
-        if (term) {
-            setSelectedTerm(term[0]?.id);
-        }
-    }, [term]);
+    // useEffect(() => {
+    //     if (term) {
+    //         setSelectedTerm(term[0]?.id);
+    //     }
+    // }, [term]);
 
     useEffect(() => {
         if (quarterYearSelected) {
@@ -177,17 +188,20 @@ export const GroupProfileQuarter = () => {
             .catch(err => console.log(err));
     };
 
+    console.log(selectedTerm , "selectedTerm")
     return (
         <DynamicModuleLoader reducers={reducers}>
             {loading ? <DefaultLoader /> : null}
             <div className={styles.quarter}>
                 <div style={{ alignSelf: "flex-end", display: "flex", gap: "2rem" }}>
                     <Select
+                        title={"Yil"}
                         defaultValue={quarterYearSelected}
                         options={quarterYear}
                         onChangeOption={setQuarterYearSelected}
                     />
                     <Select
+                        title={"Chorak"}
                         defaultValue={selectedTerm}
                         options={term}
                         onChangeOption={setSelectedTerm}
