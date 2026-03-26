@@ -99,7 +99,7 @@ export const Register = () => {
     const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
     const safeData = Array.isArray(subjects) ? subjects : [subjects];
     const [isDirector, setIsDirector] = useState("")
-    const branchID = localStorage.getItem("branchId")
+    const branchID = localStorage.getItem("branchForDirector")
     const user = useSelector(getUserProfileData)
     const [branchSelect , setBranchSelect] = useState(null)
 

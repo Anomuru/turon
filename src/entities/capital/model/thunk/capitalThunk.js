@@ -54,14 +54,14 @@ export const getInsideCategory = createAsyncThunk(
 
 export const createInsideCategory = createAsyncThunk(
     "changeCapitalInfo/createInsideCategory",
-    async ({data, changedImages, selectPayment, branchForFilter, id}) => {
+    async ({data, changedImages, selectPayment, userBranchId, id}) => {
         const {request} = useHttp();
 
         const formData = new FormData()
         formData.append("name" , data.name)
         formData.append("img" , changedImages)
         formData.append("category" , id)
-        formData.append("branch" , branchForFilter)
+        formData.append("branch" , userBranchId)
         formData.append("id_number" , data.id_number)
         formData.append("price" , data.price)
         formData.append("total_down_cost" , data.total_down_cost)

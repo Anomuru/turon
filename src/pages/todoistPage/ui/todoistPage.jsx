@@ -1023,7 +1023,7 @@ export const TodoistPage = () => {
                                                 >
                                                     View More
                                                 </button>
-                                                {(task.creator?.id === userId) && (
+                                                {(task.creator?.id === userId && !task?.management_id) && (
                                                     (activeTaskType === "givenTask" && task?.children?.length > 1) ? null : (
                                                         <>
                                                             <button
@@ -1097,7 +1097,7 @@ export const TodoistPage = () => {
                 {(modalType === "createTask" || modalType === "editTask") && (
                     <div
                         className={styles.modalBackdrop}
-                        // onClick={() => setModalType(null)}
+                    // onClick={() => setModalType(null)}
                     >
                         <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
                             <h2 className={styles.modalTitle}>
@@ -1344,7 +1344,7 @@ export const TodoistPage = () => {
                                     </div>
                                     <div>
                                         <strong>Creator:</strong>
-                                        <p>{selectedTask.creator.full_name}</p>
+                                        <p>{!!selectedTask.management_id ? "Boshqarma" : selectedTask.creator.full_name}</p>
                                     </div>
                                     <div>
                                         <strong>Executor {(selectedTask.is_redirected && selectedTask.executor.id !== selectedTask?.redirected_by?.id) ? "(Redirected)" : null}:</strong>
@@ -1355,7 +1355,7 @@ export const TodoistPage = () => {
                                     </div>
                                     <div>
                                         <strong>Reviewer:</strong>
-                                        <p>{selectedTask.reviewer.full_name}</p>
+                                        <p>{!!selectedTask.management_id ? selectedTask.reviewer_name : selectedTask.reviewer.full_name}</p>
                                     </div>
                                     <div>
                                         <strong>Deadline:</strong>
