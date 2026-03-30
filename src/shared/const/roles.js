@@ -3,6 +3,7 @@ export const BRANCH = localStorage.getItem("selectedLocation");
 
 export const ROLES = {
     director: "direktor",
+    main_director: "director",
     admin: "admin",
     user: "user",
     teacher: "teacher",
