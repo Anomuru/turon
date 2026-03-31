@@ -4,6 +4,7 @@ import {useNavigate} from "react-router";
 
 export const GroupQuarterTable = ({data , selectedSubject}) => {
 
+    console.log(selectedSubject)
     const navigate = useNavigate()
     return (
        <Table>
@@ -23,9 +24,9 @@ export const GroupQuarterTable = ({data , selectedSubject}) => {
                    <tr onClick={() => navigate(`../students/profile/${item.id}`)}>
                        <td>{i + 1}</td>
                        <td>{item?.first_name} {item?.last_name}</td>
-                       {item.subjects.map(item => item?.assignments?.map(item => <td>{item.percentage}</td>))}
+                       {item.subjects.map(item => item?.assignments?.map(item => <td>{item.calculated_result}</td>))}
 
-                       <td>{item?.subjects.map(itemSub => <td>{selectedSubject === "all " && itemSub.subject_name} {itemSub?.average_result} </td>)}</td>
+                       <td>{item?.subjects.map(itemSub => <td>{selectedSubject === "all" && itemSub.subject_name} <br/> {itemSub?.average_result} </td>)}</td>
                    </tr>
                ))
            }

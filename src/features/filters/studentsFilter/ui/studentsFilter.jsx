@@ -46,7 +46,7 @@ export const StudentsFilter = React.memo(({active, setActive, activePage, pageSi
     const ROLE = localStorage.getItem("job")
     const userBranchId = localStorage.getItem("branchId")
     const branchForFilter =
-        ROLE === "director"
+        ROLE === "direktor"
             ? currentBranch
             : userBranchId;
 
