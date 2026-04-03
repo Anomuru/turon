@@ -136,7 +136,7 @@ export const menuConfig = [
         to: "teacher",
         name: "O'qituvchilar",
         icon: "fa-user-tie",
-        roles: [ROLES.director, ROLES.main_director, ROLES.programmer, ROLES.spiritualist],
+        roles: [ROLES.director, ROLES.main_director, ROLES.programmer, ROLES.spiritualist, ROLES.admin],
         branches: true
 
     },
