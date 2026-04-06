@@ -240,6 +240,15 @@ export const menuConfig = [
 
     },
     {
+        to: "questionnaire",
+        name: "So’rovnoma",
+        icon: "fa-calculator",
+        roles: [ ROLES.director, ROLES.main_director, ROLES.advertising],
+        branches: true,
+        multi: true
+
+    },
+    {
         to: "quarterMaster",
         name: "Zavxoz profile",
         icon: "fa-toolbox",

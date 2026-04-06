@@ -26,6 +26,7 @@ export const Button = React.memo(({id,children, onClick, btnType, type, disabled
                 [cls.login]: type === "login",
                 [cls.filter]: type === "filter",
                 [cls.editPlus]: type === "editPlus",
+                [cls.active]: type === "active",
             })}
             disabled={type === "disabled" ? disabled : disabled}
         >

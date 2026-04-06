@@ -23,6 +23,7 @@ export const Input = React.memo(({
                                      checked,
                                      onBlur,
                                      titleColor,
+    styleInput
 
 
                                  }) => {
@@ -30,7 +31,6 @@ export const Input = React.memo(({
     const [silk, setSilk] = useState("");
 
 
-    console.log(title)
     return register ? (
         <label style={style} className={cls.inputLabel} htmlFor={name}>
             {title || subTitle   ? (
@@ -45,6 +45,7 @@ export const Input = React.memo(({
                     disabled={disabled}
                     placeholder={placeholder}
                     id={name}
+                    style={styleInput}
                     className={classNames(cls.input, extraClassName, {
                         [`${cls?.error}`]: errors?.[name]
                     })}
@@ -92,6 +93,7 @@ export const Input = React.memo(({
                     className={classNames(cls.input, extraClassName, {
                         [cls.error]: errors?.[name]
                     })}
+                    style={styleInput}
                     defaultValue={defaultValue}
                     value={value}
                     type={showPassword ? "text" : type}
