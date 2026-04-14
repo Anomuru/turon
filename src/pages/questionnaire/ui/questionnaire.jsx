@@ -72,7 +72,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Button} from "shared/ui/button";
 import cls from "./questionnaire.module.sass"
 import {Input} from "shared/ui/input";
-import {Select as SelectMulti} from "antd"
+import { Select as SelectMulti} from "antd"
 import {Select} from "shared/ui/select";
 import classNames from "classnames";
 import {
@@ -81,6 +81,7 @@ import {
     onQuestionnaireProfile
 } from "pages/questionnaire/model/questionnaireSlice.js";
 import {API_URL, headers, useHttp} from "shared/api/base.js";
+import {Modal} from "shared/ui/modal/index.js";
 
 
 export const Questionnaire = () => {
@@ -109,6 +110,7 @@ export const Questionnaire = () => {
 
             })
     };
+
 
     return (
         <div className={cls.container}>
@@ -171,24 +173,46 @@ const QuestionnaireHeader = ({view, setView}) => {
 };
 
 const QuestionnaireList = ({data, onStats}) => {
+    const [mySurveyJson , setMySurveyJson] = useState([]);
+    const [mySurveyJsonModal , setMySurveyJsonModal] = useState(false);
+
+    const {request} = useHttp()
+
+
     if (data.length === 0) {
         return <p>So'rovnomalar yo'q</p>;
     }
-
+    const getSurveyStatistics = (id) => {
+        request(`${API_URL}surveys/admin/surveys/${id}/statistics/`, "GET", null, headers())
+            .then(res => {
+                setMySurveyJson(res);
+                setMySurveyJsonModal(true)
+            });
+    };
+    console.log(mySurveyJson)
     return (
         <div className={cls.list}>
             {data.map(q => (
                 <div className={cls.list__box} key={q.id}>
-                    <div>
+                    <div style={{cursor: "pointer"}} onClick={() => onStats(q)}>
                         <h3>{q.title}</h3>
                         <p>{q.questions_count} ta savol</p>
                     </div>
 
-                    <Button onClick={() => onStats(q)}>
+                    <Button onClick={() => getSurveyStatistics(q.id)}>
                         Statistika
                     </Button>
                 </div>
             ))}
+
+            <Modal typeIcon active={mySurveyJsonModal} setActive={() => {
+                setMySurveyJsonModal(false)
+                setMySurveyJson([])
+            }}>
+                <div style={{maxHeight: "calc(100vh - 10rem)" , overflowY: "auto"}}>
+                    <SurveyStats data={mySurveyJson} />
+                </div>
+            </Modal>
         </div>
     );
 }
@@ -252,7 +276,6 @@ const QuestionnaireCreate = ({
             JSON.stringify(newQ),
             headers()
         ).then(res => {
-            console.log(res);
             const updated = [res, ...questionnaires];
 
             setQuestionnaires(updated);
@@ -272,7 +295,7 @@ const QuestionnaireCreate = ({
 
                         // mode="multiple"
                         allowClear
-                        style={{maxWidth: "400px"}}
+                        style={{width: "150px"}}
                         placeholder="Please select"
                         defaultValue={options[0]}
                         onChange={setSelectOption}
@@ -442,43 +465,21 @@ const QuestionCard = ({q, questions, setQuestions}) => {
 };
 
 
-const TestOptions = ({q, questions, setQuestions}) => {
 
-    const updateOption = (i, val) => {
-        setQuestions(questions.map(item => {
-            if (item.id !== q.id) return item;
-
-            const opts = [...item.options];
-            opts[i] = val;
-
-            return {...item, options: opts};
-        }));
-    };
-
-    return (
-        <div>
-            {q.options.map((opt, i) => (
-                <Input
-                    key={i}
-                    value={opt}
-                    onChange={(e) => updateOption(i, e.target.value)}
-                />
-            ))}
-        </div>
-    );
-};
 const QuestionnaireStats = ({data, questionnaires, setView, dispatch, setQuestionnaires}) => {
     const [title, setTitle] = useState("So'rovnoma");
     const [deadLine, setDeadLine] = useState(null);
     const [questions, setQuestions] = useState(data.questions);
     const [selectOption, setSelectOption] = useState([]);
+
     const {request} = useHttp()
 
     useEffect(() => {
+
         if (data) {
             setTitle(data?.title)
             setSelectOption(data?.target_role)
-            setDeadLine(data?.deadline)
+            setDeadLine(data?.deadline?.replace(/^0/, '2').split('T')[0])
         }
     }, [data])
 
@@ -536,6 +537,7 @@ const QuestionnaireStats = ({data, questionnaires, setView, dispatch, setQuestio
                 dispatch(onQuestionnaireDelete(data.id))
             })
     }
+
     return (
         <div className={cls.add}>
             <div className={cls.add_header}>
@@ -554,7 +556,7 @@ const QuestionnaireStats = ({data, questionnaires, setView, dispatch, setQuestio
                         onChange={setSelectOption}
                         options={options}
                     />
-                    <Input onChange={(e) => setDeadLine(e.target.value)}
+                    <Input value={deadLine} onChange={(e) => setDeadLine(e.target.value)}
                            styleInput={{width: "150px", height: "30px", marginBottom: "0", borderRadius: "5px"}}
                            type={"date"}/>
                     <button className={cls.add_btn} onClick={handleAddQuestion}>
@@ -587,4 +589,227 @@ const QuestionnaireStats = ({data, questionnaires, setView, dispatch, setQuestio
              </div>
         </div>
     );
+};
+
+
+
+
+
+
+
+
+function SurveyStats({ data }) {
+    return (
+        <div className="survey-container" style={styles.container}>
+            <h2>{data.survey_title}</h2>
+            <p>ID: {data.survey_id}</p>
+            <div style={styles.statsRow}>
+                <div>📝 Savollar: {data.questions.length}</div>
+                <div>💬 Javoblar: {data.total_responses}</div>
+            </div>
+            {data.questions.map((question) => {
+                switch (question.type) {
+                    case "yes_no":
+                        return <YesNoQuestion key={question.question_id} q={question} />;
+                    case "star":
+                        return <StarQuestion key={question.question_id} q={question} />;
+                    case "test":
+                        return <TestQuestion key={question.question_id} q={question} />;
+                    case "short_answer":
+                        return <ShortAnswerQuestion key={question.question_id} q={question} />;
+                    default:
+                        return null;
+                }
+            })}
+
+        </div>
+    );
+}
+const styles = {
+    container: {
+        background: "#121212",
+        color: "#f0f0f0",
+        padding: "20px",
+        borderRadius: "10px",
+        width: "600px",
+        margin: "20px auto",
+        fontFamily: "sans-serif",
+    },
+    statsRow: {
+        display: "flex",
+        justifyContent: "space-between",
+        marginBottom: "20px",
+    },
+};
+function YesNoQuestion({ q }) {
+    return (
+        <div style={styles1.box}>
+            <h4>Ha/Yo‘q — Savol ID: {q.question_id}</h4>
+            <p>{q.text}</p>
+            <div style={styles1.row}>
+                <span>✅ Ha: {q.stats.yes_count}</span>
+                <span>❌ Yo‘q: {q.stats.no_count}</span>
+                <span>📊 Ha ulushi: {q.stats.yes_percentage}%</span>
+            </div>
+            <div style={styles1.barContainer}>
+                <div
+                    style={{ ...styles1.barYes, width: q.stats.yes_percentage + "%" }}
+                ></div>
+            </div>
+        </div>
+    );
+}
+const styles1 = {
+    box: {
+        background: "#1e1e1e",
+        padding: "15px",
+        borderRadius: "10px",
+        marginBottom: "15px",
+    },
+    row: {
+        display: "flex",
+        justifyContent: "space-between",
+    },
+    barContainer: {
+        background: "#333",
+        height: "6px",
+        marginTop: "6px",
+    },
+    barYes: {
+        background: "#00e676",
+        height: "6px",
+    },
+};
+
+
+function StarQuestion({ q }) {
+    const dist = q.stats.distribution;
+    const totalVotes = Object.values(dist).reduce((a, b) => a + b, 0);
+    return (
+        <div style={styles2.box}>
+            <h4>⭐ Yulduzcha — Savol ID: {q.question_id}</h4>
+            <p>{q.text}</p>
+            <div style={styles2.row}>
+                <span>O‘rtacha ball: {q.stats.average.toFixed(1)}</span>
+                <span>Jami ovoz: {totalVotes}</span>
+            </div>
+            {[5, 4, 3, 2, 1].map((star) => (
+                <div key={star} style={styles2.starsRow}>
+                    <span>{star} ⭐</span>
+                    <div style={styles2.barContainer}>
+                        <div
+                            style={{
+                                ...styles2.bar,
+                                width: totalVotes ? (dist[star] / totalVotes) * 100 + "%" : "0%",
+                            }}
+                        ></div>
+                    </div>
+                    <span>{dist[star]}</span>
+                </div>
+            ))}
+        </div>
+    );
+}
+const styles2 = {
+    box: {
+        background: "#1e1e1e",
+        padding: "15px",
+        borderRadius: "10px",
+        marginBottom: "15px",
+    },
+    row: {
+        display: "flex",
+        justifyContent: "space-between",
+    },
+    starsRow: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    barContainer: {
+        background: "#333",
+        flex: 1,
+        margin: "0 10px",
+        height: "6px",
+    },
+    bar: {
+        background: "#ffca28",
+        height: "6px",
+    },
+};
+
+
+
+function TestQuestion({ q }) {
+    return (
+        <div style={styles3.box}>
+            <h4>🧠 Test — Savol ID: {q.question_id}</h4>
+            <p>{q.text}</p>
+            {q.stats.options.map((opt) => (
+                <div key={opt.id} style={styles3.option}>
+                    <span>{opt.text}</span>
+                    <div style={styles3.barContainer}>
+                        <div
+                            style={{ ...styles3.bar, width: opt.percentage + "%" }}
+                        ></div>
+                    </div>
+                    <span>{opt.count}</span>
+                </div>
+            ))}
+        </div>
+    );
+}
+const styles3 = {
+    box: {
+        background: "#1e1e1e",
+        padding: "15px",
+        borderRadius: "10px",
+        marginBottom: "15px",
+    },
+    option: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    barContainer: {
+        background: "#333",
+        flex: 1,
+        height: "6px",
+        margin: "0 10px",
+    },
+    bar: {
+        background: "#42a5f5",
+        height: "6px",
+    },
+};
+
+
+
+function ShortAnswerQuestion({ q }) {
+    const s = q.stats.sentiment;
+    return (
+        <div style={styles5.box}>
+            <h4>✏️ Qisqa javob — Savol ID: {q.question_id}</h4>
+            <p>{q.text}</p>
+            <p>Jami javoblar: {q.stats.total_answers}</p>
+            <div>AI tahlili: {q.stats.ai_summary || "–"}</div>
+            <div style={styles5.row}>
+                <span>😊 Ijobiy: {s.positive}</span>
+                <span>😐 Neytral: {s.neutral}</span>
+                <span>☹️ Salbiy: {s.negative}</span>
+            </div>
+        </div>
+    );
+}
+const styles5 = {
+    box: {
+        background: "#1e1e1e",
+        padding: "15px",
+        borderRadius: "10px",
+        marginBottom: "15px",
+    },
+    row: {
+        display: "flex",
+        justifyContent: "space-between",
+    },
 };
