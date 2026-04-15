@@ -1,0 +1,96 @@
+.detail
+  padding: 2.4rem
+  animation: fadeIn 0.4s ease-out
+
+.header
+  display: flex
+  align-items: center
+  gap: 2.4rem
+  margin-bottom: 3.2rem
+
+.backBtn
+  display: flex
+  align-items: center
+  gap: 0.8rem
+  padding: 1rem 2rem
+  background: #fff
+  border: 1px solid #e2e8f0
+  border-radius: 1rem
+  color: #1e293b
+  font-weight: 600
+  cursor: pointer
+  transition: all 0.2s ease
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05)
+
+  &:hover
+    background: #f8fafc
+    transform: translateX(-4px)
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05)
+
+.title
+  font-size: 2.4rem
+  font-weight: 700
+  color: #1e293b
+  margin: 0
+
+.tableWrapper
+  background: #fff
+  border-radius: 2rem
+  padding: 2.4rem
+  border: 1px solid #e2e8f0
+  overflow-x: auto
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1)
+
+.customTable
+  width: 100%
+  border-collapse: separate
+  border-spacing: 0 0.8rem
+
+  th
+    text-align: left
+    padding: 1.6rem
+    color: #64748b
+    font-size: 1.3rem
+    text-transform: uppercase
+    letter-spacing: 0.1rem
+    font-weight: 700
+
+  td
+    padding: 1.6rem
+    background: #f8fafc
+    color: #1e293b
+    font-size: 1.5rem
+    border-top: 1px solid #f1f5f9
+    border-bottom: 1px solid #f1f5f9
+
+    &:first-child
+      border-left: 1px solid #f1f5f9
+      border-top-left-radius: 1.2rem
+      border-bottom-left-radius: 1.2rem
+      font-weight: 600
+      color: #0f172a
+
+    &:last-child
+      border-right: 1px solid #f1f5f9
+      border-top-right-radius: 1.2rem
+      border-bottom-right-radius: 1.2rem
+
+  .score
+    font-weight: 700
+    color: #059669
+
+  .emptyScore
+    color: #94a3b8
+
+  .finalAvg
+    font-weight: 800
+    color: #d97706
+    font-size: 1.6rem
+
+@keyframes fadeIn
+  from
+    opacity: 0
+    transform: scale(0.98)
+  to
+    opacity: 1
+    transform: scale(1)
