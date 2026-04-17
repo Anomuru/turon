@@ -77,6 +77,7 @@ export const getHomeMessage = (id) => `messages`
 export const getHomeNews = (id) => `news`
 export const getParty = (id) => `party/*`
 export const getTeacherObservation = () => `teacherObservation`
+export const getLessonPlan = () => `lessonPlan`
 export const classView = (id) => `time/classView`
 export const questionnaire = (id) => `questionnaire`
 

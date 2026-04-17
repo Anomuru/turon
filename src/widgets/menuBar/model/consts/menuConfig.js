@@ -102,6 +102,12 @@ export const menuConfig = [
         roles: [ROLES.teacher]
     },
     {
+        to: "lessonPlan",
+        name: "Dars Rejasi",
+        icon: "fa-file-alt",
+        roles: [ROLES.teacher]
+    },
+    {
         to: "todoist",
         name: "Todoist",
         icon: "fa-circle-check",
