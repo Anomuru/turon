@@ -24,7 +24,7 @@ export const menuConfig = [
         to: "taskManager",
         name: "Task Manager",
         icon: "fa-tasks",
-        roles: [ROLES.operator],
+        roles: [ROLES.admin],
     },
     {
         to: "statistics",

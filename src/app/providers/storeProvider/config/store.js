@@ -38,6 +38,7 @@ import newsSlice from "pages/newsPage/model/newsSlice.js";
 import partySlice from "pages/partyPage/model/partySlice.js";
 import { teacherPDReducer } from 'entities/teacherPD';
 import {capitalReducer} from "entities/capital/index.js";
+import {crmReducer} from "entities/adminTaskManager/model/crmSlice.js";
 
 
 export function createReduxStore(
@@ -81,7 +82,8 @@ export function createReduxStore(
         teacherAttendanceSlice,
         newsSlice,
         teacherPD: teacherPDReducer,
-        partySlice
+        partySlice,
+        crmSlice: crmReducer
 
 
 
