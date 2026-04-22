@@ -33,6 +33,12 @@ export const menuConfig = [
         roles: [ROLES.director, ROLES.main_director, ROLES.programmer],
     },
     {
+        to: "financeDashboard",
+        name: "Moliyaviy Dashboard",
+        icon: "fa-chart-bar",
+        roles: [ROLES.director, ROLES.main_director, ROLES.programmer, ROLES.accountant],
+    },
+    {
         to: "rating",
         name: "Reyting ko'rsatkichlari",
         icon: "fa-users",
