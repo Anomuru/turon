@@ -66,7 +66,7 @@ export const menuConfig = [
         to: "adminTaskManager",
         name: "Operator Tasks",
         icon: "fa-tasks",
-        roles: [ROLES.spiritualist]
+        roles: [ROLES.admin]
         // roles: true
     },
     {
