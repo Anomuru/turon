@@ -5,6 +5,8 @@ import {useDispatch} from "react-redux";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Table} from "shared/ui/table/index.js";
+import {Button} from "shared/ui/button/index.js";
+import {onAddAlertOptions} from "features/alert/model/slice/alertSlice.js";
 
 export const ObservedDates = () => {
     const dispatch = useDispatch()
@@ -20,6 +22,7 @@ export const ObservedDates = () => {
 
     const [day, setDay] = useState()
     const [days, setDays] = useState([])
+    const [observationId, setObservationId] = useState(null)
 
     const [observationsOptions, setObservationOptions] = useState([])
     const [info, setInfo] = useState([])
@@ -31,7 +34,6 @@ export const ObservedDates = () => {
         if (id) {
             request(`${API_URL}Observation/observed_group/${id}/`, "GET", null, headers())
                 .then(res => {
-
                     if (res.month_list.length === 1) {
                         setMonth(res.month_list[0])
                     } else {
@@ -43,10 +45,7 @@ export const ObservedDates = () => {
                         setYear(res.years_list[0])
                     }
                     setYears(res.years_list)
-
-
                     setYear(res.year)
-
                 })
         }
     }, [])
@@ -54,11 +53,11 @@ export const ObservedDates = () => {
         if (year && month) {
             request(`${API_URL}Observation/observed_group/${id}/${year}-${month}/`, "GET", null, headers())
                 .then(res => {
-                    setDays(res.days)
+                    const raw = res.days || []
+                    setDays(raw.map(d => typeof d === 'object' ? { value: d.day, name: String(d.day) } : d))
                 })
         }
-
-    }, [year && month])
+    }, [year, month])
     useEffect(() => {
 
 
@@ -77,12 +76,33 @@ export const ObservedDates = () => {
                     setInfo(res.info)
                     setAverage(res.average)
                     setObserver(res.observer)
+                    setObservationId(res.observation_id || null)
                 })
         }
 
 
     }, [month, year, day])
 
+
+    const onDelete = () => {
+        if (!observationId) return
+
+        request(`${API_URL}Observation/teacher_observation_day_delete/${observationId}/`, "DELETE", null, headers())
+            .then(res => {
+                dispatch(onAddAlertOptions({
+                    type: "success",
+                    status: true,
+                    msg: res.msg || "O'chirildi"
+                }))
+                setInfo([])
+                setObservationOptions([])
+                setAverage("")
+                setObserver({})
+                setObservationId(null)
+                setDay(undefined)
+                setDays([])
+            })
+    }
 
     const stringCheck = (name,length = 50) => {
         if (name?.length > length) {
@@ -173,6 +193,11 @@ export const ObservedDates = () => {
                 <div>
                     Average: <b>{average}</b>
                 </div>
+                {info.length > 0 && (
+                    <Button type="danger" onClick={onDelete}>
+                        O'chirish
+                    </Button>
+                )}
             </div>
             <div className={cls.wrapper}>
 

@@ -24,5 +24,6 @@ archive_name.zip
 *.ntvs*
 *.njsproj
 *.sln
+*.xlsx
 *.sw?
 *~

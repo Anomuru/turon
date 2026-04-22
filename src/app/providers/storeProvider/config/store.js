@@ -30,7 +30,7 @@ import { studentProfileReducer } from "pages/profilePage/model/slice/studentProf
 import { AlertReducer } from "features/alert/model/slice/alertSlice.js";
 import { timeTableTuronReducer } from "pages/timeTable/model/slice/timeTableTuronSlice.js";
 import { filterLeadsReducers } from "entities/filteredLeadsList/model/filteredLeadsListSlice.js";
-import { quarterMasterReducer } from "pages/quarterMasterPage/model/quarterMasterSlice.js";
+import {quarterMasterReducer, quarterMasterSlice} from "pages/quarterMasterPage/model/quarterMasterSlice.js";
 import { locationsReducer } from "features/locations/model/slice/locationsSlice.js";
 import { parentReducer } from "entities/parents/model/parentSlice.js";
 import { todoistReducer } from 'pages/todoistPage';
@@ -38,6 +38,7 @@ import newsSlice from "pages/newsPage/model/newsSlice.js";
 import partySlice from "pages/partyPage/model/partySlice.js";
 import { teacherPDReducer } from 'entities/teacherPD';
 import {capitalReducer} from "entities/capital/index.js";
+import questionnaireSlice from "pages/questionnaire/model/questionnaireSlice.js";
 import {crmReducer} from "entities/adminTaskManager/model/crmSlice.js";
 
 
@@ -83,6 +84,8 @@ export function createReduxStore(
         newsSlice,
         teacherPD: teacherPDReducer,
         partySlice,
+        questionnaireSlice,
+        // partySlice,
         crmSlice: crmReducer
 
 
