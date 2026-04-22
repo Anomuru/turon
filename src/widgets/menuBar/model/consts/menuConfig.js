@@ -96,6 +96,18 @@ export const menuConfig = [
     },
 
     {
+        to: "teacherObservation",
+        name: "Observation",
+        icon: "fa-eye",
+        roles: [ROLES.teacher]
+    },
+    {
+        to: "lessonPlan",
+        name: "Dars Rejasi",
+        icon: "fa-file-alt",
+        roles: [ROLES.teacher]
+    },
+    {
         to: "todoist",
         name: "Todoist",
         icon: "fa-circle-check",
