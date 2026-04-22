@@ -1,0 +1,118 @@
+.statsContainer
+  padding: 2.4rem
+  animation: fadeIn 0.5s ease-out
+  color: #1e293b
+
+.header
+  display: flex
+  align-items: center
+  gap: 2.4rem
+  margin-bottom: 4rem
+
+.backBtn
+  padding: 1rem 2.4rem
+  background: #fff
+  border: 1px solid #e2e8f0
+  border-radius: 12px
+  color: #1e293b
+  cursor: pointer
+  font-weight: 600
+  transition: all 0.2s
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05)
+
+  &:hover
+    background: #f8fafc
+    transform: translateX(-5px)
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05)
+
+.pageTitle
+  font-size: 3.2rem
+  font-weight: 800
+  margin: 0
+  letter-spacing: -0.05rem
+
+.grid
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  gap: 3.2rem
+
+.section
+  background: #fff
+  border: 1px solid #e2e8f0
+  border-radius: 2.4rem
+  padding: 3.2rem
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05)
+
+.fullWidth
+  grid-column: 1 / -1
+
+.sectionHeader
+  display: flex
+  justify-content: space-between
+  align-items: center
+  margin-bottom: 2.4rem
+  flex-wrap: wrap
+  gap: 1.6rem
+
+.sectionTitle
+  font-size: 2rem
+  font-weight: 700
+  margin: 0
+  color: #0f172a
+
+.chartWrapper
+  margin-top: 1.6rem
+
+.rankingTableWrapper
+  margin-top: 1.6rem
+  max-height: 400px
+  overflow-y: auto
+
+.rankingTable
+  width: 100%
+  border-collapse: collapse
+  
+  th
+    text-align: left
+    padding: 1.2rem
+    color: #64748b
+    font-size: 1.2rem
+    text-transform: uppercase
+    letter-spacing: 0.1rem
+    border-bottom: 1px solid #f1f5f9
+
+  td
+    padding: 1.6rem 1.2rem
+    font-size: 1.5rem
+    border-bottom: 1px solid #f8fafc
+
+  .rank
+    width: 50px
+    font-size: 1.8rem
+    font-weight: 700
+
+  .name
+    font-weight: 500
+    color: #0f172a
+
+  .score
+    text-align: right
+    font-weight: 700
+    color: #059669
+
+.topStudent
+  background: #f0fdf4
+  .rank
+    font-size: 2.4rem
+
+@keyframes fadeIn
+  from
+    opacity: 0
+    transform: translateY(10px)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+@media (max-width: 1200px)
+  .grid
+    grid-template-columns: 1fr
