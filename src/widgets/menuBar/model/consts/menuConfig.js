@@ -20,12 +20,12 @@ export const menuConfig = [
         icon: "fa-edit",
         roles: [ROLES.admin, ROLES.director, ROLES.main_director, ROLES.programmer],
     },
-    {
-        to: "taskManager",
-        name: "Task Manager",
-        icon: "fa-tasks",
-        roles: [ROLES.admin],
-    },
+    // {
+    //     to: "taskManager",
+    //     name: "Task Manager",
+    //     icon: "fa-tasks",
+    //     roles: [ROLES.admin],
+    // },
     {
         to: "statistics",
         name: "Statistika",
@@ -66,7 +66,7 @@ export const menuConfig = [
         to: "adminTaskManager",
         name: "Operator Tasks",
         icon: "fa-tasks",
-        roles: [ROLES.admin]
+        roles: [ROLES.spiritualist]
         // roles: true
     },
     {
