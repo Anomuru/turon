@@ -43,7 +43,7 @@ export const VacancyWorkPage = () => {
 
     useEffect(() => {
         if (user && user?.job) {
-            setIsDirector(user.job.includes("director"))
+            setIsDirector(user.job.some(j => j.toLowerCase() === "director"))
         }
     }, [user])
     useEffect(() => {

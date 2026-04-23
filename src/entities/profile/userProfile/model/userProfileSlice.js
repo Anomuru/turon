@@ -35,8 +35,8 @@ const userProfileSlice = createSlice({
                 state.userData = action.payload
                 state.level = action.payload?.level
                 state.userBranchId = action.payload?.branch?.id
-                state.userJob = action.payload?.job[0]
-                localStorage.setItem("job", action.payload?.job[0])
+                state.userJob = action.payload?.job[0]?.toLowerCase()
+                localStorage.setItem("job", action.payload?.job[0]?.toLowerCase())
 
                 localStorage.setItem("username",  action.payload.username)
 
