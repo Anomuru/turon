@@ -23,20 +23,20 @@ const CallModal = ({ student, callId, callLogId, onClose, onRefresh }) => {
     const dispatch = useDispatch()
 
     // callState: 'calling' | 'active' | 'ended'
-    const [callState, setCallState]   = useState('calling')
-    const [elapsed, setElapsed]       = useState(0)
+    const [callState, setCallState] = useState('calling')
+    const [elapsed, setElapsed] = useState(0)
     const [callResult, setCallResult] = useState(null) // final response data
 
     // ── Next call date form
     const [nextCallDate, setNextCallDate] = useState('')
-    const [comment, setComment]           = useState('')
-    const [saving, setSaving]             = useState(false)
-    const [saved, setSaved]               = useState(false)
+    const [comment, setComment] = useState('')
+    const [saving, setSaving] = useState(false)
+    const [saved, setSaved] = useState(false)
 
-    const timerRef  = useRef(null)
-    const pollRef   = useRef(null)
+    const timerRef = useRef(null)
+    const pollRef = useRef(null)
 
-    const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2,'0')}:${String(s % 60).padStart(2,'0')}`
+    const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 
     // ── End call — stops polling, shows result
     const handleEndCall = useCallback((resultData = null) => {
@@ -60,7 +60,7 @@ const CallModal = ({ student, callId, callLogId, onClose, onRefresh }) => {
         const check = async () => {
             try {
                 const result = await dispatch(CheckCallStatusThunk(callId))
-                const data   = result.payload
+                const data = result.payload
                 if (data?.is_finished === true) {
                     handleEndCall(data)
                 }
@@ -90,8 +90,8 @@ const CallModal = ({ student, callId, callLogId, onClose, onRefresh }) => {
 
     const stateLabel = {
         calling: "Qo'ng'iroq yuborilyapti...",
-        active:  "Ulangan",
-        ended:   "Qo'ng'iroq tugatildi",
+        active: "Ulangan",
+        ended: "Qo'ng'iroq tugatildi",
     }[callState]
 
     const answered = callResult?.vats_status === 'success'
@@ -104,7 +104,7 @@ const CallModal = ({ student, callId, callLogId, onClose, onRefresh }) => {
             <div className={cls.modal}>
                 {/* Avatar */}
                 <div className={`${cls.modal__avatar} ${callState === 'active' ? cls['modal__avatar--active'] : ''}`}>
-                    {student?.full_name?.split(' ').slice(0,2).map(w => w[0]).join('') || '?'}
+                    {student?.full_name?.split(' ').slice(0, 2).map(w => w[0]).join('') || '?'}
                 </div>
 
                 <h2 className={cls.modal__name}>{student?.full_name || student?.user.name}</h2>
@@ -192,7 +192,7 @@ const CallModal = ({ student, callId, callLogId, onClose, onRefresh }) => {
                                 <button
                                     className={cls.modal__close_btn}
                                     onClick={() => { onClose(); onRefresh?.() }}
-                                    style={{marginTop: '0.8rem'}}
+                                    style={{ marginTop: '0.8rem' }}
                                 >
                                     Yopish
                                 </button>
@@ -211,44 +211,44 @@ const formatMoney = (val) =>
     new Intl.NumberFormat("uz-UZ", { style: "decimal" }).format(val) + " so'm"
 
 // ─── Pending Card ─────────────────────────────────────────────────────────────
-const fmtDur = (s) => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`
+const fmtDur = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 
 const PendingCard = ({ student, onRefresh }) => {
     const dispatch = useDispatch()
 
-    const [showCall, setShowCall]               = useState(false)
-    const [activeCallId, setActiveCallId]       = useState(null)
+    const [showCall, setShowCall] = useState(false)
+    const [activeCallId, setActiveCallId] = useState(null)
     const [activeCallLogId, setActiveCallLogId] = useState(null)
-    const [callLoading, setCallLoading]         = useState(false)
-    const [callStatus, setCallStatus]           = useState(null)
+    const [callLoading, setCallLoading] = useState(false)
+    const [callStatus, setCallStatus] = useState(null)
 
     // ── Call history
-    const [showHistory, setShowHistory]       = useState(false)
-    const [history, setHistory]               = useState(null)   // null = not loaded yet
+    const [showHistory, setShowHistory] = useState(false)
+    const [history, setHistory] = useState(null)   // null = not loaded yet
     const [historyLoading, setHistoryLoading] = useState(false)
 
     // API shape: full_name, phone, parent_phone, debt, months_count, color, id
     const initials = student.full_name
         ? student.full_name.split(' ').slice(0, 2).map(w => w[0]).join('')
         : "?"
-    const initialss = student?.user?.name 
-    ? student?.user?.name.split(' ').slice(0, 2).map(w => w[0]).join('')
-    : "?"
+    const initialss = student?.user?.name
+        ? student?.user?.name.split(' ').slice(0, 2).map(w => w[0]).join('')
+        : "?"
 
     // POST first → get callId + callLogId → save to localStorage → open modal
     const handleCallClick = async () => {
         if (callLoading || showCall) return
         setCallLoading(true)
         try {
-            const result  = await dispatch(CallThunk({
+            const result = await dispatch(CallThunk({
                 user: "admin",
-                phone: "+998942021090",
+                phone: student.phone || student.user.phone,
                 student_id: student.student_id,
                 comment: "com",
                 category: 'debtor',
             }))
-            const data    = result.payload
-            const callId    = data?.callid      ?? null
+            const data = result.payload
+            const callId = data?.callid ?? null
             const callLogId = data?.call_log_id ?? null
             if (callId) localStorage.setItem('activeCallId', callId)
             localStorage.setItem("student_id", student.id)
@@ -286,73 +286,73 @@ const PendingCard = ({ student, onRefresh }) => {
             <div className={cls.card__top}>
                 {
                     student.user ? <div className={cls.card__avatars}>
-                    {initialss}
-                </div> : <div className={cls.card__avatar}>
-                    {initials}
-                </div> 
+                        {initialss}
+                    </div> : <div className={cls.card__avatar}>
+                        {initials}
+                    </div>
                 }
-                
+
                 <div className={cls.card__meta}>
                     <h3 className={cls.card__name}>
                         {
-                            student.user ? 
-                            `${student.user.surname}   ${student.user.name}` : `${student.full_name}`
+                            student.user ?
+                                `${student.user.surname}   ${student.user.name}` : `${student.full_name}`
                         }
                     </h3>
                     <p className={cls.card__phone}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.78 19.78 0 01.01 2.22 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.78 19.78 0 01.01 2.22 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" /></svg>
                         {student.phone || student?.user?.phone}
                     </p>
                     {student.parent_phone && student.parent_phone !== student.phone && (
                         <p className={cls.card__phone}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
                             {student.parent_phone}
                         </p>
                     )}
                 </div>
                 {
                     student.user || student.lead_id ? null :
-                    <div className={cls.card__badges}>
-                    <span className={`${cls.badge__pending} ${colorClass}`}>{student.months_count} oy</span>
-                </div>
+                        <div className={cls.card__badges}>
+                            <span className={`${cls.badge__pending} ${colorClass}`}>{student.months_count} oy</span>
+                        </div>
                 }
-                
+
             </div>
             {
                 student.user || student.lead_id ? null :
-                <div className={cls.card__debt}>
-                <span className={cls.card__debt_label}>Debt Amount</span>
-                <span className={cls.card__debt_value}>{formatMoney(student.debt)}</span>
-            </div>
+                    <div className={cls.card__debt}>
+                        <span className={cls.card__debt_label}>Debt Amount</span>
+                        <span className={cls.card__debt_value}>{formatMoney(student.debt)}</span>
+                    </div>
             }
-            
+
             <div className={cls.card__actions}>
                 {
                     student.user ? <button
-                    onClick={handleCallClick}
-                    className={cls.btn__calls}
-                    disabled={callLoading || showCall}
-                >
-                    {callLoading ? (
-                        <span className={cls.btn__spinner} />
-                    ) : (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.78 19.78 0 01.01 2.22 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-                    )}
-                    {callLoading ? "Ulanmoqda..." : "Qo'ng'iroq"}
-                </button> : <button
-                    onClick={handleCallClick}
-                    className={cls.btn__call}
-                    disabled={callLoading || showCall}
-                >
-                    {callLoading ? (
-                        <span className={cls.btn__spinner} />
-                    ) : (
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.78 19.78 0 01.01 2.22 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
-                    )}
-                    {callLoading ? "Ulanmoqda..." : "Qo'ng'iroq"}
-                </button> 
+                        onClick={handleCallClick}
+                        className={cls.btn__calls}
+                        disabled={callLoading || showCall}
+                    >
+                        {callLoading ? (
+                            <span className={cls.btn__spinner} />
+                        ) : (
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.78 19.78 0 01.01 2.22 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" /></svg>
+                        )}
+                        {callLoading ? "Ulanmoqda..." : "Qo'ng'iroq"}
+                    </button> : <button
+                        onClick={handleCallClick}
+                        className={cls.btn__call}
+                        disabled={callLoading || showCall}
+                    >
+                        {callLoading ? (
+                            <span className={cls.btn__spinner} />
+                        ) : (
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.78 19.78 0 01.01 2.22 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" /></svg>
+                        )}
+                        {callLoading ? "Ulanmoqda..." : "Qo'ng'iroq"}
+                    </button>
                 }
-                
+
                 {showCall && (
                     <CallModal
                         student={student}
@@ -367,7 +367,7 @@ const PendingCard = ({ student, onRefresh }) => {
             {/* ── Call History ── */}
             <button className={cls.history__toggle} onClick={toggleHistory}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
                 </svg>
                 Qo'ng'iroq tarixi
                 {historyLoading && <span className={cls.history__spinner} />}
@@ -378,7 +378,7 @@ const PendingCard = ({ student, onRefresh }) => {
                     width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
                     style={{ marginLeft: 'auto', transform: showHistory ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
                 >
-                    <polyline points="6 9 12 15 18 9"/>
+                    <polyline points="6 9 12 15 18 9" />
                 </svg>
             </button>
 
@@ -393,7 +393,7 @@ const PendingCard = ({ student, onRefresh }) => {
                     {!historyLoading && history?.map((log, i) => {
                         const answered = log.vats_status === 'success'
                         const date = log.called_at
-                            ? new Date(log.called_at).toLocaleString('uz-UZ', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })
+                            ? new Date(log.called_at).toLocaleString('uz-UZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
                             : '—'
                         return (
                             <div key={log.id ?? i} className={cls.history__item}>
@@ -431,10 +431,10 @@ const StatisticsPanel = () => {
     const branchId = localStorage.getItem('branchId') || 11
     const todayStr = new Date().toISOString().slice(0, 10)
 
-    const [date, setDate]       = useState(todayStr)
-    const [stats, setStats]     = useState(null)
+    const [date, setDate] = useState(todayStr)
+    const [stats, setStats] = useState(null)
     const [loading, setLoading] = useState(false)
-    const [error, setError]     = useState(null)
+    const [error, setError] = useState(null)
 
     const fetchStats = (d) => {
         setLoading(true)
@@ -457,16 +457,20 @@ const StatisticsPanel = () => {
 
     // Derive metric rows from whatever shape the API returns
     const metrics = stats ? [
-        { icon: '📞', label: 'Jami qo\'ng\'iroqlar',    value: stats.total_calls      ?? stats.total      ?? '—', color: 'blue'   },
-        { icon: '✅', label: 'Javob berildi',            value: stats.answered_calls   ?? stats.answered   ?? '—', color: 'green'  },
-        { icon: '❌', label: 'Javob berilmadi',          value: stats.missed_calls     ?? stats.missed     ?? '—', color: 'red'    },
-        { icon: '⏱',  label: 'O\'rtacha davomiyligi',   value: stats.avg_duration     != null
-                ? `${Math.floor(stats.avg_duration / 60)}:${String(stats.avg_duration % 60).padStart(2,'0')}`
-                : '—',                                                                                             color: 'orange' },
-        { icon: '🎯', label: 'Javob darajasi',           value: stats.answer_rate      != null
+        { icon: '📞', label: 'Jami qo\'ng\'iroqlar', value: stats.total_calls ?? stats.total ?? '—', color: 'blue' },
+        { icon: '✅', label: 'Javob berildi', value: stats.answered_calls ?? stats.answered ?? '—', color: 'green' },
+        { icon: '❌', label: 'Javob berilmadi', value: stats.missed_calls ?? stats.missed ?? '—', color: 'red' },
+        {
+            icon: '⏱', label: 'O\'rtacha davomiyligi', value: stats.avg_duration != null
+                ? `${Math.floor(stats.avg_duration / 60)}:${String(stats.avg_duration % 60).padStart(2, '0')}`
+                : '—', color: 'orange'
+        },
+        {
+            icon: '🎯', label: 'Javob darajasi', value: stats.answer_rate != null
                 ? `${stats.answer_rate}%`
-                : '—',                                                                                             color: 'purple' },
-        { icon: '👥', label: 'O\'zlashtirilgan lidlar',  value: stats.converted_leads  ?? stats.converted  ?? '—', color: 'teal'   },
+                : '—', color: 'purple'
+        },
+        { icon: '👥', label: 'O\'zlashtirilgan lidlar', value: stats.converted_leads ?? stats.converted ?? '—', color: 'teal' },
     ] : []
 
     return (
@@ -474,12 +478,12 @@ const StatisticsPanel = () => {
             {/* Header row */}
             <div className={cls.statPanel__header}>
                 <div className={cls.statPanel__title}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /></svg>
                     Qo'ng'iroq statistikasi
                 </div>
                 <div className={cls.statPanel__controls}>
                     <div className={cls.statPanel__datebox}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
                         <input
                             type="date"
                             className={cls.statPanel__dateInput}
@@ -496,9 +500,9 @@ const StatisticsPanel = () => {
                     >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
                             style={{ animation: loading ? 'spin 0.8s linear infinite' : 'none' }}>
-                            <polyline points="23 4 23 10 17 10"/>
-                            <polyline points="1 20 1 14 7 14"/>
-                            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                            <polyline points="23 4 23 10 17 10" />
+                            <polyline points="1 20 1 14 7 14" />
+                            <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" />
                         </svg>
                     </button>
                 </div>
@@ -533,7 +537,7 @@ const StatisticsPanel = () => {
 
 // ─── Main Board ───────────────────────────────────────────────────────────────
 const COLOR_CONFIG = {
-    red:    { label: 'Kritik qarzdorlar',  dot: cls.dot__red,    section: cls['section--red']    },
+    red: { label: 'Kritik qarzdorlar', dot: cls.dot__red, section: cls['section--red'] },
     yellow: { label: 'O\'rtacha qarzdorlar', dot: cls.dot__yellow, section: cls['section--yellow'] },
 }
 
@@ -546,31 +550,31 @@ export const DebtorCRMBoard = () => {
     const [activeTab, setActiveTab] = useState('debtors')
 
     // ── Debtors data
-    const [debtors, setDebtors]   = useState([])
-    const [loading, setLoading]   = useState(true)
-    const [error, setError]       = useState(null)
+    const [debtors, setDebtors] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     // ── New students data
-    const [newStudents, setNewStudents]       = useState([])
+    const [newStudents, setNewStudents] = useState([])
     const [newStudentsLoading, setNewStudentsLoading] = useState(false)
     const [newStudentsFetched, setNewStudentsFetched] = useState(false)
 
     // ── Leads data
-    const [leads, setLeads]           = useState([])
+    const [leads, setLeads] = useState([])
     const [leadsLoading, setLeadsLoading] = useState(false)
     const [leadsFetched, setLeadsFetched] = useState(false)
 
-    const [search, setSearch]     = useState("")
+    const [search, setSearch] = useState("")
     const [colorFilter, setColorFilter] = useState("all") // 'all' | 'red' | 'yellow'
-    const [pages, setPages]       = useState({}) // { red: 1, yellow: 1, ... }
+    const [pages, setPages] = useState({}) // { red: 1, yellow: 1, ... }
     const [flatPage, setFlatPage] = useState(1)
 
     // ── Called users data
     const todayStr = new Date().toISOString().slice(0, 10)
-    const [calledUsers, setCalledUsers]     = useState([])
+    const [calledUsers, setCalledUsers] = useState([])
     const [calledLoading, setCalledLoading] = useState(false)
     const [calledCategory, setCalledCategory] = useState('debtor')
-    const [calledDate, setCalledDate]       = useState(todayStr)
+    const [calledDate, setCalledDate] = useState(todayStr)
 
     // ── Refresh debtors silently (fade out → in)
     const [refreshing, setRefreshing] = useState(false)
@@ -688,13 +692,13 @@ export const DebtorCRMBoard = () => {
     // ── Active data based on tab
     const activeData = activeTab === 'debtors' ? debtors
         : activeTab === 'newstudents' ? newStudents
-        : activeTab === 'leads' ? leads
-        : calledUsers
+            : activeTab === 'leads' ? leads
+                : calledUsers
 
     const isTabLoading = activeTab === 'debtors' ? loading
         : activeTab === 'newstudents' ? newStudentsLoading
-        : activeTab === 'leads' ? leadsLoading
-        : calledLoading
+            : activeTab === 'leads' ? leadsLoading
+                : calledLoading
 
     // ── Filter by search
     const filtered = useMemo(() => {
@@ -719,7 +723,7 @@ export const DebtorCRMBoard = () => {
         return groups
     }, [filtered, activeTab])
 
-    const colorOrder   = ['red', 'yellow', ...Object.keys(grouped).filter(c => c !== 'red' && c !== 'yellow')]
+    const colorOrder = ['red', 'yellow', ...Object.keys(grouped).filter(c => c !== 'red' && c !== 'yellow')]
 
     if (loading && activeTab === 'debtors') return (
         <div className={cls.loader}>
@@ -744,10 +748,10 @@ export const DebtorCRMBoard = () => {
             {/* ── Top-level Type Tabs ── */}
             <div className={cls.type_tabs}>
                 {[
-                    { key: 'debtors',     label: '💰 Qarzdorlar',             count: debtors.length },
-                    { key: 'newstudents', label: "🎓 Yangi o'quvchilar",     count: newStudents.length },
-                    { key: 'leads',       label: '🧲 Lidlar',                 count: leads.length },
-                    { key: 'called',      label: "📞 Qo'ng'iroq qilinganlar", count: calledUsers.length },
+                    { key: 'debtors', label: '💰 Qarzdorlar', count: debtors.length },
+                    { key: 'newstudents', label: "🎓 Yangi o'quvchilar", count: newStudents.length },
+                    { key: 'leads', label: '🧲 Lidlar', count: leads.length },
+                    { key: 'called', label: "📞 Qo'ng'iroq qilinganlar", count: calledUsers.length },
                 ].map(tab => (
                     <button
                         key={tab.key}
@@ -763,7 +767,7 @@ export const DebtorCRMBoard = () => {
             {/* ── Controls ── */}
             <div className={cls.controls}>
                 <div className={cls.search}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
                     <input
                         type="text"
                         placeholder="Ism yoki telefon bo'yicha qidirish..."
@@ -805,7 +809,7 @@ export const DebtorCRMBoard = () => {
                         .map(color => {
                             const cfg = COLOR_CONFIG[color] || { label: color, dot: cls.dot__pending, section: '' }
                             const currentPage = pages[color] || 1
-                            const totalCount  = grouped[color].length
+                            const totalCount = grouped[color].length
                             const start = (currentPage - 1) * PAGE_SIZE
                             const pageItems = grouped[color].slice(start, start + PAGE_SIZE)
                             return (
@@ -816,7 +820,7 @@ export const DebtorCRMBoard = () => {
                                             {cfg.label}
                                         </h2>
                                         <span className={cls.section__count}>
-                                            {totalCount} ta o'quvchi · {formatMoney(grouped[color].reduce((s,x) => s + (x.debt||0), 0))}
+                                            {totalCount} ta o'quvchi · {formatMoney(grouped[color].reduce((s, x) => s + (x.debt || 0), 0))}
                                         </span>
                                     </div>
                                     <div className={cls.grid}>
@@ -880,9 +884,9 @@ export const DebtorCRMBoard = () => {
                     <div className={cls.calledControls}>
                         <div className={cls.calledControls__cats}>
                             {[
-                                { key: 'debtor',      label: '💰 Qarzdorlar' },
+                                { key: 'debtor', label: '💰 Qarzdorlar' },
                                 { key: 'new_student', label: "🎓 Yangi o'quvchilar" },
-                                { key: 'lead',        label: '🧲 Lidlar' },
+                                { key: 'lead', label: '🧲 Lidlar' },
                             ].map(c => (
                                 <button
                                     key={c.key}
@@ -895,10 +899,10 @@ export const DebtorCRMBoard = () => {
                         </div>
                         <div className={cls.calledControls__datebox}>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2"/>
-                                <line x1="16" y1="2" x2="16" y2="6"/>
-                                <line x1="8" y1="2" x2="8" y2="6"/>
-                                <line x1="3" y1="10" x2="21" y2="10"/>
+                                <rect x="3" y="4" width="18" height="18" rx="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
                             </svg>
                             <input
                                 type="date"
