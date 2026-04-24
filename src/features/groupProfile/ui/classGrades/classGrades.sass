@@ -1,0 +1,496 @@
+// Variables
+$primary-color: #667eea
+$secondary-color: #764ba2
+$success-color: #10b981
+$warning-color: #f59e0b
+$danger-color: #ef4444
+$neutral-color: #6b7280
+
+$excellent-color: #10b981
+$good-color: #3b82f6
+$average-color: #f59e0b
+$poor-color: #ef4444
+$none-color: #9ca3af
+
+$bg-gradient: #001B61
+$card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)
+$card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)
+
+$border-radius: 12px
+$transition: all 0.3s ease
+
+// Mixins
+@mixin flex-center
+  display: flex
+  align-items: center
+  justify-content: center
+
+@mixin card-style
+  background: white
+  border-radius: $border-radius
+  box-shadow: $card-shadow
+  transition: $transition
+
+  &:hover
+    box-shadow: $card-shadow-hover
+    transform: translateY(-4px)
+
+// Main Dashboard Styles
+.dashboard
+  min-height: 100vh
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif
+  padding-bottom: 40px
+
+// Header
+.dashboard-header
+  background: $bg-gradient
+  padding: 40px 20px
+  color: white
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3)
+
+  .header-content
+    max-width: 1200px
+    margin: 0 auto
+
+    h1
+      margin: 0 0 20px 0
+      font-size: 2.5rem
+      font-weight: 700
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+
+  .term-info
+    display: flex
+    gap: 16px
+    flex-wrap: wrap
+
+    .term-badge
+      background: rgba(255, 255, 255, 0.2)
+      backdrop-filter: blur(10px)
+      padding: 8px 20px
+      border-radius: 20px
+      font-weight: 600
+      border: 1px solid rgba(255, 255, 255, 0.3)
+
+    .term-dates
+      background: rgba(255, 255, 255, 0.15)
+      backdrop-filter: blur(10px)
+      padding: 8px 20px
+      border-radius: 20px
+      font-weight: 500
+
+// Tabs
+.tabs
+  max-width: 1200px
+  margin: -24px auto 32px
+  padding: 0 20px
+  display: flex
+  gap: 12px
+
+  .tab
+    flex: 1
+    padding: 16px 24px
+    background: white
+    border: none
+    border-radius: $border-radius
+    font-size: 1rem
+    font-weight: 600
+    cursor: pointer
+    transition: $transition
+    box-shadow: $card-shadow
+    color: $neutral-color
+
+    &:hover
+      transform: translateY(-2px)
+      box-shadow: $card-shadow-hover
+
+    &.active
+      background: $bg-gradient
+      color: white
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3)
+
+// Overall Section
+.overall-section
+  max-width: 1200px
+  margin: 0 auto
+  padding: 0 20px
+
+.stats-grid
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))
+  gap: 24px
+
+.student-card
+  @include card-style
+  padding: 24px
+  border-left: 4px solid $neutral-color
+
+  &.score-excellent
+    border-left-color: $excellent-color
+
+  &.score-good
+    border-left-color: $good-color
+
+  &.score-average
+    border-left-color: $average-color
+
+  &.score-poor
+    border-left-color: $poor-color
+
+  &.score-none
+    border-left-color: $none-color
+    opacity: 0.7
+
+  .card-header
+    display: flex
+    align-items: center
+    gap: 12px
+    margin-bottom: 20px
+    padding-bottom: 16px
+    border-bottom: 2px solid #f3f4f6
+
+    .rank-badge
+      @include flex-center
+      min-width: 48px
+      height: 48px
+      background: $bg-gradient
+      color: white
+      border-radius: 50%
+      font-size: 1.25rem
+      font-weight: 700
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3)
+
+    .student-name
+      flex: 1
+      font-size: 1.125rem
+      font-weight: 600
+      color: #1f2937
+
+  .card-body
+    display: flex
+    flex-direction: column
+    gap: 12px
+
+    .stat
+      display: flex
+      justify-content: space-between
+      align-items: center
+      padding: 12px
+      background: #f9fafb
+      border-radius: 8px
+
+      .stat-label
+        color: $neutral-color
+        font-size: 0.875rem
+        font-weight: 500
+
+      .stat-value
+        color: #1f2937
+        font-size: 1.125rem
+        font-weight: 700
+
+// Subjects Section
+.subjects-section
+  max-width: 1200px
+  margin: 0 auto
+  padding: 0 20px
+
+.subject-selector
+  display: flex
+  flex-wrap: wrap
+  gap: 12px
+  margin-bottom: 32px
+
+  .subject-btn
+    padding: 12px 24px
+    background: white
+    border: 2px solid #e5e7eb
+    border-radius: 8px
+    font-size: 0.938rem
+    font-weight: 600
+    cursor: pointer
+    transition: $transition
+    color: $neutral-color
+
+    &:hover
+      border-color: $primary-color
+      color: $primary-color
+      transform: translateY(-2px)
+
+    &.active
+      background: $bg-gradient
+      color: white
+      border-color: transparent
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3)
+
+.subject-details
+  h2
+    font-size: 1.875rem
+    color: #1f2937
+    margin-bottom: 24px
+    font-weight: 700
+
+// Table
+.table-container
+  @include card-style
+  overflow-x: auto
+  margin-bottom: 32px
+
+  &:hover
+    transform: none
+
+.students-table
+  width: 100%
+  border-collapse: collapse
+
+  thead
+    background: $bg-gradient
+    color: white
+
+    th
+      padding: 16px
+      text-align: left
+      font-weight: 600
+      font-size: 0.875rem
+      text-transform: uppercase
+      letter-spacing: 0.05em
+      white-space: nowrap
+
+      &:first-child
+        border-top-left-radius: $border-radius
+
+      &:last-child
+        border-top-right-radius: $border-radius
+
+  tbody
+    tr
+      border-bottom: 1px solid #f3f4f6
+      transition: $transition
+
+      &:hover
+        background: #f9fafb
+
+      &:last-child
+        border-bottom: none
+
+      &.score-excellent
+        background: rgba($excellent-color, 0.05)
+
+      &.score-good
+        background: rgba($good-color, 0.05)
+
+      &.score-average
+        background: rgba($average-color, 0.05)
+
+      &.score-poor
+        background: rgba($poor-color, 0.05)
+
+      td
+        padding: 16px
+        color: #374151
+
+        &.student-name-cell
+          font-weight: 600
+          color: #1f2937
+
+  .score-badge
+    display: inline-block
+    padding: 6px 16px
+    border-radius: 20px
+    font-weight: 700
+    font-size: 0.938rem
+
+    &.score-excellent
+      background: $excellent-color
+      color: white
+
+    &.score-good
+      background: $good-color
+      color: white
+
+    &.score-average
+      background: $average-color
+      color: white
+
+    &.score-poor
+      background: $poor-color
+      color: white
+
+    &.score-none
+      background: $none-color
+      color: white
+
+  .attendance-bar
+    position: relative
+    width: 100%
+    height: 24px
+    background: #e5e7eb
+    border-radius: 12px
+    overflow: hidden
+
+    .attendance-fill
+      position: absolute
+      left: 0
+      top: 0
+      height: 100%
+      background: $bg-gradient
+      transition: width 0.6s ease
+
+    .attendance-text
+      position: relative
+      @include flex-center
+      height: 100%
+      font-size: 0.75rem
+      font-weight: 700
+      color: #1f2937
+      z-index: 1
+
+// History Section
+.history-section
+  margin-top: 32px
+
+  h3
+    font-size: 1.5rem
+    color: #1f2937
+    margin-bottom: 20px
+    font-weight: 700
+
+.history-card
+  @include card-style
+  padding: 24px
+  margin-bottom: 20px
+
+  h4
+    font-size: 1.125rem
+    color: #1f2937
+    margin-bottom: 16px
+    font-weight: 600
+
+  .history-items
+    display: flex
+    flex-direction: column
+    gap: 12px
+
+  .history-item
+    display: flex
+    flex-wrap: wrap
+    gap: 12px
+    padding: 16px
+    background: #f9fafb
+    border-radius: 8px
+    border-left: 4px solid $neutral-color
+
+    &.present
+      border-left-color: $success-color
+
+    &.absent
+      border-left-color: $danger-color
+      opacity: 0.7
+
+    .history-date
+      flex: 1
+      min-width: 120px
+      font-weight: 600
+      color: #1f2937
+
+    .history-status
+      font-weight: 600
+      padding: 4px 12px
+      border-radius: 6px
+      font-size: 0.875rem
+
+    .present & .history-status
+      background: rgba($success-color, 0.1)
+      color: $success-color
+
+    .absent & .history-status
+      background: rgba($danger-color, 0.1)
+      color: $danger-color
+
+    .history-score
+      padding: 4px 12px
+      background: white
+      border-radius: 6px
+      font-size: 0.875rem
+      font-weight: 500
+      color: $neutral-color
+
+// Responsive Design
+@media (max-width: 768px)
+  .dashboard-header
+    padding: 24px 16px
+
+    .header-content h1
+      font-size: 1.75rem
+
+  .tabs
+    flex-direction: column
+    margin-top: -16px
+
+    .tab
+      width: 100%
+
+  .stats-grid
+    grid-template-columns: 1fr
+
+  .subject-selector
+    .subject-btn
+      font-size: 0.813rem
+      padding: 10px 16px
+
+  .students-table
+    font-size: 0.875rem
+
+    thead th,
+    tbody td
+      padding: 12px 8px
+
+  .history-item
+    flex-direction: column
+
+    .history-date
+      min-width: auto
+
+@media (max-width: 480px)
+  .dashboard-header
+    .header-content h1
+      font-size: 1.5rem
+
+    .term-info
+      flex-direction: column
+      gap: 8px
+
+  .subject-details h2
+    font-size: 1.5rem
+
+  .student-card .card-header
+    .student-name
+      font-size: 1rem
+
+// Animations
+@keyframes fadeIn
+  from
+    opacity: 0
+    transform: translateY(20px)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+.student-card,
+.history-card
+  animation: fadeIn 0.5s ease-out
+
+// Print Styles
+@media print
+  .dashboard
+    background: white
+
+  .tabs,
+  .subject-selector
+    display: none
+
+  .student-card,
+  .table-container,
+  .history-card
+    box-shadow: none
+    break-inside: avoid
