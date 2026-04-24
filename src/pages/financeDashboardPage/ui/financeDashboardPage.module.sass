@@ -1,0 +1,350 @@
+@use "src/app/styles/abstracts/variables" as *
+
+// ── Page ────────────────────────────────────────────────────────────────────
+.page
+  padding: 2rem
+  background: #f1f5f9
+  min-height: 100%
+  display: flex
+  flex-direction: column
+  gap: 1.6rem
+
+// ── Header ──────────────────────────────────────────────────────────────────
+.header
+  display: flex
+  align-items: center
+  justify-content: space-between
+  flex-wrap: wrap
+  gap: 1rem
+
+.headerLeft
+  display: flex
+  flex-direction: column
+  gap: 0.3rem
+
+.pageTitle
+  font-size: 2.2rem
+  font-weight: 700
+  color: #0f172a
+  margin: 0
+
+.pageSubtitle
+  font-size: 1.4rem
+  color: #64748b
+  margin: 0
+
+.headerControls
+  display: flex
+  align-items: center
+  gap: 0.75rem
+  flex-wrap: wrap
+
+.payBtn
+  padding: 0.6rem 1.4rem
+  border-radius: 2rem
+  border: 1.5px solid #d1d5db
+  background: #fff
+  font-size: 1.4rem
+  color: #374151
+  cursor: pointer
+  transition: all 0.2s
+  &:hover
+    border-color: #001B61
+    color: #001B61
+
+.payBtnActive
+  background: #001B61
+  border-color: #001B61
+  color: #fff
+  &:hover
+    border-color: #001B61
+    color: #fff
+
+.select
+  padding: 0.6rem 1rem
+  border-radius: 0.5rem
+  border: 1.5px solid #d1d5db
+  background: #fff
+  font-size: 1.4rem
+  color: #374151
+  cursor: pointer
+  outline: none
+  &:focus
+    border-color: #6366f1
+
+// ── Shared card shadow ───────────────────────────────────────────────────────
+%card
+  background: #fff
+  border-radius: 1rem
+  box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.06)
+
+// ── Summary Cards ───────────────────────────────────────────────────────────
+.cardsRow
+  display: grid
+  grid-template-columns: repeat(6, 1fr)
+  gap: 1rem
+  @media (max-width: 1400px)
+    grid-template-columns: repeat(3, 1fr)
+  @media (max-width: 768px)
+    grid-template-columns: repeat(2, 1fr)
+
+.summaryCard
+  @extend %card
+  padding: 0.9rem 1rem
+  display: flex
+  align-items: flex-start
+  gap: 0.75rem
+
+.summaryCardIcon
+  width: 2.6rem
+  height: 2.6rem
+  border-radius: 0.6rem
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-shrink: 0
+  font-size: 1.2rem
+
+.summaryCardBody
+  display: flex
+  flex-direction: column
+  gap: 0.1rem
+  min-width: 0
+
+.summaryCardLabel
+  font-size: 1.2rem
+  color: #6b7280
+  font-weight: 500
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+.summaryCardValue
+  font-size: 1.4rem
+  font-weight: 700
+  color: #0f172a
+  line-height: 1.2
+  white-space: nowrap
+
+.summaryCardMeta
+  display: flex
+  flex-direction: column
+
+.summaryCardUnit
+  font-size: 1.2rem
+  color: #6b7280
+
+.summaryCardSub
+  font-size: 1.2rem
+  color: #94a3b8
+
+// ── Chart Row ────────────────────────────────────────────────────────────────
+.chartRow
+  display: grid
+  grid-template-columns: 1fr 28rem
+  gap: 1rem
+  align-items: stretch
+  @media (max-width: 1100px)
+    grid-template-columns: 1fr
+
+.chartCard
+  @extend %card
+  padding: 1.6rem 1.8rem
+  display: flex
+  flex-direction: column
+  gap: 1rem
+
+.chartCardHeader
+  display: flex
+  align-items: center
+  justify-content: space-between
+  flex-wrap: wrap
+  gap: 0.5rem
+
+.cardTitle
+  font-size: 1.5rem
+  font-weight: 600
+  color: #1e293b
+
+.chartLegend
+  display: flex
+  gap: 1.5rem
+
+.legendItem
+  display: flex
+  align-items: center
+  gap: 0.5rem
+  font-size: 1.3rem
+  color: #64748b
+
+.legendDot
+  width: 1.4rem
+  height: 0.35rem
+  border-radius: 2px
+  display: inline-block
+
+.chartSvg
+  display: block
+  overflow: visible
+
+.chartEmpty
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 0.5rem
+  padding: 3rem
+  color: #d1d5db
+  font-size: 1.4rem
+  i
+    font-size: 3rem
+
+// ── Balance Column ───────────────────────────────────────────────────────────
+.balanceColumn
+  display: flex
+  flex-direction: column
+  gap: 1rem
+
+.balanceCard
+  @extend %card
+  padding: 1.4rem 1.6rem
+  display: flex
+  align-items: center
+  gap: 1.2rem
+  flex: 1
+
+.balanceCardIconWrap
+  width: 4.5rem
+  height: 4.5rem
+  background: #f8fafc
+  border-radius: 0.875rem
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-shrink: 0
+  border: 1px solid #e2e8f0
+
+.balanceCardInfo
+  display: flex
+  flex-direction: column
+  gap: 0.3rem
+
+.balanceCardLabel
+  font-size: 1.4rem
+  color: #6b7280
+  font-weight: 500
+
+.balanceCardValue
+  font-size: 2rem
+  font-weight: 700
+  color: #0f172a
+  line-height: 1.2
+
+.balanceCardUnit
+  font-size: 1.3rem
+  color: #6b7280
+
+.balanceCardSub
+  font-size: 1.3rem
+  color: #94a3b8
+
+// ── Tables Row ───────────────────────────────────────────────────────────────
+.tablesRow
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: 1rem
+  @media (max-width: 1200px)
+    grid-template-columns: 1fr 1fr
+  @media (max-width: 768px)
+    grid-template-columns: 1fr
+
+.tableCard
+  @extend %card
+  padding: 1.4rem 1.6rem
+  display: flex
+  flex-direction: column
+  gap: 1rem
+
+.tableCardHeader
+  display: flex
+  align-items: center
+  justify-content: space-between
+
+.tableBadge
+  font-size: 1.2rem
+  background: #f1f5f9
+  color: #64748b
+  padding: 0.3rem 1rem
+  border-radius: 2rem
+  font-weight: 500
+
+// ── Table ────────────────────────────────────────────────────────────────────
+.table
+  width: 100%
+  border-collapse: collapse
+  font-size: 1.2rem
+
+  thead tr
+    background: #f8fafc
+    border-bottom: 1.5px solid #e2e8f0
+
+  th
+    padding: 0.8rem 1rem
+    text-align: left
+    font-weight: 600
+    color: #475569
+    white-space: nowrap
+
+  td
+    padding: 0.75rem 1rem
+    color: #334155
+    border-bottom: 1px solid #f1f5f9
+
+  tbody tr:last-child td
+    border-bottom: none
+
+  tbody tr:hover td
+    background: #f8fafc
+
+.emptyCell
+  text-align: center
+  color: #94a3b8
+  padding: 2rem !important
+  font-size: 1.2rem
+
+.badge
+  background: #e0e7ff
+  color: #4338ca
+  padding: 0.25rem 0.7rem
+  border-radius: 0.25rem
+  font-size: 1.2rem
+  font-weight: 500
+  white-space: nowrap
+
+.redText
+  color: #ef4444
+  font-weight: 500
+
+.greenText
+  color: #22c55e
+  font-weight: 500
+
+// ── Report Card ───────────────────────────────────────────────────────────────
+.reportCard
+  @extend %card
+  padding: 1.6rem 1.8rem
+  display: flex
+  flex-direction: column
+  gap: 1rem
+
+.totalRow
+  td
+    background: #f8fafc
+
+.reportFormula
+  font-size: 1.2rem
+  color: #64748b
+  text-align: right
+  margin: 0
+  padding-top: 0.6rem
+  border-top: 1px solid #e2e8f0

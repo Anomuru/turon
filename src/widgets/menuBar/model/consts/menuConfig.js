@@ -20,17 +20,23 @@ export const menuConfig = [
         icon: "fa-edit",
         roles: [ROLES.admin, ROLES.director, ROLES.main_director, ROLES.programmer],
     },
-    {
-        to: "taskManager",
-        name: "Task Manager",
-        icon: "fa-tasks",
-        roles: [ROLES.operator],
-    },
+    // {
+    //     to: "taskManager",
+    //     name: "Task Manager",
+    //     icon: "fa-tasks",
+    //     roles: [ROLES.admin],
+    // },
     {
         to: "statistics",
         name: "Statistika",
         icon: "fa-chart-line",
         roles: [ROLES.director, ROLES.main_director, ROLES.programmer],
+    },
+    {
+        to: "financeDashboard",
+        name: "Moliyaviy Dashboard",
+        icon: "fa-chart-bar",
+        roles: [ROLES.director, ROLES.main_director, ROLES.programmer, ROLES.accountant],
     },
     {
         to: "rating",

@@ -23,7 +23,7 @@ export const TeacherObservationPage = () => {
 
         setLoading(true);
         request(
-            `${API_URL}Observation/schedule/?branch_id=${branchId}&teacher_id=${teacherId}`,
+            `${API_URL}Observation/schedule/current_week/?branch_id=${branchId}&teacher_id=${teacherId}`,
             "GET",
             null,
             headers()
@@ -51,62 +51,54 @@ export const TeacherObservationPage = () => {
             <div className={cls.page__content}>
                 {!loading && data && (
                     <div className={cls.weeks}>
-                        {data.weeks.map(week => (
-                            <div
-                                key={week.week}
-                                className={classNames(cls.week, { [cls.current]: week.is_current })}
-                            >
-                                <div className={cls.week__header}>
-                                    <div className={cls.week__title}>
-                                        <span className={cls.week__num}>Week {week.week}</span>
-                                        <span className={cls.week__date}>{week.week_start}</span>
-                                    </div>
-                                    {week.is_current && (
-                                        <span className={cls.week__badge}>
-                                            <i className="fas fa-circle-dot" />
-                                            Joriy hafta
-                                        </span>
-                                    )}
+                        <div className={classNames(cls.week, cls.current)}>
+                            <div className={cls.week__header}>
+                                <div className={cls.week__title}>
+                                    <span className={cls.week__num}>Week {data.current_week}</span>
                                 </div>
-
-                                <div className={cls.week__body}>
-                                    {week.entries.length === 0 ? (
-                                        <div className={cls.empty}>
-                                            <i className="fas fa-calendar-xmark" />
-                                            <p>Bu haftada kuzatuvlar yo'q</p>
-                                        </div>
-                                    ) : (
-                                        week.entries.map(entry => (
-                                            <div
-                                                key={entry.id}
-                                                className={cls.entry}
-                                                onClick={() => navigate(`../time/observe/${entry.time_table?.id}`)}
-                                            >
-                                                <div className={classNames(cls.entry__status, entry.is_completed ? cls.done : cls.pending)}>
-                                                    <i className={entry.is_completed ? "fas fa-check" : "fas fa-clock"} />
-                                                </div>
-                                                <div className={cls.entry__info}>
-                                                    <span className={cls.entry__subject}>
-                                                        {entry.time_table?.name}
-                                                    </span>
-                                                    <div className={cls.entry__meta}>
-                                                        <span className={cls.entry__metaItem}>
-                                                            <i className="fas fa-user-tie" />
-                                                            Observer: {entry.observer?.name} {entry.observer?.surname}
-                                                        </span>
-                                                        <span className={cls.entry__metaItem}>
-                                                            <i className="fas fa-chalkboard-teacher" />
-                                                            Teacher: {entry.observed_teacher?.name} {entry.observed_teacher?.surname}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <i className={`fas fa-chevron-right ${cls.entry__arrow}`} />
-                                            </div>
-                                        ))
-                                    )}
-                                </div>
+                                <span className={cls.week__badge}>
+                                    <i className="fas fa-circle-dot" />
+                                    Joriy hafta
+                                </span>
                             </div>
-                        ))}
+
+                            <div className={cls.week__body}>
+                                {!data.schedule?.length ? (
+                                    <div className={cls.empty}>
+                                        <i className="fas fa-calendar-xmark" />
+                                        <p>Bu haftada kuzatuvlar yo'q</p>
+                                    </div>
+                                ) : (
+                                    data.schedule.map(entry => (
+                                        <div
+                                            key={entry.id}
+                                            className={cls.entry}
+                                            onClick={() => navigate(`../time/observe/${entry.time_table?.id}`)}
+                                        >
+                                            <div className={classNames(cls.entry__status, entry.is_completed ? cls.done : cls.pending)}>
+                                                <i className={entry.is_completed ? "fas fa-check" : "fas fa-clock"} />
+                                            </div>
+                                            <div className={cls.entry__info}>
+                                                <span className={cls.entry__subject}>
+                                                    {entry.time_table?.name}
+                                                </span>
+                                                <div className={cls.entry__meta}>
+                                                    <span className={cls.entry__metaItem}>
+                                                        <i className="fas fa-user-tie" />
+                                                        Observer: {entry.observer?.name} {entry.observer?.surname}
+                                                    </span>
+                                                    <span className={cls.entry__metaItem}>
+                                                        <i className="fas fa-chalkboard-teacher" />
+                                                        Teacher: {entry.observed_teacher?.name} {entry.observed_teacher?.surname}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <i className={`fas fa-chevron-right ${cls.entry__arrow}`} />
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
                     </div>
                 )}
             </div>

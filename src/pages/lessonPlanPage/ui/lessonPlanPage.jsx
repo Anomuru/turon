@@ -84,7 +84,7 @@ export const LessonPlanPage = () => {
             .finally(() => setLoadingList(false));
     };
 
-    const ALLOWED_EXTENSIONS = [".pdf", ".docx", ".txt"];
+    const ALLOWED_EXTENSIONS = [".pdf", ".docx", ".txt", ".xlsx"];
 
     const onFileChange = (e) => {
         const selected = e.target.files[0];
@@ -92,7 +92,7 @@ export const LessonPlanPage = () => {
 
         const ext = "." + selected.name.split(".").pop().toLowerCase();
         if (!ALLOWED_EXTENSIONS.includes(ext)) {
-            setUploadError(`"${ext}" formatdagi fayllar qabul qilinmaydi. Faqat: .pdf, .docx, .txt`);
+            setUploadError(`"${ext}" formatdagi fayllar qabul qilinmaydi. Faqat: .pdf, .docx, .txt, .xlsx`);
             setFile(null);
             if (fileInputRef.current) fileInputRef.current.value = "";
             return;
@@ -195,11 +195,11 @@ export const LessonPlanPage = () => {
                     </div>
 
                     <div className={cls.upload__field}>
-                        <label className={cls.upload__label}>Fayl (.pdf, .docx, .txt)</label>
+                        <label className={cls.upload__label}>Fayl (.pdf, .docx, .txt, .xlsx)</label>
                         <input
                             ref={fileInputRef}
                             type="file"
-                            accept=".pdf,.docx,.txt"
+                            accept=".pdf,.docx,.txt,.xlsx"
                             className={cls.upload__fileInput}
                             onChange={onFileChange}
                         />

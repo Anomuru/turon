@@ -104,7 +104,7 @@ export const TeacherProfileInfo = memo(({active, setActive, setActiveModal, newI
                                 <i style={{fontSize: "1.9rem"}} className="fa-solid fa-book-open-reader"></i>
                                 <h2>{teacherId?.subject?.[0]?.name}</h2>
                             </Button>
-                            {role !== "spiritualist" && <Button onClick={() => navigate(`teacherSalaryPage/${teacherId?.id}`)} extraClass={cls.info__teacherSource__header__balance}>
+                            {(role === "direktor" || role === "director") && <Button onClick={() => navigate(`teacherSalaryPage/${teacherId?.id}`)} extraClass={cls.info__teacherSource__header__balance}>
                                 <i style={{fontSize: "1.9rem"}} className="fa-solid fa-dollar-sign"></i>
                                 <h2>Balans</h2>
                             </Button>}

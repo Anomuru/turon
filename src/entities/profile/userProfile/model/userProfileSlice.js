@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 import {
     fetchUserProfileData,
@@ -35,10 +35,11 @@ const userProfileSlice = createSlice({
                 state.userData = action.payload
                 state.level = action.payload?.level
                 state.userBranchId = action.payload?.branch?.id
-                state.userJob = action.payload?.job[0]
-                localStorage.setItem("job", action.payload?.job[0])
+                state.userJob = action.payload?.job[0]?.toLowerCase()
+                localStorage.setItem("job", action.payload?.job[0]?.toLowerCase())
+                localStorage.setItem("crm_username", action.payload?.crm_username)
 
-                localStorage.setItem("username",  action.payload.username)
+                localStorage.setItem("username", action.payload.username)
 
                 state.userPermissions = action.payload.permissions
                 state.loading = false
@@ -56,4 +57,4 @@ export const {
     changingUserProfile
 } = userProfileSlice.actions
 export default userProfileSlice.reducer
-export const {reducer: userProfileReducer} = userProfileSlice
+export const { reducer: userProfileReducer } = userProfileSlice

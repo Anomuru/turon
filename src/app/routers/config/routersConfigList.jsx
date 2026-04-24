@@ -58,6 +58,7 @@ const CapitalInside = lazyPage(() => import("pages/capitalPage"), "CapitalInside
 const DirectorDashboardPage = lazyPage(() => import("pages/directorDashboardPage"), "DirectorDashboardPage");
 const TeacherObservationPage = lazyPage(() => import("pages/teacherObservationPage"), "TeacherObservationPage");
 const LessonPlanPage = lazyPage(() => import("pages/lessonPlanPage"), "LessonPlanPage");
+const FinanceDashboardPage = lazyPage(() => import("pages/financeDashboardPage"), "FinanceDashboardPage");
 
 
 export const routersConfigList = [
@@ -257,6 +258,11 @@ export const routersConfigList = [
         name: "Dars Rejasi",
         path: getLessonPlan(),
         element: <LessonPlanPage/>
+    },
+    {
+        name: "Moliyaviy Dashboard",
+        path: "financeDashboard",
+        element: <FinanceDashboardPage/>
     }
 
 ]

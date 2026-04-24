@@ -1,4 +1,4 @@
-import cls from "src/pages/groupsPage/ui/groupObserve/groupObserve.module.sass"
+import cls from "./groupObserve.module.sass"
 import {useEffect, useState} from "react";
 import classNames from "classnames";
 import {GroupLessonPlan, GroupObserve, ObservedDates} from "features/groupProfile/index.js";
