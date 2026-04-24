@@ -221,6 +221,7 @@ const PendingCard = ({ student, onRefresh }) => {
     const [activeCallLogId, setActiveCallLogId] = useState(null)
     const [callLoading, setCallLoading] = useState(false)
     const [callStatus, setCallStatus] = useState(null)
+    const crmUsername = localStorage.getItem("crm_username")
 
     // ── Call history
     const [showHistory, setShowHistory] = useState(false)
@@ -241,7 +242,7 @@ const PendingCard = ({ student, onRefresh }) => {
         setCallLoading(true)
         try {
             const result = await dispatch(CallThunk({
-                user: "admin",
+                user: crmUsername,
                 phone: student.phone || student.user.phone,
                 student_id: student.student_id,
                 comment: "com",

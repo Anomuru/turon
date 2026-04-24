@@ -78,6 +78,11 @@ export const UserProfilePage = () => {
             name: "birth_date",
             placeholder: "Tug'ilgan sana",
             defaultValue: userData?.birth_date
+        },
+        {
+            name: 'crm_username',
+            placeholder: "Tegilmasin",
+            defaultValue: userData?.crm_username
         }
     ], [userData])
 
@@ -106,6 +111,7 @@ export const UserProfilePage = () => {
         // dispatch(changingUserProfile())
         request(`${API_URL}Users/users/update/${id}/`, "PATCH", JSON.stringify(data), headers())
             .then(res => {
+
 
                 dispatch(changeUserProfile(res))
                 dispatch(onAddAlertOptions({
