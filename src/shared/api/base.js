@@ -5,9 +5,9 @@ export const API_URL_FOR_DOC = `https://school.gennis.uz`
 // export const API_URL_DOC = `http://26.131.144.13:8001/`//
 // export const API_URL_DOC = `http://192.168.1.2:8000/`
 //
-// export const API_URL_DOC = `https://school.gennis.uz/`
+export const API_URL_DOC = `https://school.gennis.uz/`
 
-export const API_URL_DOC = `http://26.35.130.3:8000/`
+// export const API_URL_DOC = `http://26.35.130.3:8000/`
 //
 // export const API_URL_DOC = `http://localhost:8001/`
 
