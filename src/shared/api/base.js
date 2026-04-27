@@ -18,7 +18,6 @@ export const API_URL = `${API_URL_DOC}api/`
 // export const CLASSROOM_API_URL = `https://classroom.gennis.uz/`
 // export const CLASSROOM_API_URL_DOC = `https://classroom.gennis.uz/`
 
-
 export const headers = () => {
     const token = sessionStorage.getItem("token")
     return {
@@ -62,9 +61,9 @@ export const branchQueryId = () => {
 
 
 export const useHttp = () => {
-    const request = async (url, method = 'GET', body = null, headers = {'Content-Type': 'application/json'}) => {
+    const request = async (url, method = 'GET', body = null, headers = { 'Content-Type': 'application/json' }) => {
         try {
-            const response = await fetch(url, {method, mode: 'cors', body, headers});
+            const response = await fetch(url, { method, mode: 'cors', body, headers });
 
             if (!response.ok) {
                 throw new Error(`Could not fetch ${url}, status: ${response.status}`);
@@ -77,7 +76,7 @@ export const useHttp = () => {
         }
     }
 
-    return {request}
+    return { request }
 }
 
 export const ParamUrl = (params = {}) => {
