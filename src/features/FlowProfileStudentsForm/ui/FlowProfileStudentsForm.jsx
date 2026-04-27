@@ -395,6 +395,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
     // const renderStudent = renderStudentsData()
 
 
+    const navigate = useNavigate()
     return (
         <>
             <div className={cls.studentsList}>
@@ -402,12 +403,18 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
                     <h1>O’quvchilar ro’yxati</h1>
                     <div className={cls.btns__inner}>
                         <Button
+                            onClick={() => navigate(`../flow/flowInfo/${id}/grades`)}
+                        >
+                            Davomatlarni ko'rish
+                        </Button>
+                        <Button
                             disabled={selectedMoveId.length === 0}
                             type={selectedMoveId.length === 0 ? "disabled" : ""}
                             onClick={() => setActiveModal("change")}
                         >
                             Move
                         </Button>
+
                         <Button
                             onClick={() => setActiveModal("add")}
                         >

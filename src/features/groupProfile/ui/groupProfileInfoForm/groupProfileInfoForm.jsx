@@ -147,11 +147,17 @@ export const GroupProfileInfoForm = memo(({ currentTab, setCurrentTab }) => {
                             <i style={{ fontSize: "1.9rem" }} className="fa-solid fa-table"></i>
                             <h2>Time table</h2>
                         </Button>
+                        {/*<Button*/}
+                        {/*    onClick={() => navigate(`observe`)}*/}
+                        {/*    extraClass={classNames(cls.info__right__header__observed,)}>*/}
+                        {/*    <i style={{ fontSize: "1.9rem" }} className="fa-solid fa-table"></i>*/}
+                        {/*    <h2>Observe Lesson</h2>*/}
+                        {/*</Button>*/}
                         <Button
-                            onClick={() => navigate(`observe`)}
+                            onClick={() => navigate(`grades`)}
                             extraClass={classNames(cls.info__right__header__observed,)}>
                             <i style={{ fontSize: "1.9rem" }} className="fa-solid fa-table"></i>
-                            <h2>Observe Lesson</h2>
+                            <h2>Davomatlar korinish</h2>
                         </Button>
                     </div>
                     <div className={cls.info__right__footer}>
