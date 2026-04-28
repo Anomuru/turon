@@ -79,7 +79,8 @@ export const overHeadSlice = createSlice({
                 state.error = false
             })
             .addCase(getOverheadType.fulfilled, (state, action) => {
-                state.overHeadType = action.payload
+                const payload = action.payload;
+                state.overHeadType = Array.isArray(payload) ? payload : (payload?.data ?? payload?.results ?? []);
                 state.loading = false
                 state.error = false
             })

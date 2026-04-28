@@ -61,6 +61,7 @@ export const getGroupExams = (id) => `groups/exams`
 
 
 export const getOtchot = () => `accounting/otchot/*`
+export const getOverheadTypes = () => `accounting/overheadTypes`
 
 
 export const getGroupHistory = (id) => `students/profile/history/${id}`
