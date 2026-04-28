@@ -83,6 +83,7 @@ export const classView = (id) => `time/classView`
 export const questionnaire = (id) => `questionnaire`
 export const grades = (id) => `groups/groupInfo/${id}/grades`
 export const flowGrades = (id) => `flow/flowInfo/${id}/grades`
+export const getObservationShowPage = () => "observation_results"
 
 
 
