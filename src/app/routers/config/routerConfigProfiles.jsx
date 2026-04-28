@@ -23,6 +23,7 @@ import {
     getRouteStudentAttendance,
     getRouteClassProfile,
     getOtchot,
+    getOverheadTypes,
     getRouteRGBData,
     getRouteTaskManager,
     getRouteFilteredLeads,
@@ -77,6 +78,7 @@ const Inkasatsiya = lazyPage(() => import("pages/inkasatsiyaPage"), "Inkasatsiya
 const StudentProfileGroupsHistory = lazyPage(() => import("entities/profile/studentProfile"), "StudentProfileGroupsHistory");
 
 const AccountingOtchotPage = lazyPage(() => import("pages/accountingPage"), "AccountingOtchotPage");
+const OverheadTypesPage = lazyPage(() => import("pages/accountingPage"), "OverheadTypesPage");
 
 const TaskManager = lazyPage(() => import("pages/taskManager/ui/taskManager"), "TaskManager");
 
@@ -202,6 +204,11 @@ export const routersConfigProfile = [
         name: "otchot",
         path: getOtchot(),
         element: <AccountingOtchotPage/>
+    },
+    {
+        name: "overheadTypes",
+        path: getOverheadTypes(),
+        element: <OverheadTypesPage/>
     },
     {
         name: "History",

@@ -74,6 +74,11 @@ export const AccountingPageNewHeader = ({selectType , setSelectType}) => {
                             buxgalteriya
                         </Button>
                     </Link>
+                    <Link to={`../accounting/overheadTypes`}>
+                        <Button type={"filter"}>
+                            Xarajat Turlari
+                        </Button>
+                    </Link>
 
                     <Select defaultValue={selectType} onChangeOption={setSelectType} options={pageType}/>
                 </div>
@@ -81,7 +86,7 @@ export const AccountingPageNewHeader = ({selectType , setSelectType}) => {
 
             <div className={cls.accounting__container}>
                 {totalCount?.map(item => (
-                    <div className={cls.accounting__container_box}>
+                    <div key={item?.type} className={cls.accounting__container_box}>
                        <div className={cls.accounting__container_box_header}>
 
                                {item?.name}
