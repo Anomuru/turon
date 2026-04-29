@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import  {useEffect, useState} from 'react';
 import './classGrades.sass';
 import {API_URL, useHttp} from "shared/api/base.js";
 import {useParams} from "react-router";

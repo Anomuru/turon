@@ -274,6 +274,14 @@ export const menuConfig = [
         branches: true
 
     },
+    {
+        to: "observeStatic",
+        name: "Observe Statistika",
+        icon: "fa-toolbox",
+        roles: [ROLES.admin],
+        branches: true
+
+    },
     // {
     //     to: "rooms",
     //     name: "Honalar",
