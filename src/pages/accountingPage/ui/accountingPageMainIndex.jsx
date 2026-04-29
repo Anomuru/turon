@@ -200,6 +200,11 @@ export const AccountingPageMain = () => {
                                         buxgalteriya
                                     </Button>
                                 </Link>
+                                <Link to={`../accounting/overheadTypes`}>
+                                    <Button type={"filter"}>
+                                        Xarajat Turlari
+                                    </Button>
+                                </Link>
 
 
                             </div>

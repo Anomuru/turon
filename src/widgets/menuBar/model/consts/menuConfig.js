@@ -282,6 +282,13 @@ export const menuConfig = [
         branches: true
 
     },
+    {
+        to: "observation_results",
+        name: "Observation natijalari",
+        icon: "fa-result",
+        roles: [ROLES.spiritualist],
+        branches: true
+    }
     // {
     //     to: "rooms",
     //     name: "Honalar",

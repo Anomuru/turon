@@ -108,7 +108,7 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
     }, [currentPage, selectedPayment, selectType, from, to, range, search, selectOverheadType, branchForFilter])
 
     useEffect(() => {
-        dispatch(getOverheadType())
+        dispatch(getOverheadType(branchForFilter))
         dispatch(getPaymentType())
     }, [])
 
@@ -211,7 +211,7 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
                         <>
                             { selectType === "overhead" && overHeadType &&
                                 <Select onChangeOption={setSelectOverheadType} defaultValue={selectOverheadType}
-                                        options={[{name: "Hammasi", id: "all"}, ...overHeadType]}/>}
+                                        options={[{name: "Hammasi", id: "all"}, ...(Array.isArray(overHeadType) ? overHeadType : [])]}/>}
                             <Button onClick={() => setActive(selectType)}> Qo'shish</Button>
 
                         </> : ""}

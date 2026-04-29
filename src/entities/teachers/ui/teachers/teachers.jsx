@@ -7,8 +7,10 @@ import {useSelector} from "react-redux";
 import {DefaultPageLoader} from "../../../../shared/ui/defaultLoader";
 import {Input} from "../../../../shared/ui/input";
 import {getTeachersWithFilter} from "../../model/selector/teacherSelector";
+import def from "shared/assets/images/default.png"
 
 import {useNavigate} from "react-router";
+import {API_URL_DOC, API_URL_FOR_DOC} from "shared/api/base.js";
 
 export const Teachers = memo(({data, setSelect, select, theme, onClick , setActiveDelete , setActiveModal}) => {
     const navigation = useNavigate()
@@ -33,12 +35,20 @@ export const Teachers = memo(({data, setSelect, select, theme, onClick , setActi
         // }
 
         return teachersToRender?.map((item, i) => {
+            console.log(item.profile_img)
             if (typeof item === "object" && !Array.isArray(item)) {
                 return (
 
                     <tr key={i}>
                         <td>{i + 1}</td>
-                        <td onClick={() => navigation(`teacherProfile/${item.id}`)}>{item?.name} {item?.surname}</td>
+                        <td style={{display: "flex", alignItems: "center", gap: "2rem"}} onClick={() => navigation(`teacherProfile/${item.id}`)}>
+                            {
+                                item?.profile_img ?
+                            <img className={cls.img} src={`${API_URL_FOR_DOC}media/${item?.profile_img}`} alt=""/> :
+                                    <img className={cls.img} src={def} alt=""/>
+
+                            }
+                            {item?.name} {item?.surname}</td>
                         <td>{item?.username}</td>
                         <td>{item?.phone}</td>
                         <td>{item?.age}</td>

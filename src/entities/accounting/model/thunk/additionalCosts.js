@@ -3,9 +3,9 @@ import {API_URL, headers, ParamUrl, useHttp} from "../../../../shared/api/base";
 
 export const getOverheadType = createAsyncThunk(
     "overHeadSlice/getOverheadType",
-    async () => {
+    async (branch_id) => {
         const {request} = useHttp()
-        return await request(`${API_URL}Overhead/overheads_type/`, "GET", null, headers())
+        return await request(`${API_URL}Overhead/overheads_type/?${ParamUrl({branch_id})}`, "GET", null, headers())
     }
 )
 

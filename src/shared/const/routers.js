@@ -61,6 +61,7 @@ export const getGroupExams = (id) => `groups/exams`
 
 
 export const getOtchot = () => `accounting/otchot/*`
+export const getOverheadTypes = () => `accounting/overheadTypes`
 
 
 export const getGroupHistory = (id) => `students/profile/history/${id}`
@@ -82,6 +83,7 @@ export const classView = (id) => `time/classView`
 export const questionnaire = (id) => `questionnaire`
 export const grades = (id) => `groups/groupInfo/${id}/grades`
 export const flowGrades = (id) => `flow/flowInfo/${id}/grades`
+export const getObservationShowPage = () => "observation_results"
 export const observeStatic = (id) => `observeStatic`
 
 
