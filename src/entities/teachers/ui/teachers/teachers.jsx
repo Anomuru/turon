@@ -35,7 +35,6 @@ export const Teachers = memo(({data, setSelect, select, theme, onClick , setActi
         // }
 
         return teachersToRender?.map((item, i) => {
-            console.log(item.profile_img)
             if (typeof item === "object" && !Array.isArray(item)) {
                 return (
 
@@ -44,7 +43,7 @@ export const Teachers = memo(({data, setSelect, select, theme, onClick , setActi
                         <td style={{display: "flex", alignItems: "center", gap: "2rem"}} onClick={() => navigation(`teacherProfile/${item.id}`)}>
                             {
                                 item?.profile_img ?
-                            <img className={cls.img} src={`${API_URL_FOR_DOC}media/${item?.profile_img}`} alt=""/> :
+                            <img className={cls.img} src={`${API_URL_FOR_DOC}/media/${item?.profile_img}`} alt=""/> :
                                     <img className={cls.img} src={def} alt=""/>
 
                             }

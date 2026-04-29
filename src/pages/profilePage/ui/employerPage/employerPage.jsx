@@ -33,10 +33,12 @@ export const ProfileEmployerPage = () => {
     } ,[dispatch, id])
 
 
+
+
     const onSubmitImage = (data) => {
         // formData.append("profile_img", data)
 
-        dispatch(changeEmployerProfileImage({id: employerId.id, data}))
+        dispatch(changeEmployerProfileImage({id: employerId?.user?.id, data}))
     }
 
     if (loadingDef) return <DefaultPageLoader/>

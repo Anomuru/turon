@@ -6,9 +6,10 @@ import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 import {getEmployerDataWithFilter, getEmployerLoading} from "../../model/selector/employersSelector";
 import {useDispatch, useSelector} from "react-redux";
 import {ConfirmModal} from "shared/ui/confirmModal";
-import {API_URL, headers, useHttp} from "shared/api/base";
+import {API_URL, API_URL_FOR_DOC, headers, useHttp} from "shared/api/base";
 import {onAddAlertOptions} from "features/alert/model/slice/alertSlice";
 import {onDeleteEmployer} from "entities/employer/model/slice/employersSlice";
+import def from "shared/assets/images/default.png";
 
 
 export const Employers = ({currentTableData, loading}) => {
@@ -38,7 +39,12 @@ export const Employers = ({currentTableData, loading}) => {
                     <tr>
                         <td>{i + 1}</td>
                         <Link to={`employerProfile/${item?.id}`}>
-                            <td>{item?.name} {item?.surname}</td>
+                            <td>  {
+                                item?.profile_img ?
+                                    <img className={cls.img} src={`${API_URL_FOR_DOC}/media/${item?.profile_img}`} alt=""/> :
+                                    <img className={cls.img} src={def} alt=""/>
+
+                            }{item?.name} {item?.surname}</td>
                         </Link>
                         <td>{item?.phone}</td>
                         <td>{item?.age}</td>
