@@ -297,8 +297,10 @@ const PendingCard = ({ student, onRefresh }) => {
                     <h3 className={cls.card__name}>
                         {
                             student.user ?
-                                `${student.user.surname}   ${student.user.name}` : `${student.full_name}`
+                            student.user ?
+                                `${student.user.surname}   ${student.user.name}` : `${student?.full_name}` : student?.person?.full_name
                         }
+
                     </h3>
                     <p className={cls.card__phone}>
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.78 19.78 0 01.01 2.22 2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" /></svg>
@@ -320,7 +322,7 @@ const PendingCard = ({ student, onRefresh }) => {
 
             </div>
             {
-                student.user || student.lead_id ? null :
+                student.person || student.lead_id ? null :
                     <div className={cls.card__debt}>
                         <span className={cls.card__debt_label}>Debt Amount</span>
                         <span className={cls.card__debt_value}>{formatMoney(student.debt)}</span>
@@ -576,6 +578,7 @@ export const DebtorCRMBoard = () => {
     const [calledLoading, setCalledLoading] = useState(false)
     const [calledCategory, setCalledCategory] = useState('debtor')
     const [calledDate, setCalledDate] = useState(todayStr)
+    const [calledDate2, setCalledDate2] = useState(todayStr)
 
     // ── Refresh debtors silently (fade out → in)
     const [refreshing, setRefreshing] = useState(false)
@@ -666,10 +669,10 @@ export const DebtorCRMBoard = () => {
     }, [activeTab, leadsFetched, dispatch])
 
     // ── Fetch called users when tab is 'called' or category/date changes
-    const fetchCalledUsers = useCallback((category, date) => {
+    const fetchCalledUsers = useCallback((category, date , date2) => {
         const branchId = localStorage.getItem('branchId') || 11
         setCalledLoading(true)
-        dispatch(FetchCalledUsersThunk({ branchId, date, category }))
+        dispatch(FetchCalledUsersThunk({ branchId, date, category , date2 }))
             .then(result => {
                 const data = result.payload
                 setCalledUsers(Array.isArray(data) ? data : (data?.results ?? []))
@@ -680,9 +683,9 @@ export const DebtorCRMBoard = () => {
 
     useEffect(() => {
         if (activeTab === 'called') {
-            fetchCalledUsers(calledCategory, calledDate)
+            fetchCalledUsers(calledCategory, calledDate , calledDate2)
         }
-    }, [activeTab, calledCategory, calledDate, fetchCalledUsers])
+    }, [activeTab, calledCategory, calledDate, fetchCalledUsers , calledDate2])
 
     // Reset flat page when switching tabs
     useEffect(() => {
@@ -898,20 +901,39 @@ export const DebtorCRMBoard = () => {
                                 </button>
                             ))}
                         </div>
-                        <div className={cls.calledControls__datebox}>
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg>
-                            <input
-                                type="date"
-                                className={cls.calledControls__dateInput}
-                                value={calledDate}
-                                max={todayStr}
-                                onChange={e => setCalledDate(e.target.value)}
-                            />
+                        <div style={{display: "flex" , gap: "20px"}}>
+                            <div className={cls.calledControls__datebox}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                from
+                                <input
+                                    type="date"
+                                    className={cls.calledControls__dateInput}
+                                    value={calledDate}
+                                    max={todayStr}
+                                    onChange={e => setCalledDate(e.target.value)}
+                                />
+                            </div>
+                            <div className={cls.calledControls__datebox}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                                    <line x1="16" y1="2" x2="16" y2="6" />
+                                    <line x1="8" y1="2" x2="8" y2="6" />
+                                    <line x1="3" y1="10" x2="21" y2="10" />
+                                </svg>
+                                to
+                                <input
+                                    type="date"
+                                    className={cls.calledControls__dateInput}
+                                    value={calledDate2}
+                                    max={todayStr}
+                                    onChange={e => setCalledDate2(e.target.value)}
+                                />
+                            </div>
                         </div>
                     </div>
 

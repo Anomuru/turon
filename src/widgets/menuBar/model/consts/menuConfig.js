@@ -286,7 +286,7 @@ export const menuConfig = [
         to: "observation_results",
         name: "Observation natijalari",
         icon: "fa-result",
-        roles: [ROLES.spiritualist],
+        roles: [ROLES.spiritualist , ROLES.admin],
         branches: true
     }
     // {
