@@ -295,11 +295,7 @@ const PendingCard = ({ student, onRefresh }) => {
 
                 <div className={cls.card__meta}>
                     <h3 className={cls.card__name}>
-                        {
-                            student.user ?
-                            student.user ?
-                                `${student.user.surname}   ${student.user.name}` : `${student?.full_name}` : student?.person?.full_name
-                        }
+                        {student?.person ? student.person?.full_name : student?.user ? `${student?.user?.name} ${student.user?.surname}` : student?.full_name }
 
                     </h3>
                     <p className={cls.card__phone}>

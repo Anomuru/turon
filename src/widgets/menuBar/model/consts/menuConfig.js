@@ -288,6 +288,13 @@ export const menuConfig = [
         icon: "fa-result",
         roles: [ROLES.spiritualist , ROLES.admin],
         branches: true
+    },
+    {
+        to: "applicationSystem",
+        name: "Xo'jalik uchun zayavka berish",
+        icon: "fa-list",
+        roles: [ROLES.spiritualist , ROLES.admin],
+        branches: true
     }
     // {
     //     to: "rooms",
