@@ -158,10 +158,10 @@ export const UpdateCallStatisticThunk = createAsyncThunk(
 // GET call/called/?branch_id=...&date=YYYY-MM-DD&category=debtor|new_student|lead
 export const FetchCalledUsersThunk = createAsyncThunk(
     'crmSlice/FetchCalledUsers',
-    async ({ branchId, date, category }, { rejectWithValue }) => {
+    async ({ branchId, date, category , date2 }, { rejectWithValue }) => {
         try {
-            const params = new URLSearchParams({ branch_id: branchId, date, category })
-            const res = await fetch(`${API_URL}call/called/?${params}`, {
+            const params = new URLSearchParams({ branch: branchId, date_from: date, type: category , date_to: date2})
+            const res = await fetch(`${API_URL}Tasks/admin/history/?${params}`, {
                 headers: headers(),
             })
             if (!res.ok) throw new Error(`call/called/ GET failed: ${res.status}`)

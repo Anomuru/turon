@@ -274,6 +274,28 @@ export const menuConfig = [
         branches: true
 
     },
+    {
+        to: "observeStatic",
+        name: "Observe Statistika",
+        icon: "fa-toolbox",
+        roles: [ROLES.admin],
+        branches: true
+
+    },
+    {
+        to: "observation_results",
+        name: "Observation natijalari",
+        icon: "fa-result",
+        roles: [ROLES.spiritualist , ROLES.admin],
+        branches: true
+    },
+    {
+        to: "applicationSystem",
+        name: "Xo'jalik uchun zayavka berish",
+        icon: "fa-list",
+        roles: [ROLES.spiritualist , ROLES.admin],
+        branches: true
+    }
     // {
     //     to: "rooms",
     //     name: "Honalar",

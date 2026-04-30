@@ -29,7 +29,7 @@ import {
     getRouteFilteredLeads,
     getAccounting,
     getGroupQuarter, getGroupQuarterShow, getGroupObserve, getLessonTable, getGroupExams, getCvSubmissons, getParty,
-    classView, getCapitalCategoryProfile, questionnaire, grades, flowGrades
+    classView, getCapitalCategoryProfile, questionnaire, grades, flowGrades, observeStatic, applicationSystem
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
@@ -41,6 +41,8 @@ import {TimetableGrid} from "entities/timeTableTuron/classView2.0/classView2.0.j
 import {Questionnaire} from "pages/questionnaire/ui/questionnaire.jsx";
 import {ClassGrades} from "features/groupProfile/ui/classGrades/classGrades.jsx";
 import {FlowGrades} from "features/groupProfile/ui/flowGrades/flowGrades.jsx";
+import {TeacherDashboard} from "pages/observeStatic/observeStatic.jsx";
+import {ApplicationSystem} from "pages/applicationSystem/applicationSystem.jsx";
 // import {CategoryProfile} from "pages/capitalPage/index.js";
 const AccountingPageNew = lazyPage(() => import("pages/accountingPage2.0") , "AccountingPageNew");
 // import {GroupQuarterShow} from "pages/groupsPage/index.js";
@@ -301,6 +303,16 @@ export const routersConfigProfile = [
         name: "grades",
         path: flowGrades(":id"),
         element: <FlowGrades/>
+    },
+    {
+        name: "static",
+        path: observeStatic(":id"),
+        element: <TeacherDashboard/>
+    },
+    {
+        name: "ApplicationSystem",
+        path: applicationSystem(":id"),
+        element: <ApplicationSystem/>
     },
 
 ]
