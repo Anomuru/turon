@@ -1,9 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import styles from './application.module.scss';
+import {API_URL, headers, useHttp} from "shared/api/base.js";
+const mockRequests = [
+    {
+        id: 1,
+        name: "Yangi printer",
+        description: "Buxgalteriya uchun yangi rangli printer kerak",
+        deadline: "2026-05-10",
+        comment: "Asosiy komment",
+        branch: 1,
+        branch_name: "Toshkent Filiali",
+        user: 5,
+        user_name: "Ali Valiyev",
+        created_at: "2026-04-28T22:15:00Z",
+        updated_at: "2026-04-28T22:15:00Z",
+        comments: [
+            {
+                id: 1,
+                user_name: "Admin Adminov",
+                text: "Sotib olishga ruxsat berildi",
+                created_at: "2026-04-28T22:20:00Z",
+                request: 1,
+                user: 2
+            }
+        ]
+    },
+    {
+        id: 2,
+        name: "Kompyuter ta'mirlash",
+        description: "Marketing bo'limidagi kompyuter ishlamayapti",
+        deadline: "2026-05-05",
+        comment: "Tez hal qilish kerak",
+        branch: 1,
+        branch_name: "Toshkent Filiali",
+        user: 3,
+        user_name: "Bobur Karimov",
+        created_at: "2026-04-29T10:30:00Z",
+        updated_at: "2026-04-29T10:30:00Z",
+        comments: []
+    }
+];
 
 export const ApplicationSystem = () => {
     const [activeTab, setActiveTab] = useState('requests');
-    const [requests, setRequests] = useState([]);
+    const [requests, setRequests] = useState([mockRequests]);
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [filterBranch, setFilterBranch] = useState('');
@@ -11,143 +51,71 @@ export const ApplicationSystem = () => {
     const [newComment, setNewComment] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const branchId = localStorage.getItem('branchId');
+const userId = localStorage.getItem('user_id');
+    const {request} = useHttp()
     const [formData, setFormData] = useState({
         name: '',
         description: '',
         deadline: '',
-        branch: '',
-        user: '',
+        branch: branchId,
+        user: userId,
         comment: ''
     });
 
     // API base URL
-    const API_BASE = '/api/reports';
 
     // Mock data for demo
-    const mockRequests = [
-        {
-            id: 1,
-            name: "Yangi printer",
-            description: "Buxgalteriya uchun yangi rangli printer kerak",
-            deadline: "2026-05-10",
-            comment: "Asosiy komment",
-            branch: 1,
-            branch_name: "Toshkent Filiali",
-            user: 5,
-            user_name: "Ali Valiyev",
-            created_at: "2026-04-28T22:15:00Z",
-            updated_at: "2026-04-28T22:15:00Z",
-            comments: [
-                {
-                    id: 1,
-                    user_name: "Admin Adminov",
-                    text: "Sotib olishga ruxsat berildi",
-                    created_at: "2026-04-28T22:20:00Z",
-                    request: 1,
-                    user: 2
-                }
-            ]
-        },
-        {
-            id: 2,
-            name: "Kompyuter ta'mirlash",
-            description: "Marketing bo'limidagi kompyuter ishlamayapti",
-            deadline: "2026-05-05",
-            comment: "Tez hal qilish kerak",
-            branch: 1,
-            branch_name: "Toshkent Filiali",
-            user: 3,
-            user_name: "Bobur Karimov",
-            created_at: "2026-04-29T10:30:00Z",
-            updated_at: "2026-04-29T10:30:00Z",
-            comments: []
-        }
-    ];
 
     useEffect(() => {
-        fetchRequests();
-    }, [filterBranch, filterUser]);
+        request(`${API_URL}reports/admin-requests/?branch=${branchId}`)
+            .then(res => {
+                console.log(res)
+                setRequests(res)
+            })
+    }, []);
 
-    const fetchRequests = async () => {
-        setLoading(true);
-        try {
-            // For demo, using mock data
-            // In production, uncomment below:
-            // const params = new URLSearchParams();
-            // if (filterBranch) params.append('branch', filterBranch);
-            // if (filterUser) params.append('user', filterUser);
-            // const response = await fetch(`${API_BASE}/admin-requests/?${params}`);
-            // const data = await response.json();
-            // setRequests(data);
 
-            setTimeout(() => {
-                setRequests(mockRequests);
-                setLoading(false);
-            }, 500);
-        } catch (error) {
-            console.error('Error fetching requests:', error);
-            setLoading(false);
-        }
-    };
-
+    //
     const createRequest = async () => {
-        try {
-            // const response = await fetch(`${API_BASE}/admin-requests/`, {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify(formData)
-            // });
-            // const data = await response.json();
-
-            // For demo
-            const newRequest = {
-                ...formData,
-                id: requests.length + 1,
-                branch_name: "Toshkent Filiali",
-                user_name: "Current User",
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                comments: []
-            };
-
-            setRequests([...requests, newRequest]);
-            setShowCreateModal(false);
-            resetForm();
-        } catch (error) {
-            console.error('Error creating request:', error);
-        }
+        request(`${API_URL}reports/admin-requests/` , "POST" , JSON.stringify(formData) , headers())
+            .then(res => {
+                setRequests([...requests , res])
+                setShowCreateModal(false);
+                resetForm();
+            })
     };
-
+    //
     const addComment = async (requestId) => {
         if (!newComment.trim()) return;
 
         try {
-            // const response = await fetch(`${API_BASE}/request-comments/`, {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         request: requestId,
-            //         user: 2, // current user id
-            //         text: newComment
-            //     })
-            // });
-            // const data = await response.json();
+            const response = await fetch(`${API_URL}reports/request-comments/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    request: requestId,
+                    user: userId, // current user id
+                    text: newComment
+                })
+            });
+            const data = await response.json();
 
             // For demo
-            const comment = {
-                id: Date.now(),
-                user_name: "Current User",
-                text: newComment,
-                created_at: new Date().toISOString(),
-                request: requestId,
-                user: 2
-            };
+            // const comment = {
+            //     id: Date.now(),
+            //     user_name: "Current User",
+            //     text: newComment,
+            //     created_at: new Date().toISOString(),
+            //     request: requestId,
+            //     user: 2
+            // };
 
             const updatedRequests = requests.map(req => {
                 if (req.id === requestId) {
                     return {
                         ...req,
-                        comments: [...req.comments, comment]
+                        comments: [...req.comments, data]
                     };
                 }
                 return req;
@@ -157,7 +125,7 @@ export const ApplicationSystem = () => {
             if (selectedRequest?.id === requestId) {
                 setSelectedRequest({
                     ...selectedRequest,
-                    comments: [...selectedRequest.comments, comment]
+                    comments: [...selectedRequest.comments, data]
                 });
             }
             setNewComment('');
@@ -165,14 +133,14 @@ export const ApplicationSystem = () => {
             console.error('Error adding comment:', error);
         }
     };
-
+    //
     const deleteRequest = async (id) => {
         if (!window.confirm("Haqiqatan ham o'chirmoqchimisiz?")) return;
 
         try {
-            // await fetch(`${API_BASE}/admin-requests/${id}/`, {
-            //     method: 'DELETE'
-            // });
+            await fetch(`${API_URL}reports/admin-requests/${id}/`, {
+                method: 'DELETE'
+            });
 
             setRequests(requests.filter(req => req.id !== id));
             if (selectedRequest?.id === id) {
@@ -236,30 +204,30 @@ export const ApplicationSystem = () => {
             </div>
 
             <div className={styles.controls}>
-                <div className={styles.filters}>
-                    <div className={styles.filterGroup}>
-                        <label>Filial</label>
-                        <select
-                            value={filterBranch}
-                            onChange={(e) => setFilterBranch(e.target.value)}
-                        >
-                            <option value="">Barcha filiallar</option>
-                            <option value="1">Toshkent Filiali</option>
-                            <option value="2">Samarqand Filiali</option>
-                        </select>
-                    </div>
-                    <div className={styles.filterGroup}>
-                        <label>Foydalanuvchi</label>
-                        <select
-                            value={filterUser}
-                            onChange={(e) => setFilterUser(e.target.value)}
-                        >
-                            <option value="">Barcha foydalanuvchilar</option>
-                            <option value="5">Ali Valiyev</option>
-                            <option value="3">Bobur Karimov</option>
-                        </select>
-                    </div>
-                </div>
+                {/*<div className={styles.filters}>*/}
+                {/*    <div className={styles.filterGroup}>*/}
+                {/*        <label>Filial</label>*/}
+                {/*        <select*/}
+                {/*            value={filterBranch}*/}
+                {/*            onChange={(e) => setFilterBranch(e.target.value)}*/}
+                {/*        >*/}
+                {/*            <option value="">Barcha filiallar</option>*/}
+                {/*            <option value="1">Toshkent Filiali</option>*/}
+                {/*            <option value="2">Samarqand Filiali</option>*/}
+                {/*        </select>*/}
+                {/*    </div>*/}
+                {/*    <div className={styles.filterGroup}>*/}
+                {/*        <label>Foydalanuvchi</label>*/}
+                {/*        <select*/}
+                {/*            value={filterUser}*/}
+                {/*            onChange={(e) => setFilterUser(e.target.value)}*/}
+                {/*        >*/}
+                {/*            <option value="">Barcha foydalanuvchilar</option>*/}
+                {/*            <option value="5">Ali Valiyev</option>*/}
+                {/*            <option value="3">Bobur Karimov</option>*/}
+                {/*        </select>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
 
                 <div className={styles.stats}>
                     <div className={styles.statCard}>
@@ -309,7 +277,7 @@ export const ApplicationSystem = () => {
                                         👤 {request.user_name}
                                     </span>
                                     <span className={styles.comments}>
-                                        💬 {request.comments.length}
+                                        💬 {request?.comments?.length}
                                     </span>
                                 </div>
                             </div>
@@ -444,30 +412,30 @@ export const ApplicationSystem = () => {
                                     />
                                 </div>
 
-                                <div className={styles.formGroup}>
-                                    <label>Filial *</label>
-                                    <select
-                                        value={formData.branch}
-                                        onChange={(e) => setFormData({...formData, branch: e.target.value})}
-                                    >
-                                        <option value="">Tanlang</option>
-                                        <option value="1">Toshkent Filiali</option>
-                                        <option value="2">Samarqand Filiali</option>
-                                    </select>
-                                </div>
+                                {/*<div className={styles.formGroup}>*/}
+                                {/*    <label>Filial *</label>*/}
+                                {/*    <select*/}
+                                {/*        value={formData.branch}*/}
+                                {/*        onChange={(e) => setFormData({...formData, branch: e.target.value})}*/}
+                                {/*    >*/}
+                                {/*        <option value="">Tanlang</option>*/}
+                                {/*        <option value="1">Toshkent Filiali</option>*/}
+                                {/*        <option value="2">Samarqand Filiali</option>*/}
+                                {/*    </select>*/}
+                                {/*</div>*/}
                             </div>
 
-                            <div className={styles.formGroup}>
-                                <label>Foydalanuvchi *</label>
-                                <select
-                                    value={formData.user}
-                                    onChange={(e) => setFormData({...formData, user: e.target.value})}
-                                >
-                                    <option value="">Tanlang</option>
-                                    <option value="5">Ali Valiyev</option>
-                                    <option value="3">Bobur Karimov</option>
-                                </select>
-                            </div>
+                            {/*<div className={styles.formGroup}>*/}
+                            {/*    <label>Foydalanuvchi *</label>*/}
+                            {/*    <select*/}
+                            {/*        value={formData.user}*/}
+                            {/*        onChange={(e) => setFormData({...formData, user: e.target.value})}*/}
+                            {/*    >*/}
+                            {/*        <option value="">Tanlang</option>*/}
+                            {/*        <option value="5">Ali Valiyev</option>*/}
+                            {/*        <option value="3">Bobur Karimov</option>*/}
+                            {/*    </select>*/}
+                            {/*</div>*/}
 
                             <div className={styles.formGroup}>
                                 <label>Komment</label>
