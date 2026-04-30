@@ -28,6 +28,11 @@ const pages = [
         value: "capital",
         name: "Kapital xarajatlari",
         disabled: false
+    },
+    {
+        value: "branchTransactions",
+        name: "Filial tranzaksiyalari",
+        disabled: false
     }
 ]
 

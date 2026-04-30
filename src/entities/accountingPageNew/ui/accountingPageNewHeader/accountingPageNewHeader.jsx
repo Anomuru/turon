@@ -36,6 +36,8 @@ export const AccountingPageNewHeader = ({selectType , setSelectType}) => {
                 return "Qo'shimcha xarajatlar"
             case "capital":
                 return "Kapital xarajatlari"
+            case "branchTransactions":
+                return "Filial tranzaksiyalari"
             default:
                 return "O'quvchilar tolovlari"
         }

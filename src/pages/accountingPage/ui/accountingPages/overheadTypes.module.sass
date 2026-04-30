@@ -106,6 +106,12 @@
   gap: 1.5rem
   flex-wrap: wrap
 
+.filterActions
+  margin-left: auto
+  display: flex
+  align-items: center
+  gap: 1rem
+
 // ── Table wrapper ────────────────────────────────────────────────────────────
 .tableWrapper
   background: #fff
@@ -176,6 +182,72 @@
   padding: 3px 10px
   border-radius: 6px
   display: inline-block
+
+// ── Full-width select override ────────────────────────────────────────────────
+.selectFull
+  width: 100% !important
+  & select
+    width: 100% !important
+    min-width: unset !important
+    box-sizing: border-box
+
+// ── Deleted toggle button ─────────────────────────────────────────────────────
+.deletedToggle
+  display: flex
+  align-items: center
+  justify-content: center
+  height: 36px
+  padding: 0 1.6rem
+  border-radius: 8px
+  border: 1px solid #e5e7eb
+  background: none
+  font-size: 1.4rem
+  font-weight: 500
+  color: #6b7280
+  cursor: pointer
+  white-space: nowrap
+  transition: all 0.15s
+  &:hover
+    border-color: #dc2626
+    color: #dc2626
+
+.deletedToggleActive
+  background: #fef2f2
+  border-color: #dc2626
+  color: #dc2626
+
+// ── Table action icons ────────────────────────────────────────────────────────
+.iconEdit
+  font-size: 1.6rem
+  color: #6b7280
+  cursor: pointer
+  transition: color 0.15s
+  &:hover
+    color: #374151
+
+.iconDelete
+  font-size: 1.6rem
+  color: red
+  cursor: pointer
+  transition: opacity 0.15s
+  &:hover
+    opacity: 0.75
+
+// ── Danger button ─────────────────────────────────────────────────────────────
+.btnDanger
+  background: #dc2626
+  color: #fff
+  border: none
+  border-radius: 6px
+  padding: 0.5rem 1.2rem
+  font-size: 1.3rem
+  cursor: pointer
+  transition: background 0.15s
+  &:hover
+    background: #b91c1c
+  &:disabled
+    opacity: 0.6
+    cursor: not-allowed
 
 // ── Empty / loading ──────────────────────────────────────────────────────────
 .empty

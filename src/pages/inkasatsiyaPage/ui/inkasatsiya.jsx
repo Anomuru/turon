@@ -15,12 +15,32 @@ import {Overhead} from "entities/inkasatsiya/ui/overhead/overhead";
 import {Capital} from "entities/inkasatsiya/ui/capital/capital";
 import {Teacher} from "entities/inkasatsiya/ui/teacher/teacher";
 import {Employer} from "entities/inkasatsiya/ui/employer/employer";
+import {BranchTransactions} from "entities/inkasatsiya/ui/branchTransactions/branchTransactions";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import cls from "./inkasatsiya.module.module.sass"
 import {getBranch} from "../../../features/branchSwitcher";
 import {CapitalSlice} from "entities/capital/model/slice/capitalSlice.js";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 import {getSelectedLocations} from "features/locations/index.js";
+import {Select} from "shared/ui/select";
+
+const now = new Date();
+const MONTHS = [
+    {id: 1, name: "Yanvar"}, {id: 2, name: "Fevral"}, {id: 3, name: "Mart"},
+    {id: 4, name: "Aprel"}, {id: 5, name: "May"}, {id: 6, name: "Iyun"},
+    {id: 7, name: "Iyul"}, {id: 8, name: "Avgust"}, {id: 9, name: "Sentabr"},
+    {id: 10, name: "Oktabr"}, {id: 11, name: "Noyabr"}, {id: 12, name: "Dekabr"},
+];
+const YEARS = Array.from({length: 5}, (_, i) => {
+    const y = now.getFullYear() - 2 + i;
+    return {id: y, name: String(y)};
+});
+const DIRECTION_OPTIONS = [
+    {id: "all", name: "Hammasi"},
+    {id: "give", name: "Berildi"},
+    {id: "receive", name: "Olindi"},
+];
+const fmt = (n) => Number(n || 0).toLocaleString();
 
 const filter = [
     {name: 'studentsPayments', label: "student payment"},
@@ -31,6 +51,7 @@ const filter = [
     {name: 'overhead', label: "overhead"},
     // {name: 'bookPayment', label: "book payment"},
     {name: 'capital', label: "capital"},
+    {name: 'branchTransactions', label: "filial tranzaksiyalari"},
 ]
 
 const reducers = {
@@ -51,12 +72,16 @@ export const Inkasatsiya = () => {
 
     const loading = useSelector(getInkasatsiyaLoading)
 
-
     const branchId = useSelector(getUserBranchId)
     const selectedBranch = useSelector(getSelectedLocations);
     const branchForFilter = selectedBranch?.id ?? branchId;
 
-    console.log(paymentType, "paymentType")
+    // Branch transactions tab state
+    const [btMonth, setBtMonth] = useState(now.getMonth() + 1);
+    const [btYear, setBtYear] = useState(now.getFullYear());
+    const [btDirection, setBtDirection] = useState("all");
+    const [btShowDeleted, setBtShowDeleted] = useState(false);
+    const [btSummary, setBtSummary] = useState(null);
     useEffect(() => {
 
         if (to.length && ot.length && radio > 0) {
@@ -77,32 +102,49 @@ export const Inkasatsiya = () => {
     };
 
     const totalMoney = () => {
-        switch (activeMenu) {
-            case "studentsPayments" :
-                return (
-                    <h2>o'quvchilarning umimiy to'lovi
-                        : {student?.students?.student_total_payment ? formatSalary(student?.students?.student_total_payment) : 0} </h2>
-                )
-            case "teachersSalary" :
-                return (
-                    <h2>O'qituvchilarning umumiy to'lovi
-                        : {student?.teachers?.teacher_total_salary ? formatSalary(student?.teachers?.teacher_total_salary) : 0} </h2>
-                )
-            case "employeesSalary" :
-                return (
-                    <h2>Ishchilarning umumiy to'lovi
-                        : {student?.workers?.worker_total_salary ? formatSalary(student?.workers?.worker_total_salary) : 0} </h2>
-                )
-            case "overhead" :
-                return (
-                    <h2>overheadning umumiy to'lovi
-                        : {student?.overheads?.total_overhead_payment ? formatSalary(student?.overheads?.total_overhead_payment) : 0} </h2>
-                )
-            case "capital" :
-                return <h2>capitalning umumiy to'lovi
-                    : {student?.capitals?.total_capital ? formatSalary(student?.capitals?.total_capital) : 0}</h2>
+        if (activeMenu === "branchTransactions") {
+            const cardStyle = {
+                border: "1px solid #e5e7eb", borderRadius: 8,
+                padding: "1.2rem 1.8rem", display: "flex", flexDirection: "column", gap: "0.4rem",
+                boxShadow: "rgba(50,50,93,.15) 0 2px 5px -1px, rgba(0,0,0,.2) 0 1px 3px -1px",
+            };
+            const findTotal = (type) => Array.isArray(btSummary)
+                ? (btSummary.find(i => i.type === type)?.totalPayment ?? 0)
+                : 0;
+            const given = findTotal("given");
+            const received = findTotal("received");
+            const net = findTotal("net");
+            return (
+                <div style={{display: "flex", gap: "1.2rem", flexWrap: "wrap"}}>
+                    <div style={cardStyle}>
+                        <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Berildi</span>
+                        <span style={{fontSize: "1.8rem", fontWeight: 700, color: "#dc2626"}}>{fmt(given)} UZS</span>
+                    </div>
+                    <div style={cardStyle}>
+                        <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Olindi</span>
+                        <span style={{fontSize: "1.8rem", fontWeight: 700, color: "#16a34a"}}>{fmt(received)} UZS</span>
+                    </div>
+                    <div style={cardStyle}>
+                        <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Saldo</span>
+                        <span style={{fontSize: "1.8rem", fontWeight: 700, color: net >= 0 ? "#16a34a" : "#dc2626"}}>
+                            {net >= 0 ? "+" : ""}{fmt(net)} UZS
+                        </span>
+                    </div>
+                </div>
+            );
         }
-
+        switch (activeMenu) {
+            case "studentsPayments":
+                return <h2>o'quvchilarning umimiy to'lovi: {student?.students?.student_total_payment ? formatSalary(student?.students?.student_total_payment) : 0}</h2>
+            case "teachersSalary":
+                return <h2>O'qituvchilarning umumiy to'lovi: {student?.teachers?.teacher_total_salary ? formatSalary(student?.teachers?.teacher_total_salary) : 0}</h2>
+            case "employeesSalary":
+                return <h2>Ishchilarning umumiy to'lovi: {student?.workers?.worker_total_salary ? formatSalary(student?.workers?.worker_total_salary) : 0}</h2>
+            case "overhead":
+                return <h2>overheadning umumiy to'lovi: {student?.overheads?.total_overhead_payment ? formatSalary(student?.overheads?.total_overhead_payment) : 0}</h2>
+            case "capital":
+                return <h2>capitalning umumiy to'lovi: {student?.capitals?.total_capital ? formatSalary(student?.capitals?.total_capital) : 0}</h2>
+        }
     }
 
     const setPage = useCallback((value) => {
@@ -121,11 +163,36 @@ export const Inkasatsiya = () => {
                 <div className={cls.overal}>
                     {totalMoney()}
                     <div className={cls.inkasatsiya}>
-                        <AccountingHeader activeMenu={activeMenu} paymentType={paymentType} to={to} setTo={setTo}
-                                          ot={ot}
-                                          setOt={setOt} setSelectedRadio={setSelectedRadio} radio={radio}/>
+                        {activeMenu === "branchTransactions" ? (
+                            <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.8rem"}}>
+                                <div style={{display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap"}}>
+                                    <Select options={MONTHS} defaultValue={btMonth} onChangeOption={(v) => setBtMonth(Number(v))} titleOption="Oy"/>
+                                    <Select options={YEARS} defaultValue={btYear} onChangeOption={(v) => setBtYear(Number(v))} titleOption="Yil"/>
+                                    {!btShowDeleted && (
+                                        <Select options={DIRECTION_OPTIONS} defaultValue={btDirection} onChangeOption={setBtDirection} titleOption="Yo'nalish"/>
+                                    )}
+                                </div>
+                                <button
+                                    onClick={() => setBtShowDeleted((v) => !v)}
+                                    style={{
+                                        display: "flex", alignItems: "center", gap: "0.5rem",
+                                        padding: "0.6rem 1.4rem", borderRadius: 8, cursor: "pointer",
+                                        fontSize: "1.4rem", fontWeight: 500, whiteSpace: "nowrap",
+                                        border: btShowDeleted ? "1px solid #dc2626" : "1px solid #e5e7eb",
+                                        background: btShowDeleted ? "#fef2f2" : "none",
+                                        color: btShowDeleted ? "#dc2626" : "#6b7280",
+                                        transition: "all 0.15s",
+                                    }}
+                                >
+                                    <i className="fa fa-trash"/>
+                                    O'chirilganlar
+                                </button>
+                            </div>
+                        ) : (
+                            <AccountingHeader activeMenu={activeMenu} paymentType={paymentType} to={to} setTo={setTo}
+                                              ot={ot} setOt={setOt} setSelectedRadio={setSelectedRadio} radio={radio}/>
+                        )}
                     </div>
-
                 </div>
 
 
@@ -153,6 +220,15 @@ export const Inkasatsiya = () => {
                         <Route path={"capital"}
                                element={<Capital formatSalary={formatSalary} extraClass={cls.table} capital={student}
                                                  path={"capital"} locationId={locationId}/>}/>
+                        <Route path={"branchTransactions"}
+                               element={
+                                   <BranchTransactions
+                                       extraClass={cls.table}
+                                       month={btMonth} year={btYear}
+                                       direction={btDirection} showDeleted={btShowDeleted}
+                                       onSummaryChange={setBtSummary}
+                                   />
+                               }/>
                         {/*<Route path={"debtStudents"} element={<DebtStudents/>}/>*/}
                     </Routes>}
 
