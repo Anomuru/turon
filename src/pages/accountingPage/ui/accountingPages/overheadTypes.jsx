@@ -5,6 +5,7 @@ import { API_URL, headers, useHttp } from "shared/api/base";
 import { getUserBranchId } from "entities/profile/userProfile";
 import { getCapitalTypes } from "entities/capital";
 import { getPaymentType } from "entities/capital/model/thunk/capitalThunk";
+import { fetchLoans, getLoans, getLoansLoading, getLoansError } from "entities/loans";
 import { Button } from "shared/ui/button";
 import { Select } from "shared/ui/select";
 import { Modal } from "shared/ui/modal";
@@ -627,13 +628,13 @@ const TransactionsTab = () => {
 // ── LoansTab ──────────────────────────────────────────────────────────────────
 
 const LoansTab = () => {
-    const { request } = useHttp();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const branchId = useSelector(getUserBranchId);
 
-    const [loans, setLoans] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const loans = useSelector(getLoans);
+    const loading = useSelector(getLoansLoading);
+    const error = useSelector(getLoansError);
 
     const [filters, setFilters] = useState({
         direction: "",
@@ -641,32 +642,11 @@ const LoansTab = () => {
         search: "",
     });
 
-    const loadLoans = useCallback(() => {
-        if (!branchId) return;
-        setLoading(true);
-        setError(null);
-
-        const params = new URLSearchParams({ branch: branchId });
-        if (filters.direction) params.set("direction", filters.direction);
-        if (filters.status) params.set("status", filters.status);
-        if (filters.search) params.set("search", filters.search);
-
-        request(`${API_URL}Branch/branch_loans/?${params}`, "GET", null, headers())
-            .then((res) => {
-                if (res?.results) {
-                    setLoans(Array.isArray(res.results) ? res.results : []);
-                } else if (Array.isArray(res)) {
-                    setLoans(res);
-                } else {
-                    setError("Ma'lumotlarni yuklashda xatolik");
-                }
-            })
-            .catch(() => setError("Serverga ulanib bo'lmadi"))
-            .finally(() => setLoading(false));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [branchId, filters]);
-
-    useEffect(() => { loadLoans(); }, [loadLoans]);
+    useEffect(() => {
+        if (branchId) {
+            dispatch(fetchLoans({ branchId, filters }));
+        }
+    }, [dispatch, branchId, filters]);
 
     const handleRowClick = (loan) => {
         if (loan.id) {

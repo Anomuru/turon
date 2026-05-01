@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { API_URL, headers, useHttp } from "shared/api/base";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchLoanById, getCurrentLoan, getCurrentLoanLoading, getCurrentLoanError, clearCurrentLoan } from "entities/loans";
 import { DefaultPageLoader } from "shared/ui/defaultLoader/index.js";
 import cls from "./overheadTypes.module.sass";
 
@@ -14,28 +15,20 @@ const personLabel = (person) => {
 export const LoanProfilePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { request } = useHttp();
+    const dispatch = useDispatch();
 
-    const [loan, setLoan] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const loan = useSelector(getCurrentLoan);
+    const loading = useSelector(getCurrentLoanLoading);
+    const error = useSelector(getCurrentLoanError);
 
     useEffect(() => {
-        if (!id) return;
-        setLoading(true);
-        setError(null);
-        request(`${API_URL}Branch/branch_loans/${id}/`, "GET", null, headers())
-            .then((res) => {
-                if (res?.success && res?.data) {
-                    setLoan(res.data);
-                } else {
-                    setError(res?.message || "Ma'lumotlarni yuklashda xatolik");
-                }
-            })
-            .catch(() => setError("Serverga ulanib bo'lmadi"))
-            .finally(() => setLoading(false));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id]);
+        if (id) {
+            dispatch(fetchLoanById(id));
+        }
+        return () => {
+            dispatch(clearCurrentLoan());
+        };
+    }, [dispatch, id]);
 
     if (loading) {
         return <DefaultPageLoader status={true} />;
@@ -50,7 +43,7 @@ export const LoanProfilePage = () => {
                     </button>
                     <h2 className={cls.title}>Qarz profili</h2>
                 </div>
-                <p className={cls.error}>{error}</p>
+                <p className={cls.error}>Ma'lumotlarni yuklashda xatolik</p>
             </div>
         );
     }
