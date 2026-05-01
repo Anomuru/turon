@@ -311,6 +311,7 @@ const LogsTab = () => {
 const TransactionsTab = () => {
     const { request } = useHttp();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const branchId = useSelector(getUserBranchId);
     const paymentTypes = useSelector(getCapitalTypes);
 
@@ -458,6 +459,12 @@ const TransactionsTab = () => {
         return full || "—";
     };
 
+    const handleRowClick = (tx) => {
+        if (tx.id) {
+            navigate(`/platform/accounting/loanProfile/${tx.id}`);
+        }
+    };
+
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
             <div className={cls.filters}>
@@ -523,7 +530,7 @@ const TransactionsTab = () => {
                                     <td colSpan={8} className={cls.empty}>Ma'lumot topilmadi</td>
                                 </tr>
                             ) : transactions.map((tx, idx) => (
-                                <tr key={tx.id}>
+                                <tr key={tx.id} onClick={() => handleRowClick(tx)} style={{ cursor: "pointer" }}>
                                     <td style={{ color: "#9ca3af" }}>{idx + 1}</td>
                                     <td style={{ fontWeight: 500 }}>{personLabel(tx.person)}</td>
                                     <td style={{ color: "#374151" }}>{tx.reason || "—"}</td>
@@ -540,8 +547,8 @@ const TransactionsTab = () => {
                                             ? <span className={cls.badgeGray}>O'chirilgan</span>
                                             : (
                                                 <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center" }}>
-                                                    <i className={`fa fa-pen ${cls.iconEdit}`} onClick={() => openEdit(tx)} />
-                                                    <i className={`fa fa-trash ${cls.iconDelete}`} onClick={() => setDeleteTarget(tx)} />
+                                                    <i className={`fa fa-pen ${cls.iconEdit}`} onClick={(e) => { e.stopPropagation(); openEdit(tx); }} />
+                                                    <i className={`fa fa-trash ${cls.iconDelete}`} onClick={(e) => { e.stopPropagation(); setDeleteTarget(tx); }} />
                                                 </div>
                                             )
                                         }

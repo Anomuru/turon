@@ -7,3 +7,4 @@ export {TeacherSalaryPage} from "./ui/accountingPages/teacherSalary"
 
 export {AccountingOtchotPage} from "./ui/otchotPage/accountingOtchotPage"
 export {OverheadTypesPage} from "./ui/overheadTypesPage"
+export {LoanProfilePage} from "./ui/accountingPages/loanProfilePage"
