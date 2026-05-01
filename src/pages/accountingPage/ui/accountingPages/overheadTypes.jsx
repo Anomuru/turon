@@ -624,12 +624,160 @@ const TransactionsTab = () => {
     );
 };
 
+// ── LoansTab ──────────────────────────────────────────────────────────────────
+
+const LoansTab = () => {
+    const { request } = useHttp();
+    const navigate = useNavigate();
+    const branchId = useSelector(getUserBranchId);
+
+    const [loans, setLoans] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    const [filters, setFilters] = useState({
+        direction: "",
+        status: "",
+        search: "",
+    });
+
+    const loadLoans = useCallback(() => {
+        if (!branchId) return;
+        setLoading(true);
+        setError(null);
+
+        const params = new URLSearchParams({ branch: branchId });
+        if (filters.direction) params.set("direction", filters.direction);
+        if (filters.status) params.set("status", filters.status);
+        if (filters.search) params.set("search", filters.search);
+
+        request(`${API_URL}Branch/branch_loans/?${params}`, "GET", null, headers())
+            .then((res) => {
+                if (res?.results) {
+                    setLoans(Array.isArray(res.results) ? res.results : []);
+                } else if (Array.isArray(res)) {
+                    setLoans(res);
+                } else {
+                    setError("Ma'lumotlarni yuklashda xatolik");
+                }
+            })
+            .catch(() => setError("Serverga ulanib bo'lmadi"))
+            .finally(() => setLoading(false));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [branchId, filters]);
+
+    useEffect(() => { loadLoans(); }, [loadLoans]);
+
+    const handleRowClick = (loan) => {
+        if (loan.id) {
+            navigate(`/platform/accounting/loanProfile/${loan.id}`);
+        }
+    };
+
+    const personLabel = (person) => {
+        if (!person) return "—";
+        return [person.name, person.surname].filter(Boolean).join(" ") || "—";
+    };
+
+    return (
+        <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+            {/* Filters */}
+            <div className={cls.filters}>
+                <Input
+                    type="text"
+                    title="Qidiruv"
+                    value={filters.search}
+                    onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))}
+                    placeholder="Ism, sabab bo'yicha qidirish..."
+                />
+                <Select
+                    options={[
+                        { id: "", name: "Hammasi" },
+                        { id: "in", name: "Olindi" },
+                        { id: "out", name: "Berildi" },
+                    ]}
+                    defaultValue={filters.direction}
+                    onChangeOption={(v) => setFilters((f) => ({ ...f, direction: v }))}
+                    titleOption="Yo'nalish"
+                />
+                <Select
+                    options={[
+                        { id: "", name: "Hammasi" },
+                        { id: "active", name: "Faol" },
+                        { id: "settled", name: "To'langan" },
+                        { id: "cancelled", name: "Bekor qilingan" },
+                    ]}
+                    defaultValue={filters.status}
+                    onChangeOption={(v) => setFilters((f) => ({ ...f, status: v }))}
+                    titleOption="Status"
+                />
+            </div>
+
+            {loading && <p className={cls.empty}>Yuklanmoqda...</p>}
+            {error && <p className={cls.error}>{error}</p>}
+
+            {!loading && !error && (
+                <div className={cls.tableWrapper}>
+                    <table className={cls.table}>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Kontragent</th>
+                                <th className={cls.right}>Asosiy summa</th>
+                                <th className={cls.right}>To'langan</th>
+                                <th className={cls.right}>Qoldiq</th>
+                                <th className={cls.center}>Yo'nalish</th>
+                                <th className={cls.center}>Status</th>
+                                <th className={cls.center}>Berilgan sana</th>
+                                <th className={cls.center}>Tugash sanasi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loans.length === 0 ? (
+                                <tr>
+                                    <td colSpan={9} className={cls.empty}>Ma'lumot topilmadi</td>
+                                </tr>
+                            ) : loans.map((loan, idx) => (
+                                <tr key={loan.id} onClick={() => handleRowClick(loan)} style={{ cursor: "pointer" }}>
+                                    <td style={{ color: "#9ca3af" }}>{idx + 1}</td>
+                                    <td style={{ fontWeight: 500 }}>{personLabel(loan.counterparty)}</td>
+                                    <td className={cls.right} style={{ fontFamily: "monospace" }}>{fmt(loan.principal_amount)} UZS</td>
+                                    <td className={cls.right} style={{ fontFamily: "monospace", color: "#16a34a" }}>{fmt(loan.paid_total)} UZS</td>
+                                    <td className={cls.right} style={{ fontFamily: "monospace", color: loan.remaining_amount > 0 ? "#dc2626" : "#16a34a" }}>
+                                        {fmt(loan.remaining_amount)} UZS
+                                    </td>
+                                    <td className={cls.center}>
+                                        {loan.direction === "out"
+                                            ? <span className={cls.badgeRed}>Berildi</span>
+                                            : <span className={cls.badgeGreen}>Olindi</span>}
+                                    </td>
+                                    <td className={cls.center}>
+                                        {loan.status === "cancelled"
+                                            ? <span className={cls.badgeGray}>Bekor qilingan</span>
+                                            : loan.is_settled
+                                                ? <span className={cls.badgeGreen}>To'langan</span>
+                                                : <span className={cls.badgeYellow}>Faol</span>
+                                        }
+                                    </td>
+                                    <td className={cls.center} style={{ color: "#6b7280" }}>{loan.issued_date || "—"}</td>
+                                    <td className={cls.center} style={{ color: "#6b7280" }}>{loan.due_date || "—"}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+        </div>
+    );
+};
+
 // ── Tab bar ───────────────────────────────────────────────────────────────────
 
 const TABS = [
     { id: "types", label: "Xarajat turlari" },
     { id: "logs", label: "Oylik xarajatlar" },
     { id: "transactions", label: "Filial tranzaksiyalari" },
+    { id: "loans", label: "Qarzlar" },
 ];
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -665,6 +813,7 @@ export const OverheadTypes = () => {
             {activeTab === "types" && <TypesTab />}
             {activeTab === "logs" && <LogsTab />}
             {activeTab === "transactions" && <TransactionsTab />}
+            {activeTab === "loans" && <LoansTab />}
         </div>
     );
 };
