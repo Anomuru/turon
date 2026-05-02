@@ -159,6 +159,7 @@ export const GroupProfileInfoForm = memo(({ currentTab, setCurrentTab }) => {
                             <i style={{ fontSize: "1.9rem" }} className="fa-solid fa-table"></i>
                             <h2>Davomatlar korinish</h2>
                         </Button>
+
                     </div>
                     <div className={cls.info__right__footer}>
                         <div style={{ background: "#FFEFDA", border: "2px solid #FED7AA" }} className={cls.info__right__footer__card}>
@@ -204,6 +205,14 @@ export const GroupProfileInfoForm = memo(({ currentTab, setCurrentTab }) => {
                             <div className={cls.info__right__footer__card__arounder}>
                                 <h2 style={{ color: "#16A384" }}>attendance </h2>
                                 <h1 style={{ color: "#166534" }}>students</h1>
+                            </div>
+                        </div>
+                        <div onClick={() => navigate(`reyting/${id}`)} style={{ background: "#E2FDEB", border: "2px solid #22C55E" }} className={cls.info__right__footer__card}>
+                            <span style={{ background: "#22C55E" }}>
+<i class="fa-solid fa-chart-simple"></i>                            </span>
+                            <div className={cls.info__right__footer__card__arounder}>
+                                <h2 style={{ color: "#16A384" }}>Reyting </h2>
+                                {/*<h1 style={{ color: "#166534" }}>students</h1>*/}
                             </div>
                         </div>
                     </div>

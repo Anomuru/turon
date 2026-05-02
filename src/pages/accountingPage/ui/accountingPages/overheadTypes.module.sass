@@ -2,6 +2,16 @@
   display: flex
   flex-direction: column
   gap: 2rem
+  flex: 1
+  min-height: 0
+
+// ── Tab content wrapper ──────────────────────────────────────────────────────
+.tabContent
+  display: flex
+  flex-direction: column
+  flex: 1
+  min-height: 0
+  overflow: hidden
 
 // ── Header ──────────────────────────────────────────────────────────────────
 .header
@@ -106,6 +116,12 @@
   gap: 1.5rem
   flex-wrap: wrap
 
+.filterActions
+  margin-left: auto
+  display: flex
+  align-items: center
+  gap: 1rem
+
 // ── Table wrapper ────────────────────────────────────────────────────────────
 .tableWrapper
   background: #fff
@@ -144,7 +160,49 @@
 .center
   text-align: center !important
 
+// ── View toggle buttons ──────────────────────────────────────────────────────
+.viewToggle
+  padding: 0.7rem 2.2rem
+  border-radius: 8px
+  border: 1px solid #e5e7eb
+  cursor: pointer
+  font-size: 1.4rem
+  font-weight: 500
+  transition: all 0.15s
+  background: #fff
+  color: #6b7280
+
+  &:hover
+    background: #f9fafb
+
+.viewToggleActive
+  background: #3b6ef0
+  color: #fff
+  border-color: #3b6ef0
+  box-shadow: 0 1px 3px rgba(59, 110, 240, 0.2)
+
+  &:hover
+    background: #3b6ef0
+    color: #fff
+  text-align: center !important
+
 // ── Badges ───────────────────────────────────────────────────────────────────
+.badge
+  background: #0d9488
+  color: #fff
+  font-size: 1.2rem
+  padding: 3px 10px
+  border-radius: 6px
+  display: inline-block
+
+.paymentType
+  background: #0d9488
+  color: #fff
+  font-size: 1.2rem
+  padding: 3px 8px
+  border-radius: 6px
+  display: inline-block
+
 .badgeGreen
   background: #0d9488
   color: #fff
@@ -176,6 +234,325 @@
   padding: 3px 10px
   border-radius: 6px
   display: inline-block
+
+// ── Full-width select override ────────────────────────────────────────────────
+.selectFull
+  width: 100% !important
+  & select
+    width: 100% !important
+    min-width: unset !important
+    box-sizing: border-box
+
+// ── New Design Tokens (from README.md) ───────────────────────────────────────
+
+// Avatar
+.avatar
+  width: 28px
+  height: 28px
+  border-radius: 8px
+  background: oklch(0.95 0.05 240)
+  color: #3b6ef0
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 11px
+  font-weight: 700
+  flex-shrink: 0
+
+// Status badges
+.badgeStatusActive
+  display: inline-block
+  padding: 3px 9px
+  border-radius: 99px
+  font-size: 11px
+  font-weight: 600
+  letter-spacing: 0.2px
+  color: oklch(0.35 0.13 240)
+  background: oklch(0.93 0.06 240)
+  white-space: nowrap
+
+.badgeStatusSettled
+  display: inline-block
+  padding: 3px 9px
+  border-radius: 99px
+  font-size: 11px
+  font-weight: 600
+  letter-spacing: 0.2px
+  color: oklch(0.35 0.13 145)
+  background: oklch(0.93 0.06 145)
+  white-space: nowrap
+
+.badgeStatusCancelled
+  display: inline-block
+  padding: 3px 9px
+  border-radius: 99px
+  font-size: 11px
+  font-weight: 600
+  letter-spacing: 0.2px
+  color: oklch(0.40 0.10 25)
+  background: oklch(0.94 0.05 25)
+  white-space: nowrap
+
+// Direction badges
+.badgeDirOut
+  display: inline-block
+  padding: 3px 9px
+  border-radius: 99px
+  font-size: 11px
+  font-weight: 600
+  letter-spacing: 0.2px
+  color: oklch(0.40 0.14 25)
+  background: oklch(0.94 0.05 25)
+  white-space: nowrap
+
+.badgeDirIn
+  display: inline-block
+  padding: 3px 9px
+  border-radius: 99px
+  font-size: 11px
+  font-weight: 600
+  letter-spacing: 0.2px
+  color: oklch(0.35 0.13 145)
+  background: oklch(0.93 0.06 145)
+  white-space: nowrap
+
+// Overdue row
+.overdueRow
+  background: oklch(0.99 0.01 25) !important
+
+  &:hover
+    background: oklch(0.97 0.02 25) !important
+
+// Skeleton loading
+@keyframes shimmer
+  0%
+    background-position: -200% 0
+  100%
+    background-position: 200% 0
+
+.skeleton
+  background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%)
+  background-size: 200% 100%
+  animation: shimmer 1.4s infinite
+  border-radius: 8px
+
+// Filter button
+.filterBtn
+  padding: 7px 14px
+  border-radius: 8px
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.15s
+  display: flex
+  align-items: center
+  gap: 6px
+  position: relative
+
+  &:hover
+    background: #f5f5f5
+
+.filterBadge
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  width: 16px
+  height: 16px
+  border-radius: 50%
+  background: #3b6ef0
+  color: #fff
+  font-size: 10px
+  font-weight: 600
+
+// Filter panel
+.filterPanel
+  position: absolute
+  top: 42px
+  right: 0
+  width: 340px
+  background: #fff
+  border-radius: 14px
+  padding: 20px
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.13)
+  border: 1px solid #f0f0f0
+  z-index: 100
+  animation: fadeUp 0.15s ease
+
+@keyframes fadeUp
+  from
+    opacity: 0
+    transform: translateY(8px)
+  to
+    opacity: 1
+    transform: none
+
+// Pagination
+.pagination
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 12px 20px
+  border-top: 1px solid #f0f0f0
+
+.paginationInfo
+  font-size: 12px
+  color: #aaa
+
+  strong
+    font-weight: 600
+    color: #111
+
+.paginationButtons
+  display: flex
+  gap: 6px
+
+.paginationBtn
+  width: 30px
+  height: 30px
+  border-radius: 8px
+  border: 1.5px solid #eee
+  background: #fff
+  color: #555
+  font-size: 13px
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.15s
+  display: flex
+  align-items: center
+  justify-content: center
+
+  &:hover:not(:disabled)
+    background: #f5f5f5
+
+  &:disabled
+    background: #fafafa
+    color: #ddd
+    cursor: not-allowed
+
+.paginationBtnActive
+  background: #3b6ef0 !important
+  border-color: #3b6ef0 !important
+  color: #fff !important
+  font-weight: 600
+
+// Outstanding view
+.outstandingGroup
+  border-bottom: 1px solid #f3f3f3
+
+// Loans search input - no margin
+.loansSearchInput
+  margin: 0 !important
+
+.outstandingGroupHeader
+  padding: 14px 24px
+  cursor: pointer
+  transition: background 0.15s
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+  &:hover
+    background: #fafafa
+
+.avatarLarge
+  width: 36px
+  height: 36px
+  border-radius: 11px
+  background: oklch(0.95 0.05 240)
+  color: #3b6ef0
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 13px
+  font-weight: 700
+  flex-shrink: 0
+
+.outstandingGroupBody
+  padding: 0 24px 12px 80px
+  background: #fafafa
+  display: flex
+  flex-direction: column
+  gap: 12px
+
+.outstandingLoanRow
+  display: flex
+  align-items: center
+  gap: 16px
+  padding: 10px 0
+
+.outstandingLoanLink
+  padding: 6px 12px
+  border: none
+  background: none
+  color: #3b6ef0
+  font-size: 12px
+  font-weight: 500
+  cursor: pointer
+  white-space: nowrap
+  transition: opacity 0.15s
+
+  &:hover
+    opacity: 0.7
+
+
+
+// ── Deleted toggle button ─────────────────────────────────────────────────────
+.deletedToggle
+  display: flex
+  align-items: center
+  justify-content: center
+  height: 36px
+  padding: 0 1.6rem
+  border-radius: 8px
+  border: 1px solid #e5e7eb
+  background: none
+  font-size: 1.4rem
+  font-weight: 500
+  color: #6b7280
+  cursor: pointer
+  white-space: nowrap
+  transition: all 0.15s
+  &:hover
+    border-color: #dc2626
+    color: #dc2626
+
+.deletedToggleActive
+  background: #fef2f2
+  border-color: #dc2626
+  color: #dc2626
+
+// ── Table action icons ────────────────────────────────────────────────────────
+.iconEdit
+  font-size: 1.6rem
+  color: #6b7280
+  cursor: pointer
+  transition: color 0.15s
+  &:hover
+    color: #374151
+
+.iconDelete
+  font-size: 1.6rem
+  color: red
+  cursor: pointer
+  transition: opacity 0.15s
+  &:hover
+    opacity: 0.75
+
+// ── Danger button ─────────────────────────────────────────────────────────────
+.btnDanger
+  background: #dc2626
+  color: #fff
+  border: none
+  border-radius: 6px
+  padding: 0.5rem 1.2rem
+  font-size: 1.3rem
+  cursor: pointer
+  transition: background 0.15s
+  &:hover
+    background: #b91c1c
+  &:disabled
+    opacity: 0.6
+    cursor: not-allowed
 
 // ── Empty / loading ──────────────────────────────────────────────────────────
 .empty

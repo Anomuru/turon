@@ -1,0 +1,1 @@
+export { ObservationShowPage } from './ui/observationShowPage'

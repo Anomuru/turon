@@ -1,0 +1,174 @@
+.main
+  padding: 1.5rem
+  font-family: var(--font-sans, sans-serif)
+
+.loading, .error
+  padding: 2rem
+  text-align: center
+  color: #888
+
+.cycleHeader
+  font-size: 12px
+  color: #888
+  margin-bottom: 1rem
+
+.summary
+  display: grid
+  grid-template-columns: repeat(4, 1fr)
+  gap: 12px
+  margin-bottom: 1.5rem
+
+  @media (max-width: 640px)
+    grid-template-columns: repeat(2, 1fr)
+
+.metric
+  background: #f5f5f2
+  border-radius: 8px
+  padding: 1rem
+
+.metricLabel
+  font-size: 12px
+  color: #888
+  margin-bottom: 4px
+
+.metricValue
+  font-size: 22px
+  font-weight: 500
+  color: #1a1a1a
+
+.filters
+  display: flex
+  gap: 10px
+  margin-bottom: 1rem
+  flex-wrap: wrap
+
+.searchInput, .select
+  font-size: 13px
+  padding: 6px 10px
+  border-radius: 8px
+  border: 0.5px solid #ccc
+  background: #fff
+  color: #1a1a1a
+  outline: none
+
+  &:focus
+    border-color: #378ADD
+
+.searchInput
+  flex: 1
+  min-width: 160px
+
+.tableWrap
+  overflow-x: auto
+  max-height: calc(100vh - 28rem)
+
+.table
+  width: 100%
+  border-collapse: collapse
+  font-size: 13px
+
+  thead th
+  font-weight: 500
+  font-size: 12px
+  color: #888
+  text-align: left
+  padding: 6px 10px
+  border-bottom: 0.5px solid #e0e0e0
+  white-space: nowrap
+
+  tbody td
+  padding: 8px 10px
+  color: #1a1a1a
+  vertical-align: middle
+  border-bottom: 0.5px solid #f0f0f0
+
+.sortable
+  cursor: pointer
+  user-select: none
+
+  &:hover
+    color: #1a1a1a !important
+
+.row
+  cursor: pointer
+  &:hover td
+    background: #f9f9f7
+
+.teacherName
+  font-weight: 500
+
+.progressWrap
+  display: flex
+  align-items: center
+  gap: 8px
+
+.progressBar
+  flex: 1
+  height: 6px
+  background: #eee
+  border-radius: 99px
+  overflow: hidden
+  min-width: 60px
+
+.progressFill
+  height: 100%
+  border-radius: 99px
+  transition: width 0.3s ease
+
+.pct
+  font-size: 11px
+  color: #888
+  min-width: 30px
+
+.score
+  font-weight: 500
+  font-size: 14px
+
+.badge
+  display: inline-block
+  font-size: 11px
+  padding: 2px 8px
+  border-radius: 99px
+  font-weight: 500
+
+.badge_done
+  background: #EAF3DE
+  color: #27500A
+
+.badge_pending
+  background: #FAEEDA
+  color: #633806
+
+.badge_none
+  background: #F1EFE8
+  color: #5F5E5A
+
+.expandBtn
+  cursor: pointer
+  font-size: 11px
+  color: #888
+  background: none
+  border: none
+  padding: 0
+  line-height: 1
+
+.detailRow
+  background: #f9f9f7
+
+.detailInner
+  padding: 10px 16px
+  display: flex
+  flex-wrap: wrap
+  gap: 6px
+
+.obsChip
+  font-size: 11px
+  padding: 3px 8px
+  border-radius: 99px
+  background: #EAF3DE
+  color: #27500A
+  border: 0.5px solid #C0DD97
+
+.noObs
+  font-size: 12px
+  color: #888

@@ -24,12 +24,14 @@ import {
     getRouteClassProfile,
     getOtchot,
     getOverheadTypes,
+    getLoanProfile,
     getRouteRGBData,
     getRouteTaskManager,
     getRouteFilteredLeads,
     getAccounting,
     getGroupQuarter, getGroupQuarterShow, getGroupObserve, getLessonTable, getGroupExams, getCvSubmissons, getParty,
-    classView, getCapitalCategoryProfile, questionnaire, grades, flowGrades, observeStatic
+    classView, getCapitalCategoryProfile, questionnaire, grades, flowGrades, observeStatic, applicationSystem,
+    getGroupRating, getReyting
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
@@ -42,6 +44,9 @@ import {Questionnaire} from "pages/questionnaire/ui/questionnaire.jsx";
 import {ClassGrades} from "features/groupProfile/ui/classGrades/classGrades.jsx";
 import {FlowGrades} from "features/groupProfile/ui/flowGrades/flowGrades.jsx";
 import {TeacherDashboard} from "pages/observeStatic/observeStatic.jsx";
+import {ApplicationSystem} from "pages/applicationSystem/applicationSystem.jsx";
+import {GroupsPage} from "pages/groupRating/groupRating.jsx";
+import {GroupRating} from "pages/groupsPage/ui/groupRating/groupRating.jsx";
 // import {CategoryProfile} from "pages/capitalPage/index.js";
 const AccountingPageNew = lazyPage(() => import("pages/accountingPage2.0") , "AccountingPageNew");
 // import {GroupQuarterShow} from "pages/groupsPage/index.js";
@@ -82,6 +87,7 @@ const StudentProfileGroupsHistory = lazyPage(() => import("entities/profile/stud
 
 const AccountingOtchotPage = lazyPage(() => import("pages/accountingPage"), "AccountingOtchotPage");
 const OverheadTypesPage = lazyPage(() => import("pages/accountingPage"), "OverheadTypesPage");
+const LoanProfilePage = lazyPage(() => import("pages/accountingPage"), "LoanProfilePage");
 
 const TaskManager = lazyPage(() => import("pages/taskManager/ui/taskManager"), "TaskManager");
 
@@ -214,6 +220,11 @@ export const routersConfigProfile = [
         element: <OverheadTypesPage/>
     },
     {
+        name: "loanProfile",
+        path: getLoanProfile(":id"),
+        element: <LoanProfilePage/>
+    },
+    {
         name: "History",
         path: getGroupHistory(":id"),
         element: <StudentProfileGroupsHistory/>
@@ -274,6 +285,10 @@ export const routersConfigProfile = [
         element: <LessonsTable/>
     },
     {
+        path: getReyting(":id"),
+        element: <GroupRating/>
+    },
+    {
         path: getParty(":id"),
         element: <PartyPage/>
     },
@@ -307,6 +322,15 @@ export const routersConfigProfile = [
         name: "static",
         path: observeStatic(":id"),
         element: <TeacherDashboard/>
+    },
+    {
+        name: "ApplicationSystem",
+        path: applicationSystem(":id"),
+        element: <ApplicationSystem/>
+    },
+    {
+        path: getGroupRating(":id"),
+        element: <GroupsPage/>
     },
 
 ]

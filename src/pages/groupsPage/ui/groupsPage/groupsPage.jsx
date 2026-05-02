@@ -1,16 +1,15 @@
 import {getUserBranchId} from "entities/profile/userProfile";
-import {getBranch} from "features/branchSwitcher";
 import React, {useEffect, useMemo, useState} from "react";
-import {Link, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 
 import {GroupsList} from "entities/groups/groups/ui/groupsList";
 import {
-    getGroupsListData,
-
-    getDeletedGroupsData,
     DeletedGroups,
-    getGroupsLoading, getGroupListWithFilter, fetchGroupsDataWithFilter, getGroupsListCount
+    getDeletedGroupsData,
+    getGroupListWithFilter,
+    getGroupsListCount,
+    getGroupsListData,
+    getGroupsLoading
 } from "entities/groups";
 import {getSearchValue} from "features/searchInput";
 import {GroupsFilter} from "features/filters/groupsFilter";
@@ -69,8 +68,6 @@ export const GroupsPage = () => {
     const [pageSwitch, setPageSwitch] = useState(localStorage.getItem("activePage") === "true")
 
 
-
-
     //flow items
     const flows = useSelector(getFlows)
     const flowsCount = useSelector(getFlowsCount)
@@ -81,7 +78,6 @@ export const GroupsPage = () => {
     const [activeAdd, setActiveAdd] = useState(false);
     const [filter, setFilter] = useState(false)
     const [activeAddFlow, setActiveAddFlow] = useState(false)
-
 
 
     useEffect(() => {
@@ -166,8 +162,14 @@ export const GroupsPage = () => {
                                 <Button
                                     type={"login"}
                                     extraClass={cls.extraCutClassFilter}
-                               onClick={() => navigate(`quarter`)}>
+                                    onClick={() => navigate(`quarter`)}>
                                     Chorak baholari
+                                </Button>
+                                <Button
+                                    type={"login"}
+                                    extraClass={cls.extraCutClassFilter}
+                                    onClick={() => navigate(`groupRating`)}>
+                                    Sinflar reytinggi
                                 </Button>
                                 <Button
                                     type={"login"}
@@ -183,11 +185,13 @@ export const GroupsPage = () => {
                                 >
                                     Time List
                                 </Button>
-                            <Button
-                                type={"login"}
-                                onClick={() => {navigate(`exams`)}}
-                                children={"Imtihonlar"}
-                            />
+                                <Button
+                                    type={"login"}
+                                    onClick={() => {
+                                        navigate(`exams`)
+                                    }}
+                                    children={"Imtihonlar"}
+                                />
                             </> :
 
 
@@ -225,7 +229,7 @@ export const GroupsPage = () => {
 
                 <div className={cls.table}>
 
-                    <div style={{display: 'flex' , justifyContent: "space-between"}}>
+                    <div style={{display: 'flex', justifyContent: "space-between"}}>
                         <h2>{pageSwitch ? "Flows" : activeSwitch ? "Deleted Classes" : "Classes"}</h2>
                         <h2>{pageSwitch ? flowsCount : groupCount}</h2>
                     </div>
