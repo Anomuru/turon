@@ -74,7 +74,6 @@ export const routersConfigList = [
         element: <StudentsPage/>
     },
     {
-        name: "Observation natijalari",
         path: getObservationShowPage(),
         element: <ObservationShowPage/>
     },

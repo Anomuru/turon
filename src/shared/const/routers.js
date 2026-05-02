@@ -56,6 +56,7 @@ export const getGroupQuarter = (id) => `groups/quarter`
 
 export const getGroupQuarterShow = (id) => `groups/groupInfo/${id}/quarter/${id}`
 export const getLessonTable = (id) => `groups/groupInfo/${id}/lessonTable/${id}`
+export const getReyting = (id) => `groups/groupInfo/${id}/reyting/${id}`
 export const getInkasatsiya = (id) => `inkasatsiya/*`
 export const getGroupExams = (id) => `groups/exams`
 
@@ -87,6 +88,7 @@ export const flowGrades = (id) => `flow/flowInfo/${id}/grades`
 export const getObservationShowPage = () => "observation_results"
 export const applicationSystem = () => "applicationSystem"
 export const observeStatic = (id) => `observeStatic`
+export const getGroupRating = (id) => `groups/groupRating`
 
 
 
