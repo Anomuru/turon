@@ -143,10 +143,12 @@ export const LoanProfilePage = () => {
 
         const result = await dispatch(
             repayLoan({
-                id: loan.id,
-                amount,
-                payment_type_id: repayForm.payment_type_id,
-                date: repayForm.date,
+                loanId: loan.id,
+                data: {
+                    amount,
+                    payment_type_id: repayForm.payment_type_id,
+                    date: repayForm.date,
+                }
             })
         );
 
@@ -163,8 +165,8 @@ export const LoanProfilePage = () => {
 
         const result = await dispatch(
             updateLoanProfile({
-                id: loan.id,
-                ...editForm,
+                loanId: loan.id,
+                data: editForm,
             })
         );
 
@@ -184,7 +186,7 @@ export const LoanProfilePage = () => {
 
         const result = await dispatch(
             cancelLoan({
-                id: loan.id,
+                loanId: loan.id,
                 cancelled_reason: cancelForm.cancelled_reason,
             })
         );
@@ -328,14 +330,34 @@ export const LoanProfilePage = () => {
                     )}
                 </div>
 
-                {/* Payment History Card - placeholder for now */}
+                {/* Payment History Card */}
                 <div className={cls.historyCard}>
                     <div className={cls.historyHeader}>
                         <div className={cls.historyTitle}>To'lovlar tarixi</div>
-                        <div className={cls.historyCount}>0</div>
+                        <div className={cls.historyCount}>{loan.transactions?.length || 0}</div>
                     </div>
                     <div className={cls.paymentList}>
-                        <p style={{ textAlign: "center", color: "#aaa", fontSize: "13px" }}>To'lovlar yo'q</p>
+                        {!loan.transactions || loan.transactions.length === 0 ? (
+                            <p style={{ textAlign: "center", color: "#aaa", fontSize: "13px" }}>To'lovlar yo'q</p>
+                        ) : (
+                            loan.transactions.map((tx, idx) => (
+                                <div key={tx.id} className={cls.paymentItem}>
+                                    <div className={cls.paymentDot} />
+                                    <div className={cls.paymentInfo}>
+                                        <div className={cls.paymentReason}>
+                                            {tx.direction === "give" ? "Qarz berildi" : "To'lov qabul qilindi"}
+                                            {tx.reason && ` - ${tx.reason}`}
+                                        </div>
+                                        <div className={cls.paymentMeta}>
+                                            {formatDate(tx.date)} · {tx.payment_type?.name || "—"}
+                                        </div>
+                                    </div>
+                                    <div className={cls.paymentAmount} style={{ color: tx.direction === "give" ? "#e74c3c" : "#3b6ef0" }}>
+                                        {tx.direction === "give" ? "-" : "+"}{fmt(tx.amount)} so'm
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
                 </div>
             </div>

@@ -1,0 +1,66 @@
+.wrapper
+  background: #fff
+  padding: 1rem
+  border-radius: 8px
+  box-shadow: 0 2px 6px rgba(0,0,0,.1)
+  display: flex
+  flex-direction: column
+  height: 100%
+  min-height: 0
+
+.header
+  display: flex
+  justify-content: space-between
+  align-items: center
+  margin-bottom: 1rem
+
+  h2
+    font-size: 2rem
+    font-weight: 600
+    margin: 0
+
+.tableWrapper
+  flex: 1
+  overflow-y: auto
+  border-radius: 6px
+  min-height: 0
+
+.table
+  width: 100%
+  border-collapse: collapse
+
+  th, td
+    padding: 8px 12px
+    text-align: left
+    border-bottom: 1px solid #e5e7eb
+
+  th
+    cursor: pointer
+    user-select: none
+    font-weight: 600
+    color: #333
+    font-size: 1.6rem
+    background: #f9fafb
+    position: sticky
+    top: 0
+    z-index: 2
+
+  td
+    font-size: 1.4rem
+
+  tr:hover td
+    background: #f3f4f6
+
+.badge
+  background: #0d9488
+  color: #fff
+  font-size: 1.2rem
+  padding: 3px 10px
+  border-radius: 6px
+  display: inline-block
+
+.loading
+  text-align: center
+  padding: 4rem 1rem
+  color: #9ca3af
+  font-size: 1.4rem

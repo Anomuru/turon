@@ -1,7 +1,4 @@
-export const getLoans = (state) => state.loansReducer?.loans || [];
-export const getLoansLoading = (state) => state.loansReducer?.loading || false;
-export const getLoansError = (state) => state.loansReducer?.error || false;
-
-export const getCurrentLoan = (state) => state.loansReducer?.currentLoan || null;
-export const getCurrentLoanLoading = (state) => state.loansReducer?.loadingLoan || false;
-export const getCurrentLoanError = (state) => state.loansReducer?.errorLoan || false;
+export const getLoans = (state) => state.loans.loans;
+export const getOutstandingLoans = (state) => state.loans.outstanding;
+export const getLoansLoading = (state) => state.loans.loading;
+export const getLoansError = (state) => state.loans.error;

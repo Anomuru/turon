@@ -1,11 +1,3 @@
+export { getLoans, getOutstandingLoans } from "./model/loansSelector";
+export { fetchBranchLoans, fetchOutstandingLoans, createLoan } from "./model/loansThunk";
 export { default as loansReducer } from "./model/loansSlice";
-export { fetchLoans, fetchLoanById } from "./model/loansThunk";
-export { clearCurrentLoan } from "./model/loansSlice";
-export {
-    getLoans,
-    getLoansLoading,
-    getLoansError,
-    getCurrentLoan,
-    getCurrentLoanLoading,
-    getCurrentLoanError,
-} from "./model/loansSelector";

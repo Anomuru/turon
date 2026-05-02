@@ -41,6 +41,7 @@ import {capitalReducer} from "entities/capital/index.js";
 import questionnaireSlice from "pages/questionnaire/model/questionnaireSlice.js";
 import {crmReducer} from "entities/adminTaskManager/model/crmSlice.js";
 import {loanProfileReducer} from "entities/loanProfile/index.js";
+import {loansReducer} from "entities/loans/index.js";
 
 
 export function createReduxStore(
@@ -88,7 +89,8 @@ export function createReduxStore(
         questionnaireSlice,
         // partySlice,
         crmSlice: crmReducer,
-        loanProfileReducer: loanProfileReducer
+        loanProfileReducer: loanProfileReducer,
+        loans: loansReducer
 
 
 
