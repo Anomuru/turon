@@ -278,24 +278,31 @@ export const menuConfig = [
         to: "observeStatic",
         name: "Observe Statistika",
         icon: "fa-toolbox",
-        roles: [ROLES.admin],
+        roles: [ROLES.spiritualist , ROLES.admin , ROLES.advertising],
         branches: true
 
     },
     {
         to: "observation_results",
-        name: "Observation natijalari",
-        icon: "fa-result",
-        roles: [ROLES.spiritualist , ROLES.admin],
+        name: "Teacher observe statistics",
+        icon: "fa-arrow-up-right-dots",
+        roles: [ROLES.spiritualist , ROLES.admin , ROLES.advertising],
         branches: true
     },
     {
         to: "applicationSystem",
         name: "Xo'jalik uchun zayavka berish",
         icon: "fa-list",
-        roles: [ROLES.spiritualist , ROLES.admin],
+        roles: [ROLES.spiritualist , ROLES.admin , ROLES.advertising , ROLES.director , ROLES.main_director],
         branches: true
-    }
+    },
+    // {
+    //     to: "groupRating",
+    //     name: "Xo'jalik uchun zayavka berish",
+    //     icon: "fa-list",
+    //     roles: [ROLES.spiritualist , ROLES.admin],
+    //     branches: true
+    // }
     // {
     //     to: "rooms",
     //     name: "Honalar",
