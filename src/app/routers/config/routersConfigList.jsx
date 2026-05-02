@@ -21,7 +21,7 @@ import {
     getRouteMain,
     getRouteRegister,
     getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews, getCapitalCategoryProfile, getCapitalInside,
-    getDashboard, getTeacherObservation, getLessonPlan,
+    getDashboard, getTeacherObservation, getLessonPlan, getObservationShowPage,
 
 } from "shared/const/routers";
 import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
