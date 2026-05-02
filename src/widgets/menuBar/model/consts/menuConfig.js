@@ -38,6 +38,7 @@ export const menuConfig = [
         icon: "fa-award",
         roles: [ROLES.director]
     },
+    // test
     {
         to: "financeDashboard",
         name: "Moliyaviy Dashboard",
