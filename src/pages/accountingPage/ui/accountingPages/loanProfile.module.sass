@@ -1,0 +1,565 @@
+/* Design Tokens */
+$accent: oklch(0.50 0.18 240);
+$accent-hex: #3b6ef0;
+$accent-light: oklch(0.95 0.05 240);
+$accent-green: oklch(0.38 0.13 145);
+$accent-orange: oklch(0.45 0.15 25);
+$danger: #e74c3c;
+$danger-light: #fff7f7;
+$danger-border: #ffe0e0;
+
+$bg-page: #f2f2f0;
+$bg-card: #ffffff;
+$bg-inner: #f8f8f8;
+$bg-chip: #f5f5f5;
+
+$text-primary: #111111;
+$text-secondary: #444444;
+$text-muted: #aaaaaa;
+$text-faint: #cccccc;
+
+$font: 'Inter', sans-serif;
+
+$radius-card: 20px;
+$radius-inner: 14px;
+$radius-chip: 10px;
+$radius-btn: 11px;
+$radius-badge: 99px;
+
+$shadow-card: 0 1px 8px rgba(0, 0, 0, 0.08);
+$shadow-modal: 0 16px 56px rgba(0, 0, 0, 0.16);
+
+/* Container */
+.container {
+  width: 440px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 2rem;
+  margin: 0 auto;
+}
+
+/* Main Card */
+.mainCard {
+  background: $bg-card;
+  border-radius: $radius-card;
+  box-shadow: $shadow-card;
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+  }
+
+  &.active::before {
+    background: linear-gradient(90deg, $accent-hex, rgba($accent-hex, 0.53));
+  }
+
+  &.cancelled::before {
+    background: linear-gradient(90deg, $danger, rgba($danger, 0.53));
+  }
+
+  &.settled::before {
+    background: linear-gradient(90deg, $accent-green, rgba($accent-green, 0.53));
+  }
+}
+
+/* Avatar + Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: $accent-light;
+  color: $accent-hex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.headerInfo {
+  flex: 1;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: 700;
+  color: $text-primary;
+  letter-spacing: -0.2px;
+}
+
+.phone {
+  font-size: 12px;
+  color: $text-muted;
+  margin-top: 2px;
+}
+
+.badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 3px 10px;
+  border-radius: $radius-badge;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+
+  &.statusActive {
+    color: oklch(0.35 0.13 240);
+    background: oklch(0.93 0.06 240);
+  }
+
+  &.statusSettled {
+    color: oklch(0.35 0.13 145);
+    background: oklch(0.93 0.06 145);
+  }
+
+  &.statusCancelled {
+    color: oklch(0.40 0.10 25);
+    background: oklch(0.93 0.05 25);
+  }
+
+  &.directionOut {
+    color: oklch(0.40 0.14 25);
+    background: oklch(0.93 0.05 25);
+  }
+
+  &.directionIn {
+    color: oklch(0.35 0.13 145);
+    background: oklch(0.93 0.06 145);
+  }
+}
+
+/* Amount Block */
+.amountBlock {
+  background: $bg-inner;
+  border-radius: $radius-inner;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.amountInfo {
+  flex: 1;
+}
+
+.amountLabel {
+  font-size: 11px;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 6px;
+}
+
+.amountValue {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: $text-primary;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.amountUnit {
+  font-size: 14px;
+  font-weight: 400;
+  color: $text-muted;
+}
+
+.amountSubtext {
+  font-size: 12px;
+  color: #bbb;
+  margin-top: 6px;
+}
+
+/* Donut Progress */
+.donutProgress {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+
+  svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+  }
+
+  .track {
+    stroke: #ebebeb;
+    stroke-width: 9;
+    fill: none;
+  }
+
+  .progress {
+    stroke: $accent-hex;
+    stroke-width: 9;
+    stroke-linecap: round;
+    fill: none;
+    transition: stroke-dasharray 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    font-weight: 700;
+    color: $text-primary;
+  }
+}
+
+/* Stat Chips */
+.statChips {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.statChip {
+  background: $bg-chip;
+  border-radius: $radius-chip;
+  padding: 10px 6px;
+  text-align: center;
+}
+
+.statLabel {
+  font-size: 10px;
+  color: #bbb;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+}
+
+.statValue {
+  font-size: 11px;
+  font-weight: 700;
+
+  &.paid {
+    color: $accent-green;
+  }
+
+  &.remaining {
+    color: $accent-orange;
+  }
+
+  &.issued {
+    color: #666;
+  }
+}
+
+/* Notes Block */
+.notesBlock {
+  border-left: 3px solid $accent-hex;
+  padding-left: 12px;
+  margin-bottom: 16px;
+
+  &.cancelled {
+    border-left-color: $danger;
+  }
+}
+
+.notesReason {
+  font-size: 12px;
+  color: #bbb;
+  margin-bottom: 4px;
+}
+
+.notesText {
+  font-size: 13px;
+  color: $text-secondary;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.notesMuddat {
+  font-size: 11px;
+  color: $text-faint;
+}
+
+.cancelledReason {
+  font-size: 12px;
+  color: $danger;
+  margin-left: 6px;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btnPrimary {
+  flex: 2;
+  background: $accent-hex;
+  color: #fff;
+  border: none;
+  padding: 12px 0;
+  border-radius: $radius-btn;
+  font-size: 13px;
+  font-weight: 600;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btnSecondary {
+  flex: 1;
+  border: 1.5px solid #e8e8e8;
+  background: #fff;
+  color: #555;
+  padding: 12px 0;
+  border-radius: $radius-btn;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #fafafa;
+  }
+}
+
+.btnDanger {
+  flex: 1;
+  border: 1.5px solid $danger-border;
+  background: $danger-light;
+  color: $danger;
+  padding: 12px 0;
+  border-radius: $radius-btn;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #ffeded;
+  }
+}
+
+/* Payment History Card */
+.historyCard {
+  background: $bg-card;
+  border-radius: $radius-card;
+  padding: 20px 24px;
+  box-shadow: $shadow-card;
+}
+
+.historyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.historyTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.historyCount {
+  background: $accent-light;
+  color: $accent-hex;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.paymentList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.paymentItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f5f5f5;
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.paymentDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: $accent-hex;
+  flex-shrink: 0;
+}
+
+.paymentInfo {
+  flex: 1;
+}
+
+.paymentName {
+  font-size: 13px;
+  font-weight: 500;
+  color: #222;
+}
+
+.paymentMeta {
+  font-size: 11px;
+  color: $text-faint;
+  margin-top: 2px;
+}
+
+.paymentAmount {
+  font-size: 13px;
+  font-weight: 700;
+  color: $accent-hex;
+}
+
+/* Skeleton Loading */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #ececec 25%, #f5f5f5 50%, #ececec 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 8px;
+}
+
+/* Settled Banner */
+.settledBanner {
+  background: linear-gradient(135deg, $accent-green, rgba($accent-green, 0.8));
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Modal Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modal {
+  width: 360px;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: $shadow-modal;
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: $text-primary;
+  margin-bottom: 20px;
+}
+
+.modalField {
+  margin-bottom: 16px;
+}
+
+.modalLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.modalInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: $font;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: $accent-hex;
+  }
+}
+
+.modalTextarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: $font;
+  min-height: 80px;
+  resize: vertical;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: $accent-hex;
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modalError {
+  color: $danger;
+  font-size: 12px;
+  margin-top: 8px;
+}

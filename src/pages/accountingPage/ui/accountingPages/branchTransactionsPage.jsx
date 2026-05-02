@@ -1,10 +1,10 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {useSelector} from "react-redux";
-import {API_URL, headers, useHttp} from "shared/api/base";
-import {getUserBranchId} from "entities/profile/userProfile";
-import {getSelectedLocations} from "features/locations/index.js";
-import {Pagination} from "features/pagination";
-import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { API_URL, headers, useHttp } from "shared/api/base";
+import { getUserBranchId } from "entities/profile/userProfile";
+import { getSelectedLocations } from "features/locations/index.js";
+import { Pagination } from "features/pagination";
+import { DefaultPageLoader } from "shared/ui/defaultLoader/index.js";
 import cls from "entities/accountingPageNew/ui/accountingPageNewTable/accountingPageNewTable.module.sass";
 
 const fmt = (n) => Number(n || 0).toLocaleString();
@@ -15,7 +15,7 @@ const personLabel = (person) => {
 };
 
 export const BranchTransactionsPage = () => {
-    const {request} = useHttp();
+    const { request } = useHttp();
     const branchId = useSelector(getUserBranchId);
     const selectedBranch = useSelector(getSelectedLocations);
     const branchForFilter = selectedBranch?.id ?? branchId;
@@ -29,7 +29,7 @@ export const BranchTransactionsPage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const [sortConfig, setSortConfig] = useState({key: "date", direction: "desc"});
+    const [sortConfig, setSortConfig] = useState({ key: "date", direction: "desc" });
 
     const requestSort = (key) => {
         setSortConfig(prev => ({
@@ -96,7 +96,7 @@ export const BranchTransactionsPage = () => {
             })
             .catch(() => setError("Serverga ulanib bo'lmadi"))
             .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [branchForFilter, currentPage]);
 
     useEffect(() => { loadData(); }, [loadData]);
@@ -116,7 +116,7 @@ export const BranchTransactionsPage = () => {
                 </div>
 
                 <div className={cls.tableWrapper}>
-                    {loading ? <DefaultPageLoader status={true}/> : (
+                    {loading ? <DefaultPageLoader status={true} /> : (
                         <table className={cls.table}>
                             <thead>
                                 <tr>
@@ -140,20 +140,20 @@ export const BranchTransactionsPage = () => {
                             <tbody>
                                 {error ? (
                                     <tr>
-                                        <td colSpan={7} style={{textAlign: "center", color: "#ef4444", padding: "4rem 0"}}>
+                                        <td colSpan={7} style={{ textAlign: "center", color: "#ef4444", padding: "4rem 0" }}>
                                             {error}
                                         </td>
                                     </tr>
                                 ) : sortedTransactions.length === 0 ? (
                                     <tr>
-                                        <td colSpan={7} style={{textAlign: "center", color: "#9ca3af", padding: "4rem 0"}}>
+                                        <td colSpan={7} style={{ textAlign: "center", color: "#9ca3af", padding: "4rem 0" }}>
                                             Ma'lumot topilmadi
                                         </td>
                                     </tr>
                                 ) : sortedTransactions.map((tx, idx) => (
                                     <tr key={tx.id}>
                                         <td>{(currentPage - 1) * PageSize + idx + 1}</td>
-                                        <td style={{fontWeight: 500}}>{personLabel(tx.person)}</td>
+                                        <td style={{ fontWeight: 500 }}>{personLabel(tx.person)}</td>
                                         <td>{tx.reason || "—"}</td>
                                         <td>{fmt(tx.amount)} UZS</td>
                                         <td>
