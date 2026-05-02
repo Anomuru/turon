@@ -59,6 +59,7 @@ const DirectorDashboardPage = lazyPage(() => import("pages/directorDashboardPage
 const TeacherObservationPage = lazyPage(() => import("pages/teacherObservationPage"), "TeacherObservationPage");
 const LessonPlanPage = lazyPage(() => import("pages/lessonPlanPage"), "LessonPlanPage");
 const FinanceDashboardPage = lazyPage(() => import("pages/financeDashboardPage"), "FinanceDashboardPage");
+const ObservationShowPage = lazyPage(() => import("pages/observationShowPage"), "ObservationShowPage");
 
 export const routersConfigList = [
     {
