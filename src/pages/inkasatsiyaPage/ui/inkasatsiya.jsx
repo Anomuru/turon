@@ -108,39 +108,8 @@ export const Inkasatsiya = () => {
             case "capital":
                 return <h2>capitalning umumiy to'lovi: {student?.capitals?.total_capital ? formatSalary(student?.capitals?.total_capital) : 0}</h2>
             case "branchTransactions":
-                const given = student?.branch_transactions?.given?.total || 0;
-                const received = student?.branch_transactions?.received?.total || 0;
                 const net = student?.branch_transactions?.net || 0;
-                return (
-                    <div style={{display: "flex", gap: "1.2rem", flexWrap: "wrap"}}>
-                        <div style={{
-                            border: "1px solid #e5e7eb", borderRadius: 8,
-                            padding: "1.2rem 1.8rem", display: "flex", flexDirection: "column", gap: "0.4rem",
-                            boxShadow: "rgba(50,50,93,.15) 0 2px 5px -1px, rgba(0,0,0,.2) 0 1px 3px -1px",
-                        }}>
-                            <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Berildi</span>
-                            <span style={{fontSize: "1.8rem", fontWeight: 700, color: "#dc2626"}}>{formatSalary(given)} UZS</span>
-                        </div>
-                        <div style={{
-                            border: "1px solid #e5e7eb", borderRadius: 8,
-                            padding: "1.2rem 1.8rem", display: "flex", flexDirection: "column", gap: "0.4rem",
-                            boxShadow: "rgba(50,50,93,.15) 0 2px 5px -1px, rgba(0,0,0,.2) 0 1px 3px -1px",
-                        }}>
-                            <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Olindi</span>
-                            <span style={{fontSize: "1.8rem", fontWeight: 700, color: "#16a34a"}}>{formatSalary(received)} UZS</span>
-                        </div>
-                        <div style={{
-                            border: "1px solid #e5e7eb", borderRadius: 8,
-                            padding: "1.2rem 1.8rem", display: "flex", flexDirection: "column", gap: "0.4rem",
-                            boxShadow: "rgba(50,50,93,.15) 0 2px 5px -1px, rgba(0,0,0,.2) 0 1px 3px -1px",
-                        }}>
-                            <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Saldo</span>
-                            <span style={{fontSize: "1.8rem", fontWeight: 700, color: net >= 0 ? "#16a34a" : "#dc2626"}}>
-                                {net >= 0 ? "+" : ""}{formatSalary(net)} UZS
-                            </span>
-                        </div>
-                    </div>
-                );
+                return <h2>Filial tranzaksiyalarining umumiy to'lovi: {formatSalary(net)}</h2>
         }
     }
 
