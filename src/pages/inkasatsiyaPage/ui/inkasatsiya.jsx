@@ -76,12 +76,6 @@ export const Inkasatsiya = () => {
     const selectedBranch = useSelector(getSelectedLocations);
     const branchForFilter = selectedBranch?.id ?? branchId;
 
-    // Branch transactions tab state
-    const [btMonth, setBtMonth] = useState(now.getMonth() + 1);
-    const [btYear, setBtYear] = useState(now.getFullYear());
-    const [btDirection, setBtDirection] = useState("all");
-    const [btShowDeleted, setBtShowDeleted] = useState(false);
-    const [btSummary, setBtSummary] = useState(null);
     useEffect(() => {
 
         if (to.length && ot.length && radio > 0) {
@@ -102,37 +96,6 @@ export const Inkasatsiya = () => {
     };
 
     const totalMoney = () => {
-        if (activeMenu === "branchTransactions") {
-            const cardStyle = {
-                border: "1px solid #e5e7eb", borderRadius: 8,
-                padding: "1.2rem 1.8rem", display: "flex", flexDirection: "column", gap: "0.4rem",
-                boxShadow: "rgba(50,50,93,.15) 0 2px 5px -1px, rgba(0,0,0,.2) 0 1px 3px -1px",
-            };
-            const findTotal = (type) => Array.isArray(btSummary)
-                ? (btSummary.find(i => i.type === type)?.totalPayment ?? 0)
-                : 0;
-            const given = findTotal("given");
-            const received = findTotal("received");
-            const net = findTotal("net");
-            return (
-                <div style={{display: "flex", gap: "1.2rem", flexWrap: "wrap"}}>
-                    <div style={cardStyle}>
-                        <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Berildi</span>
-                        <span style={{fontSize: "1.8rem", fontWeight: 700, color: "#dc2626"}}>{fmt(given)} UZS</span>
-                    </div>
-                    <div style={cardStyle}>
-                        <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Olindi</span>
-                        <span style={{fontSize: "1.8rem", fontWeight: 700, color: "#16a34a"}}>{fmt(received)} UZS</span>
-                    </div>
-                    <div style={cardStyle}>
-                        <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Saldo</span>
-                        <span style={{fontSize: "1.8rem", fontWeight: 700, color: net >= 0 ? "#16a34a" : "#dc2626"}}>
-                            {net >= 0 ? "+" : ""}{fmt(net)} UZS
-                        </span>
-                    </div>
-                </div>
-            );
-        }
         switch (activeMenu) {
             case "studentsPayments":
                 return <h2>o'quvchilarning umimiy to'lovi: {student?.students?.student_total_payment ? formatSalary(student?.students?.student_total_payment) : 0}</h2>
@@ -144,6 +107,40 @@ export const Inkasatsiya = () => {
                 return <h2>overheadning umumiy to'lovi: {student?.overheads?.total_overhead_payment ? formatSalary(student?.overheads?.total_overhead_payment) : 0}</h2>
             case "capital":
                 return <h2>capitalning umumiy to'lovi: {student?.capitals?.total_capital ? formatSalary(student?.capitals?.total_capital) : 0}</h2>
+            case "branchTransactions":
+                const given = student?.branch_transactions?.given?.total || 0;
+                const received = student?.branch_transactions?.received?.total || 0;
+                const net = student?.branch_transactions?.net || 0;
+                return (
+                    <div style={{display: "flex", gap: "1.2rem", flexWrap: "wrap"}}>
+                        <div style={{
+                            border: "1px solid #e5e7eb", borderRadius: 8,
+                            padding: "1.2rem 1.8rem", display: "flex", flexDirection: "column", gap: "0.4rem",
+                            boxShadow: "rgba(50,50,93,.15) 0 2px 5px -1px, rgba(0,0,0,.2) 0 1px 3px -1px",
+                        }}>
+                            <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Berildi</span>
+                            <span style={{fontSize: "1.8rem", fontWeight: 700, color: "#dc2626"}}>{formatSalary(given)} UZS</span>
+                        </div>
+                        <div style={{
+                            border: "1px solid #e5e7eb", borderRadius: 8,
+                            padding: "1.2rem 1.8rem", display: "flex", flexDirection: "column", gap: "0.4rem",
+                            boxShadow: "rgba(50,50,93,.15) 0 2px 5px -1px, rgba(0,0,0,.2) 0 1px 3px -1px",
+                        }}>
+                            <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Olindi</span>
+                            <span style={{fontSize: "1.8rem", fontWeight: 700, color: "#16a34a"}}>{formatSalary(received)} UZS</span>
+                        </div>
+                        <div style={{
+                            border: "1px solid #e5e7eb", borderRadius: 8,
+                            padding: "1.2rem 1.8rem", display: "flex", flexDirection: "column", gap: "0.4rem",
+                            boxShadow: "rgba(50,50,93,.15) 0 2px 5px -1px, rgba(0,0,0,.2) 0 1px 3px -1px",
+                        }}>
+                            <span style={{fontSize: "1.3rem", color: "#6b7280", fontWeight: 600}}>Saldo</span>
+                            <span style={{fontSize: "1.8rem", fontWeight: 700, color: net >= 0 ? "#16a34a" : "#dc2626"}}>
+                                {net >= 0 ? "+" : ""}{formatSalary(net)} UZS
+                            </span>
+                        </div>
+                    </div>
+                );
         }
     }
 
@@ -163,35 +160,8 @@ export const Inkasatsiya = () => {
                 <div className={cls.overal}>
                     {totalMoney()}
                     <div className={cls.inkasatsiya}>
-                        {activeMenu === "branchTransactions" ? (
-                            <div style={{display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.8rem"}}>
-                                <div style={{display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap"}}>
-                                    <Select options={MONTHS} defaultValue={btMonth} onChangeOption={(v) => setBtMonth(Number(v))} titleOption="Oy"/>
-                                    <Select options={YEARS} defaultValue={btYear} onChangeOption={(v) => setBtYear(Number(v))} titleOption="Yil"/>
-                                    {!btShowDeleted && (
-                                        <Select options={DIRECTION_OPTIONS} defaultValue={btDirection} onChangeOption={setBtDirection} titleOption="Yo'nalish"/>
-                                    )}
-                                </div>
-                                <button
-                                    onClick={() => setBtShowDeleted((v) => !v)}
-                                    style={{
-                                        display: "flex", alignItems: "center", gap: "0.5rem",
-                                        padding: "0.6rem 1.4rem", borderRadius: 8, cursor: "pointer",
-                                        fontSize: "1.4rem", fontWeight: 500, whiteSpace: "nowrap",
-                                        border: btShowDeleted ? "1px solid #dc2626" : "1px solid #e5e7eb",
-                                        background: btShowDeleted ? "#fef2f2" : "none",
-                                        color: btShowDeleted ? "#dc2626" : "#6b7280",
-                                        transition: "all 0.15s",
-                                    }}
-                                >
-                                    <i className="fa fa-trash"/>
-                                    O'chirilganlar
-                                </button>
-                            </div>
-                        ) : (
-                            <AccountingHeader activeMenu={activeMenu} paymentType={paymentType} to={to} setTo={setTo}
-                                              ot={ot} setOt={setOt} setSelectedRadio={setSelectedRadio} radio={radio}/>
-                        )}
+                        <AccountingHeader activeMenu={activeMenu} paymentType={paymentType} to={to} setTo={setTo}
+                                          ot={ot} setOt={setOt} setSelectedRadio={setSelectedRadio} radio={radio}/>
                     </div>
                 </div>
 
@@ -224,9 +194,7 @@ export const Inkasatsiya = () => {
                                element={
                                    <BranchTransactions
                                        extraClass={cls.table}
-                                       month={btMonth} year={btYear}
-                                       direction={btDirection} showDeleted={btShowDeleted}
-                                       onSummaryChange={setBtSummary}
+                                       branchTransactionsData={student?.branch_transactions}
                                    />
                                }/>
                         {/*<Route path={"debtStudents"} element={<DebtStudents/>}/>*/}
