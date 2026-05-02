@@ -22,6 +22,7 @@ import {
     getRouteRegister,
     getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews, getCapitalCategoryProfile, getCapitalInside,
     getDashboard, getTeacherObservation, getLessonPlan,
+    getEducationQuality, getEducationQualityDetails,
 
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
@@ -59,6 +60,8 @@ const DirectorDashboardPage = lazyPage(() => import("pages/directorDashboardPage
 const TeacherObservationPage = lazyPage(() => import("pages/teacherObservationPage"), "TeacherObservationPage");
 const LessonPlanPage = lazyPage(() => import("pages/lessonPlanPage"), "LessonPlanPage");
 const FinanceDashboardPage = lazyPage(() => import("pages/financeDashboardPage"), "FinanceDashboardPage");
+const EducationQualityPage = lazyPage(() => import("pages/educationQualityPage"), "EducationQualityPage");
+const EducationQualityDetails = lazyPage(() => import("pages/educationQualityPage"), "EducationQualityDetails");
 
 export const routersConfigList = [
     {
@@ -263,6 +266,16 @@ export const routersConfigList = [
         name: "Moliyaviy Dashboard",
         path: "financeDashboard",
         element: <FinanceDashboardPage/>
+    },
+    {
+        name: "Ta'lim Sifati",
+        path: getEducationQuality(),
+        element: <EducationQualityPage/>
+    },
+    {
+        name: "Ta'lim Sifati - Batafsil",
+        path: getEducationQualityDetails(),
+        element: <EducationQualityDetails/>
     }
 
 ]

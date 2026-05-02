@@ -85,5 +85,8 @@ export const grades = (id) => `groups/groupInfo/${id}/grades`
 export const flowGrades = (id) => `flow/flowInfo/${id}/grades`
 export const observeStatic = (id) => `observeStatic`
 
+export const getEducationQuality = () => `educationQuality`
+export const getEducationQualityDetails = () => `educationQuality/details`
+
 
 
