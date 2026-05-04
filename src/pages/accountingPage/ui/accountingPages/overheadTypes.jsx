@@ -148,11 +148,13 @@ const TypesTab = () => {
             </td>
             <td>{item.order}</td>
             <td>
-                <i
-                    onClick={() => openEdit(item)}
-                    style={{ color: "#6b7280", fontSize: "1.4rem", cursor: "pointer" }}
-                    className="fa fa-pen"
-                />
+                {!item.changeable && (
+                    <i
+                        onClick={() => openEdit(item)}
+                        style={{ color: "#6b7280", fontSize: "1.4rem", cursor: "pointer" }}
+                        className="fa fa-pen"
+                    />
+                )}
             </td>
         </tr>
     );
