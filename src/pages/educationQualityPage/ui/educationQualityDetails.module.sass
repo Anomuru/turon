@@ -1,0 +1,279 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap')
+
+.container
+    min-height: 100vh
+    background: #f8fafc
+    padding: 2.5rem
+    font-family: 'Inter', sans-serif
+
+.header
+    margin-bottom: 2.5rem
+
+.title
+    font-size: 3rem
+    font-weight: 800
+    color: #1e293b
+    margin: 0 0 0.75rem 0
+
+.subtitle
+    font-size: 1.25rem
+    color: #64748b
+    margin: 0
+
+.filtersCard
+    background: #ffffff
+    border-radius: 16px
+    padding: 2.5rem
+    margin-bottom: 2.5rem
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+    border: 1px solid #e2e8f0
+
+.filtersHeader
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: 2rem
+
+.filtersTitle
+    font-size: 1.5rem
+    font-weight: 700
+    color: #1e293b
+    margin: 0
+
+.clearBtn
+    display: flex
+    align-items: center
+    gap: 0.5rem
+    padding: 0.625rem 1.25rem
+    background: #fee2e2
+    color: #dc2626
+    border: none
+    border-radius: 8px
+    font-size: 1rem
+    font-weight: 600
+    cursor: pointer
+    transition: all 0.2s ease
+
+    svg
+        width: 16px
+        height: 16px
+
+    &:hover
+        background: #fecaca
+        transform: scale(1.05)
+
+.filtersGrid
+    display: grid
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))
+    gap: 1rem
+
+.filterGroup
+    display: flex
+    flex-direction: column
+    gap: 0.5rem
+
+.filterLabel
+    font-size: 1.125rem
+    font-weight: 600
+    color: #475569
+
+.filterSelect
+    padding: 1rem 1.25rem
+    border: 2px solid #e2e8f0
+    border-radius: 12px
+    font-size: 1.125rem
+    font-weight: 500
+    color: #1e293b
+    background: #ffffff
+    cursor: pointer
+    transition: all 0.2s ease
+
+    &:hover
+        border-color: #cbd5e1
+
+    &:focus
+        outline: none
+        border-color: #667eea
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1)
+
+    &:disabled
+        background: #f1f5f9
+        cursor: not-allowed
+        opacity: 0.6
+
+.chartCard
+    background: #ffffff
+    border-radius: 16px
+    padding: 2.5rem
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+    border: 1px solid #e2e8f0
+
+.chartHeader
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: 2.5rem
+
+.chartTitle
+    font-size: 1.75rem
+    font-weight: 700
+    color: #1e293b
+    margin: 0
+
+.chartLegend
+    display: flex
+    gap: 1.5rem
+
+.legendItem
+    display: flex
+    align-items: center
+    gap: 0.5rem
+    font-size: 1rem
+    color: #64748b
+
+.legendDot
+    width: 12px
+    height: 12px
+    border-radius: 50%
+
+.chartWrapper
+    margin-bottom: 2rem
+
+.tooltip
+    background: #ffffff
+    border: 1px solid #e2e8f0
+    border-radius: 12px
+    padding: 0.75rem 1rem
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1)
+
+.tooltipLabel
+    font-size: 1rem
+    font-weight: 600
+    color: #1e293b
+    margin: 0 0 0.25rem 0
+
+.tooltipValue
+    display: flex
+    align-items: center
+    gap: 0.5rem
+    font-size: 1rem
+    color: #64748b
+    margin: 0
+
+.tooltipDot
+    width: 8px
+    height: 8px
+    border-radius: 50%
+
+.statsGrid
+    display: grid
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))
+    gap: 1rem
+
+.statCard
+    display: flex
+    align-items: center
+    gap: 1rem
+    padding: 1.25rem
+    background: #f8fafc
+    border-radius: 16px
+    transition: all 0.2s ease
+
+    &:hover
+        background: #f1f5f9
+        transform: translateY(-2px)
+
+.statIcon
+    width: 48px
+    height: 48px
+    border-radius: 12px
+    display: flex
+    align-items: center
+    justify-content: center
+
+    svg
+        width: 24px
+        height: 24px
+
+.statContent
+    flex: 1
+
+.statLabel
+    font-size: 1rem
+    color: #64748b
+    margin: 0 0 0.25rem 0
+
+.statValue
+    font-size: 1.875rem
+    font-weight: 700
+    color: #1e293b
+    margin: 0
+
+.loaderWrapper
+    display: flex
+    justify-content: center
+    align-items: center
+    min-height: 400px
+    background: #ffffff
+    border-radius: 16px
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+    border: 1px solid #e2e8f0
+
+.spinner
+    width: 48px
+    height: 48px
+    border: 4px solid #e2e8f0
+    border-top-color: #667eea
+    border-radius: 50%
+    animation: spin 0.8s linear infinite
+
+.emptyState
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    min-height: 400px
+    background: #ffffff
+    border-radius: 16px
+    padding: 3rem
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+    border: 1px solid #e2e8f0
+
+.emptyIcon
+    width: 64px
+    height: 64px
+    color: #cbd5e1
+    margin-bottom: 1rem
+
+.emptyText
+    font-size: 1.5rem
+    font-weight: 600
+    color: #475569
+    margin: 0 0 0.5rem 0
+
+.emptySubtext
+    font-size: 1rem
+    color: #94a3b8
+    margin: 0
+
+@keyframes spin
+    to
+        transform: rotate(360deg)
+
+@media (max-width: 768px)
+    .container
+        padding: 1rem
+
+    .title
+        font-size: 2rem
+
+    .filtersGrid
+        grid-template-columns: 1fr
+
+    .statsGrid
+        grid-template-columns: 1fr
+
+    .chartHeader
+        flex-direction: column
+        align-items: flex-start
+        gap: 1rem

@@ -90,5 +90,8 @@ export const applicationSystem = () => "applicationSystem"
 export const observeStatic = (id) => `observeStatic`
 export const getGroupRating = (id) => `groups/groupRating`
 
+export const getEducationQuality = () => `educationQuality`
+export const getEducationQualityDetails = () => `educationQuality/details`
+
 
 

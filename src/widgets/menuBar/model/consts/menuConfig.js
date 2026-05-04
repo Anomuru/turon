@@ -1,4 +1,4 @@
-import { ROLES } from "shared/const/roles";
+import {ROLES} from "shared/const/roles";
 import React from "react";
 
 export const menuConfig = [
@@ -32,6 +32,13 @@ export const menuConfig = [
         icon: "fa-chart-line",
         roles: [ROLES.director, ROLES.main_director, ROLES.programmer],
     },
+    {
+        to: "educationQuality",
+        name: "Ta'lim sifati",
+        icon: "fa-award",
+        roles: [ROLES.director]
+    },
+    // test
     {
         to: "financeDashboard",
         name: "Moliyaviy Dashboard",

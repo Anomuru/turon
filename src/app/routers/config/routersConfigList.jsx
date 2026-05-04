@@ -21,7 +21,9 @@ import {
     getRouteMain,
     getRouteRegister,
     getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews, getCapitalCategoryProfile, getCapitalInside,
-    getDashboard, getTeacherObservation, getLessonPlan, getObservationShowPage,
+    getDashboard, getTeacherObservation, getLessonPlan,
+    getEducationQuality, getEducationQualityDetails,
+    getObservationShowPage,
 
 } from "shared/const/routers";
 import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
@@ -59,6 +61,8 @@ const DirectorDashboardPage = lazyPage(() => import("pages/directorDashboardPage
 const TeacherObservationPage = lazyPage(() => import("pages/teacherObservationPage"), "TeacherObservationPage");
 const LessonPlanPage = lazyPage(() => import("pages/lessonPlanPage"), "LessonPlanPage");
 const FinanceDashboardPage = lazyPage(() => import("pages/financeDashboardPage"), "FinanceDashboardPage");
+const EducationQualityPage = lazyPage(() => import("pages/educationQualityPage"), "EducationQualityPage");
+const EducationQualityDetails = lazyPage(() => import("pages/educationQualityPage"), "EducationQualityDetails");
 const ObservationShowPage = lazyPage(() => import("pages/observationShowPage"), "ObservationShowPage");
 
 export const routersConfigList = [
@@ -238,35 +242,45 @@ export const routersConfigList = [
     {
         name: "O'qituvchini rivojlantirish",
         path: "development",
-        element: <TeachersDevelopmentPage />
+        element: <TeachersDevelopmentPage/>
     },
     {
         to: "capitalBox",
         name: "capitalInside",
         path: getCapitalInside(":id"),
-        element: <CapitalInside />
+        element: <CapitalInside/>
 
     },
     {
         to: "dashboard",
         name: "dashboard",
         path: getDashboard(),
-        element: <DirectorDashboardPage />
+        element: <DirectorDashboardPage/>
     },
     {
         name: "Teacher Observation",
         path: getTeacherObservation(),
-        element: <TeacherObservationPage />
+        element: <TeacherObservationPage/>
     },
     {
         name: "Dars Rejasi",
         path: getLessonPlan(),
-        element: <LessonPlanPage />
+        element: <LessonPlanPage/>
     },
     {
         name: "Moliyaviy Dashboard",
         path: "financeDashboard",
-        element: <FinanceDashboardPage />
+        element: <FinanceDashboardPage/>
+    },
+    {
+        name: "Ta'lim Sifati",
+        path: getEducationQuality(),
+        element: <EducationQualityPage/>
+    },
+    {
+        name: "Ta'lim Sifati - Batafsil",
+        path: getEducationQualityDetails(),
+        element: <EducationQualityDetails/>
     }
 
 ]
