@@ -355,6 +355,56 @@ $text-muted: #64748b;
   }
 }
 
+.headerRight {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.status {
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.statusAccepted {
+  background: rgba(16, 185, 129, 0.15);
+  color: $success;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.statusRejected {
+  background: rgba(239, 68, 68, 0.15);
+  color: $danger;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  &.statusAccepted {
+    background: rgba(16, 185, 129, 0.15);
+    color: $success;
+    border: 2px solid rgba(16, 185, 129, 0.3);
+  }
+
+  &.statusRejected {
+    background: rgba(239, 68, 68, 0.15);
+    color: $danger;
+    border: 2px solid rgba(239, 68, 68, 0.3);
+  }
+}
+
 .deadline {
   padding: 0.5rem 1rem;
   border-radius: 8px;
