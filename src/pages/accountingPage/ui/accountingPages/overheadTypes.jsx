@@ -34,11 +34,6 @@ const STATUS_OPTIONS = [
     { id: "unpaid", name: "To'lanmagan" },
 ];
 
-const DIRECTION_OPTIONS = [
-    { id: "all", name: "Hammasi" },
-    { id: "give", name: "Berildi" },
-    { id: "receive", name: "Olindi" },
-];
 
 const LOAN_DIRECTION_OPTIONS = [
     { id: "all", name: "Hammasi" },
@@ -68,15 +63,69 @@ const TypesTab = () => {
     const [types, setTypes] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
+    const [editModal, setEditModal] = useState(false);
+    const [editTarget, setEditTarget] = useState(null);
+    const [editForm, setEditForm] = useState({ name: "", cost: "", changeable: false, order: "" });
+    const [submitting, setSubmitting] = useState(false);
+    const [formError, setFormError] = useState(null);
+
+    const loadTypes = () => {
         if (!branchId) return;
         setLoading(true);
         request(`${API_URL}Overhead/overheads_type/?branch_id=${branchId}`, "GET", null, headers())
             .then((res) => setTypes(res?.data ?? (Array.isArray(res) ? res : [])))
             .catch(() => { })
             .finally(() => setLoading(false));
+    };
+
+    useEffect(() => {
+        loadTypes();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [branchId]);
+
+    const openEdit = (item) => {
+        setEditTarget(item);
+        setEditForm({
+            name: item.name || "",
+            cost: String(item.cost || ""),
+            changeable: item.changeable ?? false,
+            order: String(item.order || ""),
+        });
+        setFormError(null);
+        setEditModal(true);
+    };
+
+    const closeEdit = () => {
+        setEditModal(false);
+        setEditTarget(null);
+        setFormError(null);
+    };
+
+    const handleSubmit = () => {
+        if (!editForm.name.trim()) { setFormError("Nomni kiriting"); return; }
+        if (!editForm.changeable && (editForm.cost === "" || Number(editForm.cost) < 0)) { setFormError("To'g'ri narx kiriting"); return; }
+
+        setSubmitting(true);
+        setFormError(null);
+        request(
+            `${API_URL}Overhead/overheads_type/${editTarget.id}/`,
+            "PATCH",
+            JSON.stringify({
+                name: editForm.name.trim(),
+                cost: Number(editForm.cost),
+                changeable: editForm.changeable,
+                order: Number(editForm.order) || 0,
+                branch_id: branchId,
+            }),
+            headers()
+        )
+            .then((res) => {
+                if (res?.id || res?.success || res?.name) { closeEdit(); loadTypes(); }
+                else setFormError(res?.message || "Xatolik yuz berdi");
+            })
+            .catch(() => setFormError("Serverga ulanib bo'lmadi"))
+            .finally(() => setSubmitting(false));
+    };
 
     const columns = [
         { label: "No", sortKey: null },
@@ -84,6 +133,7 @@ const TypesTab = () => {
         { label: "Narxi", sortKey: "cost" },
         { label: "O'zgartiriladi", sortKey: null },
         { label: "Tartib", sortKey: "order" },
+        { label: "", sortKey: null },
     ];
 
     const renderRow = (item, idx) => (
@@ -97,10 +147,63 @@ const TypesTab = () => {
                 </span>
             </td>
             <td>{item.order}</td>
+            <td>
+                <i
+                    onClick={() => openEdit(item)}
+                    style={{ color: "#6b7280", fontSize: "1.4rem", cursor: "pointer" }}
+                    className="fa fa-pen"
+                />
+            </td>
         </tr>
     );
 
-    return <UniversalTable data={types} loading={loading} columns={columns} renderRow={renderRow} onSort={true} />;
+    return (
+        <>
+            <UniversalTable data={types} loading={loading} columns={columns} renderRow={renderRow} onSort={true} />
+
+            <Modal active={editModal} setActive={closeEdit}>
+                <div style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.4rem", minWidth: 340 }}>
+                    <h3 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0 }}>Xarajat turini tahrirlash</h3>
+
+                    <Input
+                        type="text"
+                        title="Nomi *"
+                        value={editForm.name}
+                        onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))}
+                    />
+                    {!editForm.changeable && (
+                        <Input
+                            type="number"
+                            title="Narxi *"
+                            value={editForm.cost}
+                            onChange={(e) => setEditForm((f) => ({ ...f, cost: e.target.value }))}
+                        />
+                    )}
+                    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <input
+                            id="changeable-check"
+                            type="checkbox"
+                            checked={editForm.changeable}
+                            onChange={(e) => setEditForm((f) => ({ ...f, changeable: e.target.checked }))}
+                            style={{ width: "1.6rem", height: "1.6rem", cursor: "pointer" }}
+                        />
+                        <label htmlFor="changeable-check" style={{ fontSize: "1.4rem", cursor: "pointer" }}>
+                            O'zgartiriladi
+                        </label>
+                    </div>
+
+                    {formError && <span style={{ color: "#ef4444", fontSize: "1.3rem" }}>{formError}</span>}
+
+                    <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
+                        <Button type="filter" onClick={closeEdit} disabled={submitting}>Bekor</Button>
+                        <Button type="success" onClick={handleSubmit} disabled={submitting}>
+                            {submitting ? "Saqlanmoqda..." : "Saqlash"}
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
+        </>
+    );
 };
 
 // ── LogsTab ───────────────────────────────────────────────────────────────────
@@ -295,325 +398,6 @@ const LogsTab = () => {
     );
 };
 
-// ── TransactionsTab ───────────────────────────────────────────────────────────
-
-const TransactionsTab = () => {
-    const { request } = useHttp();
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const branchId = useSelector(getUserBranchId);
-    const paymentTypes = useSelector(getCapitalTypes);
-
-    const [month, setMonth] = useState(now.getMonth() + 1);
-    const [year, setYear] = useState(now.getFullYear());
-    const [direction, setDirection] = useState("all");
-    const [showDeleted, setShowDeleted] = useState(false);
-
-    const [summary, setSummary] = useState(null);
-    const [transactions, setTransactions] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    const [formModal, setFormModal] = useState(false);
-    const [editTarget, setEditTarget] = useState(null);
-    const [formData, setFormData] = useState({
-        person_name: "",
-        amount: "", is_give: "true", reason: "",
-        payment_type_id: "", date: now.toISOString().slice(0, 10),
-    });
-    const [submitting, setSubmitting] = useState(false);
-    const [formError, setFormError] = useState(null);
-
-    const [deleteTarget, setDeleteTarget] = useState(null);
-    const [deleting, setDeleting] = useState(false);
-    const [deleteError, setDeleteError] = useState(null);
-
-    useEffect(() => {
-        dispatch(getPaymentType());
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const loadData = useCallback(() => {
-        if (!branchId || !month || !year) return;
-        setLoading(true);
-        setError(null);
-        setSummary(null);
-        const params = new URLSearchParams({ branch_id: branchId });
-        const url = showDeleted
-            ? `${API_URL}Branch/branch_transaction/deleted/${month}/${year}/?${params}`
-            : (() => { if (direction !== "all") params.set("direction", direction); return `${API_URL}Branch/branch_transaction/${month}/${year}/?${params}`; })();
-        request(url, "GET", null, headers())
-            .then((res) => {
-                if (res?.success) {
-                    setSummary(res.summary ?? null);
-                    setTransactions(Array.isArray(res.data) ? res.data : []);
-                } else {
-                    setError("Ma'lumotlarni yuklashda xatolik");
-                }
-            })
-            .catch(() => setError("Serverga ulanib bo'lmadi"))
-            .finally(() => setLoading(false));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [branchId, month, year, direction, showDeleted]);
-
-    useEffect(() => { loadData(); }, [loadData]);
-
-    const emptyForm = () => ({
-        person_name: "",
-        amount: "", is_give: "true", reason: "",
-        payment_type_id: paymentTypes?.[0]?.id ? String(paymentTypes[0].id) : "",
-        date: new Date().toISOString().slice(0, 10),
-    });
-
-    const closeFormModal = () => {
-        setFormModal(false);
-        setEditTarget(null);
-        setFormData(emptyForm());
-        setFormError(null);
-    };
-
-    const openCreate = () => {
-        setEditTarget(null);
-        setFormData(emptyForm());
-        setFormError(null);
-        setFormModal(true);
-    };
-
-    const openEdit = (tx) => {
-        setEditTarget(tx);
-        setFormData({
-            person_name: [tx.person?.name, tx.person?.surname].filter(Boolean).join(" "),
-            amount: String(tx.amount),
-            is_give: String(tx.is_give),
-            reason: tx.reason || "",
-            payment_type_id: String(tx.payment_type?.id || ""),
-            date: tx.date || new Date().toISOString().slice(0, 10),
-        });
-        setFormError(null);
-        setFormModal(true);
-    };
-
-    const handleSubmit = () => {
-        if (!formData.person_name.trim()) { setFormError("Ism va familiyani kiriting"); return; }
-        if (Number(formData.amount) <= 0) { setFormError("To'g'ri summa kiriting"); return; }
-        if (!formData.reason.trim()) { setFormError("Sababni kiriting"); return; }
-        if (!formData.payment_type_id) { setFormError("To'lov turini tanlang"); return; }
-
-        const body = {
-            amount: Number(formData.amount),
-            is_give: formData.is_give === "true",
-            reason: formData.reason.trim(),
-            payment_type_id: Number(formData.payment_type_id),
-            branch_id: branchId,
-            date: formData.date,
-            person_name: formData.person_name.trim(),
-        };
-
-        setSubmitting(true);
-        setFormError(null);
-
-        const url = editTarget
-            ? `${API_URL}Branch/branch_transaction/${editTarget.id}/update/`
-            : `${API_URL}Branch/branch_transaction/`;
-        const method = editTarget ? "PUT" : "POST";
-
-        request(url, method, JSON.stringify(body), headers())
-            .then((res) => {
-                if (res?.success) { closeFormModal(); loadData(); }
-                else setFormError(res?.message || "Xatolik yuz berdi");
-            })
-            .catch(() => setFormError("Serverga ulanib bo'lmadi"))
-            .finally(() => setSubmitting(false));
-    };
-
-    const handleDelete = () => {
-        if (!deleteTarget) return;
-        setDeleting(true);
-        setDeleteError(null);
-        request(
-            `${API_URL}Branch/branch_transaction/${deleteTarget.id}/delete/`,
-            "DELETE", null, headers()
-        )
-            .then((res) => {
-                if (res?.success) { setDeleteTarget(null); loadData(); }
-                else setDeleteError(res?.message || "O'chirishda xatolik");
-            })
-            .catch(() => setDeleteError("Serverga ulanib bo'lmadi"))
-            .finally(() => setDeleting(false));
-    };
-
-    const personLabel = (person) => {
-        if (!person) return "—";
-        const full = [person.name, person.surname].filter(Boolean).join(" ");
-        return full || "—";
-    };
-
-    const handleRowClick = (tx) => {
-        if (tx.id) {
-            navigate(`/platform/accounting/loanProfile/${tx.id}`);
-        }
-    };
-
-    return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-            <div className={cls.filters}>
-                <Select options={MONTHS} defaultValue={month} onChangeOption={(v) => setMonth(Number(v))} titleOption="Oy" />
-                <Select options={YEARS} defaultValue={year} onChangeOption={(v) => setYear(Number(v))} titleOption="Yil" />
-                {!showDeleted && (
-                    <Select options={DIRECTION_OPTIONS} defaultValue={direction} onChangeOption={setDirection} titleOption="Yo'nalish" />
-                )}
-                <div className={cls.filterActions}>
-                    <button
-                        className={`${cls.deletedToggle} ${showDeleted ? cls.deletedToggleActive : ""}`}
-                        onClick={() => setShowDeleted((v) => !v)}
-                    >
-                        <i className="fa fa-trash" style={{ marginRight: "0.5rem" }} />
-                        O'chirilganlar
-                    </button>
-                    {!showDeleted && (
-                        <Button type="success" onClick={openCreate}>+ Qo'shish</Button>
-                    )}
-                </div>
-            </div>
-
-            {summary && (
-                <div className={cls.cards}>
-                    <div className={cls.card}>
-                        <div className={cls.cardHeader}>Berildi <span>📤</span></div>
-                        <div className={cls.cardAmount} style={{ color: "#dc2626" }}>{fmt(summary.total_given)} UZS</div>
-                    </div>
-                    <div className={cls.card}>
-                        <div className={cls.cardHeader}>Olindi <span>📥</span></div>
-                        <div className={cls.cardAmount} style={{ color: "#16a34a" }}>{fmt(summary.total_received)} UZS</div>
-                    </div>
-                    <div className={cls.card}>
-                        <div className={cls.cardHeader}>Saldo <span>📊</span></div>
-                        <div className={cls.cardAmount} style={{ color: summary.net >= 0 ? "#16a34a" : "#dc2626" }}>
-                            {summary.net >= 0 ? "+" : ""}{fmt(summary.net)} UZS
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {error && <p className={cls.error}>{error}</p>}
-
-            <UniversalTable
-                data={transactions}
-                loading={loading}
-                columns={[
-                    { label: "No", sortKey: null },
-                    { label: "Shaxs", sortKey: "person" },
-                    { label: "Sabab", sortKey: "reason" },
-                    { label: "Summa", sortKey: "amount" },
-                    { label: "Yo'nalish", sortKey: "direction" },
-                    { label: "To'lov turi", sortKey: null },
-                    { label: "Sana", sortKey: "date" },
-                    { label: "", sortKey: null },
-                ]}
-                renderRow={(tx, idx) => (
-                    <tr key={tx.id} onClick={() => handleRowClick(tx)} style={{ cursor: "pointer" }}>
-                        <td>{idx + 1}</td>
-                        <td>{personLabel(tx.person)}</td>
-                        <td>{tx.reason || "—"}</td>
-                        <td>{fmt(tx.amount)} UZS</td>
-                        <td>
-                            <span className={cls.badge}>
-                                {tx.direction === "give" ? "Berildi" : "Olindi"}
-                            </span>
-                        </td>
-                        <td>
-                            <span className={cls.paymentType}>
-                                {tx.payment_type?.name || "—"}
-                            </span>
-                        </td>
-                        <td>{tx.date || "—"}</td>
-                        <td>
-                            {showDeleted ? (
-                                <span style={{ color: "#6b7280" }}>O'chirilgan</span>
-                            ) : (
-                                <div style={{ display: "flex", gap: "1rem" }}>
-                                    <i
-                                        onClick={(e) => { e.stopPropagation(); openEdit(tx); }}
-                                        style={{ color: "#6b7280", fontSize: "1.6rem", cursor: "pointer" }}
-                                        className="fa fa-pen"
-                                    />
-                                    <i
-                                        onClick={(e) => { e.stopPropagation(); setDeleteTarget(tx); }}
-                                        style={{ color: "red", fontSize: "1.6rem", cursor: "pointer" }}
-                                        className="fa fa-trash"
-                                    />
-                                </div>
-                            )}
-                        </td>
-                    </tr>
-                )}
-                onSort={true}
-            />
-
-            <Modal active={formModal} setActive={closeFormModal}>
-                <div style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem", minWidth: 360 }}>
-                    <h3 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0 }}>
-                        {editTarget ? "Tranzaksiyani tahrirlash" : "Yangi tranzaksiya"}
-                    </h3>
-
-                    <Input type="text" title="Ism va familiya *" value={formData.person_name}
-                        onChange={(e) => setFormData((f) => ({ ...f, person_name: e.target.value }))} />
-
-                    <Select
-                        options={IS_GIVE_OPTIONS}
-                        defaultValue={formData.is_give}
-                        onChangeOption={(v) => setFormData((f) => ({ ...f, is_give: v }))}
-                        titleOption="Yo'nalish *"
-                        extraClass={cls.selectFull}
-                    />
-
-                    <Input type="number" title="Summa *" value={formData.amount}
-                        onChange={(e) => setFormData((f) => ({ ...f, amount: e.target.value }))} />
-
-                    <Input type="text" title="Sabab *" value={formData.reason}
-                        onChange={(e) => setFormData((f) => ({ ...f, reason: e.target.value }))} />
-
-                    <Select
-                        options={paymentTypes?.map((pt) => ({ id: String(pt.id), name: pt.name })) ?? []}
-                        defaultValue={formData.payment_type_id}
-                        onChangeOption={(v) => setFormData((f) => ({ ...f, payment_type_id: v }))}
-                        titleOption="To'lov turi *"
-                        extraClass={cls.selectFull}
-                    />
-
-                    <Input type="date" title="Sana *" value={formData.date}
-                        onChange={(e) => setFormData((f) => ({ ...f, date: e.target.value }))} />
-
-                    {formError && <span style={{ color: "#ef4444", fontSize: "1.3rem" }}>{formError}</span>}
-
-                    <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
-                        <Button type="filter" onClick={closeFormModal} disabled={submitting}>Bekor</Button>
-                        <Button type="success" onClick={handleSubmit} disabled={submitting}>
-                            {submitting ? "Yuborilmoqda..." : (editTarget ? "Saqlash" : "Qo'shish")}
-                        </Button>
-                    </div>
-                </div>
-            </Modal>
-
-            <Modal active={!!deleteTarget} setActive={() => { setDeleteTarget(null); setDeleteError(null); }}>
-                <div style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.5rem", minWidth: 300 }}>
-                    <h3 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0 }}>O'chirishni tasdiqlang</h3>
-                    <p style={{ fontSize: "1.4rem", color: "#374151", margin: 0 }}>
-                        Bu tranzaksiya o'chirilsinmi?
-                    </p>
-                    {deleteError && <span style={{ color: "#ef4444", fontSize: "1.3rem" }}>{deleteError}</span>}
-                    <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end" }}>
-                        <Button type="filter" onClick={() => { setDeleteTarget(null); setDeleteError(null); }} disabled={deleting}>Bekor</Button>
-                        <button className={cls.btnDanger} onClick={handleDelete} disabled={deleting}>
-                            {deleting ? "O'chirilmoqda..." : "O'chirish"}
-                        </button>
-                    </div>
-                </div>
-            </Modal>
-        </div>
-    );
-};
-
 // ── Helper functions for loans ───────────────────────────────────────────────
 
 const fmtShort = (n) => {
@@ -667,7 +451,7 @@ const OutstandingGroup = ({ item, expanded, onToggle, onLoanClick, fmtShort, ini
                             {item.counterparty.name} {item.counterparty.surname}
                         </div>
                         <div style={{ fontSize: "1.1rem", color: "#bbb" }}>
-                            {loans.length} ta qarz
+                            {loans.length} ta tranzaksiya
                         </div>
                     </div>
                 </div>
@@ -1017,7 +801,7 @@ const LoansTab = () => {
                         className={`${cls.viewToggle} ${activeView === "outstanding" ? cls.viewToggleActive : ""}`}
                         onClick={() => setActiveView("outstanding")}
                     >
-                        Faol qarzlar
+                        Faol tranzaksiyalar
                     </button>
                 </div>
 
@@ -1050,7 +834,7 @@ const LoansTab = () => {
                     )}
 
                     <div style={{ marginLeft: "auto" }}>
-                        <Button type="success" onClick={openCreateModal}>+ Qarz qo'shish</Button>
+                        <Button type="success" onClick={openCreateModal}>+ Tranzaksiya qo'shish</Button>
                     </div>
                 </div>
             </div>
@@ -1205,7 +989,7 @@ const LoansTab = () => {
             {!loading && activeView === "outstanding" && (
                 <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
                     {(!outstanding || outstanding.length === 0) ? (
-                        <p className={cls.empty}>Faol qarzlar topilmadi</p>
+                        <p className={cls.empty}>Faol tranzaksiyalar topilmadi</p>
                     ) : outstanding.map((item) => {
                         const groupKey = `${item.counterparty.id}-${item.direction}`;
                         const pct = item.loaned_total > 0 ? Math.round((item.paid_total / item.loaned_total) * 100) : 0;
@@ -1228,7 +1012,7 @@ const LoansTab = () => {
 
             <Modal active={createModal} setActive={closeCreateModal}>
                 <div style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "0.5rem", minWidth: 360 }}>
-                    <h3 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0 }}>Yangi qarz</h3>
+                    <h3 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0 }}>Yangi tranzaksiya</h3>
 
                     <Input
                         type="text"
@@ -1317,8 +1101,7 @@ const LoansTab = () => {
 const TABS = [
     { id: "types", label: "Xarajat turlari" },
     { id: "logs", label: "Oylik xarajatlar" },
-    { id: "transactions", label: "Filial tranzaksiyalari" },
-    { id: "loans", label: "Qarzlar" },
+    { id: "loans", label: "Tranzaksiyalar" },
 ];
 
 // ── Main component ────────────────────────────────────────────────────────────
@@ -1354,7 +1137,6 @@ export const OverheadTypes = () => {
             <div className={cls.tabContent}>
                 {activeTab === "types" && <TypesTab />}
                 {activeTab === "logs" && <LogsTab />}
-                {activeTab === "transactions" && <TransactionsTab />}
                 {activeTab === "loans" && <LoansTab />}
             </div>
         </div>

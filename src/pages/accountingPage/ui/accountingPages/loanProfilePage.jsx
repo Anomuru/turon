@@ -14,6 +14,8 @@ import {
     getLoanProfileRepaying,
     getLoanProfileCancelling,
 } from "entities/loanProfile";
+import { API_URL, headers, useHttp } from "shared/api/base";
+import { getUserBranchId } from "entities/profile/userProfile";
 import cls from "./loanProfile.module.sass";
 
 const fmt = (n) => {
@@ -90,6 +92,7 @@ export const LoanProfilePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { request } = useHttp();
 
     const loan = useSelector(getLoanProfile);
     const loading = useSelector(getLoanProfileLoading);
@@ -97,12 +100,30 @@ export const LoanProfilePage = () => {
     const updating = useSelector(getLoanProfileUpdating);
     const repaying = useSelector(getLoanProfileRepaying);
     const cancelling = useSelector(getLoanProfileCancelling);
+    const branchId = useSelector(getUserBranchId);
+    const [paymentTypes, setPaymentTypes] = useState([]);
 
     const [modal, setModal] = useState(null);
-    const [repayForm, setRepayForm] = useState({ amount: "", date: "", payment_type_id: 1 });
+    const [repayForm, setRepayForm] = useState({ amount: "", date: "", payment_type_id: "" });
     const [editForm, setEditForm] = useState({ due_date: "", reason: "", notes: "" });
     const [cancelForm, setCancelForm] = useState({ cancelled_reason: "" });
     const [formError, setFormError] = useState("");
+
+    // Transaction edit/delete states
+    const [editTransactionModal, setEditTransactionModal] = useState(false);
+    const [deleteTransactionModal, setDeleteTransactionModal] = useState(false);
+    const [selectedTransaction, setSelectedTransaction] = useState(null);
+    const [transactionForm, setTransactionForm] = useState({
+        person_name: "",
+        amount: "",
+        is_give: "true",
+        reason: "",
+        payment_type_id: "",
+        date: "",
+    });
+    const [transactionSubmitting, setTransactionSubmitting] = useState(false);
+    const [transactionDeleting, setTransactionDeleting] = useState(false);
+    const [transactionError, setTransactionError] = useState("");
 
     useEffect(() => {
         if (id) {
@@ -114,6 +135,15 @@ export const LoanProfilePage = () => {
     }, [dispatch, id]);
 
     useEffect(() => {
+        request(`${API_URL}Payments/payment-types/`, "GET", null, headers())
+            .then((res) => {
+                if (Array.isArray(res)) setPaymentTypes(res);
+            })
+            .catch(() => {});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
         if (loan && modal === "edit") {
             setEditForm({
                 due_date: loan.due_date || "",
@@ -122,6 +152,125 @@ export const LoanProfilePage = () => {
             });
         }
     }, [loan, modal]);
+
+    const openEditTransaction = (tx) => {
+        setSelectedTransaction(tx);
+        setTransactionForm({
+            person_name: [tx.person?.name, tx.person?.surname].filter(Boolean).join(" "),
+            amount: String(tx.amount),
+            is_give: String(tx.is_give),
+            reason: tx.reason || "",
+            payment_type_id: String(tx.payment_type?.id || ""),
+            date: tx.date || new Date().toISOString().slice(0, 10),
+        });
+        setTransactionError("");
+        setEditTransactionModal(true);
+    };
+
+    const closeEditTransactionModal = () => {
+        setEditTransactionModal(false);
+        setSelectedTransaction(null);
+        setTransactionForm({
+            person_name: "",
+            amount: "",
+            is_give: "true",
+            reason: "",
+            payment_type_id: "",
+            date: "",
+        });
+        setTransactionError("");
+    };
+
+    const handleEditTransaction = async () => {
+        if (!transactionForm.person_name.trim()) {
+            setTransactionError("Ism va familiyani kiriting");
+            return;
+        }
+        if (Number(transactionForm.amount) <= 0) {
+            setTransactionError("To'g'ri summa kiriting");
+            return;
+        }
+        if (!transactionForm.reason.trim()) {
+            setTransactionError("Sababni kiriting");
+            return;
+        }
+        if (!transactionForm.payment_type_id) {
+            setTransactionError("To'lov turini tanlang");
+            return;
+        }
+
+        const body = {
+            amount: Number(transactionForm.amount),
+            is_give: transactionForm.is_give === "true",
+            reason: transactionForm.reason.trim(),
+            payment_type_id: Number(transactionForm.payment_type_id),
+            branch_id: branchId,
+            date: transactionForm.date,
+            person_name: transactionForm.person_name.trim(),
+        };
+
+        setTransactionSubmitting(true);
+        setTransactionError("");
+
+        try {
+            const res = await request(
+                `${API_URL}Branch/branch_transaction/${selectedTransaction.id}/update/`,
+                "PUT",
+                JSON.stringify(body),
+                headers()
+            );
+
+            if (res?.success) {
+                closeEditTransactionModal();
+                dispatch(fetchLoanProfile(id));
+            } else {
+                setTransactionError(res?.message || "Xatolik yuz berdi");
+            }
+        } catch (err) {
+            setTransactionError("Serverga ulanib bo'lmadi");
+        } finally {
+            setTransactionSubmitting(false);
+        }
+    };
+
+    const openDeleteTransaction = (tx) => {
+        setSelectedTransaction(tx);
+        setTransactionError("");
+        setDeleteTransactionModal(true);
+    };
+
+    const closeDeleteTransactionModal = () => {
+        setDeleteTransactionModal(false);
+        setSelectedTransaction(null);
+        setTransactionError("");
+    };
+
+    const handleDeleteTransaction = async () => {
+        if (!selectedTransaction) return;
+
+        setTransactionDeleting(true);
+        setTransactionError("");
+
+        try {
+            const res = await request(
+                `${API_URL}Branch/branch_transaction/${selectedTransaction.id}/delete/`,
+                "DELETE",
+                null,
+                headers()
+            );
+
+            if (res?.success) {
+                closeDeleteTransactionModal();
+                dispatch(fetchLoanProfile(id));
+            } else {
+                setTransactionError(res?.message || "O'chirishda xatolik");
+            }
+        } catch (err) {
+            setTransactionError("Serverga ulanib bo'lmadi");
+        } finally {
+            setTransactionDeleting(false);
+        }
+    };
 
     const handleRepaySubmit = async (e) => {
         e.preventDefault();
@@ -140,13 +289,17 @@ export const LoanProfilePage = () => {
             setFormError("Sana kiritilishi shart");
             return;
         }
+        if (!repayForm.payment_type_id) {
+            setFormError("To'lov turini tanlang");
+            return;
+        }
 
         const result = await dispatch(
             repayLoan({
                 loanId: loan.id,
                 data: {
                     amount,
-                    payment_type_id: repayForm.payment_type_id,
+                    payment_type_id: Number(repayForm.payment_type_id),
                     date: repayForm.date,
                 }
             })
@@ -154,7 +307,7 @@ export const LoanProfilePage = () => {
 
         if (result.type.endsWith("/fulfilled")) {
             setModal(null);
-            setRepayForm({ amount: "", date: "", payment_type_id: 1 });
+            setRepayForm({ amount: "", date: "", payment_type_id: "" });
             dispatch(fetchLoanProfile(id));
         }
     };
@@ -355,6 +508,20 @@ export const LoanProfilePage = () => {
                                     <div className={cls.paymentAmount} style={{ color: tx.direction === "give" ? "#e74c3c" : "#3b6ef0" }}>
                                         {tx.direction === "give" ? "-" : "+"}{fmt(tx.amount)} so'm
                                     </div>
+                                    <div className={cls.paymentActions}>
+                                        <i
+                                            onClick={(e) => { e.stopPropagation(); openEditTransaction(tx); }}
+                                            style={{ color: "#6b7280", fontSize: "1.4rem", cursor: "pointer", marginRight: "0.8rem" }}
+                                            className="fa fa-pen"
+                                            title="Tahrirlash"
+                                        />
+                                        <i
+                                            onClick={(e) => { e.stopPropagation(); openDeleteTransaction(tx); }}
+                                            style={{ color: "#e74c3c", fontSize: "1.4rem", cursor: "pointer" }}
+                                            className="fa fa-trash"
+                                            title="O'chirish"
+                                        />
+                                    </div>
                                 </div>
                             ))
                         )}
@@ -396,9 +563,10 @@ export const LoanProfilePage = () => {
                                         setRepayForm({ ...repayForm, payment_type_id: Number(e.target.value) })
                                     }
                                 >
-                                    <option value={1}>Naqd</option>
-                                    <option value={2}>Bank o'tkazma</option>
-                                    <option value={3}>Karta</option>
+                                    <option value="">Tanlang</option>
+                                    {paymentTypes?.map((pt) => (
+                                        <option key={pt.id} value={pt.id}>{pt.name}</option>
+                                    ))}
                                 </select>
                             </div>
                             {formError && <div className={cls.modalError}>{formError}</div>}
@@ -503,6 +671,127 @@ export const LoanProfilePage = () => {
                                 </button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Transaction Modal */}
+            {editTransactionModal && (
+                <div className={cls.modalOverlay} onClick={closeEditTransactionModal}>
+                    <div className={cls.modal} onClick={(e) => e.stopPropagation()}>
+                        <h3 className={cls.modalTitle}>Tranzaksiyani tahrirlash</h3>
+                        <div className={cls.modalField}>
+                            <label className={cls.modalLabel}>Ism va familiya *</label>
+                            <input
+                                type="text"
+                                className={cls.modalInput}
+                                value={transactionForm.person_name}
+                                onChange={(e) => setTransactionForm({ ...transactionForm, person_name: e.target.value })}
+                            />
+                        </div>
+                        <div className={cls.modalField}>
+                            <label className={cls.modalLabel}>Yo'nalish *</label>
+                            <select
+                                className={cls.modalInput}
+                                value={transactionForm.is_give}
+                                onChange={(e) => setTransactionForm({ ...transactionForm, is_give: e.target.value })}
+                            >
+                                <option value="true">Berildi</option>
+                                <option value="false">Olindi</option>
+                            </select>
+                        </div>
+                        <div className={cls.modalField}>
+                            <label className={cls.modalLabel}>Summa *</label>
+                            <input
+                                type="number"
+                                className={cls.modalInput}
+                                value={transactionForm.amount}
+                                onChange={(e) => setTransactionForm({ ...transactionForm, amount: e.target.value })}
+                            />
+                        </div>
+                        <div className={cls.modalField}>
+                            <label className={cls.modalLabel}>Sabab *</label>
+                            <input
+                                type="text"
+                                className={cls.modalInput}
+                                value={transactionForm.reason}
+                                onChange={(e) => setTransactionForm({ ...transactionForm, reason: e.target.value })}
+                            />
+                        </div>
+                        <div className={cls.modalField}>
+                            <label className={cls.modalLabel}>To'lov turi *</label>
+                            <select
+                                className={cls.modalInput}
+                                value={transactionForm.payment_type_id}
+                                onChange={(e) => setTransactionForm({ ...transactionForm, payment_type_id: e.target.value })}
+                            >
+                                <option value="">Tanlang</option>
+                                {paymentTypes?.map((pt) => (
+                                    <option key={pt.id} value={String(pt.id)}>
+                                        {pt.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className={cls.modalField}>
+                            <label className={cls.modalLabel}>Sana *</label>
+                            <input
+                                type="date"
+                                className={cls.modalInput}
+                                value={transactionForm.date}
+                                onChange={(e) => setTransactionForm({ ...transactionForm, date: e.target.value })}
+                            />
+                        </div>
+                        {transactionError && <div className={cls.modalError}>{transactionError}</div>}
+                        <div className={cls.modalActions}>
+                            <button
+                                type="button"
+                                className={cls.btnPrimary}
+                                onClick={handleEditTransaction}
+                                disabled={transactionSubmitting}
+                            >
+                                {transactionSubmitting ? "Yuklanmoqda..." : "Saqlash"}
+                            </button>
+                            <button
+                                type="button"
+                                className={cls.btnSecondary}
+                                onClick={closeEditTransactionModal}
+                                disabled={transactionSubmitting}
+                            >
+                                Bekor qilish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Transaction Modal */}
+            {deleteTransactionModal && (
+                <div className={cls.modalOverlay} onClick={closeDeleteTransactionModal}>
+                    <div className={cls.modal} onClick={(e) => e.stopPropagation()}>
+                        <h3 className={cls.modalTitle}>O'chirishni tasdiqlang</h3>
+                        <p style={{ fontSize: "1.4rem", color: "#374151", margin: "1rem 0" }}>
+                            Bu tranzaksiya o'chirilsinmi?
+                        </p>
+                        {transactionError && <div className={cls.modalError}>{transactionError}</div>}
+                        <div className={cls.modalActions}>
+                            <button
+                                type="button"
+                                className={cls.btnDanger}
+                                onClick={handleDeleteTransaction}
+                                disabled={transactionDeleting}
+                            >
+                                {transactionDeleting ? "O'chirilmoqda..." : "O'chirish"}
+                            </button>
+                            <button
+                                type="button"
+                                className={cls.btnSecondary}
+                                onClick={closeDeleteTransactionModal}
+                                disabled={transactionDeleting}
+                            >
+                                Bekor
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

@@ -394,6 +394,16 @@ $shadow-modal: 0 16px 56px rgba(0, 0, 0, 0.16)
   font-weight: 700
   color: $accent-hex
 
+.paymentActions
+  display: flex
+  align-items: center
+  gap: 0.8rem
+  opacity: 0
+  transition: opacity 0.2s
+
+  .paymentItem:hover &
+    opacity: 1
+
 // Skeleton Loading
 @keyframes shimmer
   0%
