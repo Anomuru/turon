@@ -1512,7 +1512,7 @@ export const TodoistPage = () => {
                                                         <div className={styles.nestedItem__header}>
                                                             <div className={styles.info}>
                                                                 <p className={styles.btns__title}>{com.created_at}</p>
-                                                                {com.user.id === userId || com.user === userId ? (
+                                                                {com.user?.id === userId || com.user === userId ? (
                                                                     <div className={classNames(styles.nestedActions, styles.btns)}>
                                                                         <button
                                                                             className={styles.btnSmallEdit}
@@ -1528,7 +1528,7 @@ export const TodoistPage = () => {
                                                                         </button>
                                                                     </div>
                                                                 ) : (
-                                                                    <p className={styles.btns__title}>{com.user.full_name}</p>
+                                                                    <p className={styles.btns__title}>{com.user?.full_name}</p>
                                                                 )}
                                                             </div>
                                                             <div>
