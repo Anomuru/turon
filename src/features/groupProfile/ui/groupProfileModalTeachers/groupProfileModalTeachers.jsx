@@ -35,6 +35,7 @@ export const GroupProfileModalTeachers = memo(({ branch }) => {
     const profileData = useSelector(getGroupProfileData)
     const centerTeachers = useSelector(getGroupProfileFilteredTeachers)
     const schoolTeachers = useSelector(getTeachers)
+    const usedRole = localStorage.getItem("userRole")
 
     useEffect(() => {
         if (branch)
@@ -129,7 +130,7 @@ export const GroupProfileModalTeachers = memo(({ branch }) => {
 
     return (
         <>
-            <EditableCard
+            {usedRole === "teacher" ? null : <EditableCard
                 extraClass={cls.teacher}
                 // titleType={"beetwean"}
                 title={<i className="fas fa-edit" />}
@@ -163,7 +164,8 @@ export const GroupProfileModalTeachers = memo(({ branch }) => {
                     }
 
                 </div>
-            </EditableCard>
+            </EditableCard>}
+
             <Modal
                 active={active}
                 setActive={setActive}

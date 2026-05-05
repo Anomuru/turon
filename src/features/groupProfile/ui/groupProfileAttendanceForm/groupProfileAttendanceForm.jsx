@@ -57,6 +57,7 @@ export const GroupProfileAttendanceForm = memo(
 
         const [status, setStatus] = useState(true);
         const [absentStudents, setAbsentStudents] = useState({});
+        const usedRole = localStorage.getItem("userRole")
 
         const today = new Date();
         const todayDay = today.getDate();
@@ -453,8 +454,7 @@ export const GroupProfileAttendanceForm = memo(
 
         return (
             <>
-
-                <EditableCard extraClass={cls.attendance} onClick={() => setAttendance(!attendance)}>
+                {usedRole === "teacher" ? <EditableCard extraClass={cls.attendance} >
                     <div className={cls.attendance__header}>
                         <h1>Davomat</h1>
                         <Select
@@ -511,45 +511,45 @@ export const GroupProfileAttendanceForm = memo(
                                                 (absentStudents && +absentStudents.date === +day) ||
                                                 !!statusDay.length;
 
-                                            return shouldDisable ? (
-                                                <td key={day}/>
-                                            ) : (
-                                                <td className={cls.btn} key={day}>
-                                                    <Button
-                                                        extraClass={cls.btn__inner}
-                                                        onClick={() => {
-                                                            const payload = {
-                                                                day: formatDayString(selectedYear, selectedMonth, day),
-                                                                group_id: id,
-                                                                absent_students: [],
-                                                            };
-
-                                                            dispatch(loadingAttendance());
-
-                                                            request(
-                                                                `${API_URL}Attendance/attendance/create-list/`,
-                                                                "POST",
-                                                                JSON.stringify(payload),
-                                                                headers()
-                                                            ).then((res) => {
-                                                                if (attendanceList?.students) {
-                                                                    dispatch(createAttendance(res));
-                                                                } else {
-                                                                    dispatch(
-                                                                        getSchoolAttendanceList({
-                                                                            group_id: id,
-                                                                            year: selectedYear,
-                                                                            month: selectedMonth,
-                                                                        })
-                                                                    );
-                                                                }
-                                                            });
-                                                        }}
-                                                    >
-                                                        Tasdiqlash
-                                                    </Button>
-                                                </td>
-                                            );
+                                            // return shouldDisable ? (
+                                            //     <td key={day}/>
+                                            // ) : (
+                                            //     <td className={cls.btn} key={day}>
+                                            //         <Button
+                                            //             extraClass={cls.btn__inner}
+                                            //             onClick={() => {
+                                            //                 const payload = {
+                                            //                     day: formatDayString(selectedYear, selectedMonth, day),
+                                            //                     group_id: id,
+                                            //                     absent_students: [],
+                                            //                 };
+                                            //
+                                            //                 dispatch(loadingAttendance());
+                                            //
+                                            //                 request(
+                                            //                     `${API_URL}Attendance/attendance/create-list/`,
+                                            //                     "POST",
+                                            //                     JSON.stringify(payload),
+                                            //                     headers()
+                                            //                 ).then((res) => {
+                                            //                     if (attendanceList?.students) {
+                                            //                         dispatch(createAttendance(res));
+                                            //                     } else {
+                                            //                         dispatch(
+                                            //                             getSchoolAttendanceList({
+                                            //                                 group_id: id,
+                                            //                                 year: selectedYear,
+                                            //                                 month: selectedMonth,
+                                            //                             })
+                                            //                         );
+                                            //                     }
+                                            //                 });
+                                            //             }}
+                                            //         >
+                                            //             Tasdiqlash
+                                            //         </Button>
+                                            //     </td>
+                                            // );
                                         })
                                     }
                                 </tr>
@@ -581,7 +581,138 @@ export const GroupProfileAttendanceForm = memo(
                                 </Button>
                             </div>
                     }
-                </EditableCard>
+                </EditableCard> :
+                    <EditableCard extraClass={cls.attendance} onClick={() => setAttendance(!attendance)}>
+                        <div className={cls.attendance__header}>
+                            <h1>Davomat</h1>
+                            <Select
+                                titleOption="Yil"
+                                extraClass={cls.select}
+                                onChangeOption={setSelectedYear}
+                                options={attendanceYears}
+                                defaultValue={selectedYear}
+                            />
+                            <Select
+                                titleOption="Oy"
+                                extraClass={cls.select}
+                                onChangeOption={setSelectedMonth}
+                                options={attendanceMonth}
+                                defaultValue={selectedMonth}
+                            />
+                        </div>
+
+                        <div className={classNames(cls.attendance__container, {[cls.active]: attendance})}>
+                            <Table>
+                                <thead style={{top: 0}}>
+                                <tr>
+                                    <th>№</th>
+                                    <th>Ism Familya</th>
+
+                                    {
+                                        getSelectedDays().map((day, index) =>
+                                            index >= 3 && !attendance ? null : (
+                                                <th key={day}>
+                                                    <div className={cls.days}>
+                                                        <h2>{day}</h2>
+                                                    </div>
+                                                </th>
+                                            )
+                                        )
+                                    }
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {(!hideConfirmRow || attendance) && (
+                                    <tr className={cls.bottom}>
+                                        <td/>
+                                        <td/>
+                                        {
+                                            getSelectedDays().map((day, index) => {
+                                                if (index >= 3 && !attendance) return null;
+
+                                                const statusDay = attendanceList?.students
+                                                    ? attendanceList.students.filter((st) => st.days[day]?.id)
+                                                    : [];
+
+                                                const shouldDisable =
+                                                    (absentStudents && +absentStudents.date === +day) ||
+                                                    !!statusDay.length;
+
+                                                return shouldDisable ? (
+                                                    <td key={day}/>
+                                                ) : (
+                                                    <td className={cls.btn} key={day}>
+                                                        <Button
+                                                            extraClass={cls.btn__inner}
+                                                            onClick={() => {
+                                                                const payload = {
+                                                                    day: formatDayString(selectedYear, selectedMonth, day),
+                                                                    group_id: id,
+                                                                    absent_students: [],
+                                                                };
+
+                                                                dispatch(loadingAttendance());
+
+                                                                request(
+                                                                    `${API_URL}Attendance/attendance/create-list/`,
+                                                                    "POST",
+                                                                    JSON.stringify(payload),
+                                                                    headers()
+                                                                ).then((res) => {
+                                                                    if (attendanceList?.students) {
+                                                                        dispatch(createAttendance(res));
+                                                                    } else {
+                                                                        dispatch(
+                                                                            getSchoolAttendanceList({
+                                                                                group_id: id,
+                                                                                year: selectedYear,
+                                                                                month: selectedMonth,
+                                                                            })
+                                                                        );
+                                                                    }
+                                                                });
+                                                            }}
+                                                        >
+                                                            Tasdiqlash
+                                                        </Button>
+                                                    </td>
+                                                );
+                                            })
+                                        }
+                                    </tr>
+                                )}
+                                {renderAttendance()}
+                                </tbody>
+
+                            </Table>
+                        </div>
+
+                        {
+                            attendanceListLoading
+                                ? <DefaultLoader/>
+                                :
+                                <div className={cls.attendance__btns}>
+                                    <Button
+                                        type={!absentStudents?.students?.length ? "disabled" : "danger"}
+                                        disabled={!absentStudents?.students?.length}
+                                        onClick={() => setAbsentStudents({})}
+                                    >
+                                        Tozalash
+                                    </Button>
+                                    <Button
+                                        disabled={!absentStudents?.students?.length}
+                                        type={!absentStudents?.students?.length ? "disabled" : ""}
+                                        onClick={onSubmitAll}
+                                    >
+                                        Yuborish
+                                    </Button>
+                                </div>
+                        }
+                    </EditableCard>
+
+                }
+
 
                 <Modal active={active} setActive={setActive}>
                     <h1>Davomat qilish</h1>

@@ -63,6 +63,7 @@ export const GroupsPage = () => {
     const search = useSelector(getSearchValue)
     let PageSize = useMemo(() => 50, [])
     const [currentPage, setCurrentPage] = useState(1);
+    const usedRole = localStorage.getItem("userRole")
 
 
     const [pageSwitch, setPageSwitch] = useState(localStorage.getItem("activePage") === "true")
@@ -138,7 +139,7 @@ export const GroupsPage = () => {
                             extraClass={cls.extraCutClassFilter}
                             onClick={() => {
                                 setActive(!active)
-                                console.log("hello")
+
                             }}
                             type={"filter"}
                         >
@@ -147,7 +148,7 @@ export const GroupsPage = () => {
                         : <Button
                             onClick={() => {
                                 setFilter(!filter)
-                                console.log("hello2")
+
                             }}
                             status={"filter"}
                             type={"filter"}
@@ -262,7 +263,6 @@ export const GroupsPage = () => {
                     }}
                     type={"custom"}
                 />
-
 
                 {!pageSwitch ? <GroupsFilter
                         setIsFilter={setIsFilter}
