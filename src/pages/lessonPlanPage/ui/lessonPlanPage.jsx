@@ -133,7 +133,7 @@ export const LessonPlanPage = () => {
             setUploadError("Guruh yoki Flow tanlanmagan");
             return;
         }
-        if (availableSubjects.length > 0 && !selectedSubject) {
+        if (selectedGroup && availableSubjects.length > 0 && !selectedSubject) {
             setUploadError("Fan tanlanmagan");
             return;
         }
@@ -151,12 +151,16 @@ export const LessonPlanPage = () => {
         formData.append("term_id", selectedTermId);
         if (selectedGroup) {
             formData.append("group_id", selectedGroup);
+            if (selectedSubject) {
+                formData.append("subject_id", selectedSubject);
+            }
         }
         if (selectedFlow) {
             formData.append("flow_id", selectedFlow);
-        }
-        if (selectedSubject) {
-            formData.append("subject_id", selectedSubject);
+            const flow = flows.find(f => f.id === parseInt(selectedFlow));
+            if (flow?.subjects?.[0]?.id) {
+                formData.append("subject_id", flow.subjects[0].id);
+            }
         }
         formData.append("file", file);
 
@@ -257,7 +261,7 @@ export const LessonPlanPage = () => {
                         </select>
                     </div>
 
-                    {availableSubjects.length > 0 && (
+                    {availableSubjects.length > 0 && selectedGroup && (
                         <div className={cls.upload__field}>
                             <label className={cls.upload__label}>Fan *</label>
                             <select
