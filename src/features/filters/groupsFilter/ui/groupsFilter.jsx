@@ -34,6 +34,8 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
     const selectedBranch = useSelector(getSelectedLocations);
     const branchForFilter = selectedBranch?.id ?? userBranchId;
     const types = useSelector(getGroupTypes)
+    const usedRole = localStorage.getItem("userRole")
+    const teacherLocId = localStorage.getItem("teacherId")
 
     localStorage.setItem("selectedTeacher" , selectedTeacher)
     localStorage.setItem("selectedSwitch" , `${activeSwitch}`)
@@ -42,7 +44,7 @@ export const GroupsFilter = React.memo(({active, setActive, setIsFilter , active
 
     useEffect(() => {
         dispatch(fetchGroupsDataWithFilter({
-            teacherId: selectedTeacher,
+            teacherId: !usedRole ? selectedTeacher : teacherLocId,
             userBranchId: branchForFilter,
             deleted:activeSwitch,
             pageSize,

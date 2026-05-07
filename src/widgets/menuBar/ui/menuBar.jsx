@@ -28,6 +28,9 @@ export const Menubar = () => {
     const userPermissions = useSelector(getUserPermission);
     const user = useSelector(getUserProfileData);
 
+    localStorage.setItem("userRole", user?.role)
+    localStorage.setItem("teacherId", user?.teacher?.id)
+
     const notificationsList = useSelector(getTaskNotificationsList)
     const [notification, setNotification] = useState({ type: "executor", list: [] })
 

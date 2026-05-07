@@ -90,6 +90,7 @@ export const GroupProfileDeleteForm = memo(({ branch }) => {
     const studyMonths = useSelector(getStudyMonths)
     const debtStudents = useSelector(getDebtStudents)
     const loading = useSelector(getStudentsLoading)
+    const usedRole = localStorage.getItem("userRole")
 
     const [isDeleted, setIsDeleted] = useState(false)
     const [dataDeleted, setDataDeleted] = useState(null)
@@ -498,7 +499,49 @@ export const GroupProfileDeleteForm = memo(({ branch }) => {
     }, [selectedChange])
     return (
         <>
-            <EditableCard
+            {usedRole === "teacher" ? <EditableCard
+                extraClass={cls.students}
+                title={""}
+                // onClick={() => setActive(!active)}
+            >
+                <div className={cls.students__title}>
+                    <h1>O’quvchilar </h1>
+                    <div className={cls.students__wrapperBtn}>
+
+                        {
+                            active ?
+                                <div className={cls.students__wrapper}>
+                                    <Button
+                                        disabled={select?.length === 0}
+                                        type={select?.length === 0 ? "disabled" : ""}
+                                        extraClass={cls.students__btn}
+                                        onClick={() => setActiveModal("changeModal")}
+                                    >
+                                        Move
+                                    </Button>
+                                    <Button
+                                        extraClass={cls.students__btn}
+                                        onClick={() => setActiveModal("addModal")}
+                                    >
+                                        Add
+                                    </Button>
+
+                                </div> : null
+                        }
+                    </div>
+                </div>
+                <div className={cls.students__list}>
+                    {
+                        loading
+                            ? <DefaultPageLoader />
+                            : <Table>
+                                <tbody>
+                                {render}
+                                </tbody>
+                            </Table>
+                    }
+                </div>
+            </EditableCard> : <EditableCard
                 extraClass={cls.students}
                 title={<i className="fas fa-edit" />}
                 onClick={() => setActive(!active)}
@@ -538,12 +581,13 @@ export const GroupProfileDeleteForm = memo(({ branch }) => {
                             ? <DefaultPageLoader />
                             : <Table>
                                 <tbody>
-                                    {render}
+                                {render}
                                 </tbody>
                             </Table>
                     }
                 </div>
-            </EditableCard>
+            </EditableCard>}
+
             <Modal
                 extraClass={cls.deleteForm}
                 active={activeModal === "deleteModal"}
