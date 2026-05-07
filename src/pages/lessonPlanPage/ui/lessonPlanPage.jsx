@@ -289,6 +289,14 @@ export const LessonPlanPage = () => {
                                             <i className="fas fa-calendar-alt" />
                                             {plan.term?.quarter}-chorak · {plan.term?.academic_year}
                                         </span>
+                                        {(plan.flow || plan.group) && (
+                                            <span className={cls.item__groupFlow}>
+                                                <i className="fas fa-users" />
+                                                {plan.flow && `Flow: ${plan.flow.name}`}
+                                                {plan.flow && plan.group && " / "}
+                                                {plan.group && `Guruh: ${plan.group.name}`}
+                                            </span>
+                                        )}
                                         <span className={classNames(
                                             cls.item__status,
                                             cls[`item__status--${plan.status}`]
