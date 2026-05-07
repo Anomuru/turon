@@ -41,6 +41,8 @@ export const LessonPlanPage = () => {
     const [groups, setGroups] = useState([])
     const [selectedGroup, setSelectedGroup] = useState("")
     const [selectedFlow, setSelectedFLow] = useState("")
+    const [selectedSubject, setSelectedSubject] = useState("")
+    const [availableSubjects, setAvailableSubjects] = useState([])
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [uploadError, setUploadError] = useState("");
@@ -127,6 +129,14 @@ export const LessonPlanPage = () => {
             setUploadError("Chorak tanlanmagan");
             return;
         }
+        if (!selectedGroup && !selectedFlow) {
+            setUploadError("Guruh yoki Flow tanlanmagan");
+            return;
+        }
+        if (availableSubjects.length > 0 && !selectedSubject) {
+            setUploadError("Fan tanlanmagan");
+            return;
+        }
         if (!teacherId) {
             setUploadError("O'qituvchi ma'lumotlari topilmadi");
             return;
@@ -139,8 +149,15 @@ export const LessonPlanPage = () => {
         const formData = new FormData();
         formData.append("teacher_id", teacherId);
         formData.append("term_id", selectedTermId);
-        formData.append("group_id", selectedGroup)
-        formData.append("flow_id", selectedFlow)
+        if (selectedGroup) {
+            formData.append("group_id", selectedGroup);
+        }
+        if (selectedFlow) {
+            formData.append("flow_id", selectedFlow);
+        }
+        if (selectedSubject) {
+            formData.append("subject_id", selectedSubject);
+        }
         formData.append("file", file);
 
         request(
@@ -212,13 +229,26 @@ export const LessonPlanPage = () => {
                         </select>
                     </div>
                     <div className={cls.upload__field}>
-                        <label className={cls.upload__label}>Guruhlar</label>
+                        <label className={cls.upload__label}>Sinflar *</label>
                         <select
                             className={cls.upload__select}
                             value={selectedGroup}
-                            onChange={e => setSelectedGroup(e.target.value)}
+                            onChange={e => {
+                                const groupId = e.target.value;
+                                setSelectedGroup(groupId);
+                                if (groupId) {
+                                    setSelectedFLow("");
+                                    const group = groups.find(g => g.id === parseInt(groupId));
+                                    setAvailableSubjects(group?.subjects || []);
+                                    setSelectedSubject("");
+                                } else {
+                                    setAvailableSubjects([]);
+                                    setSelectedSubject("");
+                                }
+                            }}
+                            disabled={!!selectedFlow}
                         >
-                            <option value="">Default</option>
+                            <option value="">Sinfni tanlang</option>
                             {groups.map(t => (
                                 <option key={t.id} value={t.id}>
                                     {t.name}
@@ -226,14 +256,46 @@ export const LessonPlanPage = () => {
                             ))}
                         </select>
                     </div>
+
+                    {availableSubjects.length > 0 && (
+                        <div className={cls.upload__field}>
+                            <label className={cls.upload__label}>Fan *</label>
+                            <select
+                                className={cls.upload__select}
+                                value={selectedSubject}
+                                onChange={e => setSelectedSubject(e.target.value)}
+                            >
+                                <option value="">Fanni tanlang</option>
+                                {availableSubjects.map(subject => (
+                                    <option key={subject.id} value={subject.id}>
+                                        {subject.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+
                     <div className={cls.upload__field}>
-                        <label className={cls.upload__label}>Flowlar</label>
+                        <label className={cls.upload__label}>Flowlar *</label>
                         <select
                             className={cls.upload__select}
                             value={selectedFlow}
-                            onChange={e => setSelectedFLow(e.target.value)}
+                            onChange={e => {
+                                const flowId = e.target.value;
+                                setSelectedFLow(flowId);
+                                if (flowId) {
+                                    setSelectedGroup("");
+                                    const flow = flows.find(f => f.id === parseInt(flowId));
+                                    setAvailableSubjects(flow?.subjects || []);
+                                    setSelectedSubject("");
+                                } else {
+                                    setAvailableSubjects([]);
+                                    setSelectedSubject("");
+                                }
+                            }}
+                            disabled={!!selectedGroup}
                         >
-                            <option value="">Default</option>
+                            <option value="">Flowni tanlang</option>
                             {flows.map(t => (
                                 <option key={t.id} value={t.id}>
                                     {t.name}
@@ -342,7 +404,13 @@ export const LessonPlanPage = () => {
                                                 <i className="fas fa-users" />
                                                 {plan.flow && `Flow: ${plan.flow.name}`}
                                                 {plan.flow && plan.group && " / "}
-                                                {plan.group && `Guruh: ${plan.group.name}`}
+                                                {plan.group && `Sinf: ${plan.group.name}`}
+                                            </span>
+                                        )}
+                                        {(plan.subject || plan.flow?.subject) && (
+                                            <span className={cls.item__subject}>
+                                                <i className="fas fa-book" />
+                                                {plan.subject?.name || plan.flow?.subject?.name}
                                             </span>
                                         )}
                                         <span className={classNames(
