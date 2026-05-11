@@ -1035,7 +1035,7 @@ export const DebtorCRMBoard = () => {
 
                     {/* Cards */}
                     {!calledLoading && (
-                        <section className={cls.section}>
+                        <section className={`${cls.section} `}>
                             <div className={cls.section__header}>
                                 <h2 className={cls.section__title}>
                                     <span className={cls.dot__pending} />
