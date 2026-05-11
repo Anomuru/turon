@@ -12,6 +12,7 @@ import {
 } from "entities/accountingPageNew/model/accountingNewSelector.js";
 import {capitalReducer} from "entities/capital/index.js";
 import {overHeadReducer} from "entities/accounting/index.js";
+import {BranchTransactionsPage} from "pages/accountingPage/ui/accountingPages/branchTransactionsPage.jsx";
 
 const reducers = {
 
@@ -37,19 +38,25 @@ export const AccountingPageNew = () => {
        <DynamicModuleLoader reducers={reducers}>
            <div className={cls.accounting}>
                <AccountingPageNewHeader setSelectType={setSelectType} selectType={selectType}/>
-                <AccountingNewFilter setCurrentPage={setCurrentPage} pageSize={PageSize} currentPage={currentPage} selectType={selectType} setActiveFilter={setActiveFilter} activeFilter={activeFilter}/>
-               <AccountingPageNewTable selectType={selectType} data={data} activeFilter={activeFilter}/>
-               <Pagination
-                   className={cls.pagination}
-                   setCurrentPage={setCurrentPage}
-                   currentPage={currentPage}
-                   pageSize={PageSize}
-                   onPageChange={page => {
-                       setCurrentPage(page)
-                   }}
-                   type={"custom"}
-                   totalCount={data?.count}
-               />
+               {selectType === "branchTransactions" ? (
+                   <BranchTransactionsPage/>
+               ) : (
+                   <>
+                       <AccountingNewFilter setCurrentPage={setCurrentPage} pageSize={PageSize} currentPage={currentPage} selectType={selectType} setActiveFilter={setActiveFilter} activeFilter={activeFilter}/>
+                       <AccountingPageNewTable selectType={selectType} data={data} activeFilter={activeFilter}/>
+                       <Pagination
+                           className={cls.pagination}
+                           setCurrentPage={setCurrentPage}
+                           currentPage={currentPage}
+                           pageSize={PageSize}
+                           onPageChange={page => {
+                               setCurrentPage(page)
+                           }}
+                           type={"custom"}
+                           totalCount={data?.count}
+                       />
+                   </>
+               )}
            </div>
 
        </DynamicModuleLoader>

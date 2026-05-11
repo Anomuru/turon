@@ -24,6 +24,7 @@ import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/Dyn
 import {StudentSalary} from "./accountingPages/studentSalary";
 import {AdditionalCosts} from "./accountingPages/additionalCosts";
 import {Capital} from "./accountingPages/capital";
+import {BranchTransactionsPage} from "./accountingPages/branchTransactionsPage";
 import {AccountingOtchotPage, EmployerSalaryPage} from "../index";
 import {TeacherSalaryPage} from "../index";
 
@@ -269,12 +270,13 @@ export const AccountingPageMain = () => {
                    <Route path={"otchot"}
                           element={
                               <AccountingOtchotPage
-
                                   path={"otchot"}
                               />
                           }
                    />
-
+                   <Route path={"branchTransactions"}
+                          element={<BranchTransactionsPage/>}
+                   />
 
                </Routes>
            </div>

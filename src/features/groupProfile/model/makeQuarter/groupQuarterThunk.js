@@ -11,8 +11,9 @@ export const fetchTerm = createAsyncThunk(
 )
 export const fetchTermData = createAsyncThunk(
     "groupQuarterSlice/fetchTermData",
-    async ({termId , branchId}) => {
+    async ({termId , branchId, entityType = "group"}) => {
         const {request} = useHttp()
+        // Используем один и тот же эндпоинт для обоих типов
         return await request(`${API_URL}terms/list-test/${termId}/${branchId}/`, "GET", null, headers())
 
     }

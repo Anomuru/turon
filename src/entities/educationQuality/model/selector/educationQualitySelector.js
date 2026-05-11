@@ -1,0 +1,14 @@
+export const selectEducationQualityLoading = (state) => state.educationQuality.loading;
+export const selectEducationQualityError = (state) => state.educationQuality.error;
+export const selectEducationQualityOverview = (state) => state.educationQuality.overview;
+export const selectEducationQualityStatistics = (state) => state.educationQuality.statistics;
+export const selectEducationQualityTermInfo = (state) => state.educationQuality.termInfo;
+export const selectEducationQualityChartData = (state) => state.educationQuality.chartData;
+export const selectEducationQualityTerms = (state) => state.educationQuality.terms;
+export const selectEducationQualitySubjects = (state) => state.educationQuality.subjects;
+export const selectEducationQualityClasses = (state) => state.educationQuality.classes.data;
+export const selectEducationQualityTeachers = (state) => state.educationQuality.teachers;
+export const selectEducationQualitySelectedTerm = (state) => state.educationQuality.selectedTerm;
+export const selectEducationQualitySelectedSubject = (state) => state.educationQuality.selectedSubject;
+export const selectEducationQualitySelectedClass = (state) => state.educationQuality.selectedClass;
+export const selectEducationQualitySelectedTeacher = (state) => state.educationQuality.selectedTeacher;

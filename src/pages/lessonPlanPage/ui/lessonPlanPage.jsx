@@ -37,7 +37,12 @@ export const LessonPlanPage = () => {
     const [selectedYear, setSelectedYear] = useState("");
     const [terms, setTerms] = useState([]);
     const [selectedTermId, setSelectedTermId] = useState("");
-
+    const [flows, setFlows] = useState([])
+    const [groups, setGroups] = useState([])
+    const [selectedGroup, setSelectedGroup] = useState("")
+    const [selectedFlow, setSelectedFLow] = useState("")
+    const [selectedSubject, setSelectedSubject] = useState("")
+    const [availableSubjects, setAvailableSubjects] = useState([])
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [uploadError, setUploadError] = useState("");
@@ -67,6 +72,18 @@ export const LessonPlanPage = () => {
             });
     }, [selectedYear]);
 
+    useEffect(() => {
+        request(`${API_URL}Mobile/teachers/terms/my-classes/`, "GET", null, headers())
+            .then(res => {
+                setFlows(res.flows)
+                setGroups(res.groups)
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, []);
+
+    console.log(groups)
     useEffect(() => {
         if (!teacherId) return;
         fetchPlans();
@@ -102,6 +119,7 @@ export const LessonPlanPage = () => {
         setFile(selected);
     };
 
+
     const onUpload = () => {
         if (!file) {
             setUploadError("Fayl tanlanmagan");
@@ -109,6 +127,14 @@ export const LessonPlanPage = () => {
         }
         if (!selectedTermId) {
             setUploadError("Chorak tanlanmagan");
+            return;
+        }
+        if (!selectedGroup && !selectedFlow) {
+            setUploadError("Guruh yoki Flow tanlanmagan");
+            return;
+        }
+        if (selectedGroup && availableSubjects.length > 0 && !selectedSubject) {
+            setUploadError("Fan tanlanmagan");
             return;
         }
         if (!teacherId) {
@@ -123,6 +149,19 @@ export const LessonPlanPage = () => {
         const formData = new FormData();
         formData.append("teacher_id", teacherId);
         formData.append("term_id", selectedTermId);
+        if (selectedGroup) {
+            formData.append("group_id", selectedGroup);
+            if (selectedSubject) {
+                formData.append("subject_id", selectedSubject);
+            }
+        }
+        if (selectedFlow) {
+            formData.append("flow_id", selectedFlow);
+            const flow = flows.find(f => f.id === parseInt(selectedFlow));
+            if (flow?.subjects?.[0]?.id) {
+                formData.append("subject_id", flow.subjects[0].id);
+            }
+        }
         formData.append("file", file);
 
         request(
@@ -189,6 +228,81 @@ export const LessonPlanPage = () => {
                             {terms.map(t => (
                                 <option key={t.id} value={t.id}>
                                     {t.quarter}-chorak
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className={cls.upload__field}>
+                        <label className={cls.upload__label}>Sinflar *</label>
+                        <select
+                            className={cls.upload__select}
+                            value={selectedGroup}
+                            onChange={e => {
+                                const groupId = e.target.value;
+                                setSelectedGroup(groupId);
+                                if (groupId) {
+                                    setSelectedFLow("");
+                                    const group = groups.find(g => g.id === parseInt(groupId));
+                                    setAvailableSubjects(group?.subjects || []);
+                                    setSelectedSubject("");
+                                } else {
+                                    setAvailableSubjects([]);
+                                    setSelectedSubject("");
+                                }
+                            }}
+                            disabled={!!selectedFlow}
+                        >
+                            <option value="">Sinfni tanlang</option>
+                            {groups.map(t => (
+                                <option key={t.id} value={t.id}>
+                                    {t.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {availableSubjects.length > 0 && selectedGroup && (
+                        <div className={cls.upload__field}>
+                            <label className={cls.upload__label}>Fan *</label>
+                            <select
+                                className={cls.upload__select}
+                                value={selectedSubject}
+                                onChange={e => setSelectedSubject(e.target.value)}
+                            >
+                                <option value="">Fanni tanlang</option>
+                                {availableSubjects.map(subject => (
+                                    <option key={subject.id} value={subject.id}>
+                                        {subject.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+
+                    <div className={cls.upload__field}>
+                        <label className={cls.upload__label}>Flowlar *</label>
+                        <select
+                            className={cls.upload__select}
+                            value={selectedFlow}
+                            onChange={e => {
+                                const flowId = e.target.value;
+                                setSelectedFLow(flowId);
+                                if (flowId) {
+                                    setSelectedGroup("");
+                                    const flow = flows.find(f => f.id === parseInt(flowId));
+                                    setAvailableSubjects(flow?.subjects || []);
+                                    setSelectedSubject("");
+                                } else {
+                                    setAvailableSubjects([]);
+                                    setSelectedSubject("");
+                                }
+                            }}
+                            disabled={!!selectedGroup}
+                        >
+                            <option value="">Flowni tanlang</option>
+                            {flows.map(t => (
+                                <option key={t.id} value={t.id}>
+                                    {t.name}
                                 </option>
                             ))}
                         </select>
@@ -289,6 +403,20 @@ export const LessonPlanPage = () => {
                                             <i className="fas fa-calendar-alt" />
                                             {plan.term?.quarter}-chorak · {plan.term?.academic_year}
                                         </span>
+                                        {(plan.flow || plan.group) && (
+                                            <span className={cls.item__groupFlow}>
+                                                <i className="fas fa-users" />
+                                                {plan.flow && `Flow: ${plan.flow.name}`}
+                                                {plan.flow && plan.group && " / "}
+                                                {plan.group && `Sinf: ${plan.group.name}`}
+                                            </span>
+                                        )}
+                                        {(plan.subject || plan.flow?.subject) && (
+                                            <span className={cls.item__subject}>
+                                                <i className="fas fa-book" />
+                                                {plan.subject?.name || plan.flow?.subject?.name}
+                                            </span>
+                                        )}
                                         <span className={classNames(
                                             cls.item__status,
                                             cls[`item__status--${plan.status}`]

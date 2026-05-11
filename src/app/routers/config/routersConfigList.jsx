@@ -1,6 +1,6 @@
-import {DailyReportPage} from "pages/dailyReportPage/index.js";
-import {ParentsPage} from "pages/parentsPage/ui/parentsPage.jsx";
-import {TeacherAttendanceView} from "pages/teacherAttendanceView/index.js";
+import { DailyReportPage } from "pages/dailyReportPage/index.js";
+import { ParentsPage } from "pages/parentsPage/ui/parentsPage.jsx";
+import { TeacherAttendanceView } from "pages/teacherAttendanceView/index.js";
 import React from "react";
 
 import {
@@ -21,14 +21,16 @@ import {
     getRouteMain,
     getRouteRegister,
     getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews, getCapitalCategoryProfile, getCapitalInside,
-    getDashboard, getTeacherObservation, getLessonPlan, getObservationShowPage
+    getDashboard, getTeacherObservation, getLessonPlan,
+    getEducationQuality, getEducationQualityDetails,
+    getObservationShowPage,
 
 } from "shared/const/routers";
-import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
+import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
 import Register from "pages/registerPage/index.js";
-import {CvSubmissions} from "pages/cvSubmissions/index.js";
-import {HomeMessages} from "pages/homeMessages/index.js";
-import {NewsPage} from "pages/newsPage/newsPage.jsx";
+import { CvSubmissions } from "pages/cvSubmissions/index.js";
+import { HomeMessages } from "pages/homeMessages/index.js";
+import { NewsPage } from "pages/newsPage/newsPage.jsx";
 
 
 const StudentsPage = lazyPage(() => import("pages/studentsPage"), "StudentsPage");
@@ -59,6 +61,8 @@ const DirectorDashboardPage = lazyPage(() => import("pages/directorDashboardPage
 const TeacherObservationPage = lazyPage(() => import("pages/teacherObservationPage"), "TeacherObservationPage");
 const LessonPlanPage = lazyPage(() => import("pages/lessonPlanPage"), "LessonPlanPage");
 const FinanceDashboardPage = lazyPage(() => import("pages/financeDashboardPage"), "FinanceDashboardPage");
+const EducationQualityPage = lazyPage(() => import("pages/educationQualityPage"), "EducationQualityPage");
+const EducationQualityDetails = lazyPage(() => import("pages/educationQualityPage"), "EducationQualityDetails");
 const ObservationShowPage = lazyPage(() => import("pages/observationShowPage"), "ObservationShowPage");
 
 export const routersConfigList = [
@@ -71,36 +75,36 @@ export const routersConfigList = [
     {
         name: "O'quvchilar",
         path: getRouteStudents(),
-        element: <StudentsPage/>
+        element: <StudentsPage />
     },
     {
         path: getObservationShowPage(),
-        element: <ObservationShowPage/>
+        element: <ObservationShowPage />
     },
     {
         name: "Kalendar",
         path: getRouteCalendar(),
-        element: <CalendarPage/>
+        element: <CalendarPage />
     },
     {
         name: "Gruppalar",
         path: getRouteGroups(":id"),
-        element: <GroupsPage/>
+        element: <GroupsPage />
     },
     {
         name: "O'qituvchilar",
         path: getRouteTeacher(":id"),
-        element: <TeachersPage/>
+        element: <TeachersPage />
     },
     {
         name: "Time Table",
         path: getRouteTimePage(":idBranch"),
-        element: <TimeTableListPage/>,
+        element: <TimeTableListPage />,
     },
     {
         name: "Vakansiyalar",
         path: getVacancyPage(":idBranch"),
-        element: <VacancyPage/>,
+        element: <VacancyPage />,
     },
     {
 
@@ -108,44 +112,44 @@ export const routersConfigList = [
         icon: "fa-user-graduate",
         roles: [],
         path: getEmployerPage(":idBranch"),
-        element: <EmployerPage/>,
+        element: <EmployerPage />,
     },
     {
         name: "Flows",
         path: getFlow(":id"),
-        element: <FlowsPage/>,
+        element: <FlowsPage />,
     },
     {
         name: "Class",
         path: getClass(":id"),
-        element: <ClassMain/>,
+        element: <ClassMain />,
     },
     {
         path: getContract(":id"),
         name: "Contract",
         // icon: "fa fa-book",
-        element: <ContractPage/>
+        element: <ContractPage />
     },
     {
         path: getCapital(":id"),
         name: "capital",
-        element: <CapitalPage/>
+        element: <CapitalPage />
     },
 
     {
         name: "Honalar",
         path: getRouteRooms(":id"),
-        element: <Rooms/>,
+        element: <Rooms />,
     },
     {
         name: "Zavxoz",
         path: getQuarterMaster(),
-        element: <QuarterMaster/>
+        element: <QuarterMaster />
     },
 
     {
         path: "calendar",
-        element: <CalendarPage/>,
+        element: <CalendarPage />,
     },
     // {
     //     name: "Time Table",
@@ -181,59 +185,59 @@ export const routersConfigList = [
     {
         name: "Registratsiya",
         path: getRouteRegister(),
-        element: <Register/>,
+        element: <Register />,
     },
     {
         name: "settings",
         path: `settings/*`,
-        element: <Settings/>,
+        element: <Settings />,
     },
     {
         name: "Statistics",
         path: `Statistics/`,
-        element: <StatisticsPage/>,
+        element: <StatisticsPage />,
     },
     {
         name: "rating",
         path: "rating",
-        element: <RatingForTeachersPage/>
+        element: <RatingForTeachersPage />
     },
     {
         name: "parents",
         path: `parents/`,
-        element: <ParentsPage/>,
+        element: <ParentsPage />,
     },
     {
         name: "teacherAttendanceView",
         path: `teacherAttendance/:id`,
-        element: <TeacherAttendanceView/>,
+        element: <TeacherAttendanceView />,
     },
     {
         name: "daily report",
         path: "dailyReport",
-        element: <DailyReportPage/>
+        element: <DailyReportPage />
     },
     {
         path: getCvSubmissons(":id"),
-        element: <CvSubmissions/>
+        element: <CvSubmissions />
     },
     {
         path: getHomeMessage(":id"),
-        element: <HomeMessages/>
+        element: <HomeMessages />
     },
     {
         path: getHomeNews(":id"),
-        element: <NewsPage/>
+        element: <NewsPage />
     },
     {
         name: "So'rovnoma natijalari",
         path: "surveyResults",
-        element: <SurveyResultsPage/>
+        element: <SurveyResultsPage />
     },
     {
         name: "O'qituvchini baholash",
         path: "teacherRating",
-        element: <ContributionsPage/>
+        element: <ContributionsPage />
     },
     {
         name: "O'qituvchini rivojlantirish",
@@ -267,6 +271,16 @@ export const routersConfigList = [
         name: "Moliyaviy Dashboard",
         path: "financeDashboard",
         element: <FinanceDashboardPage/>
+    },
+    {
+        name: "Ta'lim Sifati",
+        path: getEducationQuality(),
+        element: <EducationQualityPage/>
+    },
+    {
+        name: "Ta'lim Sifati - Batafsil",
+        path: getEducationQualityDetails(),
+        element: <EducationQualityDetails/>
     }
 
 ]

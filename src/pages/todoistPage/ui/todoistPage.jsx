@@ -81,6 +81,19 @@ const NOTIFICATION_TYPES = [
     { id: "reviewer", name: "Tekshirish vazifalari" },
 ]
 
+const STATUS_PERMISSIONS = {
+    executor: {
+        not_started: ["in_progress"],
+        in_progress: ["blocked", "completed"],
+        recheck: ["in_progress"],
+        blocked: ["in_progress"],
+    },
+    reviewer: {
+        completed: ["approved", "declined", "recheck"],
+        declined: ["recheck"],
+    },
+}
+
 // ==================== UTILITY FUNCTIONS ====================
 
 const sortTasks = (data) => {
@@ -124,6 +137,31 @@ const getDeadlineBackground = (task) => {
     }
 
     return { background: backgrounds[task.deadline_color] } || null
+}
+
+const getAvailableStatuses = (currentStatus, userRole, statusList) => {
+    const permissions = STATUS_PERMISSIONS[userRole]
+
+    if (!permissions || !permissions[currentStatus]) {
+        return []
+    }
+
+    const allowedStatusIds = permissions[currentStatus]
+    return statusList.filter(status => allowedStatusIds.includes(status.id))
+}
+
+const getUserRoleForTask = (task, userId) => {
+    // Если пользователь создатель, возвращаем "creator" для полного доступа
+    if (task.creator?.id === userId || task.creator === userId) {
+        return "creator"
+    }
+    if (task.executor?.id === userId || task.executor === userId) {
+        return "executor"
+    }
+    if (task.reviewer?.id === userId || task.reviewer === userId) {
+        return "reviewer"
+    }
+    return null
 }
 
 // ==================== NOTIFICATION CARD COMPONENT ====================
@@ -1512,7 +1550,7 @@ export const TodoistPage = () => {
                                                         <div className={styles.nestedItem__header}>
                                                             <div className={styles.info}>
                                                                 <p className={styles.btns__title}>{com.created_at}</p>
-                                                                {com.user.id === userId || com.user === userId ? (
+                                                                {com.user?.id === userId || com.user === userId ? (
                                                                     <div className={classNames(styles.nestedActions, styles.btns)}>
                                                                         <button
                                                                             className={styles.btnSmallEdit}
@@ -1528,7 +1566,7 @@ export const TodoistPage = () => {
                                                                         </button>
                                                                     </div>
                                                                 ) : (
-                                                                    <p className={styles.btns__title}>{com.user.full_name}</p>
+                                                                    <p className={styles.btns__title}>{com.user?.full_name}</p>
                                                                 )}
                                                             </div>
                                                             <div>
@@ -1854,20 +1892,37 @@ export const TodoistPage = () => {
                 )}
 
                 {/* Change Status Modal */}
-                {modalType === "changeStatus" && (
-                    <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
-                        <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                            <h2 className={styles.modalTitle}>Change task status</h2>
-                            <div className={styles.formGroup}>
-                                <label>Status</label>
-                                <select
-                                    value={formData.status}
-                                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                                    required
-                                >
-                                    {statusList.map(item => (
-                                        <option key={item.id} value={item.id}>{item.name}</option>
-                                    ))}
+                {modalType === "changeStatus" && (() => {
+                    const userRole = getUserRoleForTask(selectedTask, userId)
+                    const availableStatuses = userRole === "creator"
+                        ? statusList
+                        : getAvailableStatuses(formData.status, userRole, statusList)
+
+                    return (
+                        <div className={styles.modalBackdrop} onClick={() => setModalType(null)}>
+                            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                                <h2 className={styles.modalTitle}>Change task status</h2>
+                                <div className={styles.formGroup}>
+                                    <label>Status</label>
+                                    <select
+                                        value={formData.status}
+                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                        required
+                                    >
+                                        {userRole === "creator" ? (
+                                            statusList.map(item => (
+                                                <option key={item.id} value={item.id}>{item.name}</option>
+                                            ))
+                                        ) : (
+                                            <>
+                                                <option value={formData.status}>
+                                                    {statusList.find(item => item.id === formData.status)?.name}
+                                                </option>
+                                                {availableStatuses.map(item => (
+                                                    <option key={item.id} value={item.id}>{item.name}</option>
+                                                ))}
+                                            </>
+                                        )}
                                 </select>
                             </div>
                             <div className={styles.formActions}>
@@ -1880,7 +1935,8 @@ export const TodoistPage = () => {
                             </div>
                         </div>
                     </div>
-                )}
+                    )
+                })()}
 
                 {/* Create/Edit/Delete Tag Modals */}
                 {(modalType === "createTag" || modalType === "editTag") && (

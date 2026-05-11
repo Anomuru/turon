@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import styles from "./groupProfileQuarter.module.sass";
 import { DynamicModuleLoader } from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import {
@@ -45,6 +45,7 @@ export const GroupProfileQuarter = () => {
     const { request } = useHttp();
     const [quarterYear, setQuarterYear] = useState(null);
     const [quarterYearSelected, setQuarterYearSelected] = useState(null);
+    const [entityType, setEntityType] = useState("group"); // "group" or "flow"
 
     const dispatch = useDispatch();
     const getCurrentTerm = () => {
@@ -85,9 +86,9 @@ export const GroupProfileQuarter = () => {
 
     useEffect(() => {
         if (selectedTerm && branchId) {
-            dispatch(fetchTermData({ termId: selectedTerm, branchId: branchForFilter }));
+            dispatch(fetchTermData({ termId: selectedTerm, branchId: branchForFilter, entityType }));
         }
-    }, [selectedTerm, branchForFilter]);
+    }, [selectedTerm, branchForFilter, entityType]);
 
     useEffect(() => {
         if (viewTest) {
@@ -118,12 +119,12 @@ export const GroupProfileQuarter = () => {
     };
 
     const onPostTerm = (data) => {
+        const entityKey = entityType === "flow" ? "flow" : "group";
         const res = {
             ...data,
             term: selectedTerm,
-            [activeItems[0]?.type]: activeItems[0]?.id,
-            [activeItems[1]?.type]: activeItems[1]?.id,
-            [activeItems[2]?.type]: activeItems[2]?.id,
+            [entityKey]: activeItems[0]?.id,
+            subject: activeItems[1]?.id,
         };
 
         request(`${API_URL}terms/create-test/`, "POST", JSON.stringify(res), headers())
@@ -141,9 +142,15 @@ export const GroupProfileQuarter = () => {
     };
 
     const onViewTest = (path, row) => {
-        const groupId = path.find(p => p.type === "group")?.id;
+        const entityKey = entityType === "flow" ? "flow" : "group";
+        const entityId = path.find(p => p.type === entityKey)?.id;
         setLoading(true);
-        request(`${API_URL}terms/student-assignment/${groupId}/${row.id}/`, "GET", null, headers())
+
+        const endpoint = entityType === "flow"
+            ? `${API_URL}terms/student-assignment-flow/${entityId}/${row.id}/`
+            : `${API_URL}terms/student-assignment/${entityId}/${row.id}/`
+
+        request(endpoint, "GET", null, headers())
             .then(res => {
                 setViewTest({
                     id: row.id,
@@ -176,7 +183,11 @@ export const GroupProfileQuarter = () => {
             };
         });
 
-        request(`${API_URL}terms/assignment-create/`, "POST", JSON.stringify(payload), headers())
+        const endpoint = entityType === "flow"
+            ? `${API_URL}terms/assignment-create-flow/`
+            : `${API_URL}terms/assignment-create/`
+
+        request(endpoint, "POST", JSON.stringify(payload), headers())
             .then(() => {
                 dispatch(onAddAlertOptions({
                     status: true,
@@ -189,10 +200,31 @@ export const GroupProfileQuarter = () => {
     };
 
     console.log(selectedTerm , "selectedTerm")
+
+    // Фильтруем данные в зависимости от выбранного типа
+    const filteredData = useMemo(() => {
+        if (!data) return [];
+        return data.filter(item => item.type === entityType);
+    }, [data, entityType]);
+
     return (
         <DynamicModuleLoader reducers={reducers}>
             {loading ? <DefaultLoader /> : null}
             <div className={styles.quarter}>
+                <div className={styles.tabs}>
+                    <button
+                        className={entityType === "group" ? styles.tabActive : styles.tab}
+                        onClick={() => setEntityType("group")}
+                    >
+                        Klasslar
+                    </button>
+                    <button
+                        className={entityType === "flow" ? styles.tabActive : styles.tab}
+                        onClick={() => setEntityType("flow")}
+                    >
+                        Oqimlar
+                    </button>
+                </div>
                 <div style={{ alignSelf: "flex-end", display: "flex", gap: "2rem" }}>
                     <Select
                         title={"Yil"}
@@ -210,8 +242,9 @@ export const GroupProfileQuarter = () => {
                 <Accordion
                     selectedTerm={selectedTerm}
                     onClick={onClick}
-                    items={data}
+                    items={filteredData}
                     onViewTest={onViewTest}
+                    entityType={entityType}
                 />
             </div>
 
@@ -305,7 +338,7 @@ export const GroupProfileQuarter = () => {
 };
 
 
-function Accordion({items, onClick, parentId = null, path = [], onDeleteId, onViewTest ,selectedTerm}) {
+function Accordion({items, onClick, parentId = null, path = [], onDeleteId, onViewTest ,selectedTerm, entityType}) {
     return (
         <div className={styles.accordion}>
             {items?.map((item, i) => (
@@ -317,13 +350,14 @@ function Accordion({items, onClick, parentId = null, path = [], onDeleteId, onVi
                     path={[...path, {id: item?.id, title: item?.title, type: item.type}]}
                     onClick={onClick}
                     onViewTest={onViewTest}
+                    entityType={entityType}
                 />
             ))}
         </div>
     );
 }
 
-function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
+function AccordionItem({item, path, onClick, onViewTest , selectedTerm, entityType}) {
     const [open, setOpen] = useState(false);
     const hasChildren = !!item?.children;
     const hasTable = !!item?.tableData;
@@ -347,15 +381,17 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
     };
 
     const onUpdateTest = (data) => {
+        const entityKey = entityType === "flow" ? "flow" : "group";
         const res = {
-            group: path.find(p => p.type === "group")?.id,
+            [entityKey]: path.find(p => p.type === entityKey)?.id,
             subject: path.find(p => p.type === "subject")?.id,
             name: data.name,
             weight: data.weight,
             date: data.date,
+            term: selectedTerm,
         };
 
-        request(`${API_URL}terms/update-test/${editItem.id}/`, "PATCH", JSON.stringify({...res ,  term: selectedTerm,}), headers())
+        request(`${API_URL}terms/update-test/${editItem.id}/`, "PATCH", JSON.stringify(res), headers())
             .then((res) => {
                 dispatch(updateTest({
                     path: editItem.path,
@@ -386,7 +422,7 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
                 dispatch(onAddAlertOptions({
                     status: true,
                     type: "success",
-                    msg: "Test o‘chirildi",
+                    msg: "Test o’chirildi",
                 }));
                 setDeleteActive(false);
                 setEditActive(false);
@@ -404,7 +440,9 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
                 }}
                 className={styles.header}
             >
-                <h3>{item.type === "group" ? "Sinf" : "Fan"} - {item?.title}</h3>
+                <h3>
+                    {item.type === "group" ? "Sinf" : item.type === "flow" ? "Oqim" : "Fan"} - {item?.title}
+                </h3>
                 <div style={{display: "flex", gap: "1rem"}}>
                     {hasTable && (
                         <i
@@ -473,6 +511,7 @@ function AccordionItem({item, path, onClick, onViewTest , selectedTerm}) {
                             onClick={onClick}
                             onViewTest={onViewTest}
                             selectedTerm={selectedTerm}
+                            entityType={entityType}
                         />
                     )}
                 </div>

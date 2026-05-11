@@ -9,6 +9,7 @@ const initialState = {
         {label: "employeesSalary" , name: "Ishchilar oyligi"},
         {label: "overhead" , name: "Qo'shimcha xarajatlar"},
         {label: "capital" , name: "Kapital xarajatlari"},
+        {label: "branchTransactions" , name: "Filial tranzaksiyalari"},
     ],
     totalCount: [
         { name: "Total Amount" ,  totalPayment: 321321213, totalPaymentCount: 12 , type: "amount"},

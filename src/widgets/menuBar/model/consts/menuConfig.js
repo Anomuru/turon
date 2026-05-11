@@ -1,4 +1,4 @@
-import { ROLES } from "shared/const/roles";
+import {ROLES} from "shared/const/roles";
 import React from "react";
 
 export const menuConfig = [
@@ -32,6 +32,13 @@ export const menuConfig = [
         icon: "fa-chart-line",
         roles: [ROLES.director, ROLES.main_director, ROLES.programmer],
     },
+    {
+        to: "educationQuality",
+        name: "Ta'lim sifati",
+        icon: "fa-award",
+        roles: [ROLES.director]
+    },
+    // test
     {
         to: "financeDashboard",
         name: "Moliyaviy Dashboard",
@@ -261,7 +268,7 @@ export const menuConfig = [
         to: "questionnaire",
         name: "So’rovnoma",
         icon: "fa-calculator",
-        roles: [ ROLES.director, ROLES.main_director, ROLES.advertising],
+        roles: [ROLES.director, ROLES.main_director, ROLES.advertising],
         branches: true,
         multi: true
 
@@ -278,7 +285,7 @@ export const menuConfig = [
         to: "observeStatic",
         name: "Observe Statistika",
         icon: "fa-toolbox",
-        roles: [ROLES.spiritualist , ROLES.admin , ROLES.advertising],
+        roles: [ROLES.spiritualist, ROLES.admin, ROLES.advertising],
         branches: true
 
     },
@@ -286,14 +293,14 @@ export const menuConfig = [
         to: "observation_results",
         name: "Teacher observe statistics",
         icon: "fa-arrow-up-right-dots",
-        roles: [ROLES.spiritualist , ROLES.admin , ROLES.advertising],
+        roles: [ROLES.spiritualist, ROLES.admin, ROLES.advertising],
         branches: true
     },
     {
         to: "applicationSystem",
         name: "Xo'jalik uchun zayavka berish",
         icon: "fa-list",
-        roles: [ROLES.spiritualist , ROLES.admin , ROLES.advertising , ROLES.director , ROLES.main_director],
+        roles: [ROLES.spiritualist, ROLES.admin, ROLES.advertising, ROLES.director, ROLES.main_director],
         branches: true
     },
     // {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import cls from "./observationShowPage.module.sass";
-import {API_URL, headers, useHttp} from "shared/api/base.js";
+import { API_URL, headers, useHttp } from "shared/api/base.js";
 
 export const ObservationShowPage = () => {
     const [data, setData] = useState(null);
@@ -13,12 +13,12 @@ export const ObservationShowPage = () => {
     const [sortDir, setSortDir] = useState(1);
 
     const branchId = localStorage.getItem("branchId");
-    const [cycle  , setCycle] = useState([]);
-    const [cycleId , setCycleId] = useState(cycle[0]?.id);
-    const {request} = useHttp()
+    const [cycle, setCycle] = useState([]);
+    const [cycleId, setCycleId] = useState(cycle[0]?.id);
+    const { request } = useHttp()
 
     useEffect(() => {
-        request(`${API_URL}Observation/schedule/cycles/?branch_id=${branchId}` , "GET" , null , headers())
+        request(`${API_URL}Observation/schedule/cycles/?branch_id=${branchId}`, "GET", null, headers())
             .then(res => {
                 setCycle(res)
                 setCycleId(res[0]?.id)
@@ -29,7 +29,7 @@ export const ObservationShowPage = () => {
 
 
     useEffect(() => {
-        if (cycleId){
+        if (cycleId) {
             fetch(`${API_URL}Observation/observation/weekly/?cycle=${cycleId}&branch=${branchId}`, {
                 method: "GET",
                 headers: headers()
@@ -144,7 +144,7 @@ export const ObservationShowPage = () => {
                     <option value="1">Ball: 1</option>
                     <option value="null">Ball yo'q</option>
                 </select>
-                <select  value={scoreFilter} onChange={e => setCycleId(e.target.value)} className={cls.select}>
+                <select value={scoreFilter} onChange={e => setCycleId(e.target.value)} className={cls.select}>
                     {cycle && cycle?.map(item => (
                         <option key={item?.id} value={item.id}>{item.start_date}</option>
                     ))}
@@ -154,76 +154,76 @@ export const ObservationShowPage = () => {
             <div className={cls.tableWrap}>
                 <table className={cls.table}>
                     <thead>
-                    <tr>
-                        <th></th>
-                        <th onClick={() => handleSort('name')} className={cls.sortable}>O'qituvchi {sortCol === 'name' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
-                        <th onClick={() => handleSort('completed')} className={cls.sortable}>Bajarildi {sortCol === 'completed' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
-                        <th onClick={() => handleSort('pending')} className={cls.sortable}>Kutilmoqda {sortCol === 'pending' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
-                        <th>Jarayon</th>
-                        <th onClick={() => handleSort('score')} className={cls.sortable}>O'rt. ball {sortCol === 'score' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
-                        <th>Holat</th>
-                    </tr>
+                        <tr>
+                            <th></th>
+                            <th onClick={() => handleSort('name')} className={cls.sortable}>O'qituvchi {sortCol === 'name' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
+                            <th onClick={() => handleSort('completed')} className={cls.sortable}>Bajarildi {sortCol === 'completed' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
+                            <th onClick={() => handleSort('pending')} className={cls.sortable}>Kutilmoqda {sortCol === 'pending' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
+                            <th>Jarayon</th>
+                            <th onClick={() => handleSort('score')} className={cls.sortable}>O'rt. ball {sortCol === 'score' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
+                            <th>Holat</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {sorted.map(t => {
-                        const pct = Math.round((t.completed_count / t.total_observers_required) * 100);
-                        const st = getStatus(t);
-                        const sc = t.weekly_avg_score;
-                        const isExp = expanded.has(t.teacher_id);
-                        const completedObs = t.observers.filter(o => o.is_completed);
+                        {sorted.map(t => {
+                            const pct = Math.round((t.completed_count / t.total_observers_required) * 100);
+                            const st = getStatus(t);
+                            const sc = t.weekly_avg_score;
+                            const isExp = expanded.has(t.teacher_id);
+                            const completedObs = t.observers.filter(o => o.is_completed);
 
-                        return (
-                            <React.Fragment key={t.teacher_id}>
-                                <tr onClick={() => toggleExpand(t.teacher_id)} className={cls.row}>
-                                    <td>
-                                        <button className={cls.expandBtn} >
-                                            {isExp ? '▲' : '▼'}
-                                        </button>
-                                    </td>
-                                    <td className={cls.teacherName}>{t.teacher_name}</td>
-                                    <td>{t.completed_count} / {t.total_observers_required}</td>
-                                    <td>{t.pending_count}</td>
-                                    <td>
-                                        <div className={cls.progressWrap}>
-                                            <div className={cls.progressBar}>
-                                                <div
-                                                    className={cls.progressFill}
-                                                    style={{ width: `${pct}%`, background: scoreColor(sc) }}
-                                                />
+                            return (
+                                <React.Fragment key={t.teacher_id}>
+                                    <tr onClick={() => toggleExpand(t.teacher_id)} className={cls.row}>
+                                        <td>
+                                            <button className={cls.expandBtn} >
+                                                {isExp ? '▲' : '▼'}
+                                            </button>
+                                        </td>
+                                        <td className={cls.teacherName}>{t.teacher_name}</td>
+                                        <td>{t.completed_count} / {t.total_observers_required}</td>
+                                        <td>{t.pending_count}</td>
+                                        <td>
+                                            <div className={cls.progressWrap}>
+                                                <div className={cls.progressBar}>
+                                                    <div
+                                                        className={cls.progressFill}
+                                                        style={{ width: `${pct}%`, background: scoreColor(sc) }}
+                                                    />
+                                                </div>
+                                                <span className={cls.pct}>{pct}%</span>
                                             </div>
-                                            <span className={cls.pct}>{pct}%</span>
-                                        </div>
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
                                             <span className={cls.score} style={{ color: scoreColor(sc) }}>
                                                 {sc !== null ? sc.toFixed(1) : '—'}
                                             </span>
-                                    </td>
-                                    <td>
+                                        </td>
+                                        <td>
                                             <span className={`${cls.badge} ${cls[`badge_${st}`]}`}>
                                                 {st === 'done' ? 'Tugallangan' : st === 'pending' ? 'Jarayonda' : 'Boshlanmagan'}
                                             </span>
-                                    </td>
-                                </tr>
-                                {isExp && (
-                                    <tr className={cls.detailRow}>
-                                        <td colSpan={7}>
-                                            <div className={cls.detailInner}>
-                                                {completedObs.length > 0
-                                                    ? completedObs.map(o => (
-                                                        <span key={o.observer_id} className={cls.obsChip}>
-                                                                {o.observer_name}{o.observation_avg !== null ? ` · ${o.observation_avg}` : ''}
-                                                            </span>
-                                                    ))
-                                                    : <span className={cls.noObs}>Hali kuzatuv amalga oshirilmagan</span>
-                                                }
-                                            </div>
                                         </td>
                                     </tr>
-                                )}
-                            </React.Fragment>
-                        );
-                    })}
+                                    {isExp && (
+                                        <tr className={cls.detailRow}>
+                                            <td colSpan={7}>
+                                                <div className={cls.detailInner}>
+                                                    {completedObs.length > 0
+                                                        ? completedObs.map(o => (
+                                                            <span key={o.observer_id} className={cls.obsChip}>
+                                                                {o.observer_name}{o.observation_avg !== null ? ` · ${o.observation_avg}` : ''}
+                                                            </span>
+                                                        ))
+                                                        : <span className={cls.noObs}>Hali kuzatuv amalga oshirilmagan</span>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </React.Fragment>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>

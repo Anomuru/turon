@@ -48,6 +48,7 @@ export const ApplicationSystem = () => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [filterBranch, setFilterBranch] = useState('');
     const [filterUser, setFilterUser] = useState('');
+    const [filterStatus, setFilterStatus] = useState(''); // '' = all, 'true' = active, 'false' = inactive
     const [newComment, setNewComment] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -68,12 +69,13 @@ const userId = localStorage.getItem('user_id');
     // Mock data for demo
 
     useEffect(() => {
-        request(`${API_URL}reports/admin-requests/?branch=${branchId}`)
+        const statusParam = filterStatus ? `&status=${filterStatus}` : '';
+        request(`${API_URL}reports/admin-requests/?branch=${branchId}${statusParam}`)
             .then(res => {
                 console.log(res)
                 setRequests(res)
             })
-    }, []);
+    }, [filterStatus]);
 
 
     //
@@ -204,30 +206,19 @@ const userId = localStorage.getItem('user_id');
             </div>
 
             <div className={styles.controls}>
-                {/*<div className={styles.filters}>*/}
-                {/*    <div className={styles.filterGroup}>*/}
-                {/*        <label>Filial</label>*/}
-                {/*        <select*/}
-                {/*            value={filterBranch}*/}
-                {/*            onChange={(e) => setFilterBranch(e.target.value)}*/}
-                {/*        >*/}
-                {/*            <option value="">Barcha filiallar</option>*/}
-                {/*            <option value="1">Toshkent Filiali</option>*/}
-                {/*            <option value="2">Samarqand Filiali</option>*/}
-                {/*        </select>*/}
-                {/*    </div>*/}
-                {/*    <div className={styles.filterGroup}>*/}
-                {/*        <label>Foydalanuvchi</label>*/}
-                {/*        <select*/}
-                {/*            value={filterUser}*/}
-                {/*            onChange={(e) => setFilterUser(e.target.value)}*/}
-                {/*        >*/}
-                {/*            <option value="">Barcha foydalanuvchilar</option>*/}
-                {/*            <option value="5">Ali Valiyev</option>*/}
-                {/*            <option value="3">Bobur Karimov</option>*/}
-                {/*        </select>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
+                <div className={styles.filters}>
+                    <div className={styles.filterGroup}>
+                        <label>Status</label>
+                        <select
+                            value={filterStatus}
+                            onChange={(e) => setFilterStatus(e.target.value)}
+                        >
+                            <option value="">Barchasi</option>
+                            <option value="true">Qabul qilindi</option>
+                            <option value="false">Qabul qilinmadi</option>
+                        </select>
+                    </div>
+                </div>
 
                 <div className={styles.stats}>
                     <div className={styles.statCard}>
@@ -264,9 +255,14 @@ const userId = localStorage.getItem('user_id');
                             >
                                 <div className={styles.requestHeader}>
                                     <h3>{request.name}</h3>
-                                    <span className={`${styles.deadline} ${getStatusColor(request.deadline)}`}>
-                                        {formatDate(request.deadline)}
-                                    </span>
+                                    <div className={styles.headerRight}>
+                                        <span className={`${styles.status} ${request.status ? styles.statusAccepted : styles.statusRejected}`}>
+                                            {request.status ? '✓ Qabul qilindi' : '✗ Qabul qilinmadi'}
+                                        </span>
+                                        <span className={`${styles.deadline} ${getStatusColor(request.deadline)}`}>
+                                            {formatDate(request.deadline)}
+                                        </span>
+                                    </div>
                                 </div>
                                 <p className={styles.requestDesc}>{request.description}</p>
                                 <div className={styles.requestMeta}>
@@ -298,6 +294,13 @@ const userId = localStorage.getItem('user_id');
                         </div>
 
                         <div className={styles.detailsBody}>
+                            <div className={styles.detailSection}>
+                                <label>Status</label>
+                                <p className={`${styles.statusBadge} ${selectedRequest.status ? styles.statusAccepted : styles.statusRejected}`}>
+                                    {selectedRequest.status ? '✓ Qabul qilindi' : '✗ Qabul qilinmadi'}
+                                </p>
+                            </div>
+
                             <div className={styles.detailSection}>
                                 <label>Tavsif</label>
                                 <p>{selectedRequest.description}</p>

@@ -1,1 +1,1 @@
-export {ObservationShowPage} from './ui/observationShowPage.jsx'
+export { ObservationShowPage } from './ui/observationShowPage'

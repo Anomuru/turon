@@ -24,6 +24,7 @@ import {
     getRouteClassProfile,
     getOtchot,
     getOverheadTypes,
+    getLoanProfile,
     getRouteRGBData,
     getRouteTaskManager,
     getRouteFilteredLeads,
@@ -86,6 +87,7 @@ const StudentProfileGroupsHistory = lazyPage(() => import("entities/profile/stud
 
 const AccountingOtchotPage = lazyPage(() => import("pages/accountingPage"), "AccountingOtchotPage");
 const OverheadTypesPage = lazyPage(() => import("pages/accountingPage"), "OverheadTypesPage");
+const LoanProfilePage = lazyPage(() => import("pages/accountingPage"), "LoanProfilePage");
 
 const TaskManager = lazyPage(() => import("pages/taskManager/ui/taskManager"), "TaskManager");
 
@@ -216,6 +218,11 @@ export const routersConfigProfile = [
         name: "overheadTypes",
         path: getOverheadTypes(),
         element: <OverheadTypesPage/>
+    },
+    {
+        name: "loanProfile",
+        path: getLoanProfile(":id"),
+        element: <LoanProfilePage/>
     },
     {
         name: "History",

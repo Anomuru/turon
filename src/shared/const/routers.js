@@ -63,6 +63,7 @@ export const getGroupExams = (id) => `groups/exams`
 
 export const getOtchot = () => `accounting/otchot/*`
 export const getOverheadTypes = () => `accounting/overheadTypes`
+export const getLoanProfile = (id) => `accounting/loanProfile/${id}`
 
 
 export const getGroupHistory = (id) => `students/profile/history/${id}`
@@ -88,6 +89,9 @@ export const getObservationShowPage = () => "observation_results"
 export const applicationSystem = () => "applicationSystem"
 export const observeStatic = (id) => `observeStatic`
 export const getGroupRating = (id) => `groups/groupRating`
+
+export const getEducationQuality = () => `educationQuality`
+export const getEducationQualityDetails = () => `educationQuality/details`
 
 
 

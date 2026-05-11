@@ -1,22 +1,22 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import classNames from "classnames";
-import {useDispatch, useSelector} from "react-redux";
-import {useParams} from "react-router";
-import {useTheme} from "shared/lib/hooks/useTheme";
-import {TeacherProfileInfo, TeacherProfileTeachersGroup, SchoolTeacherGroups} from "entities/profile/teacherProfile";
-import {TeacherEdit} from "features/profileEdits/teacherEdit";
-import {fetchTeacherId, getTeacherId, changeTeacherProfileImage} from "entities/teachers";
-import {ImageCrop} from "features/imageCrop";
-import {changeStudentProfileImage} from "../../model/thunk/studentProfileThunk";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { useTheme } from "shared/lib/hooks/useTheme";
+import { TeacherProfileInfo, TeacherProfileTeachersGroup, SchoolTeacherGroups } from "entities/profile/teacherProfile";
+import { TeacherEdit } from "features/profileEdits/teacherEdit";
+import { fetchTeacherId, getTeacherId, changeTeacherProfileImage } from "entities/teachers";
+import { ImageCrop } from "features/imageCrop";
+import { changeStudentProfileImage } from "../../model/thunk/studentProfileThunk";
 
 import cls from "./profileTeacherPage.module.sass"
-import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
-import {teacherParseReducer} from "entities/teachers/model/teacherParseSlice.js";
-import {getLoading, getStudentLoading} from "entities/teachers/model/selector/teacherIdSelector.js";
-import {DefaultLoader, DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
-import {fetchTimeTableData, fetchTimeTableForShow} from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
-import {getUserBranchId} from "entities/profile/userProfile/index.js";
-import {Switch} from "shared/ui/switch/index.js";
+import { DynamicModuleLoader } from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
+import { teacherParseReducer } from "entities/teachers/model/teacherParseSlice.js";
+import { getLoading, getStudentLoading } from "entities/teachers/model/selector/teacherIdSelector.js";
+import { DefaultLoader, DefaultPageLoader } from "shared/ui/defaultLoader/index.js";
+import { fetchTimeTableData, fetchTimeTableForShow } from "pages/timeTable/model/thunks/timeTableTuronThunks.js";
+import { getUserBranchId } from "entities/profile/userProfile/index.js";
+import { Switch } from "shared/ui/switch/index.js";
 
 
 const reducers = {
@@ -28,7 +28,7 @@ export const ProfileTeacherPage = () => {
     const date = new Date().toLocaleDateString('en-CA')
     const [active, setActive] = useState(false)
     const dispatch = useDispatch()
-    const {id} = useParams()
+    const { id } = useParams()
     // const {id} = useSelector(getBranch)
     const teacherId = useSelector(getTeacherId)
     const branch = useSelector(getUserBranchId)
@@ -50,7 +50,7 @@ export const ProfileTeacherPage = () => {
     useEffect(() => {
         if (id && branch) {
             console.log(true)
-            dispatch(fetchTimeTableForShow({teacher: id, branch}))
+            dispatch(fetchTimeTableForShow({ teacher: id, branch }))
         }
     }, [id, branch])
 
@@ -58,7 +58,7 @@ export const ProfileTeacherPage = () => {
     const onSubmitImage = (data) => {
         // formData.append("profile_img", data)
 
-        dispatch(changeStudentProfileImage({id: teacherId.user?.id, data}))
+        dispatch(changeStudentProfileImage({ id: teacherId.user?.id, data }))
     }
 
 
@@ -94,7 +94,7 @@ export const ProfileTeacherPage = () => {
                     })}
                 >
 
-                    <SchoolTeacherGroups currentTab={currentTab}/>
+                    <SchoolTeacherGroups currentTab={currentTab} />
 
                 </div>
                 <ImageCrop

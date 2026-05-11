@@ -15,12 +15,32 @@ import {Overhead} from "entities/inkasatsiya/ui/overhead/overhead";
 import {Capital} from "entities/inkasatsiya/ui/capital/capital";
 import {Teacher} from "entities/inkasatsiya/ui/teacher/teacher";
 import {Employer} from "entities/inkasatsiya/ui/employer/employer";
+import {BranchTransactions} from "entities/inkasatsiya/ui/branchTransactions/branchTransactions";
 import {DynamicModuleLoader} from "shared/lib/components/DynamicModuleLoader/DynamicModuleLoader.jsx";
 import cls from "./inkasatsiya.module.module.sass"
 import {getBranch} from "../../../features/branchSwitcher";
 import {CapitalSlice} from "entities/capital/model/slice/capitalSlice.js";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
 import {getSelectedLocations} from "features/locations/index.js";
+import {Select} from "shared/ui/select";
+
+const now = new Date();
+const MONTHS = [
+    {id: 1, name: "Yanvar"}, {id: 2, name: "Fevral"}, {id: 3, name: "Mart"},
+    {id: 4, name: "Aprel"}, {id: 5, name: "May"}, {id: 6, name: "Iyun"},
+    {id: 7, name: "Iyul"}, {id: 8, name: "Avgust"}, {id: 9, name: "Sentabr"},
+    {id: 10, name: "Oktabr"}, {id: 11, name: "Noyabr"}, {id: 12, name: "Dekabr"},
+];
+const YEARS = Array.from({length: 5}, (_, i) => {
+    const y = now.getFullYear() - 2 + i;
+    return {id: y, name: String(y)};
+});
+const DIRECTION_OPTIONS = [
+    {id: "all", name: "Hammasi"},
+    {id: "give", name: "Berildi"},
+    {id: "receive", name: "Olindi"},
+];
+const fmt = (n) => Number(n || 0).toLocaleString();
 
 const filter = [
     {name: 'studentsPayments', label: "student payment"},
@@ -31,6 +51,7 @@ const filter = [
     {name: 'overhead', label: "overhead"},
     // {name: 'bookPayment', label: "book payment"},
     {name: 'capital', label: "capital"},
+    {name: 'branchTransactions', label: "filial tranzaksiyalari"},
 ]
 
 const reducers = {
@@ -51,12 +72,10 @@ export const Inkasatsiya = () => {
 
     const loading = useSelector(getInkasatsiyaLoading)
 
-
     const branchId = useSelector(getUserBranchId)
     const selectedBranch = useSelector(getSelectedLocations);
     const branchForFilter = selectedBranch?.id ?? branchId;
 
-    console.log(paymentType, "paymentType")
     useEffect(() => {
 
         if (to.length && ot.length && radio > 0) {
@@ -78,31 +97,20 @@ export const Inkasatsiya = () => {
 
     const totalMoney = () => {
         switch (activeMenu) {
-            case "studentsPayments" :
-                return (
-                    <h2>o'quvchilarning umimiy to'lovi
-                        : {student?.students?.student_total_payment ? formatSalary(student?.students?.student_total_payment) : 0} </h2>
-                )
-            case "teachersSalary" :
-                return (
-                    <h2>O'qituvchilarning umumiy to'lovi
-                        : {student?.teachers?.teacher_total_salary ? formatSalary(student?.teachers?.teacher_total_salary) : 0} </h2>
-                )
-            case "employeesSalary" :
-                return (
-                    <h2>Ishchilarning umumiy to'lovi
-                        : {student?.workers?.worker_total_salary ? formatSalary(student?.workers?.worker_total_salary) : 0} </h2>
-                )
-            case "overhead" :
-                return (
-                    <h2>overheadning umumiy to'lovi
-                        : {student?.overheads?.total_overhead_payment ? formatSalary(student?.overheads?.total_overhead_payment) : 0} </h2>
-                )
-            case "capital" :
-                return <h2>capitalning umumiy to'lovi
-                    : {student?.capitals?.total_capital ? formatSalary(student?.capitals?.total_capital) : 0}</h2>
+            case "studentsPayments":
+                return <h2>o'quvchilarning umimiy to'lovi: {student?.students?.student_total_payment ? formatSalary(student?.students?.student_total_payment) : 0}</h2>
+            case "teachersSalary":
+                return <h2>O'qituvchilarning umumiy to'lovi: {student?.teachers?.teacher_total_salary ? formatSalary(student?.teachers?.teacher_total_salary) : 0}</h2>
+            case "employeesSalary":
+                return <h2>Ishchilarning umumiy to'lovi: {student?.workers?.worker_total_salary ? formatSalary(student?.workers?.worker_total_salary) : 0}</h2>
+            case "overhead":
+                return <h2>overheadning umumiy to'lovi: {student?.overheads?.total_overhead_payment ? formatSalary(student?.overheads?.total_overhead_payment) : 0}</h2>
+            case "capital":
+                return <h2>capitalning umumiy to'lovi: {student?.capitals?.total_capital ? formatSalary(student?.capitals?.total_capital) : 0}</h2>
+            case "branchTransactions":
+                const net = student?.branch_transactions?.net || 0;
+                return <h2>Filial tranzaksiyalarining umumiy to'lovi: {formatSalary(net)}</h2>
         }
-
     }
 
     const setPage = useCallback((value) => {
@@ -122,10 +130,8 @@ export const Inkasatsiya = () => {
                     {totalMoney()}
                     <div className={cls.inkasatsiya}>
                         <AccountingHeader activeMenu={activeMenu} paymentType={paymentType} to={to} setTo={setTo}
-                                          ot={ot}
-                                          setOt={setOt} setSelectedRadio={setSelectedRadio} radio={radio}/>
+                                          ot={ot} setOt={setOt} setSelectedRadio={setSelectedRadio} radio={radio}/>
                     </div>
-
                 </div>
 
 
@@ -153,6 +159,13 @@ export const Inkasatsiya = () => {
                         <Route path={"capital"}
                                element={<Capital formatSalary={formatSalary} extraClass={cls.table} capital={student}
                                                  path={"capital"} locationId={locationId}/>}/>
+                        <Route path={"branchTransactions"}
+                               element={
+                                   <BranchTransactions
+                                       extraClass={cls.table}
+                                       branchTransactionsData={student?.branch_transactions}
+                                   />
+                               }/>
                         {/*<Route path={"debtStudents"} element={<DebtStudents/>}/>*/}
                     </Routes>}
 
