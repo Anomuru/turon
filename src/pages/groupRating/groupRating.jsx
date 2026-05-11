@@ -161,7 +161,7 @@ export const GroupsPage = () => {
                     <option value="rated">Baholangan</option>
                     <option value="unrated">Baholanmagan</option>
                 </select>
-            </div>
+            </div>  
 
             {filtered.length === 0
                 ? <div className={cls.empty}>Iltimos sana tanlang !!!</div>
