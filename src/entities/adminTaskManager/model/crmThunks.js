@@ -126,7 +126,7 @@ export const FetchCallStatisticThunk = createAsyncThunk(
     async ({ branchId, date }, { rejectWithValue }) => {
         try {
             const res = await fetch(
-                `${API_URL}call/statistic/?branch_id=${branchId}&date=${date}`,
+                `${API_URL}call/statistic/?branch=${branchId}&date=${date}`,
                 { headers: headers() }
             )
             if (!res.ok) throw new Error(`call/statistic/ GET failed: ${res.status}`)

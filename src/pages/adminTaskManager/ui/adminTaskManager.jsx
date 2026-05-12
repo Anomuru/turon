@@ -32,7 +32,7 @@ const CallStatisticsPage = () => {
         setLoading(true);
         dispatch(FetchCallStatisticThunk({ branchId, date: d }))
             .then(res => {
-                if (res.payload?.ok) setStats(res.payload.results);
+                if (res.payload?.ok) setStats(res.payload);
             })
             .finally(() => setLoading(false));
     };
@@ -41,13 +41,14 @@ const CallStatisticsPage = () => {
 
     // Yuqoridagi 3 ta karta uchun umumiy hisob-kitoblar
     const summary = useMemo(() => {
-        const totalCustomers = stats.reduce((acc, curr) => acc + curr.total, 0);
-        const totalCalled = stats.reduce((acc, curr) => acc + curr.called, 0);
-        const avgPercent = totalCustomers > 0 ? ((totalCalled / totalCustomers) * 100).toFixed(1) : 0;
-
-        return { totalCustomers, totalCalled, avgPercent };
+        // const totalCustomers = stats.reduce((acc, curr) => acc + curr.total, 0);
+        // const totalCalled = stats.reduce((acc, curr) => acc + curr.called, 0);
+        // const avgPercent = totalCustomers > 0 ? ((totalCalled / totalCustomers) * 100).toFixed(1) : 0;
+        //
+        // return { totalCustomers, totalCalled, avgPercent };
     }, [stats]);
 
+    console.log(stats)
     return (
         <div className={cls2.statsWrapper}>
             {/* Header Section */}
@@ -67,30 +68,30 @@ const CallStatisticsPage = () => {
                 </div>
             </header>
 
-            {/* Summary Cards */}
-            <div className={cls2.summaryGrid}>
-                <div className={cls2.summaryCard}>
-                    <p>JAMI MIJOZLAR</p>
-                    <h2>{summary.totalCustomers}</h2>
-                    <span>barcha filiallar</span>
-                </div>
-                <div className={cls2.summaryCard}>
-                    <p>QO'NG'IROQ QILINDI</p>
-                    <h2>{summary.totalCalled}</h2>
-                    <span>bugun</span>
-                </div>
-                <div className={cls2.summaryCard}>
-                    <p>O'RTACHA FOIZ</p>
-                    <h2 className={cls2.highlightText}>{summary.avgPercent}%</h2>
-                    <span>bajarilish darajasi</span>
-                </div>
-            </div>
+            {/*/!* Summary Cards *!/*/}
+            {/*<div className={cls2.summaryGrid}>*/}
+            {/*    <div className={cls2.summaryCard}>*/}
+            {/*        <p>JAMI MIJOZLAR</p>*/}
+            {/*        <h2>{summary.totalCustomers}</h2>*/}
+            {/*        <span>barcha filiallar</span>*/}
+            {/*    </div>*/}
+            {/*    <div className={cls2.summaryCard}>*/}
+            {/*        <p>QO'NG'IROQ QILINDI</p>*/}
+            {/*        <h2>{summary.totalCalled}</h2>*/}
+            {/*        <span>bugun</span>*/}
+            {/*    </div>*/}
+            {/*    <div className={cls2.summaryCard}>*/}
+            {/*        <p>O'RTACHA FOIZ</p>*/}
+            {/*        <h2 className={cls2.highlightText}>{summary.avgPercent}%</h2>*/}
+            {/*        <span>bajarilish darajasi</span>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
 
             {/* Branch Cards Grid */}
             <div className={cls2.cardsGrid}>
-                {stats.map((item) => (
-                    <BranchCard key={item.id} data={item} />
-                ))}
+                {/*{stats.map((item) => (*/}
+                    <BranchCard key={stats.id} data={stats.called_counts} />
+                {/*// ))}*/}
             </div>
         </div>
     );
@@ -100,18 +101,18 @@ const CallStatisticsPage = () => {
 const BranchCard = ({ data }) => {
     const radius = 70;
     const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (data.percentage / 100) * circumference;
+    const offset = circumference - (data?.percentage / 100) * circumference;
 
     // Filialga qarab rang tanlash (ixtiyoriy)
-    const cardColor = data.branch_id === 6 ? "#3b82f6" : data.branch_id === 9 ? "#10b981" : "#f43f5e";
+    const cardColor = data?.branch_id === 6 ? "#3b82f6" : data?.branch_id === 9 ? "#10b981" : "#f43f5e";
 
     return (
         <div className={cls2.branchCard}>
             <div className={cls2.branchCard__header}>
                 <span className={cls2.badge} style={{ backgroundColor: cardColor + '22', color: cardColor }}>
-                    Filial #{data.branch_id}
+                    Filial #{data?.branch_id}
                 </span>
-                <span className={cls2.dateText}>{data.date}</span>
+                <span className={cls2.dateText}>{data?.date}</span>
             </div>
 
             <div className={cls2.circleBox}>
@@ -126,23 +127,26 @@ const BranchCard = ({ data }) => {
                     />
                 </svg>
                 <div className={cls2.circleInfo}>
-                    <h3>{data.percentage}%</h3>
+                    <h3>{data?.percentage}%</h3>
                     <p>BAJARILDI</p>
                 </div>
             </div>
 
             <div className={cls2.statsTable}>
                 <div className={cls2.statsRow}>
-                    <div className={cls2.statItem}><span>Jami</span><strong>{data.total}</strong></div>
-                    <div className={cls2.statItem}><span>Qo'ng'iroq</span><strong>{data.called}</strong></div>
+                    <div className={cls2.statItem} style={{gridColumn: "1/3"}}><span>Jami</span><strong>{data?.total}</strong></div>
+                    <div className={cls2.statItem}><span>Qo'ng'iroq</span><strong>{data?.called}</strong></div>
+                    <div className={cls2.statItem}><span>Yangi o'quvchilar</span><strong>{data?.new_student}</strong></div>
+                    <div className={cls2.statItem}><span>Qarizdorlar</span><strong>{data?.debtor}</strong></div>
+                    <div className={cls2.statItem}><span>Leadlar</span><strong>{data?.lead}</strong></div>
                 </div>
                 <div className={cls2.progressLine}>
                     <div className={cls2.lineLabel}>
                         <span>Bajarilish</span>
-                        <span>{data.percentage}%</span>
+                        <span>{data?.percentage}%</span>
                     </div>
                     <div className={cls2.lineBg}>
-                        <div className={cls2.lineFill} style={{ width: `${data.percentage}%`, backgroundColor: cardColor }} />
+                        <div className={cls2.lineFill} style={{ width: `${data?.percentage}%`, backgroundColor: cardColor }} />
                     </div>
                 </div>
             </div>
