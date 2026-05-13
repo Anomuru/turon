@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import cls from "./observationShowPage.module.sass";
-import { API_URL, headers, useHttp } from "shared/api/base.js";
+import cls from './observationShowPage.module.sass';
+import { API_URL, headers, useHttp } from 'shared/api/base.js';
 
 export const ObservationShowPage = () => {
     const [data, setData] = useState(null);
@@ -11,52 +11,49 @@ export const ObservationShowPage = () => {
     const [scoreFilter, setScoreFilter] = useState('all');
     const [sortCol, setSortCol] = useState(null);
     const [sortDir, setSortDir] = useState(1);
-
-    const branchId = localStorage.getItem("branchId");
     const [cycle, setCycle] = useState([]);
-    const [cycleId, setCycleId] = useState(cycle[0]?.id);
-    const { request } = useHttp()
+    const [cycleId, setCycleId] = useState(null);
+
+    const branchId = localStorage.getItem('branchId');
+    const { request } = useHttp();
 
     useEffect(() => {
-        request(`${API_URL}Observation/schedule/cycles/?branch_id=${branchId}`, "GET", null, headers())
+        request(`${API_URL}Observation/schedule/cycles/?branch_id=${branchId}`, 'GET', null, headers())
             .then(res => {
-                setCycle(res)
-                setCycleId(res[0]?.id)
-            })
+                setCycle(res);
+                setCycleId(res[0]?.id ?? null);
+            });
     }, []);
 
-
-
-
     useEffect(() => {
-        if (cycleId) {
-            fetch(`${API_URL}Observation/observation/weekly/?cycle=${cycleId}&branch=${branchId}`, {
-                method: "GET",
-                headers: headers()
-            })
-                .then(res => res.json())
-                .then(json => { setData(json); setLoading(false); })
-                .catch(() => setLoading(false));
-        }
+        if (!cycleId) return;
+        setLoading(true);
+        fetch(`${API_URL}Observation/observation/weekly/?cycle=${cycleId}&branch=${branchId}`, {
+            method: 'GET',
+            headers: headers(),
+        })
+            .then(res => res.json())
+            .then(json => { setData(json); setLoading(false); })
+            .catch(() => setLoading(false));
     }, [cycleId]);
 
-    if (loading) return <div className={cls.loading}>Yuklanmoqda...</div>;
+    if (loading) return <div className={cls.loading}><span className={cls.spinner} />Yuklanmoqda...</div>;
     if (!data) return <div className={cls.error}>Ma'lumot topilmadi</div>;
 
     const teachers = data.teachers || [];
 
-    const getStatus = (t) => {
+    const getStatus = t => {
         if (t.completed_count === 0) return 'none';
         if (t.completed_count >= t.total_observers_required) return 'done';
         return 'pending';
     };
 
-    const scoreColor = (s) => {
-        if (s === null) return '#B4B2A9';
-        if (s >= 4) return '#639922';
-        if (s >= 3) return '#378ADD';
-        if (s >= 2) return '#BA7517';
-        return '#E24B4A';
+    const scoreColor = s => {
+        if (s === null) return 'var(--score-null)';
+        if (s >= 4) return 'var(--score-high)';
+        if (s >= 3) return 'var(--score-mid)';
+        if (s >= 2) return 'var(--score-low)';
+        return 'var(--score-fail)';
     };
 
     const filtered = teachers.filter(t => {
@@ -81,12 +78,12 @@ export const ObservationShowPage = () => {
         return sortDir * (av - bv);
     });
 
-    const handleSort = (col) => {
+    const handleSort = col => {
         if (sortCol === col) setSortDir(d => d * -1);
         else { setSortCol(col); setSortDir(1); }
     };
 
-    const toggleExpand = (id) => {
+    const toggleExpand = id => {
         setExpanded(prev => {
             const next = new Set(prev);
             next.has(id) ? next.delete(id) : next.add(id);
@@ -101,18 +98,31 @@ export const ObservationShowPage = () => {
     const totalObs = teachers.reduce((s, t) => s + t.completed_count, 0);
     const started = teachers.filter(t => t.completed_count > 0).length;
 
-    console.log(cycle)
+    const sortArrow = col => sortCol === col ? (sortDir === 1 ? ' ↑' : ' ↓') : '';
+
+    const statusLabel = st =>
+        st === 'done' ? 'Tugallangan' : st === 'pending' ? 'Jarayonda' : 'Boshlanmagan';
+
     return (
         <div className={cls.main}>
-            <p className={cls.cycleHeader}>
-                Tsikl #{data.cycle_id} &nbsp;|&nbsp; {data.start_date} – {data.end_date} &nbsp;|&nbsp; Filial #{data.branch_id}
-            </p>
 
+            {/* Cycle info bar */}
+            <div className={cls.cycleBar}>
+                <span className={cls.cyclePill}>
+                    Tsikl <strong>#{data.cycle_id}</strong>
+                </span>
+                <span className={cls.cyclePill}>{data.start_date} – {data.end_date}</span>
+                <span className={cls.cyclePill}>
+                    Filial <strong>#{data.branch_id}</strong>
+                </span>
+            </div>
+
+            {/* Summary metrics */}
             <div className={cls.summary}>
                 {[
                     { label: "Jami o'qituvchilar", value: teachers.length },
-                    { label: "Boshlagan", value: started },
-                    { label: "Jami kuzatuvlar", value: totalObs },
+                    { label: 'Boshlagan', value: started },
+                    { label: 'Jami kuzatuvlar', value: totalObs },
                     { label: "O'rtacha ball", value: avgScore },
                 ].map(m => (
                     <div key={m.label} className={cls.metric}>
@@ -122,6 +132,7 @@ export const ObservationShowPage = () => {
                 ))}
             </div>
 
+            {/* Filters */}
             <div className={cls.filters}>
                 <input
                     type="text"
@@ -130,13 +141,21 @@ export const ObservationShowPage = () => {
                     onChange={e => setSearch(e.target.value)}
                     className={cls.searchInput}
                 />
-                <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className={cls.select}>
+                <select
+                    value={statusFilter}
+                    onChange={e => setStatusFilter(e.target.value)}
+                    className={cls.select}
+                >
                     <option value="all">Barcha holat</option>
-                    <option value="done">Bajarildi</option>
+                    <option value="done">Tugallangan</option>
                     <option value="pending">Jarayonda</option>
                     <option value="none">Boshlanmagan</option>
                 </select>
-                <select value={scoreFilter} onChange={e => setScoreFilter(e.target.value)} className={cls.select}>
+                <select
+                    value={scoreFilter}
+                    onChange={e => setScoreFilter(e.target.value)}
+                    className={cls.select}
+                >
                     <option value="all">Barcha ball</option>
                     <option value="4">Ball: 4</option>
                     <option value="3">Ball: 3</option>
@@ -144,86 +163,132 @@ export const ObservationShowPage = () => {
                     <option value="1">Ball: 1</option>
                     <option value="null">Ball yo'q</option>
                 </select>
-                <select value={scoreFilter} onChange={e => setCycleId(e.target.value)} className={cls.select}>
-                    {cycle && cycle?.map(item => (
-                        <option key={item?.id} value={item.id}>{item.start_date}</option>
+                <select
+                    value={cycleId ?? ''}
+                    onChange={e => setCycleId(Number(e.target.value))}
+                    className={cls.select}
+                >
+                    {cycle.map(item => (
+                        <option key={item.id} value={item.id}>{item.start_date}</option>
                     ))}
                 </select>
             </div>
 
+            {/* Table */}
             <div className={cls.tableWrap}>
                 <table className={cls.table}>
                     <thead>
-                        <tr>
-                            <th></th>
-                            <th onClick={() => handleSort('name')} className={cls.sortable}>O'qituvchi {sortCol === 'name' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
-                            <th onClick={() => handleSort('completed')} className={cls.sortable}>Bajarildi {sortCol === 'completed' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
-                            <th onClick={() => handleSort('pending')} className={cls.sortable}>Kutilmoqda {sortCol === 'pending' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
-                            <th>Jarayon</th>
-                            <th onClick={() => handleSort('score')} className={cls.sortable}>O'rt. ball {sortCol === 'score' ? (sortDir === 1 ? '↑' : '↓') : '↕'}</th>
-                            <th>Holat</th>
-                        </tr>
+                    <tr>
+                        <th className={cls.thToggle} />
+                        <th className={cls.sortable} onClick={() => handleSort('name')}>
+                            O'qituvchi{sortArrow('name')}
+                        </th>
+                        <th className={cls.sortable} onClick={() => handleSort('completed')}>
+                            Bajarildi{sortArrow('completed')}
+                        </th>
+                        <th className={cls.sortable} onClick={() => handleSort('pending')}>
+                            Kutilmoqda{sortArrow('pending')}
+                        </th>
+                        <th>Jarayon</th>
+                        <th className={cls.sortable} onClick={() => handleSort('score')}>
+                            O'rt. ball{sortArrow('score')}
+                        </th>
+                        <th>Holat</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        {sorted.map(t => {
-                            const pct = Math.round((t.completed_count / t.total_observers_required) * 100);
-                            const st = getStatus(t);
-                            const sc = t.weekly_avg_score;
-                            const isExp = expanded.has(t.teacher_id);
-                            const completedObs = t.observers.filter(o => o.is_completed);
+                    {sorted.length === 0 && (
+                        <tr>
+                            <td colSpan={7} className={cls.emptyCell}>
+                                Hech narsa topilmadi
+                            </td>
+                        </tr>
+                    )}
+                    {sorted.map(t => {
+                        const pct = t.total_observers_required > 0
+                            ? Math.round((t.completed_count / t.total_observers_required) * 100)
+                            : 0;
+                        const st = getStatus(t);
+                        const sc = t.weekly_avg_score;
+                        const isExp = expanded.has(t.teacher_id);
+                        const allObs = t.observers || [];
+                        const completedObs = allObs.filter(o => o.is_completed);
+                        const pendingObs = allObs.filter(o => !o.is_completed);
 
-                            return (
-                                <React.Fragment key={t.teacher_id}>
-                                    <tr onClick={() => toggleExpand(t.teacher_id)} className={cls.row}>
-                                        <td>
-                                            <button className={cls.expandBtn} >
-                                                {isExp ? '▲' : '▼'}
-                                            </button>
-                                        </td>
-                                        <td className={cls.teacherName}>{t.teacher_name}</td>
-                                        <td>{t.completed_count} / {t.total_observers_required}</td>
-                                        <td>{t.pending_count}</td>
-                                        <td>
-                                            <div className={cls.progressWrap}>
-                                                <div className={cls.progressBar}>
-                                                    <div
-                                                        className={cls.progressFill}
-                                                        style={{ width: `${pct}%`, background: scoreColor(sc) }}
-                                                    />
-                                                </div>
-                                                <span className={cls.pct}>{pct}%</span>
+                        return (
+                            <React.Fragment key={t.teacher_id}>
+                                <tr
+                                    className={cls.row}
+                                    onClick={() => toggleExpand(t.teacher_id)}
+                                >
+                                    <td>
+                                        <div className={cls.expandBtn}>
+                                            {isExp ? '▲' : '▼'}
+                                        </div>
+                                    </td>
+                                    <td className={cls.teacherName}>{t.teacher_name}</td>
+                                    <td>{t.completed_count} / {t.total_observers_required}</td>
+                                    <td>{t.pending_count}</td>
+                                    <td>
+                                        <div className={cls.progressWrap}>
+                                            <div className={cls.progressBar}>
+                                                <div
+                                                    className={cls.progressFill}
+                                                    style={{
+                                                        width: `${pct}%`,
+                                                        background: scoreColor(sc),
+                                                    }}
+                                                />
                                             </div>
-                                        </td>
-                                        <td>
-                                            <span className={cls.score} style={{ color: scoreColor(sc) }}>
+                                            <span className={cls.pct}>{pct}%</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                            <span
+                                                className={cls.score}
+                                                style={{ color: scoreColor(sc) }}
+                                            >
                                                 {sc !== null ? sc.toFixed(1) : '—'}
                                             </span>
-                                        </td>
-                                        <td>
+                                    </td>
+                                    <td>
                                             <span className={`${cls.badge} ${cls[`badge_${st}`]}`}>
-                                                {st === 'done' ? 'Tugallangan' : st === 'pending' ? 'Jarayonda' : 'Boshlanmagan'}
+                                                {statusLabel(st)}
                                             </span>
+                                    </td>
+                                </tr>
+
+                                {isExp && (
+                                    <tr className={cls.detailRow}>
+                                        <td colSpan={7}>
+                                            <div className={cls.detailInner}>
+                                                {allObs.length === 0 && (
+                                                    <span className={cls.noObs}>
+                                                            Kuzatuvlar ma'lumoti mavjud emas
+                                                        </span>
+                                                )}
+                                                {completedObs.map(o => (
+                                                    <span key={o.observer_id} className={`${cls.obsChip} ${cls.obsChipDone}`}>
+                                                            <span className={cls.obsDot} />
+                                                        {o.observer_name}
+                                                        {o.observation_avg !== null
+                                                            ? ` · ${o.observation_avg.toFixed(1)}`
+                                                            : ''}
+                                                        </span>
+                                                ))}
+                                                {pendingObs.map(o => (
+                                                    <span key={o.observer_id} className={`${cls.obsChip} ${cls.obsChipPending}`}>
+                                                            <span className={cls.obsDot} />
+                                                        {o.observer_name}
+                                                        </span>
+                                                ))}
+                                            </div>
                                         </td>
                                     </tr>
-                                    {isExp && (
-                                        <tr className={cls.detailRow}>
-                                            <td colSpan={7}>
-                                                <div className={cls.detailInner}>
-                                                    {completedObs.length > 0
-                                                        ? completedObs.map(o => (
-                                                            <span key={o.observer_id} className={cls.obsChip}>
-                                                                {o.observer_name}{o.observation_avg !== null ? ` · ${o.observation_avg}` : ''}
-                                                            </span>
-                                                        ))
-                                                        : <span className={cls.noObs}>Hali kuzatuv amalga oshirilmagan</span>
-                                                    }
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )}
-                                </React.Fragment>
-                            );
-                        })}
+                                )}
+                            </React.Fragment>
+                        );
+                    })}
                     </tbody>
                 </table>
             </div>

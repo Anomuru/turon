@@ -48,7 +48,6 @@ const CallStatisticsPage = () => {
         // return { totalCustomers, totalCalled, avgPercent };
     }, [stats]);
 
-    console.log(stats)
     return (
         <div className={cls2.statsWrapper}>
             {/* Header Section */}
@@ -57,7 +56,7 @@ const CallStatisticsPage = () => {
                     <div className={cls2.header__icon}><i className="fi fi-rr-stats" /></div>
                     <div>
                         <h1>Qo'ng'iroq Statistikasi</h1>
-                        <span>Filial #{branchId} · {date}</span>
+                        {/*<span>Filial #{branchId} · {date}</span>*/}
                     </div>
                 </div>
                 <div className={cls2.header__controls}>
@@ -186,7 +185,8 @@ const PAGE_TABS = [
 const initialState = {}
 
 export const AdminTaskManager = () => {
-    const [activeTab, setActiveTab] = useState('crm')
+const tab = localStorage.getItem('activeTab');
+    const [activeTab, setActiveTab] = useState(tab || "crm")
 
     return (
         <DynamicModuleLoader reducers={initialState}>
@@ -212,7 +212,10 @@ export const AdminTaskManager = () => {
                                 <button
                                     key={t.key}
                                     className={`${cls.pageTab} ${activeTab === t.key ? cls['pageTab--active'] : ''}`}
-                                    onClick={() => setActiveTab(t.key)}
+                                    onClick={() => {
+                                        setActiveTab(t.key)
+                                        localStorage.setItem('activeTab', t.key)
+                                    }}
                                 >
                                     {t.icon}
                                     {t.label}
