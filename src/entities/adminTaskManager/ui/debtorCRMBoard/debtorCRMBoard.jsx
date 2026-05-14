@@ -3,6 +3,7 @@ import { createPortal } from "react-dom"
 import { useDispatch } from "react-redux"
 import { Pagination } from "features/pagination/ui/pagination"
 import cls from "./debtorCRMBoard.module.sass"
+import cls2 from "./style.module.css"
 
 import {
     CallThunk,
@@ -16,6 +17,8 @@ import {
     UpdateCallStatisticThunk,
     FetchCalledUsersThunk,
 } from "entities/adminTaskManager/model/crmThunks"
+import {Modal} from "antd";
+// import {Modal} from "shared/ui/modal/index.js";
 
 // ─── In-App Call Modal ─────────────────────────────────────────────────────────
 // onRefresh — optional, called after save+close so the board can silently refetch
@@ -213,7 +216,7 @@ const formatMoney = (val) =>
 // ─── Pending Card ─────────────────────────────────────────────────────────────
 const fmtDur = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 
-const PendingCard = ({ student, onRefresh }) => {
+const PendingCard = ({ tab ,student, onRefresh }) => {
     const dispatch = useDispatch()
 
     const [showCall, setShowCall] = useState(false)
@@ -262,13 +265,14 @@ const PendingCard = ({ student, onRefresh }) => {
             setCallLoading(false)
         }
     }
+    // console.log(student)
 
     // Fetch history once on first open
     const toggleHistory = async () => {
         if (!showHistory && history === null) {
             setHistoryLoading(true)
             try {
-                const result = await dispatch(GetCallsHistoryThunk(student?.lead_id || student?.id || student?.student_id))
+                const result = await dispatch(GetCallsHistoryThunk(tab === "called" ? student.person.id :student?.lead_id || student?.id || student?.student_id))
                 setHistory(result.payload ?? [])
             } catch (e) {
                 console.warn('History fetch failed:', e)
@@ -381,45 +385,133 @@ const PendingCard = ({ student, onRefresh }) => {
                 </svg>
             </button>
 
-            {showHistory && (
-                <div className={cls.history__panel}>
-                    {historyLoading && (
-                        <p className={cls.history__loading}>Yuklanmoqda...</p>
-                    )}
-                    {!historyLoading && history?.length === 0 && (
-                        <p className={cls.history__empty}>Qo'ng'iroq tarixi topilmadi</p>
-                    )}
-                    {!historyLoading && history?.map((log, i) => {
-                        const answered = log.vats_status === 'success'
-                        const date = log.called_at
-                            ? new Date(log.called_at).toLocaleString('uz-UZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-                            : '—'
-                        return (
-                            <div key={log.id ?? i} className={cls.history__item}>
-                                <div className={cls.history__item_top}>
-                                    <span className={`${cls.history__badge} ${answered ? cls['history__badge--success'] : cls['history__badge--missed']}`}>
-                                        {answered ? '✓ Javob berdi' : '✗ Javob bermadi'}
-                                    </span>
-                                    <span className={cls.history__date}>{date}</span>
-                                    {log.vats_duration > 0 && (
-                                        <span className={cls.history__dur}>⏱ {fmtDur(log.vats_duration)}</span>
-                                    )}
-                                </div>
 
-                                {log.comment && (
-                                    <p className={cls.history__comment}>💬 {log.comment}</p>
-                                )}
-                                {log.next_call_date && (
-                                    <p className={cls.history__next}>📅 Keyingi: {log.next_call_date}</p>
-                                )}
-                                {log.audio_url && (
-                                    <audio controls src={log.audio_url} className={cls.history__audio} />
-                                )}
-                            </div>
-                        )
-                    })}
+            <Modal open={showHistory}  onOk={() => setShowHistory(false)}  onCancel={() => setShowHistory(false)}>
+                <CallHistoryModal
+                    history={history}
+                    historyLoading={historyLoading}
+                    person={history?.[0]?.person}
+                />
+            </Modal>
+        </div>
+    )
+}
+
+
+
+
+
+// const fmtDur = (sec) => {
+//     const m = Math.floor(sec / 60)
+//     const s = sec % 60
+//     return `${m}:${s.toString().padStart(2, '0')}`
+// }
+
+const fmtDate = (iso) => {
+    if (!iso) return '—'
+    return new Date(iso).toLocaleString('uz-UZ', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+    })
+}
+
+function CallHistoryModal({ history = [], historyLoading = false, person = null }) {
+    const answeredCount = history.filter(l => l.vats_status === 'success').length
+    const missedCount = history.length - answeredCount
+
+    return (
+        <div className={cls2.panel}>
+
+            {person && (
+                <div className={cls2.header}>
+                    <div className={cls2.avatar}>
+                        {person.full_name?.slice(0, 2).toUpperCase() || 'AN'}
+                    </div>
+                    <div className={cls2.headerInfo}>
+                        <p className={cls2.headerName}>{person.full_name}</p>
+                        <p className={cls2.headerPhone}>+998 {person.phone}</p>
+                    </div>
+                    <div className={cls2.headerBadges}>
+                        <span className={cls2.badgeDebtor}>Debitor</span>
+                        <span className={cls2.badgeCount}>{history.length} ta</span>
+                    </div>
                 </div>
             )}
+
+            {person && history.length > 0 && (
+                <div className={cls2.stats}>
+                    <div className={cls2.statItem}>
+                        <span className={cls2.statDot} data-type="success" />
+                        <span className={cls2.statLabel}>Javob berdi</span>
+                        <span className={cls2.statVal}>{answeredCount}</span>
+                    </div>
+                    <div className={cls2.statDivider} />
+                    <div className={cls2.statItem}>
+                        <span className={cls2.statDot} data-type="missed" />
+                        <span className={cls2.statLabel}>Javob bermadi</span>
+                        <span className={cls2.statVal}>{missedCount}</span>
+                    </div>
+                </div>
+            )}
+
+            <div className={cls2.list}>
+                {historyLoading && (
+                    <div className={cls2.center}>
+                        <div className={cls2.spinner} />
+                        <p className={cls2.centerText}>Yuklanmoqda...</p>
+                    </div>
+                )}
+
+                {!historyLoading && history.length === 0 && (
+                    <div className={cls2.center}>
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={cls.emptyIcon}>
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42 2 2 0 0 1 3.6 1.24h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l.94-.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16.92z"/>
+                        </svg>
+                        <p className={cls2.centerText}>Qo'ng'iroq tarixi topilmadi</p>
+                    </div>
+                )}
+
+                {!historyLoading && history.map((log, i) => {
+                    const answered = log.vats_status === 'success'
+                    return (
+                        <div key={log.id ?? i} className={cls2.item}>
+                            <div className={cls2.itemTop}>
+                                <span className={`${cls2.statusBadge} ${answered ? cls2.success : cls2.missed}`}>
+                                    {answered
+                                        ? <><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Javob berdi</>
+                                        : <><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Javob bermadi</>
+                                    }
+                                </span>
+                                {log.vats_duration > 0 && (
+                                    <span className={cls2.dur}>
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        {fmtDur(log.vats_duration)}
+                                    </span>
+                                )}
+                                <span className={cls2.date}>{fmtDate(log.called_at)}</span>
+                            </div>
+
+                            {log.comment && (
+                                <p className={cls2.comment}>
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                    {log.comment}
+                                </p>
+                            )}
+
+                            {log.next_call_date && (
+                                <p className={cls2.nextDate}>
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                    Keyingi: {log.next_call_date}
+                                </p>
+                            )}
+
+                            {log.audio_url && (
+                                <audio controls src={log.audio_url} className={cls2.audio} />
+                            )}
+                        </div>
+                    )
+                })}
+            </div>
         </div>
     )
 }
@@ -825,7 +917,7 @@ export const DebtorCRMBoard = () => {
                                     </div>
                                     <div className={cls.grid}>
                                         {pageItems.map((s, i) => (
-                                            <PendingCard key={s.phone + i} student={s} onRefresh={refreshDebtors} />
+                                            <PendingCard tab={activeTab} key={s.phone + i} student={s} onRefresh={refreshDebtors} />
                                         ))}
                                     </div>
                                     <Pagination
@@ -859,7 +951,7 @@ export const DebtorCRMBoard = () => {
                         </div>
                         <div className={cls.grid}>
                             {flatPageItems.map((s, i) => (
-                                <PendingCard key={(s.phone || '') + i} student={s} />
+                                <PendingCard tab={activeTab} key={(s.phone || '') + i} student={s} />
                             ))}
                         </div>
                         <Pagination
@@ -943,7 +1035,7 @@ export const DebtorCRMBoard = () => {
 
                     {/* Cards */}
                     {!calledLoading && (
-                        <section className={cls.section}>
+                        <section className={`${cls.section} `}>
                             <div className={cls.section__header}>
                                 <h2 className={cls.section__title}>
                                     <span className={cls.dot__pending} />
@@ -953,7 +1045,7 @@ export const DebtorCRMBoard = () => {
                             </div>
                             <div className={cls.grid}>
                                 {calledUsers.map((s, i) => (
-                                    <PendingCard key={(s.phone || s.id || '') + i} student={s} />
+                                    <PendingCard tab={activeTab} key={(s.phone || s.id || '') + i} student={s} />
                                 ))}
                             </div>
                             {calledUsers.length === 0 && (
