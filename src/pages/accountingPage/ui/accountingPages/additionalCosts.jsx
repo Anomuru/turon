@@ -70,6 +70,10 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
     const [changingData, setChangingData] = useState({})
     const overheadDeletedList = useSelector(getOverHeadDeletedList)
     const [changePayment, setChangePayment] = useState(false)
+    const changeableOverHeadTypes = useMemo(
+        () => Array.isArray(overHeadType) ? overHeadType.filter(item => item.changeable !== false) : [],
+        [overHeadType]
+    )
 
     const [activeBtn, setActiveBtn] = useState(
         activeBtnId ? Number(activeBtnId) : null
@@ -298,7 +302,7 @@ export const AdditionalCosts = ({deleted, setDeleted}) => {
                     showAdditionalFields={showAdditionalFields}
                     setActiveModal={setActiveModal}
                     activeModal={activeModal}
-                    option={overHeadType}
+                    option={changeableOverHeadTypes}
                     select={select}
                     setSelected={setSelect}
                     onChange={onChange}
