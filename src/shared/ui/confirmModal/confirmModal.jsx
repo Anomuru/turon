@@ -9,7 +9,6 @@ import React from "react";
 export const ConfirmModal = ({ setActive, active, onClick, title = "Rostanham o'chirmoqchimisiz", text, type = "danger" }) => {
     // const [deleting, setDeleting] = useState(false);
     const renderImg = () => {
-        // eslint-disable-next-line default-case
         switch (type) {
             case "danger":
                 return <div className={`${cls.confirmIcon} ${type === 'success' ? cls.success : cls.danger}`}><i className="fa fa-triangle-exclamation"/></div>
@@ -45,7 +44,10 @@ export const ConfirmModal = ({ setActive, active, onClick, title = "Rostanham o'
                             <button className={`${cls.btnDelete} ${type === 'success' ? cls.success : cls.danger}`} onClick={onClick} >
                                 <><i className="fa fa-trash"/> Ha, o'chirish</>
                             </button>
-                        </> : type === "success" ? <button className={`${cls.btnDelete} ${type === 'success' ? cls.success : cls.danger}`} onClick={() => setActive(false)} >
+                        </> : type === "success" ? <button className={`${cls.btnDelete} ${type === 'success' ? cls.success : cls.danger}`} onClick={() => {
+                            onClick?.()
+                            setActive(false)
+                        }} >
                             <><i className="fa fa-check"/> Ha, tasdiqlash</>
                         </button> : null
                     }
@@ -56,4 +58,3 @@ export const ConfirmModal = ({ setActive, active, onClick, title = "Rostanham o'
         </Modal>
     );
 };
-
