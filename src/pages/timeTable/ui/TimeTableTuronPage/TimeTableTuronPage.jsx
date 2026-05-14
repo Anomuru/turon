@@ -142,7 +142,7 @@ export const TimeTableTuronPage = () => {
     const selectedBranch = useSelector(getSelectedLocations);
     const branchForFilter = selectedBranch?.id ?? branch;
 
-    const [viewData , setViewData] = useState(null)
+    const [viewData, setViewData] = useState(null)
 
 
     const dispatch = useDispatch()
@@ -854,155 +854,157 @@ export const TimeTableTuronPage = () => {
 
     return (
 
-        classView ? <TimetableGrid classes={classViewData} hours={hours} setActive={setClassView} setViewData={setViewData} viewData={viewData}/> :
-        <div className={cls.timeTable}>
-            {
-                !isSelected ?
-                    <TimeTableTuronPageFilters
-                        setIsSelected={setIsSelected}
-                        isSelected={isSelected}
-                        setFullScreen={setFullScreen}
-                        setClassView={setClassView}
-                        groups={groups}
-                    /> : null
-            }
-
-
-            {isSelected && <Button type={"danger"} onClick={onFalseSelected}>Remove Selected</Button>}
-
-            {loading && <DefaultLoader/>}
-
-
-            <DndContext
-                sensors={sensors}
-                collisionDetection={rectIntersection}
-                onDragStart={onDragStart}
-                onDragEnd={(event) => {
-                    const {over, active} = event
-                    if (active?.data?.current?.type === "container" && over?.data?.current?.type === "container") {
-                        setActiveUpdate(true)
-                        setActiveEvent(event)
-                    } else {
-                        let {active, over} = event
-                        let {active: lastActive, over: lastOver} = activeCanSet;
-                        if (lastActive && lastActive?.id !== active?.id && lastOver?.id === over?.id) {
-                            setIsActiveCanSet(true)
-                            setActiveEvent(event)
-                        } else {
-                            setActiveCanSet(event)
-                            handleDragEnd(event)
-                        }
-                    }
-                }}
-                // modifiers={[restrictToFirstScrollableAncestor]}
-            >
+        classView ?
+            <TimetableGrid classes={classViewData} hours={hours} setActive={setClassView} setViewData={setViewData}
+                           viewData={viewData}/> :
+            <div className={cls.timeTable}>
                 {
-                    job === "admin" ? null :
-
-                    <TimeTableDragItems
-                    setSelectedSubject={setSelectedSubject}
-                selectedSubject={selectedSubject}
-                isSelected={isSelected}
-                groups={groups}
-                subjects={subjects}
-                teachers={teachers}
-                color={color}
-                type={type}
-                status={groupsDataStatus}
-                selectedType={selectedType}
-                onFilterStudentSubject={onFilterStudentSubject}
-            />
+                    !isSelected ?
+                        <TimeTableTuronPageFilters
+                            setIsSelected={setIsSelected}
+                            isSelected={isSelected}
+                            setFullScreen={setFullScreen}
+                            setClassView={setClassView}
+                            groups={groups}
+                        /> : null
                 }
 
-                <div className={cls.wrapper}>
+
+                {isSelected && <Button type={"danger"} onClick={onFalseSelected}>Remove Selected</Button>}
+
+                {loading && <DefaultLoader/>}
+
+
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={rectIntersection}
+                    onDragStart={onDragStart}
+                    onDragEnd={(event) => {
+                        const {over, active} = event
+                        if (active?.data?.current?.type === "container" && over?.data?.current?.type === "container") {
+                            setActiveUpdate(true)
+                            setActiveEvent(event)
+                        } else {
+                            let {active, over} = event
+                            let {active: lastActive, over: lastOver} = activeCanSet;
+                            if (lastActive && lastActive?.id !== active?.id && lastOver?.id === over?.id) {
+                                setIsActiveCanSet(true)
+                                setActiveEvent(event)
+                            } else {
+                                setActiveCanSet(event)
+                                handleDragEnd(event)
+                            }
+                        }
+                    }}
+                    // modifiers={[restrictToFirstScrollableAncestor]}
+                >
                     {
-                        dataStatus === true ?
-                            <MiniLoader/>
-                            :
-                            <TimeTableDropContainer
-                                onDoubleClickContainer={onDoubleClickContainer}
-                                onDeleteContainer={onDeleteContainer}
-                                rooms={rooms}
-                                times={times}
-                                hours={hours}
-                                canDisabled={canDisabled}
-                                startItem={startItem}
-                                // containers={containers}
+                        job === "admin" ? null :
+
+                            <TimeTableDragItems
+                                setSelectedSubject={setSelectedSubject}
+                                selectedSubject={selectedSubject}
+                                isSelected={isSelected}
+                                groups={groups}
+                                subjects={subjects}
+                                teachers={teachers}
+                                color={color}
+                                type={type}
+                                status={groupsDataStatus}
+                                selectedType={selectedType}
+                                onFilterStudentSubject={onFilterStudentSubject}
                             />
                     }
 
-                    {students.length > 0 && <TimeTableStudents students={students}/>}
-                </div>
+                    <div className={cls.wrapper}>
+                        {
+                            dataStatus === true ?
+                                <MiniLoader/>
+                                :
+                                <TimeTableDropContainer
+                                    onDoubleClickContainer={onDoubleClickContainer}
+                                    onDeleteContainer={onDeleteContainer}
+                                    rooms={rooms}
+                                    times={times}
+                                    hours={hours}
+                                    canDisabled={canDisabled}
+                                    startItem={startItem}
+                                    // containers={containers}
+                                />
+                        }
+
+                        {students.length > 0 && <TimeTableStudents students={students}/>}
+                    </div>
 
 
-                <DragOverlay>
-                    {
-                        startItem?.room ?
-                            <DraggableContainer type={"overlay"} item={startItem}/> :
-                            startItem?.type === "teacher" ?
-                                <TimeTableDragItem
-                                    item={startItem}
-                                >
-                                    {startItem.name} {startItem.surname}
-                                </TimeTableDragItem>
-                                : startItem?.dndId ?
+                    <DragOverlay>
+                        {
+                            startItem?.room ?
+                                <DraggableContainer type={"overlay"} item={startItem}/> :
+                                startItem?.type === "teacher" ?
                                     <TimeTableDragItem
                                         item={startItem}
-                                        color={startItem?.color?.value}
                                     >
-                                        {startItem.class_name || startItem.name}
+                                        {startItem.name} {startItem.surname}
                                     </TimeTableDragItem>
-                                    : null
-                    }
-                </DragOverlay>
-            </DndContext>
+                                    : startItem?.dndId ?
+                                        <TimeTableDragItem
+                                            item={startItem}
+                                            color={startItem?.color?.value}
+                                        >
+                                            {startItem.class_name || startItem.name}
+                                        </TimeTableDragItem>
+                                        : null
+                        }
+                    </DragOverlay>
+                </DndContext>
 
 
-            <Modal active={fullScreen} setActive={setFullScreen} type={"other"}>
+                <Modal active={fullScreen} setActive={setFullScreen} type={"other"}>
 
 
-                <TimeTableFullScreen
-                    rooms={rooms}
-                    times={times}
-                    hours={hours}
+                    <TimeTableFullScreen
+                        rooms={rooms}
+                        times={times}
+                        hours={hours}
+                    />
+
+
+                </Modal>
+
+                {/*<Modal status={true} active={classView} setActive={setClassView} type={"other"}>*/}
+
+
+                {/*<TimeTableClassView*/}
+                {/*    lessons={classViewData}*/}
+                {/*    hours={hours}*/}
+                {/*/>*/}
+
+
+                {/*<TimeTableFullScreen*/}
+                {/*    rooms={rooms}*/}
+                {/*    times={times}*/}
+                {/*    hours={hours}*/}
+                {/*/>*/}
+
+                {/*</Modal>*/}
+                <ConfirmModal
+                    setActive={setActiveUpdate}
+                    active={activeUpdate}
+                    title={"Rostanham o'zgartirmoqchimisiz"}
+                    type={"success"}
+                    onClick={() => handleDragEnd(false)}
                 />
 
+                <ConfirmModal
+                    setActive={setIsActiveCanSet}
+                    active={isActiveCanSet}
+                    title={"Rostanham o'zgartirmoqchimisiz"}
+                    type={"success"}
+                    onClick={() => handleDragEnd(false)}
+                />
 
-            </Modal>
-
-            {/*<Modal status={true} active={classView} setActive={setClassView} type={"other"}>*/}
-
-
-            {/*<TimeTableClassView*/}
-            {/*    lessons={classViewData}*/}
-            {/*    hours={hours}*/}
-            {/*/>*/}
-
-
-            {/*<TimeTableFullScreen*/}
-            {/*    rooms={rooms}*/}
-            {/*    times={times}*/}
-            {/*    hours={hours}*/}
-            {/*/>*/}
-
-            {/*</Modal>*/}
-            <ConfirmModal
-                setActive={setActiveUpdate}
-                active={activeUpdate}
-                title={"Rostanham o'zgartirmoqchimisiz"}
-                type={"success"}
-                onClick={() => handleDragEnd(false)}
-            />
-
-            <ConfirmModal
-                setActive={setIsActiveCanSet}
-                active={isActiveCanSet}
-                title={"Rostanham o'zgartirmoqchimisiz"}
-                type={"success"}
-                onClick={() => handleDragEnd(false)}
-            />
-
-        </div>
+            </div>
     );
 };
 
