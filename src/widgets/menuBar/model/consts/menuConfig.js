@@ -38,6 +38,12 @@ export const menuConfig = [
         icon: "fa-award",
         roles: [ROLES.director]
     },
+    {
+        to: "teacherStatistics",
+        name: "O'qituvchilar statistikasi",
+        icon: "fa-chart-bar",
+        roles: [ROLES.director, ROLES.main_director]
+    },
     // test
     {
         to: "financeDashboard",
@@ -288,6 +294,13 @@ export const menuConfig = [
         roles: [ROLES.spiritualist, ROLES.admin, ROLES.advertising],
         branches: true
 
+    },
+    {
+        to: "teacherStatistics",
+        name: "TeacherStatistics",
+        icon: "fa-users",
+        roles: [ROLES.spiritualist],
+        branches: true
     },
     {
         to: "observation_results",

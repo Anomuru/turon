@@ -93,5 +93,7 @@ export const getGroupRating = (id) => `groups/groupRating`
 export const getEducationQuality = () => `educationQuality`
 export const getEducationQualityDetails = () => `educationQuality/details`
 
+export const getTeacherStatistics = () => `teacherStatistics`
+
 
 
