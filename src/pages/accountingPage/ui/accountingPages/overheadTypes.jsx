@@ -642,16 +642,18 @@ const LogsTab = ({ focusLogId, initialMonth, initialYear }) => {
                                 To'lovlar
                             </Button>
                         )}
-                        {canEditLog && (
+                        {/* Log editing is temporarily hidden on Oylik xarajatlar. */}
+                        {/* {canEditLog && (
                             <Button type="filter" onClick={() => openEditLogModal(log)}>
                                 Narx
                             </Button>
-                        )}
-                        {canDeleteLog && (
+                        )} */}
+                        {/* Log deletion is temporarily hidden on Oylik xarajatlar. */}
+                        {/* {canDeleteLog && (
                             <Button type="danger" onClick={() => openDeleteLogModal(log)}>
                                 O'chirish
                             </Button>
-                        )}
+                        )} */}
                     </div>
                 </td>
             </tr>
@@ -665,9 +667,10 @@ const LogsTab = ({ focusLogId, initialMonth, initialYear }) => {
                 <Select options={MONTHS} defaultValue={month} onChangeOption={(v) => setMonth(Number(v))} titleOption="Oy" />
                 <Select options={YEARS} defaultValue={year} onChangeOption={(v) => setYear(Number(v))} titleOption="Yil" />
                 <Select options={STATUS_OPTIONS} defaultValue={status} onChangeOption={setStatus} titleOption="Status" />
-                <Button type="filter" onClick={handleGenerateLogs} disabled={generatingLogs}>
+                {/* Log generation is temporarily hidden on Oylik xarajatlar. */}
+                {/* <Button type="filter" onClick={handleGenerateLogs} disabled={generatingLogs}>
                     {generatingLogs ? "Yaratilmoqda..." : "Loglarni yaratish"}
-                </Button>
+                </Button> */}
             </div>
             {generateError && <p className={cls.error}>{generateError}</p>}
 
@@ -864,7 +867,8 @@ const LogsTab = ({ focusLogId, initialMonth, initialYear }) => {
                 </div>
             </Modal>
 
-            <Modal active={editLogModal} setActive={closeEditLogModal}>
+            {/* Log editing modal is temporarily hidden on Oylik xarajatlar. */}
+            {/* <Modal active={editLogModal} setActive={closeEditLogModal}>
                 <div style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.6rem", minWidth: 340 }}>
                     <h3 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0 }}>
                         Narxni o'zgartirish: {editLog?.overhead_type_name}
@@ -898,9 +902,10 @@ const LogsTab = ({ focusLogId, initialMonth, initialYear }) => {
                         </Button>
                     </div>
                 </div>
-            </Modal>
+            </Modal> */}
 
-            <Modal active={deleteLogModal} setActive={closeDeleteLogModal}>
+            {/* Log deletion modal is temporarily hidden on Oylik xarajatlar. */}
+            {/* <Modal active={deleteLogModal} setActive={closeDeleteLogModal}>
                 <div style={{ padding: "2rem", display: "flex", flexDirection: "column", gap: "1.6rem", minWidth: 360 }}>
                     <h3 style={{ fontSize: "1.8rem", fontWeight: 700, margin: 0 }}>
                         Logni o'chirish
@@ -916,7 +921,7 @@ const LogsTab = ({ focusLogId, initialMonth, initialYear }) => {
                         </Button>
                     </div>
                 </div>
-            </Modal>
+            </Modal> */}
         </div>
     );
 };
