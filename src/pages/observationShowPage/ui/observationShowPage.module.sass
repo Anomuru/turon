@@ -1,22 +1,73 @@
+$score-high: #639922
+$score-mid: #378ADD
+$score-low: #BA7517
+$score-fail: #E24B4A
+$score-null: #B4B2A9
+
+:root
+  --score-high: #{$score-high}
+  --score-mid: #{$score-mid}
+  --score-low: #{$score-low}
+  --score-fail: #{$score-fail}
+  --score-null: #{$score-null}
+
 .main
-  padding: 1.5rem
+  padding: 1.25rem
   font-family: var(--font-sans, sans-serif)
 
+// ─── Loading / Error ─────────────────────────────────────────
+
 .loading, .error
-  padding: 2rem
-  text-align: center
+  display: flex
+  align-items: center
+  justify-content: center
+  gap: 10px
+  padding: 3rem
+  color: #888
+  font-size: 14px
+
+.spinner
+  display: inline-block
+  width: 16px
+  height: 16px
+  border: 2px solid #e0e0e0
+  border-top-color: #378ADD
+  border-radius: 50%
+  animation: spin .7s linear infinite
+  flex-shrink: 0
+
+@keyframes spin
+  to
+    transform: rotate(360deg)
+
+// ─── Cycle bar ───────────────────────────────────────────────
+
+.cycleBar
+  display: flex
+  align-items: center
+  gap: 6px
+  flex-wrap: wrap
+  margin-bottom: 1.25rem
+
+.cyclePill
+  font-size: 12px
+  padding: 3px 10px
+  border-radius: 99px
+  background: #f5f5f2
+  border: 0.5px solid #e0e0e0
   color: #888
 
-.cycleHeader
-  font-size: 12px
-  color: #888
-  margin-bottom: 1rem
+  strong
+    color: #1a1a1a
+    font-weight: 500
+
+// ─── Summary metrics ─────────────────────────────────────────
 
 .summary
   display: grid
   grid-template-columns: repeat(4, 1fr)
-  gap: 12px
-  margin-bottom: 1.5rem
+  gap: 10px
+  margin-bottom: 1.25rem
 
   @media (max-width: 640px)
     grid-template-columns: repeat(2, 1fr)
@@ -24,11 +75,13 @@
 .metric
   background: #f5f5f2
   border-radius: 8px
-  padding: 1rem
+  padding: 0.875rem 1rem
 
 .metricLabel
-  font-size: 12px
+  font-size: 11px
   color: #888
+  text-transform: uppercase
+  letter-spacing: 0.04em
   margin-bottom: 4px
 
 .metricValue
@@ -36,11 +89,16 @@
   font-weight: 500
   color: #1a1a1a
 
+// ─── Filters ─────────────────────────────────────────────────
+
 .filters
   display: flex
-  gap: 10px
+  gap: 8px
   margin-bottom: 1rem
   flex-wrap: wrap
+
+  @media (max-width: 600px)
+    flex-direction: column
 
 .searchInput, .select
   font-size: 13px
@@ -50,17 +108,22 @@
   background: #fff
   color: #1a1a1a
   outline: none
+  transition: border-color .15s
 
   &:focus
     border-color: #378ADD
 
 .searchInput
   flex: 1
-  min-width: 160px
+  min-width: 150px
+
+// ─── Table wrapper ───────────────────────────────────────────
 
 .tableWrap
   overflow-x: auto
-  max-height: calc(100vh - 28rem)
+  border: 0.5px solid #e0e0e0
+  border-radius: 10px
+  overflow: hidden
 
 .table
   width: 100%
@@ -68,19 +131,28 @@
   font-size: 13px
 
   thead th
-  font-weight: 500
-  font-size: 12px
-  color: #888
-  text-align: left
-  padding: 6px 10px
-  border-bottom: 0.5px solid #e0e0e0
-  white-space: nowrap
+    font-weight: 500
+    font-size: 11px
+    color: #888
+    text-align: left
+    padding: 9px 12px
+    background: #f9f9f7
+    border-bottom: 0.5px solid #e0e0e0
+    white-space: nowrap
+    text-transform: uppercase
+    letter-spacing: 0.04em
 
   tbody td
-  padding: 8px 10px
-  color: #1a1a1a
-  vertical-align: middle
-  border-bottom: 0.5px solid #f0f0f0
+    padding: 9px 12px
+    color: #1a1a1a
+    vertical-align: middle
+    border-bottom: 0.5px solid #f0f0f0
+
+  tbody tr:last-child td
+    border-bottom: none
+
+.thToggle
+  width: 36px
 
 .sortable
   cursor: pointer
@@ -91,11 +163,23 @@
 
 .row
   cursor: pointer
+  transition: background .1s
+
   &:hover td
     background: #f9f9f7
 
+.emptyCell
+  text-align: center
+  padding: 2rem !important
+  color: #aaa
+  font-size: 13px
+
+// ─── Teacher name ────────────────────────────────────────────
+
 .teacherName
   font-weight: 500
+
+// ─── Progress ────────────────────────────────────────────────
 
 .progressWrap
   display: flex
@@ -104,32 +188,39 @@
 
 .progressBar
   flex: 1
-  height: 6px
+  height: 5px
   background: #eee
   border-radius: 99px
   overflow: hidden
-  min-width: 60px
+  min-width: 50px
 
 .progressFill
   height: 100%
   border-radius: 99px
-  transition: width 0.3s ease
+  transition: width .3s ease
 
 .pct
   font-size: 11px
   color: #888
-  min-width: 30px
+  min-width: 28px
+  text-align: right
+
+// ─── Score ───────────────────────────────────────────────────
 
 .score
   font-weight: 500
   font-size: 14px
 
+// ─── Status badge ────────────────────────────────────────────
+
 .badge
-  display: inline-block
+  display: inline-flex
+  align-items: center
   font-size: 11px
   padding: 2px 8px
   border-radius: 99px
   font-weight: 500
+  white-space: nowrap
 
 .badge_done
   background: #EAF3DE
@@ -143,32 +234,71 @@
   background: #F1EFE8
   color: #5F5E5A
 
-.expandBtn
-  cursor: pointer
-  font-size: 11px
-  color: #888
-  background: none
-  border: none
-  padding: 0
-  line-height: 1
+// ─── Expand button ───────────────────────────────────────────
 
-.detailRow
+.expandBtn
+  width: 20px
+  height: 20px
+  border-radius: 4px
+  background: #f5f5f2
+  border: 0.5px solid #e0e0e0
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 9px
+  color: #888
+  flex-shrink: 0
+  pointer-events: none
+
+// ─── Detail row ──────────────────────────────────────────────
+
+.detailRow td
   background: #f9f9f7
+  padding: 0 !important
 
 .detailInner
-  padding: 10px 16px
+  padding: 10px 14px
   display: flex
   flex-wrap: wrap
   gap: 6px
 
+// ─── Observer chips ──────────────────────────────────────────
+
 .obsChip
+  display: inline-flex
+  align-items: center
+  gap: 5px
   font-size: 11px
-  padding: 3px 8px
+  padding: 4px 9px
   border-radius: 99px
+  border: 0.5px solid #e0e0e0
+  background: #fff
+  color: #888
+  white-space: nowrap
+
+.obsChipDone
   background: #EAF3DE
   color: #27500A
-  border: 0.5px solid #C0DD97
+  border-color: #C0DD97
+
+  .obsDot
+    background: #639922
+
+.obsChipPending
+  background: #FAEEDA
+  color: #633806
+  border-color: #FAC775
+
+  .obsDot
+    background: #BA7517
+
+.obsDot
+  width: 6px
+  height: 6px
+  border-radius: 50%
+  flex-shrink: 0
 
 .noObs
   font-size: 12px
-  color: #888
+  color: #aaa
+  padding: 2px 0
