@@ -1,0 +1,140 @@
+.container
+  width: 100%
+  display: flex
+  flex-direction: column
+  gap: 2rem
+  padding: 2rem
+
+.teacherCard
+  background: #ffffff
+  border-radius: 1.2rem
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08)
+  overflow: hidden
+  transition: all 0.3s ease
+
+  &:hover
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12)
+    transform: translateY(-2px)
+
+.teacherHeader
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+  padding: 2rem
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+.teacherInfo
+  display: flex
+  flex-direction: column
+  gap: 0.5rem
+
+.teacherName
+  font-size: 2rem
+  font-weight: 700
+  color: #ffffff
+  margin: 0
+
+.teacherPhone
+  font-size: 1.4rem
+  color: rgba(255, 255, 255, 0.9)
+  margin: 0
+
+.lessonCount
+  .countBadge
+    background: rgba(255, 255, 255, 0.2)
+    color: #ffffff
+    padding: 0.8rem 1.6rem
+    border-radius: 2rem
+    font-size: 1.4rem
+    font-weight: 600
+    backdrop-filter: blur(10px)
+
+.lessonsTable
+  overflow-x: auto
+  padding: 2rem
+
+.table
+  width: 100%
+  border-collapse: collapse
+
+  thead
+    tr
+      border-bottom: 2px solid #e5e7eb
+
+      th
+        padding: 1.5rem 1rem
+        text-align: left
+        font-weight: 700
+        font-size: 1.4rem
+        color: #374151
+        text-transform: uppercase
+        letter-spacing: 0.5px
+
+  tbody
+    tr
+      border-bottom: 1px solid #f3f4f6
+      transition: background 0.2s
+
+      &:hover
+        background: #f9fafb
+
+      td
+        padding: 1.5rem 1rem
+        font-size: 1.4rem
+        color: #1f2937
+
+.groupName
+  font-weight: 600
+  color: #667eea
+
+.time
+  font-weight: 500
+  color: #6b7280
+
+.statusBadge
+  display: inline-block
+  padding: 0.5rem 1.2rem
+  border-radius: 2rem
+  color: #ffffff
+  font-size: 1.2rem
+  font-weight: 600
+  text-align: center
+
+.score
+  text-align: center
+
+.scoreBadge
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%)
+  color: #ffffff
+  padding: 0.6rem 1.2rem
+  border-radius: 0.8rem
+  font-weight: 700
+  font-size: 1.5rem
+  min-width: 6rem
+
+.noScore
+  color: #9ca3af
+  font-size: 1.6rem
+
+.conclusion
+  max-width: 30rem
+  font-size: 1.3rem
+  color: #6b7280
+  line-height: 1.5
+
+.noLessons
+  padding: 3rem
+  text-align: center
+  color: #9ca3af
+  font-size: 1.5rem
+
+.empty
+  display: flex
+  justify-content: center
+  align-items: center
+  min-height: 40rem
+  font-size: 1.6rem
+  color: #9ca3af

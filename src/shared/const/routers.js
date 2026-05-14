@@ -95,5 +95,7 @@ export const getEducationQualityDetails = () => `educationQuality/details`
 
 export const getTeacherStatistics = () => `teacherStatistics`
 
+export const getLessonPlanDailyReport = () => `lessonPlanDailyReport`
+
 
 

@@ -44,6 +44,12 @@ export const menuConfig = [
         icon: "fa-chart-bar",
         roles: [ROLES.director, ROLES.main_director]
     },
+    {
+        to: "lessonPlanDailyReport",
+        name: "Kunlik dars rejasi",
+        icon: "fa-clipboard-list",
+        roles: [ROLES.director, ROLES.main_director, ROLES.spiritualist]
+    },
     // test
     {
         to: "financeDashboard",
