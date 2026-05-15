@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import cls from './observationShowPage.module.sass';
 import { API_URL, headers, useHttp } from 'shared/api/base.js';
+import {useNavigate} from "react-router";
 
 export const ObservationShowPage = () => {
     const [data, setData] = useState(null);
@@ -13,6 +14,7 @@ export const ObservationShowPage = () => {
     const [sortDir, setSortDir] = useState(1);
     const [cycle, setCycle] = useState([]);
     const [cycleId, setCycleId] = useState(null);
+    const navigate = useNavigate()
 
     const branchId = localStorage.getItem('branchId');
     const { request } = useHttp();
@@ -226,7 +228,7 @@ export const ObservationShowPage = () => {
                                             {isExp ? '▲' : '▼'}
                                         </div>
                                     </td>
-                                    <td className={cls.teacherName}>{t.teacher_name}</td>
+                                    <td onClick={()=> navigate(`/platform/teacher/teacherProfile/${t.teacher_id}`)} className={cls.teacherName}>{t.teacher_name}</td>
                                     <td>{t.completed_count} / {t.total_observers_required}</td>
                                     <td>{t.pending_count}</td>
                                     <td>
