@@ -1,11 +1,14 @@
 import cls from "./teacherStatistics.module.sass";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {useNavigate} from "react-router";
 
 const formatSum = (sum) => {
     return sum?.toString()?.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ")
 }
 
 export const TeacherStatistics = ({data, loading}) => {
+
+    const navigate = useNavigate();
 
     if (loading === true) {
         return <DefaultPageLoader/>
@@ -41,7 +44,7 @@ export const TeacherStatistics = ({data, loading}) => {
                     </thead>
                     <tbody>
                         {data.results.map((teacher, index) => (
-                            <tr key={teacher.teacher_id} className={cls.row}>
+                            <tr onClick={() => navigate(`/platform/teacher/teacherProfile/${teacher.teacher_id}`)} key={teacher.teacher_id} className={cls.row}>
                                 <td className={cls.rank}>
                                     <div className={cls.rankBadge}>
                                         {teacher.rank}
