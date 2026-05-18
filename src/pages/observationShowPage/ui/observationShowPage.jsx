@@ -228,7 +228,20 @@ export const ObservationShowPage = () => {
                                             {isExp ? '▲' : '▼'}
                                         </div>
                                     </td>
-                                    <td onClick={()=> navigate(`/platform/teacher/teacherProfile/${t.teacher_id}`)} className={cls.teacherName}>{t.teacher_name}</td>
+                                    <td  onClick={(e) => {
+                                        e.stopPropagation();
+
+                                        const observeIds = t.observers.map(item => item.id);
+
+                                        console.log(observeIds);
+
+                                        navigate(`/platform/observationDetail/${t.teacher_id}`, {
+                                            state: {
+                                                observeIds
+                                            }
+                                        });
+                                    }}
+                                         className={cls.teacherName}>{t.teacher_name}</td>
                                     <td>{t.completed_count} / {t.total_observers_required}</td>
                                     <td>{t.pending_count}</td>
                                     <td>
@@ -270,19 +283,22 @@ export const ObservationShowPage = () => {
                                                         </span>
                                                 )}
                                                 {completedObs.map(o => (
-                                                    <span key={o.observer_id} className={`${cls.obsChip} ${cls.obsChipDone}`}>
-                                                            <span className={cls.obsDot} />
+                                                    <span
+                                                        key={o.observer_id}
+                                                        className={`${cls.obsChip} ${cls.obsChipDone}`}
+                                                    >
+                                                        <span className={cls.obsDot} />
                                                         {o.observer_name}
                                                         {o.observation_avg !== null
                                                             ? ` · ${o.observation_avg.toFixed(1)}`
                                                             : ''}
-                                                        </span>
+                                                    </span>
                                                 ))}
                                                 {pendingObs.map(o => (
                                                     <span key={o.observer_id} className={`${cls.obsChip} ${cls.obsChipPending}`}>
-                                                            <span className={cls.obsDot} />
+                                                        <span className={cls.obsDot} />
                                                         {o.observer_name}
-                                                        </span>
+                                                    </span>
                                                 ))}
                                             </div>
                                         </td>

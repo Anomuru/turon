@@ -21,7 +21,7 @@ import {
     getRouteMain,
     getRouteRegister,
     getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews, getCapitalCategoryProfile, getCapitalInside,
-    getDashboard, getTeacherObservation, getLessonPlan,
+    getDashboard, getTeacherObservation, getObservationDetail, getLessonPlan,
     getEducationQuality, getEducationQualityDetails,
     getObservationShowPage,
     getTeacherStatistics,
@@ -61,6 +61,7 @@ const TeachersDevelopmentPage = lazyPage(() => import("pages/teachersDevelopment
 const CapitalInside = lazyPage(() => import("pages/capitalPage"), "CapitalInside");
 const DirectorDashboardPage = lazyPage(() => import("pages/directorDashboardPage"), "DirectorDashboardPage");
 const TeacherObservationPage = lazyPage(() => import("pages/teacherObservationPage"), "TeacherObservationPage");
+const ObservationDetailPage = lazyPage(() => import("pages/observationDetailPage"), "ObservationDetailPage");
 const LessonPlanPage = lazyPage(() => import("pages/lessonPlanPage"), "LessonPlanPage");
 const FinanceDashboardPage = lazyPage(() => import("pages/financeDashboardPage"), "FinanceDashboardPage");
 const EducationQualityPage = lazyPage(() => import("pages/educationQualityPage"), "EducationQualityPage");
@@ -265,6 +266,11 @@ export const routersConfigList = [
         name: "Teacher Observation",
         path: getTeacherObservation(),
         element: <TeacherObservationPage/>
+    },
+    {
+        name: "Observation Detail",
+        path: getObservationDetail(":observationId"),
+        element: <ObservationDetailPage/>
     },
     {
         name: "Dars Rejasi",

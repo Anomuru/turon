@@ -297,7 +297,7 @@ export const menuConfig = [
         to: "observeStatic",
         name: "Observe Statistika",
         icon: "fa-toolbox",
-        roles: [ROLES.spiritualist, ROLES.admin, ROLES.advertising],
+        roles: [ROLES.spiritualist],
         branches: true
 
     },
@@ -312,7 +312,7 @@ export const menuConfig = [
         to: "observation_results",
         name: "Teacher observe statistics",
         icon: "fa-arrow-up-right-dots",
-        roles: [ROLES.spiritualist, ROLES.admin, ROLES.advertising],
+        roles: [ROLES.spiritualist],
         branches: true
     },
     {
