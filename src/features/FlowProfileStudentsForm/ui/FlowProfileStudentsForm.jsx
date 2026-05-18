@@ -34,6 +34,7 @@ import {getBranch} from "../../branchSwitcher";
 import {fetchFlowsSelect} from "entities/flows/model/slice/flowsThunk.js";
 import {getFlowsSelect} from "entities/flows/model/selector/flowsSelector.js";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {fetchTeachersData, getTeacherData} from "entities/oftenUsed/index.js";
 
 export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loading}) => {
 
@@ -49,8 +50,9 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
     const data = useSelector(getFlowsProfileData)
     const flows = useSelector(getFlowsSelect)
     const filteredStudents = useSelector(getFlowsProfileFilteredStudents)
-    const filteredTeachers = useSelector(getFlowsProfileFilteredTeachers)
+    // const filteredTeachers = useSelector(getFlowsProfileFilteredTeachers)
     const branch = useSelector(getUserBranchId)
+    const teachData = useSelector(getTeacherData)
 
 
     const [active, setActive] = useState(false)
@@ -60,6 +62,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
     const [selectedMoveId, setSelectedMoveId] = useState([])
     const [deleteId, setDeleteId] = useState(null)
     const [currentFilteredData, setCurrentFilteredData] = useState([])
+
 
     // const loading = useSelector(getFlowsProfileTeacherLoading)
     useEffect(() => {
@@ -73,14 +76,21 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
     }, [branch])
 
 
+    // useEffect(() => {
+    //     if (data && id && branch) {
+    //         const res = {
+    //             ignore_teacher: data?.teacher?.id
+    //         }
+    //         dispatch(fetchFilteredTeachers({res, id, branch}))
+    //     }
+    // }, [id, branch, data])
+
     useEffect(() => {
         if (data && id && branch) {
-            const res = {
-                ignore_teacher: data?.teacher?.id
-            }
-            dispatch(fetchFilteredTeachers({res, id, branch}))
+            dispatch(fetchTeachersData(branch))
+
         }
-    }, [id, branch, data])
+    }, [data, id, branch]);
 
     const onSubmitAdd = () => {
         let idArr = []
@@ -126,11 +136,11 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
     }
 
     const onChangeTeacher = (teacherId) => {
-        if (filteredTeachers.filter(item => item.id === +teacherId)[0]?.subject.length === 1) {
+        if (teachData.filter(item => item.id === +teacherId)[0]?.subject.length === 1) {
             dispatch(changeFlowProfile({
                 res: {
                     teacher: teacherId,
-                    subject: filteredTeachers.filter(item => item.id === +teacherId)[0]?.subject[0]?.id,
+                    subject: teachData.filter(item => item.id === +teacherId)[0]?.subject[0]?.id,
                     level: null
                 },
                 id,
@@ -350,14 +360,14 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
     }
 
     const renderTeachers = () => {
-        return filteredTeachers?.map(item => {
+        return teachData?.map(item => {
             return (
                 <tr>
                     <td>
                         <img src={defaultUserImg} alt=""/>
                     </td>
-                    <td>{item?.user?.name}</td>
-                    <td>{item?.user?.surname}</td>
+                    <td>{item?.name}</td>
+                    <td>{item?.surname}</td>
                     <td>
                         <div className={cls.teachersModal__wrapper}>
                             {
@@ -375,13 +385,13 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
                                 activeSwitch={data?.teacher?.id === item?.id}
                                 onChangeSwitch={() => onChangeTeacher(item?.id)}
                             />
-                            <div className={classNames(cls.status, {
-                                [cls.active]: item?.extra_info?.status
-                            })}>
-                                <div className={classNames(cls.status__inner, {
-                                    [cls.active]: item?.extra_info?.status
-                                })}/>
-                            </div>
+                            {/*<div className={classNames(cls.status, {*/}
+                            {/*    [cls.active]: item?.extra_info?.status*/}
+                            {/*})}>*/}
+                            {/*    <div className={classNames(cls.status__inner, {*/}
+                            {/*        [cls.active]: item?.extra_info?.status*/}
+                            {/*    })}/>*/}
+                            {/*</div>*/}
                         </div>
                     </td>
                 </tr>
@@ -560,7 +570,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
                     <Select
                         title={"Fan"}
                         register={register}
-                        options={filteredTeachers?.filter(item => item.id === selectedTeacher)[0]?.subject}
+                        options={teachData?.filter(item => item.id === selectedTeacher)[0]?.subject}
                         name={"subject"}
                     />
                 </Form>

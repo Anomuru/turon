@@ -80,6 +80,7 @@ export const getHomeMessage = (id) => `messages`
 export const getHomeNews = (id) => `news`
 export const getParty = (id) => `party/*`
 export const getTeacherObservation = () => `teacherObservation`
+export const getObservationDetail = (id) => `observationDetail/${id}`
 export const getLessonPlan = () => `lessonPlan`
 export const classView = (id) => `time/classView`
 export const questionnaire = (id) => `questionnaire`
@@ -92,6 +93,10 @@ export const getGroupRating = (id) => `groups/groupRating`
 
 export const getEducationQuality = () => `educationQuality`
 export const getEducationQualityDetails = () => `educationQuality/details`
+
+export const getTeacherStatistics = () => `teacherStatistics`
+
+export const getLessonPlanDailyReport = () => `lessonPlanDailyReport`
 
 
 

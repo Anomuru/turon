@@ -1,0 +1,122 @@
+.container
+  width: 100%
+  padding: 2rem
+
+.header
+  margin-bottom: 2rem
+  display: flex
+  justify-content: space-between
+  align-items: center
+
+  h2
+    font-size: 2rem
+    font-weight: 600
+    color: var(--text-color)
+
+  p
+    font-size: 1.4rem
+    color: var(--text-secondary)
+
+.tableWrapper
+  overflow-x: auto
+  background: var(--bg-color)
+  border-radius: 1rem
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1)
+
+.table
+  width: 100%
+  border-collapse: collapse
+  min-width: 1200px
+
+  thead
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+
+    tr
+      th
+        padding: 2rem 1.5rem
+        text-align: left
+        font-weight: 700
+        font-size: 1.6rem
+        white-space: nowrap
+        color: #ffffff
+        text-transform: uppercase
+        letter-spacing: 0.5px
+
+  tbody
+    tr
+      border-bottom: 1px solid #e5e7eb
+      transition: all 0.3s ease
+      cursor: pointer
+
+      &:hover
+        background: #f9fafb
+        transform: scale(1)
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)
+
+      td
+        padding: 2rem 1.5rem
+        font-size: 1.5rem
+        color: #1f2937
+        font-weight: 500
+
+.rank
+  text-align: center
+
+.rankBadge
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  width: 4.5rem
+  height: 4.5rem
+  border-radius: 50%
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%)
+  color: #ffffff
+  font-weight: 800
+  font-size: 1.8rem
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3)
+
+.teacherName
+  font-weight: 700
+  font-size: 1.6rem
+  color: #667eea
+
+.statCell
+  display: flex
+  flex-direction: column
+  gap: 0.5rem
+
+  .count
+    font-weight: 700
+    font-size: 1.6rem
+    color: #1f2937
+
+  .avg
+    font-size: 1.3rem
+    color: #6b7280
+    font-weight: 500
+
+  .delay
+    font-size: 1.2rem
+    color: #ef4444
+    font-weight: 600
+    background: #fee2e2
+    padding: 0.2rem 0.6rem
+    border-radius: 0.4rem
+
+.totalAvg
+  text-align: center
+  font-size: 1.8rem
+
+  font-weight: 800
+  color: #10b981
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)
+  padding: 0.8rem
+  border-radius: 0.8rem
+
+.empty
+  display: flex
+  justify-content: center
+  align-items: center
+  min-height: 40rem
+  font-size: 1.6rem
+  color: var(--text-secondary)

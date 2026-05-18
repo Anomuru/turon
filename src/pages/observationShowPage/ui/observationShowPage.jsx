@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import cls from './observationShowPage.module.sass';
 import { API_URL, headers, useHttp } from 'shared/api/base.js';
+import {useNavigate} from "react-router";
 
 export const ObservationShowPage = () => {
     const [data, setData] = useState(null);
@@ -13,6 +14,7 @@ export const ObservationShowPage = () => {
     const [sortDir, setSortDir] = useState(1);
     const [cycle, setCycle] = useState([]);
     const [cycleId, setCycleId] = useState(null);
+    const navigate = useNavigate()
 
     const branchId = localStorage.getItem('branchId');
     const { request } = useHttp();
@@ -226,7 +228,20 @@ export const ObservationShowPage = () => {
                                             {isExp ? '▲' : '▼'}
                                         </div>
                                     </td>
-                                    <td className={cls.teacherName}>{t.teacher_name}</td>
+                                    <td  onClick={(e) => {
+                                        e.stopPropagation();
+
+                                        const observeIds = t.observers.map(item => item.id);
+
+                                        console.log(observeIds);
+
+                                        navigate(`/platform/observationDetail/${t.teacher_id}`, {
+                                            state: {
+                                                observeIds
+                                            }
+                                        });
+                                    }}
+                                         className={cls.teacherName}>{t.teacher_name}</td>
                                     <td>{t.completed_count} / {t.total_observers_required}</td>
                                     <td>{t.pending_count}</td>
                                     <td>
@@ -268,19 +283,22 @@ export const ObservationShowPage = () => {
                                                         </span>
                                                 )}
                                                 {completedObs.map(o => (
-                                                    <span key={o.observer_id} className={`${cls.obsChip} ${cls.obsChipDone}`}>
-                                                            <span className={cls.obsDot} />
+                                                    <span
+                                                        key={o.observer_id}
+                                                        className={`${cls.obsChip} ${cls.obsChipDone}`}
+                                                    >
+                                                        <span className={cls.obsDot} />
                                                         {o.observer_name}
                                                         {o.observation_avg !== null
                                                             ? ` · ${o.observation_avg.toFixed(1)}`
                                                             : ''}
-                                                        </span>
+                                                    </span>
                                                 ))}
                                                 {pendingObs.map(o => (
                                                     <span key={o.observer_id} className={`${cls.obsChip} ${cls.obsChipPending}`}>
-                                                            <span className={cls.obsDot} />
+                                                        <span className={cls.obsDot} />
                                                         {o.observer_name}
-                                                        </span>
+                                                    </span>
                                                 ))}
                                             </div>
                                         </td>
