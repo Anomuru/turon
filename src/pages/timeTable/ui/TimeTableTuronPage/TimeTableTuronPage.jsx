@@ -104,6 +104,7 @@ export const TimeTableTuronPage = () => {
     const [canDisabled, setCanDisabled] = useState(false)
     const [fullScreen, setFullScreen] = useState(false)
     const [classView, setClassView] = useState(false)
+    const [flowSearch, setFlowSearch] = useState("")
     const job = localStorage.getItem("job")
 
 
@@ -866,6 +867,8 @@ export const TimeTableTuronPage = () => {
                             setFullScreen={setFullScreen}
                             setClassView={setClassView}
                             groups={groups}
+                            flowSearch={flowSearch}
+                            setFlowSearch={setFlowSearch}
                         /> : null
                 }
 
@@ -906,6 +909,7 @@ export const TimeTableTuronPage = () => {
                                 selectedSubject={selectedSubject}
                                 isSelected={isSelected}
                                 groups={groups}
+                                flowSearch={flowSearch}
                                 subjects={subjects}
                                 teachers={teachers}
                                 color={color}
@@ -1007,4 +1011,3 @@ export const TimeTableTuronPage = () => {
             </div>
     );
 };
-
