@@ -98,5 +98,7 @@ export const getTeacherStatistics = () => `teacherStatistics`
 
 export const getLessonPlanDailyReport = () => `lessonPlanDailyReport`
 
+export const getLessonPlanDetail = (teacherId) => `lessonPlanDetail/${teacherId}`
+
 
 

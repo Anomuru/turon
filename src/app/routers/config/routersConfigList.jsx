@@ -26,6 +26,7 @@ import {
     getObservationShowPage,
     getTeacherStatistics,
     getLessonPlanDailyReport,
+    getLessonPlanDetail,
 
 } from "shared/const/routers";
 import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
@@ -69,6 +70,7 @@ const EducationQualityDetails = lazyPage(() => import("pages/educationQualityPag
 const ObservationShowPage = lazyPage(() => import("pages/observationShowPage"), "ObservationShowPage");
 const TeacherStatisticsPage = lazyPage(() => import("pages/teacherStatisticsPage"), "TeacherStatisticsPage");
 const LessonPlanDailyReportPage = lazyPage(() => import("pages/lessonPlanDailyReportPage"), "LessonPlanDailyReportPage");
+const LessonPlanDetailPage = lazyPage(() => import("pages/lessonPlanDetailPage"), "LessonPlanDetailPage");
 
 export const routersConfigList = [
     {
@@ -301,6 +303,11 @@ export const routersConfigList = [
         name: "Kunlik Dars Rejasi Hisoboti",
         path: getLessonPlanDailyReport(),
         element: <LessonPlanDailyReportPage/>
+    },
+    {
+        name: "Dars Rejasi Tafsilotlari",
+        path: getLessonPlanDetail(":teacherId"),
+        element: <LessonPlanDetailPage/>
     }
 
 ]
