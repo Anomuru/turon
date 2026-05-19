@@ -293,14 +293,14 @@ export const menuConfig = [
         branches: true
 
     },
-    {
-        to: "observeStatic",
-        name: "Observe Statistika",
-        icon: "fa-toolbox",
-        roles: [ROLES.spiritualist],
-        branches: true
-
-    },
+    // {
+    //     to: "observeStatic",
+    //     name: "Observe Statistika",
+    //     icon: "fa-toolbox",
+    //     roles: [ROLES.spiritualist],
+    //     branches: true
+    //
+    // },
     {
         to: "teacherStatistics",
         name: "TeacherStatistics",
