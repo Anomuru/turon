@@ -54,6 +54,9 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
     const overHeadType = useSelector(getOverHeadType)
     const [select, setSelect] = useState({})
     const [selectOverheadType, setSelectOverheadType] = useState()
+    const changeableOverHeadTypes = Array.isArray(overHeadType)
+        ? overHeadType.filter(item => item.changeable !== false)
+        : [];
 
     useEffect(() => {
         if (overHeadType) {
@@ -324,7 +327,7 @@ export const AccountingNewFilter = ({selectType, activeFilter, setActiveFilter, 
 
                 <Form extraClassname={cls.form} onSubmit={handleSubmit(onAddOverhead)}>
                     <Input register={register} name={"created"} type={"date"} title={"Kun"}/>
-                    <Select defaultValue={selectOverheadType} options={overHeadType}
+                    <Select defaultValue={selectOverheadType} options={changeableOverHeadTypes}
                         // defaultValue={select}
                             onChangeOption={(e) => {
                                 onChange({

@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 
 
 import cls from "./TimeTableDragItems.module.sass"
@@ -13,6 +13,7 @@ export const TimeTableDragItems = (props) => {
 
     const {
         groups,
+        flowSearch,
         isSelected,
         subjects,
         teachers,
@@ -35,13 +36,31 @@ export const TimeTableDragItems = (props) => {
         })
     }
 
+    const filteredFlows = () => {
+        const search = flowSearch?.trim()?.toLowerCase()
 
-    const renderItems = useCallback(() => {
+        if (type !== "flow" || !search) {
+            return filteredColors()
+        }
+
+        return filteredColors()?.filter(item => {
+            const flowName = item?.name || ""
+            const teacherName = item?.teacher_info?.name || ""
+            const teacherSurname = item?.teacher_info?.surname || ""
+            const fullTeacherName = `${teacherName} ${teacherSurname}`
+
+            return [flowName, teacherName, teacherSurname, fullTeacherName]
+                .some(value => value.toLowerCase().includes(search))
+        })
+    }
+
+
+    const renderItems = () => {
         if (!isSelected || selectedType === "flow") {
             if (!groups?.length) {
                 return <h1 style={{color: 'red'}}>{type} yoq</h1>
             }
-            return filteredColors()?.map(item => {
+            return filteredFlows()?.map(item => {
                 return <TimeTableDragItem  color={item.type === "group" ? item?.color?.value : ""} typeItem={type}
                                           item={item}>
                     <p style={{textAlign: "center"}}>{item?.class_name || item?.name}</p>
@@ -87,7 +106,7 @@ export const TimeTableDragItems = (props) => {
                 return <TimeTableDragItem type={"teacher"} item={item}>{item?.name} {item?.surname}</TimeTableDragItem>
             })
         }
-    }, [isSelected, selectedSubject, groups, teachers, color, subjects, selectedType,selectedItem])
+    }
 
 
     if (status === true) {
@@ -100,4 +119,3 @@ export const TimeTableDragItems = (props) => {
         </div>
     );
 };
-

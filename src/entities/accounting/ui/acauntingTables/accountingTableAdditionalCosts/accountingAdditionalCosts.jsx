@@ -11,6 +11,7 @@ import {getSearchValue} from "../../../../../features/searchInput";
 import {MiniLoader} from "../../../../../shared/ui/miniLoader";
 import {Select} from "../../../../../shared/ui/select";
 import {DefaultPageLoader} from "shared/ui/defaultLoader";
+import {useNavigate} from "react-router";
 
 export const AccountingAdditionalCosts = ({
                                               additionalCosts,
@@ -32,9 +33,26 @@ export const AccountingAdditionalCosts = ({
     const search = useSelector(getSearchValue)
     const loading = useSelector(getOverHeadLoading)
     const totalCount = useSelector(getOverHeadCount)
+    const navigate = useNavigate()
 
+    const getOverheadLogUrl = (item) => {
+        const params = new URLSearchParams({
+            tab: "logs",
+            log_id: String(item.overhead_type_log_id),
+        });
 
+        if (item.payment_id) params.set("payment_id", String(item.payment_id));
 
+        const dateParts = String(item.created || "").split(/[.-]/);
+        if (dateParts.length === 3) {
+            const [first, second, third] = dateParts;
+            const isIsoDate = first.length === 4;
+            params.set("month", isIsoDate ? second : second);
+            params.set("year", isIsoDate ? first : third);
+        }
+
+        return `/platform/accounting/overheadTypes?${params.toString()}`;
+    };
 
     const renderOverHeadList = () => {
         return additionalCosts?.map((item, i) => (
@@ -55,6 +73,14 @@ export const AccountingAdditionalCosts = ({
                 </td>
                 <td>
                     <div>
+                        {item.overhead_type_log_id && (
+                            <Button
+                                onClick={() => navigate(getOverheadLogUrl(item))}
+                                type={"filter"}
+                            >
+                                Hisob
+                            </Button>
+                        )}
                         <Button
                             onClick={() => {
                                 setActiveDelete(true)
@@ -120,4 +146,3 @@ export const AccountingAdditionalCosts = ({
         </>
     );
 };
-

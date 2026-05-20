@@ -33,7 +33,9 @@ const TimeTableTuronPageFilters = React.memo((props) => {
         setIsSelected,
         setClassView,
         groups,
-        selectedType
+        selectedType,
+        flowSearch,
+        setFlowSearch
     } = props
 
     const currentDateForTimeTable = localStorage.getItem("dateForTimeTable")
@@ -125,6 +127,7 @@ const TimeTableTuronPageFilters = React.memo((props) => {
 
     const onChangeType = (type) => {
         setIsSelected()
+        setFlowSearch?.("")
         dispatch(onChangeTypeTimeTable(type))
     }
 
@@ -203,6 +206,16 @@ const TimeTableTuronPageFilters = React.memo((props) => {
                         />
                     </div>
                     <div className={cls.container}>
+                        {
+                            type === "flow" &&
+                            <Input
+                                type={"text"}
+                                value={flowSearch}
+                                onChange={(e) => setFlowSearch(e.target.value)}
+                                placeholder={"Flow qidirish"}
+                                extraClassName={cls.search}
+                            />
+                        }
                         <Select
                             titleOption={"O'qituvchi filtri"}
                             options={[{name: "Hamma", id: "all"}, ...teachersForSelect]}

@@ -1,0 +1,218 @@
+.page
+    padding: 20px
+    max-width: 1200px
+    margin: 0 auto
+
+.header
+    margin-bottom: 30px
+    padding-bottom: 20px
+    border-bottom: 2px solid #e0e0e0
+
+.headerTop
+    display: flex
+    align-items: center
+    gap: 15px
+    margin-bottom: 20px
+
+    h1
+        font-size: 28px
+        color: #333
+        margin: 0
+
+.backBtn
+    display: flex
+    align-items: center
+    gap: 8px
+    padding: 8px 16px
+    border: 1px solid #ddd
+    border-radius: 8px
+    background: white
+    color: #555
+    cursor: pointer
+    font-size: 14px
+    transition: all 0.2s
+
+    &:hover
+        background: #f5f5f5
+        border-color: #bbb
+
+.dateFilters
+    display: flex
+    gap: 20px
+    flex-wrap: wrap
+
+.inputGroup
+    display: flex
+    flex-direction: column
+    gap: 5px
+
+    label
+        font-size: 13px
+        color: #666
+        font-weight: 500
+
+.dateInput
+    padding: 8px 12px
+    border: 1px solid #ddd
+    border-radius: 6px
+    font-size: 14px
+    outline: none
+    transition: border-color 0.2s
+
+    &:focus
+        border-color: #4CAF50
+
+.plansList
+    display: flex
+    flex-direction: column
+    gap: 15px
+
+.planCard
+    background: white
+    border-radius: 10px
+    border: 1px solid #e0e0e0
+    overflow: hidden
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06)
+    transition: box-shadow 0.2s
+
+    &:hover
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1)
+
+.planCardHeader
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: 18px 20px
+    cursor: pointer
+    transition: background 0.2s
+
+    &:hover
+        background: #fafafa
+
+.planCardInfo
+    display: flex
+    flex-wrap: wrap
+    gap: 15px
+    align-items: center
+
+    > div
+        display: flex
+        align-items: center
+        gap: 6px
+        font-size: 14px
+        color: #555
+
+        i
+            color: #999
+            font-size: 13px
+
+.planCardDate
+    font-weight: 600
+    color: #333 !important
+
+.planCardRight
+    display: flex
+    align-items: center
+    gap: 12px
+
+.ballBadge
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    background: #4CAF50
+    color: white
+    width: 40px
+    height: 40px
+    border-radius: 50%
+    font-size: 16px
+    font-weight: bold
+
+.arrow
+    color: #999
+    transition: transform 0.2s
+
+.planCardBody
+    padding: 0 20px 20px
+    border-top: 1px solid #f0f0f0
+
+.info
+    display: grid
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))
+    gap: 10px
+    margin: 15px 0
+
+    p
+        margin: 5px 0
+        font-size: 14px
+        color: #666
+
+        strong
+            color: #333
+            margin-right: 5px
+
+.content
+    margin-bottom: 20px
+
+.section
+    background: #f9f9f9
+    padding: 20px
+    margin-bottom: 15px
+    border-radius: 8px
+    border-left: 4px solid #4CAF50
+
+    h3
+        font-size: 18px
+        margin-bottom: 10px
+        color: #333
+
+    p
+        font-size: 14px
+        line-height: 1.6
+        color: #555
+
+.ball
+    display: inline-block
+    background: #4CAF50
+    color: white
+    padding: 10px 20px
+    border-radius: 8px
+    font-size: 24px
+    font-weight: bold
+
+.students
+    margin-top: 20px
+
+    h2
+        font-size: 20px
+        margin-bottom: 15px
+        color: #333
+
+.studentsList
+    display: grid
+    gap: 12px
+
+.studentCard
+    background: white
+    padding: 15px
+    border-radius: 8px
+    border: 1px solid #e0e0e0
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05)
+
+.studentName
+    font-size: 16px
+    font-weight: 600
+    color: #333
+    margin-bottom: 8px
+
+.studentComment
+    font-size: 14px
+    color: #666
+    line-height: 1.5
+
+.empty
+    display: flex
+    justify-content: center
+    align-items: center
+    min-height: 400px
+    font-size: 18px
+    color: #999

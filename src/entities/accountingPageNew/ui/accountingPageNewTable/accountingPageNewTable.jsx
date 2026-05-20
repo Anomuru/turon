@@ -67,6 +67,24 @@ export const AccountingPageNewTable = ({activeFilter, data, selectType}) => {
         if (sortConfig.key !== key) return "↕";
         return sortConfig.direction === "asc" ? "↑" : "↓";
     };
+    const getOverheadLogUrl = (item) => {
+        const params = new URLSearchParams({
+            tab: "logs",
+            log_id: String(item.overhead_type_log_id),
+        });
+
+        if (item.payment_id) params.set("payment_id", String(item.payment_id));
+
+        const dateParts = String(item.date || "").split(/[.-]/);
+        if (dateParts.length === 3) {
+            const [first, second, third] = dateParts;
+            const isIsoDate = first.length === 4;
+            params.set("month", isIsoDate ? second : second);
+            params.set("year", isIsoDate ? first : third);
+        }
+
+        return `/platform/accounting/overheadTypes?${params.toString()}`;
+    };
     const {request} = useHttp()
 
     const dispatch = useDispatch()
@@ -172,6 +190,14 @@ export const AccountingPageNewTable = ({activeFilter, data, selectType}) => {
                                     <span className={cls.paymentType}>{p.payment_type_name}</span>
                                 </td>
                                 <td>
+                                    {selectType === "overhead" && p.overhead_type_log_id && (
+                                        <i
+                                            onClick={() => navigate(getOverheadLogUrl(p))}
+                                            title="Oylik hisobni ochish"
+                                            style={{ color: "#2563eb", fontSize: "1.6rem", cursor: "pointer", marginRight: "1.2rem" }}
+                                            className="fa fa-receipt"
+                                        />
+                                    )}
                                     <i onClick={() => {
                                         setConfirmModal(true)
                                         setConfirmModalItem(p)

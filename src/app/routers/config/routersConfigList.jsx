@@ -21,9 +21,12 @@ import {
     getRouteMain,
     getRouteRegister,
     getQuarterMaster, getCvSubmissons, getHomeMessage, getHomeNews, getCapitalCategoryProfile, getCapitalInside,
-    getDashboard, getTeacherObservation, getLessonPlan,
+    getDashboard, getTeacherObservation, getObservationDetail, getLessonPlan,
     getEducationQuality, getEducationQualityDetails,
     getObservationShowPage,
+    getTeacherStatistics,
+    getLessonPlanDailyReport,
+    getLessonPlanDetail,
 
 } from "shared/const/routers";
 import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
@@ -59,11 +62,15 @@ const TeachersDevelopmentPage = lazyPage(() => import("pages/teachersDevelopment
 const CapitalInside = lazyPage(() => import("pages/capitalPage"), "CapitalInside");
 const DirectorDashboardPage = lazyPage(() => import("pages/directorDashboardPage"), "DirectorDashboardPage");
 const TeacherObservationPage = lazyPage(() => import("pages/teacherObservationPage"), "TeacherObservationPage");
+const ObservationDetailPage = lazyPage(() => import("pages/observationDetailPage"), "ObservationDetailPage");
 const LessonPlanPage = lazyPage(() => import("pages/lessonPlanPage"), "LessonPlanPage");
 const FinanceDashboardPage = lazyPage(() => import("pages/financeDashboardPage"), "FinanceDashboardPage");
 const EducationQualityPage = lazyPage(() => import("pages/educationQualityPage"), "EducationQualityPage");
 const EducationQualityDetails = lazyPage(() => import("pages/educationQualityPage"), "EducationQualityDetails");
 const ObservationShowPage = lazyPage(() => import("pages/observationShowPage"), "ObservationShowPage");
+const TeacherStatisticsPage = lazyPage(() => import("pages/teacherStatisticsPage"), "TeacherStatisticsPage");
+const LessonPlanDailyReportPage = lazyPage(() => import("pages/lessonPlanDailyReportPage"), "LessonPlanDailyReportPage");
+const LessonPlanDetailPage = lazyPage(() => import("pages/lessonPlanDetailPage"), "LessonPlanDetailPage");
 
 export const routersConfigList = [
     {
@@ -263,6 +270,11 @@ export const routersConfigList = [
         element: <TeacherObservationPage/>
     },
     {
+        name: "Observation Detail",
+        path: getObservationDetail(":observationId"),
+        element: <ObservationDetailPage/>
+    },
+    {
         name: "Dars Rejasi",
         path: getLessonPlan(),
         element: <LessonPlanPage/>
@@ -281,6 +293,21 @@ export const routersConfigList = [
         name: "Ta'lim Sifati - Batafsil",
         path: getEducationQualityDetails(),
         element: <EducationQualityDetails/>
+    },
+    {
+        name: "O'qituvchilar Statistikasi",
+        path: getTeacherStatistics(),
+        element: <TeacherStatisticsPage/>
+    },
+    {
+        name: "Kunlik Dars Rejasi Hisoboti",
+        path: getLessonPlanDailyReport(),
+        element: <LessonPlanDailyReportPage/>
+    },
+    {
+        name: "Dars Rejasi Tafsilotlari",
+        path: getLessonPlanDetail(":teacherId"),
+        element: <LessonPlanDetailPage/>
     }
 
 ]

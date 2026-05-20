@@ -38,6 +38,18 @@ export const menuConfig = [
         icon: "fa-award",
         roles: [ROLES.director]
     },
+    {
+        to: "teacherStatistics",
+        name: "O'qituvchilar statistikasi",
+        icon: "fa-chart-bar",
+        roles: [ROLES.director, ROLES.main_director]
+    },
+    {
+        to: "lessonPlanDailyReport",
+        name: "Kunlik dars rejasi",
+        icon: "fa-clipboard-list",
+        roles: [ROLES.director, ROLES.main_director, ROLES.spiritualist]
+    },
     // test
     {
         to: "financeDashboard",
@@ -61,7 +73,7 @@ export const menuConfig = [
         to: "surveyResults",
         name: "So'rovnoma natijalari",
         icon: "fa-list",
-        roles: [ROLES.admin, ROLES.programmer, ROLES.director, ROLES.main_director]
+        roles: [ROLES.spiritualist, ROLES.director, ROLES.main_director]
     },
     {
         to: "teacherRating",
@@ -281,19 +293,26 @@ export const menuConfig = [
         branches: true
 
     },
+    // {
+    //     to: "observeStatic",
+    //     name: "Observe Statistika",
+    //     icon: "fa-toolbox",
+    //     roles: [ROLES.spiritualist],
+    //     branches: true
+    //
+    // },
     {
-        to: "observeStatic",
-        name: "Observe Statistika",
-        icon: "fa-toolbox",
-        roles: [ROLES.spiritualist, ROLES.admin, ROLES.advertising],
+        to: "teacherStatistics",
+        name: "TeacherStatistics",
+        icon: "fa-users",
+        roles: [ROLES.spiritualist],
         branches: true
-
     },
     {
         to: "observation_results",
         name: "Teacher observe statistics",
         icon: "fa-arrow-up-right-dots",
-        roles: [ROLES.spiritualist, ROLES.admin, ROLES.advertising],
+        roles: [ROLES.spiritualist],
         branches: true
     },
     {
