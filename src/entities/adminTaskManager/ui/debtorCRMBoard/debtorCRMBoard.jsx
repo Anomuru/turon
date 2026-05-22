@@ -674,7 +674,7 @@ export const DebtorCRMBoard = () => {
     const [refreshing, setRefreshing] = useState(false)
 
 
-    const [radio , setRadio] = useState('Hammasi')
+    const [radio , setRadio] = useState('Хаммаси')
     console.log(radio)
 
     const refreshDebtors = useCallback(() => {
@@ -822,7 +822,7 @@ export const DebtorCRMBoard = () => {
         return groups
     }, [filtered, activeTab])
     const filteredCalledUsers = useMemo(() => {
-        if (radio === "Жавоб берганлар ") {
+        if (radio === "Жавоб берганлар") {
             return calledUsers.filter(item => item.status === "answered")
         }
 
