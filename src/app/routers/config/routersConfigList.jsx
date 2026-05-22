@@ -26,7 +26,7 @@ import {
     getObservationShowPage,
     getTeacherStatistics,
     getLessonPlanDailyReport,
-    getLessonPlanDetail, getSchoolMenu,
+    getLessonPlanDetail, getSchoolMenu, getTeacherItem,
 
 } from "shared/const/routers";
 import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
@@ -35,6 +35,7 @@ import { CvSubmissions } from "pages/cvSubmissions/index.js";
 import { HomeMessages } from "pages/homeMessages/index.js";
 import { NewsPage } from "pages/newsPage/newsPage.jsx";
 import {SchoolItem} from "pages/shortMenuData/schoolItem/schoolItem.jsx";
+import {ShortTeacherData} from "pages/shortMenuData/teacher/shortTeacherData.jsx";
 
 
 const StudentsPage = lazyPage(() => import("pages/studentsPage"), "StudentsPage");
@@ -100,6 +101,10 @@ export const routersConfigList = [
         element: <GroupsPage />
     },
     {
+        path: getTeacherItem(":id"),
+        element: <ShortTeacherData/>
+    },
+    {
         name: "O'qituvchilar",
         path: getRouteTeacher(":id"),
         element: <TeachersPage />
@@ -139,7 +144,7 @@ export const routersConfigList = [
         element: <ContractPage />
     },
     {
-        path: getSchoolMenu(":id"),
+        path: getSchoolMenu(""),
         element: <SchoolItem/>
     },
     {

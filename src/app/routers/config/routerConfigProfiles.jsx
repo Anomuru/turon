@@ -334,10 +334,7 @@ export const routersConfigProfile = [
         path: getGroupRating(":id"),
         element: <GroupsPage/>
     },
-    {
-        path: getTeacherItem(":id"),
-        element: <ShortTeacherData/>
-    },
+
 
 
 ]

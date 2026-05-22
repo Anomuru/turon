@@ -47,13 +47,11 @@ export const Location = () => {
 
     useEffect(() => {
         const ROLE = localStorage.getItem("job");
-        const id =
-            ROLE === "director"
-                ? localStorage.getItem("branchForDirector")
-                : localStorage.getItem("branchId");
+        const id = localStorage.getItem("branchId");
+        const id2 = localStorage.getItem("branchForDirector");
 
         if (id) {
-            dispatch(setCurrentBranchId(id));
+            dispatch(setCurrentBranchId(id2));
         }
     }, [dispatch]);
 
@@ -80,6 +78,7 @@ export const Location = () => {
 
     const changeSelectedLocation = useCallback((id) => {
         dispatch(setCurrentBranchId(id));
+        localStorage.setItem("branchId", id)
         localStorage.setItem("branchForDirector", id)
     }, []);
 

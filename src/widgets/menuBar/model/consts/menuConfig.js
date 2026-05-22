@@ -56,7 +56,7 @@ export const menuConfig = [
         name: "School items",
         icon: "fa-tasks",
         roles: [ROLES.director, ROLES.main_director],
-        branches: true
+        // branches: true
     },
 
 
