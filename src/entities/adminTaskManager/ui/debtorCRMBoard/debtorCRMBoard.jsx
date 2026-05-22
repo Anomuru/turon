@@ -670,12 +670,12 @@ export const DebtorCRMBoard = () => {
     const [calledDate, setCalledDate] = useState(todayStr)
     const [calledDate2, setCalledDate2] = useState(todayStr)
 
+
     // ── Refresh debtors silently (fade out → in)
     const [refreshing, setRefreshing] = useState(false)
 
 
     const [radio , setRadio] = useState('Хаммаси')
-    console.log(radio)
 
     const refreshDebtors = useCallback(() => {
         const branchId = localStorage.getItem('branchId') || 6

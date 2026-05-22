@@ -26,7 +26,7 @@ import {
     getObservationShowPage,
     getTeacherStatistics,
     getLessonPlanDailyReport,
-    getLessonPlanDetail,
+    getLessonPlanDetail, getSchoolMenu,
 
 } from "shared/const/routers";
 import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
@@ -34,6 +34,7 @@ import Register from "pages/registerPage/index.js";
 import { CvSubmissions } from "pages/cvSubmissions/index.js";
 import { HomeMessages } from "pages/homeMessages/index.js";
 import { NewsPage } from "pages/newsPage/newsPage.jsx";
+import {SchoolItem} from "pages/shortMenuData/schoolItem/schoolItem.jsx";
 
 
 const StudentsPage = lazyPage(() => import("pages/studentsPage"), "StudentsPage");
@@ -136,6 +137,10 @@ export const routersConfigList = [
         name: "Contract",
         // icon: "fa fa-book",
         element: <ContractPage />
+    },
+    {
+        path: getSchoolMenu(":id"),
+        element: <SchoolItem/>
     },
     {
         path: getCapital(":id"),

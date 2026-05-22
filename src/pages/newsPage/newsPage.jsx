@@ -440,8 +440,8 @@ export const NewsPage = () => {
 const S = {
     page: {
         fontFamily: "'Segoe UI', sans-serif",
-        padding: 32,
-        backgroundColor: "#f3f4f6",
+        // padding: 32,
+        // backgroundColor: "#f3f4f6",
     },
     pageHeader: {
         display: "flex",
@@ -478,7 +478,7 @@ const S = {
         borderRadius: 12,
         boxShadow: "0 1px 3px rgba(0,0,0,0.09)",
         overflow: "auto",
-        height: "calc(100vh - 22.5rem)",
+        height: "calc(100vh - 27rem)",
     },
     table: {width: "100%", borderCollapse: "collapse", minWidth: 700},
     thead: {backgroundColor: "#1e293b"},
