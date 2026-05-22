@@ -822,11 +822,11 @@ export const DebtorCRMBoard = () => {
         return groups
     }, [filtered, activeTab])
     const filteredCalledUsers = useMemo(() => {
-        if (radio === "Tel kutarganlar") {
+        if (radio === "Жавоб берганлар ") {
             return calledUsers.filter(item => item.status === "answered")
         }
 
-        if (radio === "Tel kutarmaganlar") {
+        if (radio === "Жавоб бермаганлар") {
             return calledUsers.filter(item => item.status === "not_answered")
         }
 
