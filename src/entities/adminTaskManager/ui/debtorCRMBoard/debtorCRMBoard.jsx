@@ -1046,7 +1046,7 @@ export const DebtorCRMBoard = () => {
 
                        </div>
                         <div style={{display: 'flex', gap: '10px', alignItems: 'center'  , width: "100%"}}>
-                            {["Hammasi" , "Tel kutarganlar" , "Tel kutarmaganlar"].map(item => (
+                            {["Хаммаси" , "Жавоб берганлар" , "Жавоб бермаганлар"].map(item => (
                                 <Radio
                                     onChange={setRadio}
                                     children={item}
