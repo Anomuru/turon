@@ -1073,7 +1073,7 @@ export const DebtorCRMBoard = () => {
                                     <span className={cls.dot__pending} />
                                     Qo'ng'iroq qilinganlar
                                 </h2>
-                                <span className={cls.section__count}>{calledUsers.length} ta</span>
+                                <span className={cls.section__count}>{filteredCalledUsers.length} ta</span>
                             </div>
                             <div className={cls.grid}>
                                 {filteredCalledUsers.map((s, i) => (
