@@ -157,7 +157,7 @@ export const menuConfig = [
         to: "todoist",
         name: "Todoist",
         icon: "fa-circle-check",
-        roles: [ROLES.teacher, ROLES.accountant, ROLES.methodist, ROLES.director, ROLES.main_director, ROLES.muxarir, ROLES.operator, ROLES.programmer, ROLES.smm, ROLES.teacher, ROLES.zavxos],
+        roles: [ROLES.teacher, ROLES.accountant, ROLES.methodist, ROLES.director, ROLES.main_director, ROLES.muxarir, ROLES.operator, ROLES.programmer, ROLES.smm, ROLES.teacher, ROLES.zavxos, ROLES.admin],
         // roles: true
     },
     // {
