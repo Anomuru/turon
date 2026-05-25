@@ -218,7 +218,7 @@ export const menuConfig = [
         to: "groups",
         name: "Sinflar",
         icon: "fa-users",
-        roles: [  ROLES.programmer, ROLES.teacher, ROLES.zavuch, ROLES.spiritualist],
+        roles: [ROLES.admin,  ROLES.programmer, ROLES.teacher, ROLES.zavuch, ROLES.spiritualist],
         branches: true
 
     },
