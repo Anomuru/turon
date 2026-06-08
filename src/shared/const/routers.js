@@ -90,6 +90,8 @@ export const getObservationShowPage = () => "observation_results"
 export const applicationSystem = () => "applicationSystem"
 export const observeStatic = (id) => `observeStatic`
 export const getGroupRating = (id) => `groups/groupRating`
+export const getTeacherItem = (id) => `teacherMenu`
+export const getSchoolMenu = (id) => `schoolMenu`
 
 export const getEducationQuality = () => `educationQuality`
 export const getEducationQualityDetails = () => `educationQuality/details`

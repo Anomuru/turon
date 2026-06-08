@@ -670,12 +670,12 @@ export const DebtorCRMBoard = () => {
     const [calledDate, setCalledDate] = useState(todayStr)
     const [calledDate2, setCalledDate2] = useState(todayStr)
 
+
     // ── Refresh debtors silently (fade out → in)
     const [refreshing, setRefreshing] = useState(false)
 
 
-    const [radio , setRadio] = useState('Hammasi')
-    console.log(radio)
+    const [radio , setRadio] = useState('Хаммаси')
 
     const refreshDebtors = useCallback(() => {
         const branchId = localStorage.getItem('branchId') || 6
@@ -822,11 +822,11 @@ export const DebtorCRMBoard = () => {
         return groups
     }, [filtered, activeTab])
     const filteredCalledUsers = useMemo(() => {
-        if (radio === "Tel kutarganlar") {
+        if (radio === "Жавоб берганлар") {
             return calledUsers.filter(item => item.status === "answered")
         }
 
-        if (radio === "Tel kutarmaganlar") {
+        if (radio === "Жавоб бермаганлар") {
             return calledUsers.filter(item => item.status === "not_answered")
         }
 
@@ -1046,7 +1046,7 @@ export const DebtorCRMBoard = () => {
 
                        </div>
                         <div style={{display: 'flex', gap: '10px', alignItems: 'center'  , width: "100%"}}>
-                            {["Hammasi" , "Tel kutarganlar" , "Tel kutarmaganlar"].map(item => (
+                            {["Хаммаси" , "Жавоб берганлар" , "Жавоб бермаганлар"].map(item => (
                                 <Radio
                                     onChange={setRadio}
                                     children={item}
@@ -1073,7 +1073,7 @@ export const DebtorCRMBoard = () => {
                                     <span className={cls.dot__pending} />
                                     Qo'ng'iroq qilinganlar
                                 </h2>
-                                <span className={cls.section__count}>{calledUsers.length} ta</span>
+                                <span className={cls.section__count}>{filteredCalledUsers.length} ta</span>
                             </div>
                             <div className={cls.grid}>
                                 {filteredCalledUsers.map((s, i) => (

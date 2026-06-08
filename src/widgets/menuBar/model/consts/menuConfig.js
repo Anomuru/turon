@@ -12,7 +12,7 @@ export const menuConfig = [
         to: "dashboard",
         name: "Dashboard",
         icon: "fa-home",
-        roles: [ROLES.director, ROLES.main_director]
+        roles: [ROLES.director, ROLES.main_director , ROLES.spiritualist , ROLES.accountant]
     },
     {
         to: "register",
@@ -38,49 +38,70 @@ export const menuConfig = [
         icon: "fa-award",
         roles: [ROLES.director]
     },
+    // {
+    //     to: "teacherStatistics",
+    //     name: "O'qituvchilar statistikasi",
+    //     icon: "fa-chart-bar",
+    //     roles: [ROLES.director, ROLES.main_director]
+    // },
     {
-        to: "teacherStatistics",
-        name: "O'qituvchilar statistikasi",
-        icon: "fa-chart-bar",
-        roles: [ROLES.director, ROLES.main_director]
-    },
-    {
-        to: "lessonPlanDailyReport",
-        name: "Kunlik dars rejasi",
-        icon: "fa-clipboard-list",
-        roles: [ROLES.director, ROLES.main_director, ROLES.spiritualist]
-    },
-    // test
-    {
-        to: "financeDashboard",
-        name: "Moliyaviy Dashboard",
-        icon: "fa-chart-bar",
-        roles: [ROLES.director, ROLES.main_director, ROLES.programmer, ROLES.accountant],
-    },
-    {
-        to: "rating",
-        name: "Reyting ko'rsatkichlari",
-        icon: "fa-users",
-        roles: [ROLES.director, ROLES.main_director, ROLES.programmer]
-    },
-    {
-        to: "development",
-        name: "O'qituvchilarni rivojlantirish",
-        icon: "fa-chalkboard-teacher",
-        roles: [ROLES.director, ROLES.main_director]
-    },
-    {
-        to: "surveyResults",
-        name: "So'rovnoma natijalari",
+        to: "teacherMenu",
+        name: "Teacher items",
         icon: "fa-list",
-        roles: [ROLES.spiritualist, ROLES.director, ROLES.main_director]
+        roles: [ROLES.director, ROLES.main_director],
+        branches: true
     },
     {
-        to: "teacherRating",
-        name: "O'qituvchini baholash",
-        icon: "fa-star",
-        roles: [ROLES.director, ROLES.main_director, ROLES.programmer]
+        to: "schoolMenu",
+        name: "School items",
+        icon: "fa-tasks",
+        roles: [ROLES.director, ROLES.main_director],
+        // branches: true
     },
+
+
+
+
+    // {
+    //     to: "lessonPlanDailyReport",
+    //     name: "Kunlik dars rejasi",
+    //     icon: "fa-clipboard-list",
+    //     roles: [ROLES.director, ROLES.main_director, ROLES.spiritualist]
+    // },
+    // test
+    // {
+    //     to: "financeDashboard",
+    //     name: "Moliyaviy Dashboard",
+    //     icon: "fa-chart-bar",
+    //     roles: [ROLES.director, ROLES.main_director, ROLES.programmer, ROLES.accountant],
+    // },
+
+
+
+    // {
+    //     to: "rating",
+    //     name: "Reyting ko'rsatkichlari",
+    //     icon: "fa-users",
+    //     roles: [ROLES.director, ROLES.main_director, ROLES.programmer]
+    // },
+    // {
+    //     to: "development",
+    //     name: "O'qituvchilarni rivojlantirish",
+    //     icon: "fa-chalkboard-teacher",
+    //     roles: [ROLES.director, ROLES.main_director]
+    // },
+    // {
+    //     to: "surveyResults",
+    //     name: "So'rovnoma natijalari",
+    //     icon: "fa-list",
+    //     roles: [ROLES.spiritualist, ROLES.director, ROLES.main_director]
+    // },
+    // {
+    //     to: "teacherRating",
+    //     name: "O'qituvchini baholash",
+    //     icon: "fa-star",
+    //     roles: [ROLES.director, ROLES.main_director, ROLES.programmer]
+    // },
     {
         to: "adminTaskManager",
         name: "Operator Tasks",
@@ -90,26 +111,26 @@ export const menuConfig = [
     },
     {
         to: "cvShow",
-        name: "CV Submissions ",
+        name: "Home Page Items",
         icon: "fa-file",
-        roles: [ROLES.director, ROLES.main_director, ROLES.smm]
-        // roles: true
+        roles: [ROLES.director, ROLES.main_director, ROLES.smm],
+        branches: true
     },
-    {
-        to: "messages",
-        name: "Xabarlar",
-        icon: "fa-message",
-        roles: [ROLES.director, ROLES.main_director, ROLES.smm]
-        // roles: true
-    },
-
-    {
-        to: "news",
-        name: "Yangiliklar",
-        icon: "fa-brands fa-neos",
-        roles: [ROLES.director, ROLES.main_director, ROLES.smm]
-        // roles: true
-    },
+    // {
+    //     to: "messages",
+    //     name: "Xabarlar",
+    //     icon: "fa-message",
+    //     roles: [ROLES.director, ROLES.main_director, ROLES.smm]
+    //     // roles: true
+    // },
+    //
+    // {
+    //     to: "news",
+    //     name: "Yangiliklar",
+    //     icon: "fa-brands fa-neos",
+    //     roles: [ROLES.director, ROLES.main_director, ROLES.smm]
+    //     // roles: true
+    // },
 
 
     {
@@ -136,7 +157,7 @@ export const menuConfig = [
         to: "todoist",
         name: "Todoist",
         icon: "fa-circle-check",
-        roles: [ROLES.teacher, ROLES.accountant, ROLES.methodist, ROLES.director, ROLES.main_director, ROLES.muxarir, ROLES.operator, ROLES.programmer, ROLES.smm, ROLES.teacher, ROLES.zavxos],
+        roles: [ROLES.teacher, ROLES.accountant, ROLES.methodist, ROLES.director, ROLES.main_director, ROLES.muxarir, ROLES.operator, ROLES.programmer, ROLES.smm, ROLES.teacher, ROLES.zavxos, ROLES.admin],
         // roles: true
     },
     // {
@@ -149,14 +170,14 @@ export const menuConfig = [
         to: "calendar",
         name: "Kalendar",
         icon: "fas fa-calendar-times",
-        roles: [ROLES.director, ROLES.main_director, ROLES.spiritualist, ROLES.advertising],
+        roles: [ ROLES.spiritualist, ROLES.advertising],
 
     },
     {
         to: "students",
         name: "O'quvchilar",
         icon: "fa-user-graduate",
-        roles: [ROLES.admin, ROLES.director, ROLES.main_director, ROLES.programmer, ROLES.zavuch, ROLES.spiritualist, ROLES.advertising],
+        roles: [ROLES.admin, ROLES.programmer, ROLES.zavuch, ROLES.spiritualist, ROLES.advertising],
         branches: true
     },
     // {
@@ -173,7 +194,7 @@ export const menuConfig = [
         to: "teacher",
         name: "O'qituvchilar",
         icon: "fa-user-tie",
-        roles: [ROLES.director, ROLES.main_director, ROLES.programmer, ROLES.spiritualist, ROLES.admin],
+        roles: [ROLES.programmer, ROLES.spiritualist, ROLES.admin],
         branches: true
 
     },
@@ -185,29 +206,29 @@ export const menuConfig = [
     //     branches: true
     //
     // },
-    {
-        to: "parents/",
-        name: "Ota-onalar",
-        icon: "fa-users",
-        roles: [ROLES.director, ROLES.main_director, ROLES.programmer],
-        branches: true
-
-    },
+    // {
+    //     to: "parents/",
+    //     name: "Ota-onalar",
+    //     icon: "fa-users",
+    //     roles: [ROLES.director, ROLES.main_director, ROLES.programmer],
+    //     branches: true
+    //
+    // },
     {
         to: "groups",
         name: "Sinflar",
         icon: "fa-users",
-        roles: [ROLES.admin, ROLES.director, ROLES.main_director, ROLES.programmer, ROLES.teacher, ROLES.zavuch, ROLES.spiritualist],
+        roles: [ROLES.admin,  ROLES.programmer, ROLES.teacher, ROLES.zavuch, ROLES.spiritualist],
         branches: true
 
     },
-    {
-        to: "vacancyPage",
-        name: "Vakansiyalar",
-        icon: "fa-tasks", // Bu element director uchun filtrlanadi
-        roles: [ROLES.director, ROLES.main_director, ROLES.programmer],
-        branches: true
-    },
+    // {
+    //     to: "vacancyPage",
+    //     name: "Vakansiyalar",
+    //     icon: "fa-tasks", // Bu element director uchun filtrlanadi
+    //     roles: [ROLES.director, ROLES.main_director, ROLES.programmer],
+    //     branches: true
+    // },
     // {
     //     to: "timeList",
     //     name: "Time List",
@@ -221,7 +242,7 @@ export const menuConfig = [
         to: "time",
         name: "Time Table",
         icon: "fa-clock",
-        roles: [ROLES.admin, ROLES.director, ROLES.main_director, ROLES.programmer, ROLES.zavuch, ROLES.spiritualist],
+        roles: [ROLES.admin,  ROLES.programmer, ROLES.zavuch, ROLES.spiritualist],
         branches: true
     },
     // {
@@ -322,6 +343,7 @@ export const menuConfig = [
         roles: [ROLES.spiritualist, ROLES.admin, ROLES.advertising, ROLES.director, ROLES.main_director],
         branches: true
     },
+
     // {
     //     to: "groupRating",
     //     name: "Xo'jalik uchun zayavka berish",

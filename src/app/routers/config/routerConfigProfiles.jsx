@@ -31,7 +31,7 @@ import {
     getAccounting,
     getGroupQuarter, getGroupQuarterShow, getGroupObserve, getLessonTable, getGroupExams, getCvSubmissons, getParty,
     classView, getCapitalCategoryProfile, questionnaire, grades, flowGrades, observeStatic, applicationSystem,
-    getGroupRating, getReyting
+    getGroupRating, getReyting, getTeacherItem, getSchoolMenu
 } from "shared/const/routers";
 import {lazyPage} from "shared/lib/lazyPage/lazyPage.js";
 import {TimeTableTuronPage} from "pages/timeTable/index.js";
@@ -47,6 +47,8 @@ import {TeacherDashboard} from "pages/observeStatic/observeStatic.jsx";
 import {ApplicationSystem} from "pages/applicationSystem/applicationSystem.jsx";
 import {GroupsPage} from "pages/groupRating/groupRating.jsx";
 import {GroupRating} from "pages/groupsPage/ui/groupRating/groupRating.jsx";
+import {ShortTeacherData} from "pages/shortMenuData/teacher/shortTeacherData.jsx";
+import {SchoolItem} from "pages/shortMenuData/schoolItem/schoolItem.jsx";
 // import {CategoryProfile} from "pages/capitalPage/index.js";
 const AccountingPageNew = lazyPage(() => import("pages/accountingPage2.0") , "AccountingPageNew");
 // import {GroupQuarterShow} from "pages/groupsPage/index.js";
@@ -332,5 +334,7 @@ export const routersConfigProfile = [
         path: getGroupRating(":id"),
         element: <GroupsPage/>
     },
+
+
 
 ]

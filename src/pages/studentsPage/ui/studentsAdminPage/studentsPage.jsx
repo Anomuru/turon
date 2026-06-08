@@ -89,6 +89,7 @@ export const StudentsPage = () => {
     const [searchParams] = useSearchParams();
     const {register, handleSubmit} = useForm();
     const userBranchId = localStorage.getItem("branchId")
+    const userBranchId2 = localStorage.getItem("branchForDirector")
 
 
     const search = useSelector(getSearchValue);
