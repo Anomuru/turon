@@ -44,7 +44,7 @@ export const TeacherStatistics = ({data, loading}) => {
                     </thead>
                     <tbody>
                         {data.results.map((teacher, index) => (
-                            <tr onClick={() => navigate(`/platform/teacher/teacherProfile/${teacher.teacher_id}`)} key={teacher.teacher_id} className={cls.row}>
+                            <tr onClick={() => navigate(`/platform/lessonPlanDetail/${teacher.teacher_id}`)} key={teacher.teacher_id} className={cls.row}>
                                 <td className={cls.rank}>
                                     <div className={cls.rankBadge}>
                                         {teacher.rank}

@@ -220,86 +220,428 @@
 //           position: absolute
 //           top: 0
 //           left: 0
+//
+//.timeTableWrapper
+//  width: 100%
+//  padding: 20px
+//  background: #ffffff
+//  border-radius: 12px
+//  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)
+//  overflow-x: auto
+//
+//.headerPortal
+//  position: sticky
+//  top: 0
+//  z-index: 100
+//  background: #ffffff
+//  border-bottom: 2px solid #ddd
+//  margin-bottom: 16px
+//
+//.headerRow
+//  display: flex
+//  gap: 0
+//
+//.timeHeaderCell
+//  min-width: 100px
+//  flex-shrink: 0
+//
+//.dayHeader
+//  flex: 1
+//  min-width: 150px
+//  padding: 16px 12px
+//  text-align: center
+//  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)
+//  border-right: 1px solid #ddd
+//
+//  &:last-child
+//    border-right: none
+//
+//.weekday
+//  font-size: 16px
+//  font-weight: 600
+//  color: #2c3e50
+//  margin-bottom: 4px
+//
+//.date
+//  font-size: 14px
+//  color: #7f8c8d
+//  font-weight: 400
+//
+//.timeTable
+//  display: flex
+//  gap: 0
+//  max-height: 53.5rem
+//
+//.timeColumn
+//  min-width: 100px
+//  flex-shrink: 0
+//
+//.timeCell
+//  height: 90px
+//  padding: 12px
+//  display: flex
+//  flex-direction: column
+//  justify-content: center
+//  align-items: center
+//  border-bottom: 1px solid #ddd
+//  border-right: 2px solid #ddd
+//  background: #f8f9fa
+//
+//  &:last-child
+//    border-bottom: none
+//
+//.startTime
+//  font-size: 15px
+//  font-weight: 600
+//  color: #2c3e50
+//  margin-bottom: 4px
+//
+//.endTime
+//  font-size: 13px
+//  color: #7f8c8d
+//
+//.scheduleGrid
+//  flex: 1
+//  display: flex
+//  flex-direction: column
+//
+//.scheduleRow
+//  display: flex
+//  gap: 0
+//
+//  &:not(:last-child)
+//    border-bottom: 1px solid #ddd
+//
+//.scheduleCell
+//  flex: 1
+//  min-width: 150px
+//  height: 89px
+//  border-right: 1px solid #ddd
+//  position: relative
+//
+//  &:last-child
+//    border-right: none
+//
+//.emptyCell
+//  width: 100%
+//  height: 100%
+//  background: #f5f5f5
+//  border-radius: 4px
+//
+//.lessonCard
+//  width: 100%
+//  height: 100%
+//  padding: 12px
+//  background: #ffffff
+//  display: flex
+//  flex-direction: column
+//  justify-content: space-between
+//  transition: all 0.3s ease
+//  cursor: pointer
+//  position: relative
+//
+//  &__bg
+//    position: absolute
+//    // z-index: -1
+//    font-size: 20px
+//    color: #228b2266
+//    // color: #1e8fff43
+//    left: 50%
+//    top: 50%
+//    transform: translate(-50%, -50%)
+//    &.flow
+//
+//  &:hover
+//    background: #f8f9fa
+//    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1)
+//    transform: translateY(-2px)
+//
+//.lessonContent
+//  flex: 1
+//
+//.groupName
+//  font-size: 15px
+//  font-weight: 600
+//  color: #2c3e50
+//  margin-bottom: 6px
+//  line-height: 1.3
+//
+//.subjectName
+//  font-size: 14px
+//  color: #34495e
+//  margin-bottom: 6px
+//  line-height: 1.3
+//
+//.roomName
+//  font-size: 13px
+//  color: #7f8c8d
+//  font-weight: 500
+//
+//.slideCounter
+//  font-size: 12px
+//  color: #95a5a6
+//  text-align: center
+//  margin-top: 8px
+//  padding-top: 8px
+//  border-top: 1px solid #ecf0f1
+//
+//.swiperContainer
+//  width: 100%
+//  height: 100%
+//
+//  :global(.swiper-pagination)
+//    bottom: 4px
+//
+//  :global(.swiper-pagination-bullet)
+//    background: #3498db
+//    opacity: 0.5
+//
+//  :global(.swiper-pagination-bullet-active)
+//    opacity: 1
+//
+//.loaderContainer
+//  display: flex
+//  justify-content: center
+//  align-items: center
+//  min-height: 400px
+//  width: 100%
+//
+//.loader
+//  width: 48px
+//  height: 48px
+//  border: 4px solid #f3f3f3
+//  border-top: 4px solid #3498db
+//  border-radius: 50%
+//  animation: spin 1s linear infinite
+//
+//@keyframes spin
+//  0%
+//    transform: rotate(0deg)
+//  100%
+//    transform: rotate(360deg)
+//
+//.error
+//  padding: 40px
+//  text-align: center
+//  font-size: 16px
+//  color: #e74c3c
+//  background: #fef5f5
+//  border-radius: 8px
+//  border: 1px solid #f5c6cb
+//
+//// Responsive design
+//@media (max-width: 768px)
+//  .timeTableWrapper
+//    padding: 12px
+//
+//  .dayHeader
+//    min-width: 120px
+//    padding: 12px 8px
+//
+//  .scheduleCell
+//    min-width: 120px
+//
+//  .weekday
+//    font-size: 14px
+//
+//  .date
+//    font-size: 12px
+//
+//  .lessonCard
+//    padding: 8px
+//
+//  .groupName
+//    font-size: 14px
+//
+//  .subjectName
+//    font-size: 13px
+//
+//  .roomName
+//    font-size: 12px
+//
+//
+// ════════════════════════════════════════════════════════════
+//  Premium School Timetable — SASS Module
+// ════════════════════════════════════════════════════════════
 
-.timeTableWrapper
+// ── Design Tokens ────────────────────────────────────────────
+$bg:          #f6f8fc
+$surface:     #ffffff
+$surface-glass: rgba(255, 255, 255, 0.85)
+$border:      rgba(0, 0, 0, 0.06)
+$border-em:   rgba(0, 0, 0, 0.1)
+$text-primary:   #111827
+$text-secondary: #6b7280
+$text-tertiary:  #9ca3af
+$today-bg:    rgba(99, 102, 241, 0.04)
+$today-border: rgba(99, 102, 241, 0.25)
+$radius-card: 14px
+$radius-sm:   8px
+$cell-h:      96px
+$time-w:      80px
+$day-min-w:   148px
+$shadow-card: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)
+$shadow-hover: 0 8px 24px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)
+$transition:  all 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+// ── Scrollbar ────────────────────────────────────────────────
+\::-webkit-scrollbar
+  width: 6px
+  height: 6px
+\::-webkit-scrollbar-track
+  background: transparent
+\::-webkit-scrollbar-thumb
+  background: rgba(0,0,0,0.12)
+  border-radius: 99px
+  &:hover
+    background: rgba(0,0,0,0.2)
+
+// ── Wrapper ──────────────────────────────────────────────────
+.wrapper
   width: 100%
-  padding: 20px
-  background: #ffffff
-  border-radius: 12px
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08)
-  overflow-x: auto
+  background: $bg
+  border-radius: 20px
+  overflow: hidden
+  border: 1px solid $border-em
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06)
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif
 
+// ── Sticky Header Portal ──────────────────────────────────────
 .headerPortal
   position: sticky
   top: 0
-  z-index: 100
-  background: #ffffff
-  border-bottom: 2px solid #ddd
-  margin-bottom: 16px
+  z-index: 20
+  background: rgba(246, 248, 252, 0.9)
+  backdrop-filter: blur(16px)
+  -webkit-backdrop-filter: blur(16px)
+  border-bottom: 1px solid $border-em
 
 .headerRow
   display: flex
-  gap: 0
+  align-items: stretch
 
 .timeHeaderCell
-  min-width: 100px
+  width: $time-w
   flex-shrink: 0
+  border-right: 1px solid $border-em
 
 .dayHeader
   flex: 1
-  min-width: 150px
-  padding: 16px 12px
-  text-align: center
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)
-  border-right: 1px solid #ddd
-  
+  min-width: $day-min-w
+  padding: 14px 10px
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 5px
+  border-right: 1px solid $border
+  position: relative
+  transition: $transition
+  cursor: default
+
   &:last-child
     border-right: none
 
-.weekday
-  font-size: 16px
+  &:hover
+    background: rgba(0,0,0,0.02)
+
+.todayHeader
+  background: $today-bg
+
+.weekdayLabel
+  font-size: 11px
   font-weight: 600
-  color: #2c3e50
-  margin-bottom: 4px
+  letter-spacing: 0.06em
+  text-transform: uppercase
+  color: $text-secondary
 
-.date
-  font-size: 14px
-  color: #7f8c8d
-  font-weight: 400
+.dateChip
+  font-size: 18px
+  font-weight: 700
+  color: $text-primary
+  line-height: 1
 
-.timeTable
-  display: flex
-  gap: 0
-  max-height: 53.5rem
+.todayChip
+  color: #6366f1
 
-.timeColumn
-  min-width: 100px
+.todayDot
+  width: 5px
+  height: 5px
+  border-radius: 50%
+  background: #6366f1
   flex-shrink: 0
 
+// ── Table Body ────────────────────────────────────────────────
+.tableBody
+  display: flex
+  overflow-x: auto
+  overflow-y: auto
+  max-height: 620px
+  scrollbar-width: thin
+
+// ── Time Column ──────────────────────────────────────────────
+.timeColumn
+  width: $time-w
+  flex-shrink: 0
+  position: sticky
+  left: 0
+  z-index: 10
+  background: $bg
+  border-right: 1px solid $border-em
+
 .timeCell
-  height: 90px
-  padding: 12px
+  height: $cell-h
   display: flex
   flex-direction: column
   justify-content: center
   align-items: center
-  border-bottom: 1px solid #ddd
-  border-right: 2px solid #ddd
-  background: #f8f9fa
-  
+  gap: 2px
+  padding: 10px 8px
+  border-bottom: 1px solid $border
+  position: relative
+  transition: $transition
+
   &:last-child
     border-bottom: none
 
-.startTime
-  font-size: 15px
+.timeCellBreak
+  height: 52px
+  background: rgba(0,0,0,0.015)
+  opacity: 0.7
+
+.timeCellCurrent
+  background: rgba(99, 102, 241, 0.06)
+
+.timeStart
+  font-size: 12px
+  font-weight: 700
+  color: $text-primary
+  letter-spacing: -0.01em
+
+.timeEnd
+  font-size: 10px
+  color: $text-tertiary
+  font-weight: 500
+
+.breakLabel
+  font-size: 9px
   font-weight: 600
-  color: #2c3e50
-  margin-bottom: 4px
+  color: $text-tertiary
+  text-transform: uppercase
+  letter-spacing: 0.08em
+  text-align: center
+  line-height: 1.3
 
-.endTime
-  font-size: 13px
-  color: #7f8c8d
+.currentTimeLine
+  position: absolute
+  bottom: 0
+  left: 0
+  right: 0
+  height: 2px
+  background: linear-gradient(90deg, #6366f1, #8b5cf6)
+  border-radius: 99px
+  z-index: 5
 
+// ── Schedule Grid ─────────────────────────────────────────────
 .scheduleGrid
   flex: 1
   display: flex
@@ -307,156 +649,312 @@
 
 .scheduleRow
   display: flex
-  gap: 0
-  
-  &:not(:last-child)
-    border-bottom: 1px solid #ddd
+  border-bottom: 1px solid $border
+
+  &:last-child
+    border-bottom: none
+
+.scheduleRowBreak
+  .scheduleCell
+    height: 52px
+
+
+.scheduleRowCurrent
+  background: rgba(99, 102, 241, 0.015)
 
 .scheduleCell
   flex: 1
-  min-width: 150px
-  height: 89px
-  border-right: 1px solid #ddd
-  position: relative
-  
+  min-width: $day-min-w
+  height: $cell-h
+  border-right: 1px solid $border
+  overflow: hidden
+  padding: 8px
+
   &:last-child
     border-right: none
 
+.scheduleCellToday
+  background: $today-bg
+  border-right-color: $today-border
+
+.scheduleCellBreak
+  height: 52px
+  padding: 4px
+
+// ── Empty Cell ────────────────────────────────────────────────
 .emptyCell
   width: 100%
   height: 100%
-  background: #f5f5f5
-  border-radius: 4px
+  border-radius: $radius-sm
+  background-image: radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px)
+  background-size: 14px 14px
+  transition: $transition
+  &:hover
+    background-color: rgba(99,102,241,0.03)
 
+.emptyCellBreak
+  background-image: none
+  background: transparent
+
+// ── Lesson Card ───────────────────────────────────────────────
 .lessonCard
   width: 100%
   height: 100%
-  padding: 12px
-  background: #ffffff
+  padding: 8px 9px 7px
+  border-radius: $radius-card
+  background: $surface-glass
+  backdrop-filter: blur(8px)
+  box-shadow: $shadow-card
+  border: 1px solid rgba(255,255,255,0.7)
   display: flex
   flex-direction: column
-  justify-content: space-between
-  transition: all 0.3s ease
+  gap: 3px
   cursor: pointer
+  transition: $transition
   position: relative
+  overflow: hidden
 
-  &__bg
-    position: absolute
-    // z-index: -1
-    font-size: 20px
-    color: #228b2266
-    // color: #1e8fff43
-    left: 50%
-    top: 50%
-    transform: translate(-50%, -50%)
-    &.flow
-  
   &:hover
-    background: #f8f9fa
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1)
-    transform: translateY(-2px)
+    box-shadow: $shadow-hover
+    border-color: var(--accent, rgba(99,102,241,0.3))
+    background: $surface
 
-.lessonContent
-  flex: 1
+.cardAccentBar
+  position: absolute
+  left: 0
+  top: 0
+  bottom: 0
+  width: 3px
+  background: var(--accent, #6366f1)
+  border-radius: 2px 0 0 2px
 
-.groupName
-  font-size: 15px
-  font-weight: 600
-  color: #2c3e50
-  margin-bottom: 6px
-  line-height: 1.3
+.cardTop
+  display: flex
+  align-items: flex-start
+  justify-content: space-between
+  gap: 4px
 
-.subjectName
+.subjectChip
+  font-size: 11px
+  font-weight: 700
+  color: var(--accent, #6366f1)
+  background: var(--accent-bg, rgba(99,102,241,0.08))
+  padding: 2px 7px
+  border-radius: 99px
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  max-width: calc(100% - 30px)
+  line-height: 1.5
+
+.avatar
+  width: 22px
+  height: 22px
+  border-radius: 50%
+  font-size: 8px
+  font-weight: 800
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-shrink: 0
+  letter-spacing: 0.02em
+
+.teacherName
   font-size: 14px
-  color: #34495e
-  margin-bottom: 6px
-  line-height: 1.3
-
-.roomName
-  font-size: 13px
-  color: #7f8c8d
   font-weight: 500
+  color: $text-primary
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  flex: 1
+  line-height: 1.3
+  padding-left: 2px
 
-.slideCounter
-  font-size: 12px
-  color: #95a5a6
-  text-align: center
-  margin-top: 8px
-  padding-top: 8px
-  border-top: 1px solid #ecf0f1
+.cardBottom
+  display: flex
+  align-items: center
+  justify-content: space-between
+  gap: 3px
+  margin-top: auto
 
+.roomPill,
+.typePill
+  display: inline-flex
+  align-items: center
+  gap: 3px
+  font-size: 14px
+  font-weight: 600
+  padding: 2px 6px
+  border-radius: 99px
+  line-height: 1.4
+  letter-spacing: 0.01em
+
+.roomPill
+  background: rgba(0,0,0,0.04)
+  color: $text-secondary
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  max-width: 60%
+
+.classPill
+  background: rgba(16, 185, 129, 0.1)
+  color: #059669
+
+.flowPill
+  background: rgba(245, 158, 11, 0.1)
+  color: #d97706
+
+// ── Current lesson highlight ─────────────────────────────────
+.currentLesson
+  border: 1.5px solid var(--accent, #6366f1)
+  box-shadow: 0 0 0 2px var(--accent-bg), $shadow-card
+
+.liveIndicator
+  position: absolute
+  top: 5px
+  right: 7px
+  display: flex
+  align-items: center
+  gap: 3px
+  font-size: 8px
+  font-weight: 700
+  color: #ef4444
+  letter-spacing: 0.04em
+
+  span
+    width: 5px
+    height: 5px
+    border-radius: 50%
+    background: #ef4444
+    animation: pulse 1.5s ease-in-out infinite
+
+@keyframes pulse
+  0%, 100%
+    opacity: 1
+    transform: scale(1)
+  50%
+    opacity: 0.5
+    transform: scale(0.8)
+
+// ── Swiper ────────────────────────────────────────────────────
 .swiperContainer
   width: 100%
   height: 100%
-  
+
   :global(.swiper-pagination)
-    bottom: 4px
-    
+    top: 60px
+
   :global(.swiper-pagination-bullet)
-    background: #3498db
-    opacity: 0.5
-    
-  :global(.swiper-pagination-bullet-active)
+    width: 8px
+    height: 4px
+    background: $text-tertiary
     opacity: 1
+    transition: $transition
 
-.loaderContainer
-  display: flex
-  justify-content: center
-  align-items: center
-  min-height: 400px
-  width: 100%
+  :global(.swiper-pagination-bullet-active)
+    background: #6366f1
+    width: 12px
+    border-radius: 99px
 
-.loader
-  width: 48px
-  height: 48px
-  border: 4px solid #f3f3f3
-  border-top: 4px solid #3498db
-  border-radius: 50%
-  animation: spin 1s linear infinite
-
-@keyframes spin
+// ── Skeleton ──────────────────────────────────────────────────
+@keyframes shimmer
   0%
-    transform: rotate(0deg)
+    background-position: -600px 0
   100%
-    transform: rotate(360deg)
+    background-position: 600px 0
 
-.error
-  padding: 40px
-  text-align: center
-  font-size: 16px
-  color: #e74c3c
-  background: #fef5f5
+%skeleton-base
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 37%, #f0f0f0 63%)
+  background-size: 600px 100%
+  animation: shimmer 1.4s ease infinite
   border-radius: 8px
-  border: 1px solid #f5c6cb
 
-// Responsive design
+.skeletonWrap
+  padding: 16px
+  display: flex
+  flex-direction: column
+  gap: 8px
+  background: $bg
+  border-radius: 20px
+  min-height: 400px
+
+.skeletonHeader
+  display: flex
+  gap: 8px
+  margin-bottom: 4px
+  padding-bottom: 12px
+  border-bottom: 1px solid $border-em
+
+.skeletonDay
+  @extend %skeleton-base
+  flex: 1
+  height: 44px
+  min-width: 100px
+
+.skeletonRow
+  display: flex
+  gap: 8px
+  align-items: center
+
+.skeletonTime
+  @extend %skeleton-base
+  width: 72px
+  height: 80px
+  flex-shrink: 0
+
+.skeletonCell
+  @extend %skeleton-base
+  flex: 1
+  height: 80px
+  min-width: 100px
+  background: #f7f7f7
+  background-size: 0 0
+  animation: none
+
+.skeletonFilled
+  @extend %skeleton-base
+
+// ── Empty state ───────────────────────────────────────────────
+.emptyState
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 12px
+  min-height: 360px
+  color: $text-tertiary
+  font-size: 15px
+
+  svg
+    opacity: 0.3
+
+// ── Responsive ───────────────────────────────────────────────
 @media (max-width: 768px)
-  .timeTableWrapper
-    padding: 12px
-    
+  .timeColumn
+    width: 60px
+
+  .timeHeaderCell
+    width: 60px
+
   .dayHeader
-    min-width: 120px
-    padding: 12px 8px
-    
+    min-width: 110px
+    padding: 10px 6px
+
   .scheduleCell
-    min-width: 120px
-    
-  .weekday
-    font-size: 14px
-    
-  .date
-    font-size: 12px
-    
+    min-width: 110px
+
+  .weekdayLabel
+    font-size: 10px
+
+  .dateChip
+    font-size: 15px
+
   .lessonCard
-    padding: 8px
-    
-  .groupName
-    font-size: 14px
-    
-  .subjectName
-    font-size: 13px
-    
-  .roomName
-    font-size: 12px
+    padding: 6px 7px
 
+  .subjectChip
+    font-size: 10px
 
+  .teacherName
+    font-size: 10px

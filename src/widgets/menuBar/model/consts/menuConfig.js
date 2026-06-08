@@ -73,7 +73,7 @@ export const menuConfig = [
         to: "surveyResults",
         name: "So'rovnoma natijalari",
         icon: "fa-list",
-        roles: [ROLES.admin, ROLES.programmer, ROLES.director, ROLES.main_director]
+        roles: [ROLES.spiritualist, ROLES.director, ROLES.main_director]
     },
     {
         to: "teacherRating",
@@ -293,14 +293,14 @@ export const menuConfig = [
         branches: true
 
     },
-    {
-        to: "observeStatic",
-        name: "Observe Statistika",
-        icon: "fa-toolbox",
-        roles: [ROLES.spiritualist],
-        branches: true
-
-    },
+    // {
+    //     to: "observeStatic",
+    //     name: "Observe Statistika",
+    //     icon: "fa-toolbox",
+    //     roles: [ROLES.spiritualist],
+    //     branches: true
+    //
+    // },
     {
         to: "teacherStatistics",
         name: "TeacherStatistics",
