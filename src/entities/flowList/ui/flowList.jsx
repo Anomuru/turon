@@ -31,7 +31,6 @@ export const FlowList = memo(({flowList, number, onChangeSingle, onChangeAll, cu
                             type={"checkbox"}
                             onChange={() => onChangeSingle(item?.id, flowList?.id)}
                             checked={item?.isCheck ? item?.isCheck : flowList?.isCheck}
-                            disabled={item?.extra_info ? !item?.extra_info?.status : false}
                         />
                         {
                             item?.extra_info ?

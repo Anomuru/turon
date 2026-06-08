@@ -94,6 +94,8 @@ const STATUS_PERMISSIONS = {
     },
 }
 
+const INITIAL_STATUS = "not_started"
+
 // ==================== UTILITY FUNCTIONS ====================
 
 const sortTasks = (data) => {
@@ -136,29 +138,47 @@ const getDeadlineBackground = (task) => {
         yellow: "rgba(255, 255, 0, 0.2)"
     }
 
-    return { background: backgrounds[task.deadline_color] } || null
+    return backgrounds[task.deadline_color] ? { background: backgrounds[task.deadline_color] } : null
 }
 
 const getAvailableStatuses = (currentStatus, userRole, statusList) => {
     const permissions = STATUS_PERMISSIONS[userRole]
 
-    if (!permissions || !permissions[currentStatus]) {
+    if (!permissions) {
         return []
     }
 
-    const allowedStatusIds = permissions[currentStatus]
-    return statusList.filter(status => allowedStatusIds.includes(status.id))
+    const allowedStatusIds = new Set(permissions[currentStatus] || [])
+
+    if (currentStatus !== INITIAL_STATUS) {
+        allowedStatusIds.add(INITIAL_STATUS)
+    }
+
+    return statusList.filter(status => allowedStatusIds.has(status.id))
+}
+
+const getEntityId = (entity) => {
+    if (entity === null || entity === undefined) return null
+    if (typeof entity === "object") return entity.id ?? entity.user_id ?? null
+    return entity
+}
+
+const isSameId = (firstId, secondId) => {
+    const first = getEntityId(firstId)
+    const second = getEntityId(secondId)
+
+    return first !== null && second !== null && String(first) === String(second)
 }
 
 const getUserRoleForTask = (task, userId) => {
     // Если пользователь создатель, возвращаем "creator" для полного доступа
-    if (task.creator?.id === userId || task.creator === userId) {
+    if (isSameId(task.creator, userId)) {
         return "creator"
     }
-    if (task.executor?.id === userId || task.executor === userId) {
+    if (isSameId(task.executor, userId)) {
         return "executor"
     }
-    if (task.reviewer?.id === userId || task.reviewer === userId) {
+    if (isSameId(task.reviewer, userId)) {
         return "reviewer"
     }
     return null
@@ -461,7 +481,7 @@ export const TodoistPage = () => {
         const post = {
             ...formData,
             tags: formData.tags.map(item => item.value),
-            executor_ids: !!formData.executor_ids.length ? formData.executor_ids.map(item => item.value) : [userId],
+            executor_ids: formData.executor_ids.length ? formData.executor_ids.map(item => item.value) : [userId],
             ...repeat,
             branch: userBranchId
         }
@@ -549,8 +569,7 @@ export const TodoistPage = () => {
     const handleChangeStatus = () => {
         dispatch(taskLoading())
         request(`${API_URL}Tasks/missions/${formData.id}/`, "PATCH", JSON.stringify({
-            status: formData.status,
-            executor_ids: [formData.is_redirected ? formData.redirected_by.id : formData.executor.id]
+            status: formData.status
         }), headers())
             .then(res => {
                 request(`${API_URL}Tasks/missions/${res.id}/`, "GET", null, headers())
@@ -1016,7 +1035,7 @@ export const TodoistPage = () => {
                                                     ? `${task.executor.full_name} +${task.children?.length - 1}`
                                                     : task.executor?.full_name}
                                             </p>
-                                            {(task.is_redirected && task.executor.id !== task.redirected_by?.id) && (
+                                            {(task.is_redirected && !isSameId(task.executor, task.redirected_by)) && (
                                                 <p className={styles.cardText}>
                                                     <strong>Redirected:</strong> {task.redirected_by.full_name}
                                                 </p>
@@ -1061,7 +1080,7 @@ export const TodoistPage = () => {
                                                 >
                                                     View More
                                                 </button>
-                                                {(task.creator?.id === userId && !task?.management_id) && (
+                                                {(isSameId(task.creator, userId) && !task?.management_id) && (
                                                     (activeTaskType === "givenTask" && task?.children?.length > 1) ? null : (
                                                         <>
                                                             <button
@@ -1382,18 +1401,18 @@ export const TodoistPage = () => {
                                     </div>
                                     <div>
                                         <strong>Creator:</strong>
-                                        <p>{!!selectedTask.management_id ? "Boshqarma" : selectedTask.creator.full_name}</p>
+                                        <p>{selectedTask.management_id ? "Boshqarma" : selectedTask.creator.full_name}</p>
                                     </div>
                                     <div>
-                                        <strong>Executor {(selectedTask.is_redirected && selectedTask.executor.id !== selectedTask?.redirected_by?.id) ? "(Redirected)" : null}:</strong>
+                                        <strong>Executor {(selectedTask.is_redirected && !isSameId(selectedTask.executor, selectedTask?.redirected_by)) ? "(Redirected)" : null}:</strong>
                                         <p>{selectedTask.executor.full_name}</p>
-                                        {(selectedTask.is_redirected && selectedTask.executor.id !== selectedTask?.redirected_by?.id) && (
+                                        {(selectedTask.is_redirected && !isSameId(selectedTask.executor, selectedTask?.redirected_by)) && (
                                             <p>({selectedTask?.redirected_by?.full_name})</p>
                                         )}
                                     </div>
                                     <div>
                                         <strong>Reviewer:</strong>
-                                        <p>{!!selectedTask.management_id ? selectedTask.reviewer_name : selectedTask.reviewer.full_name}</p>
+                                        <p>{selectedTask.management_id ? selectedTask.reviewer_name : selectedTask.reviewer.full_name}</p>
                                     </div>
                                     <div>
                                         <strong>Deadline:</strong>
@@ -1550,7 +1569,7 @@ export const TodoistPage = () => {
                                                         <div className={styles.nestedItem__header}>
                                                             <div className={styles.info}>
                                                                 <p className={styles.btns__title}>{com.created_at}</p>
-                                                                {com.user?.id === userId || com.user === userId ? (
+                                                                {isSameId(com.user, userId) ? (
                                                                     <div className={classNames(styles.nestedActions, styles.btns)}>
                                                                         <button
                                                                             className={styles.btnSmallEdit}

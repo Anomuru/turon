@@ -3,6 +3,7 @@ import {fetchFlows, getFlows} from "entities/flows";
 import {
     getFlowsProfileData,
     getFlowsProfileFilteredStudents, getFlowsProfileFilteredTeachers, getFlowsProfileTeacherLoading,
+    getFlowsProfileStatus,
 } from "entities/flowsProfile/model/flowsProfileSelector";
 import {
     changeFlowProfile,
@@ -34,6 +35,7 @@ import {getBranch} from "../../branchSwitcher";
 import {fetchFlowsSelect} from "entities/flows/model/slice/flowsThunk.js";
 import {getFlowsSelect} from "entities/flows/model/selector/flowsSelector.js";
 import {DefaultPageLoader} from "shared/ui/defaultLoader/index.js";
+import {MiniLoader} from "shared/ui/miniLoader";
 import {fetchTeachersData, getTeacherData} from "entities/oftenUsed/index.js";
 
 export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loading}) => {
@@ -50,6 +52,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
     const data = useSelector(getFlowsProfileData)
     const flows = useSelector(getFlowsSelect)
     const filteredStudents = useSelector(getFlowsProfileFilteredStudents)
+    const filteredLoading = useSelector(getFlowsProfileStatus)
     // const filteredTeachers = useSelector(getFlowsProfileFilteredTeachers)
     const branch = useSelector(getUserBranchId)
     const teachData = useSelector(getTeacherData)
@@ -294,7 +297,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
         setSelectedId(prev => {
             if (prev.filter(i => i?.classId === +classId)[0]) {
                 return prev.map(i => {
-                    if (i?.classId === classId) {
+                    if (i?.classId === +classId) {
                         return {
                             classId: i.classId,
                             students: i.students.includes(+studentId)
@@ -303,7 +306,7 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
                                 :
                                 [...i.students, +studentId]
                         }
-                    }
+                    } else return i
                 })
             } else return [...prev, {
                 classId: +classId,
@@ -476,21 +479,8 @@ export const FlowProfileStudentsForm = ({activeTeacher, setActiveTeacher , loadi
                         <span>Sinf Raqami</span>
                     </div>
                 </div>
-                <div className={cls.addModal__container}>
-                    {/*<Table>*/}
-                    {/*    <thead>*/}
-                    {/*    <tr>*/}
-                    {/*        <th/>*/}
-                    {/*        <th>Ism</th>*/}
-                    {/*        <th>Familya</th>*/}
-                    {/*        <th>Tel</th>*/}
-                    {/*        <th/>*/}
-                    {/*    </tr>*/}
-                    {/*    </thead>*/}
-                    {/*    <tbody>*/}
-                    {renderFlow}
-                    {/*    </tbody>*/}
-                    {/*</Table>*/}
+                <div className={classNames(cls.addModal__container, {[cls.addModal__containerLoading]: filteredLoading})}>
+                    {filteredLoading ? <MiniLoader/> : renderFlow}
                 </div>
                 <Button
                     extraClass={cls.addModal__btn}
