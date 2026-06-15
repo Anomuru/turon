@@ -289,7 +289,7 @@ export const GroupProfileQuarter = () => {
                                             <td>{item.name} {item.surname}</td>
                                             <td>
                                                 <Input
-                                                    disabled={item.assignment?.is_editable === false ? "disabled" : ""}
+                                                    // disabled={item.assignment?.is_editable === false ? "disabled" : ""}
                                                     extraClassName={styles.input}
                                                     type="number"
                                                     value={percentage === 0 ? "" : Number(percentage)}
