@@ -252,6 +252,7 @@ export const GroupQuarterShow = () => {
     }, [selectQuarter, selectAcademicYear , subjectSelect])
     const subjectsForDashboard = useMemo(() => getSubjectsSummary(data), [data]);
 
+    console.log(getSubjectsSummary(data))
     const handleSelectSubject = (sub) => {
         setSelectedSubjectName(sub.name);
         setView('detail');

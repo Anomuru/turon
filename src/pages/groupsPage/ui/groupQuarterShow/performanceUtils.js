@@ -20,30 +20,30 @@ export const calculateMean = (arr) => {
  * @param {Array} studentsData 
  * @returns {Array} List of subjects with median scores
  */
-export const getSubjectsSummary = (studentsData) => {
-    if (!studentsData || studentsData.length === 0) return [];
-    
-    const subjectMap = {};
+    export const getSubjectsSummary = (studentsData) => {
+        if (!studentsData || studentsData.length === 0) return [];
 
-    studentsData.forEach(student => {
-        student.subjects.forEach(subject => {
-            if (!subjectMap[subject.subject_name]) {
-                subjectMap[subject.subject_name] = {
-                    name: subject.subject_name,
-                    scores: []
-                };
-            }
-            subjectMap[subject.subject_name].scores.push(subject.average_result);
+        const subjectMap = {};
+
+        studentsData.forEach(student => {
+            student.subjects.forEach(subject => {
+                if (!subjectMap[subject.subject_name]) {
+                    subjectMap[subject.subject_name] = {
+                        name: subject.subject_name,
+                        scores: []
+                    };
+                }
+                subjectMap[subject.subject_name].scores.push(subject.average_result);
+            });
         });
-    });
 
-    return Object.values(subjectMap).map(sub => ({
-        id: sub.name,
-        name: sub.name,
-        median: calculateMedian(sub.scores),
-        average: calculateMean(sub.scores)
-    }));
-};
+        return Object.values(subjectMap).map(sub => ({
+            id: sub.name,
+            name: sub.name,
+            median: calculateMedian(sub.scores),
+            average: calculateMean(sub.scores)
+        }));
+    };
 
 /**
  * Calculates student rankings based on mean of all subjects

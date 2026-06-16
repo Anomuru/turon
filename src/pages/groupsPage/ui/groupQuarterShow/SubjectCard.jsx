@@ -11,6 +11,7 @@ import cls from './SubjectCard.module.sass';
  */
 export const SubjectCard = ({ subject, onClick }) => {
   const { name, median } = subject;
+
   // Determine mastery color
   const getColorClass = (val) => {
     if (val >= 80) return cls.green;

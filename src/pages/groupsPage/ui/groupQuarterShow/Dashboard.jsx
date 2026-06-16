@@ -9,6 +9,7 @@ import cls from './Dashboard.module.sass';
  * - onSelect: function(subject) called when a card is clicked
  */
 export const Dashboard = ({ subjects, onSelect, onShowStats }) => {
+
   return (
     <div className={cls.dashboardContainer}>
       <div className={cls.header}>
