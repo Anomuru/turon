@@ -26,7 +26,7 @@ import {
     getObservationShowPage,
     getTeacherStatistics,
     getLessonPlanDailyReport,
-    getLessonPlanDetail, getSchoolMenu, getTeacherItem,
+    getLessonPlanDetail, getSchoolMenu, getTeacherItem, getLeadFromSteam,
 
 } from "shared/const/routers";
 import { lazyPage } from "shared/lib/lazyPage/lazyPage.js";
@@ -36,6 +36,7 @@ import { HomeMessages } from "pages/homeMessages/index.js";
 import { NewsPage } from "pages/newsPage/newsPage.jsx";
 import {SchoolItem} from "pages/shortMenuData/schoolItem/schoolItem.jsx";
 import {ShortTeacherData} from "pages/shortMenuData/teacher/shortTeacherData.jsx";
+import SteamLead from "pages/steamLead/steamLead.jsx";
 
 
 const StudentsPage = lazyPage(() => import("pages/studentsPage"), "StudentsPage");
@@ -118,6 +119,11 @@ export const routersConfigList = [
         name: "Vakansiyalar",
         path: getVacancyPage(":idBranch"),
         element: <VacancyPage />,
+    },
+    {
+        name: "Vakansiyalar",
+        path: getLeadFromSteam(":idBranch"),
+        element: <SteamLead />,
     },
     {
 
