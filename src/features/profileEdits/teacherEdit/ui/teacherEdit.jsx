@@ -117,7 +117,7 @@ export const TeacherEdit = ({isOpen, onClose, onUpdate, teacherId}) => {
                 name,
                 surname,
                 phone,
-                age,
+                birth_date: age,
                 // username,
                 father_name: fatherName
             },
