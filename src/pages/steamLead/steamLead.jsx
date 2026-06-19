@@ -55,10 +55,10 @@ function formatCreated(iso) {
 }
 
 export default function SteamLead({
-                                               branches = BRANCHES,
-                                               apiEndpoint = API_ENDPOINT,
-                                               authToken = null,
-                                           } = {}) {
+                                      branches = BRANCHES,
+                                      apiEndpoint = API_ENDPOINT,
+                                      authToken = null,
+                                  } = {}) {
     const [filters, setFilters] = useState(initialFilters);
     const [searchInput, setSearchInput] = useState("");
     const [offset, setOffset] = useState(0);
@@ -171,24 +171,24 @@ export default function SteamLead({
                         />
                     </div>
 
-                        {/*<div className={styles.filterGroup}>*/}
-                        {/*    <label className={styles.filterLabel} htmlFor="branch">*/}
-                        {/*        Filial*/}
-                        {/*    </label>*/}
-                        {/*    <select*/}
-                        {/*        id="branch"*/}
-                        {/*        className={styles.filterInput}*/}
-                        {/*        value={filters.branch}*/}
-                        {/*        onChange={(e) => updateFilter("branch", e.target.value)}*/}
-                        {/*    >*/}
-                        {/*        <option value="">Barchasi</option>*/}
-                        {/*        {branches.map((branch) => (*/}
-                        {/*            <option value={branch.id} key={branch.id}>*/}
-                        {/*                {branch.name}*/}
-                        {/*            </option>*/}
-                        {/*        ))}*/}
-                        {/*    </select>*/}
-                        {/*</div>*/}
+                    {/*<div className={styles.filterGroup}>*/}
+                    {/*    <label className={styles.filterLabel} htmlFor="branch">*/}
+                    {/*        Filial*/}
+                    {/*    </label>*/}
+                    {/*    <select*/}
+                    {/*        id="branch"*/}
+                    {/*        className={styles.filterInput}*/}
+                    {/*        value={filters.branch}*/}
+                    {/*        onChange={(e) => updateFilter("branch", e.target.value)}*/}
+                    {/*    >*/}
+                    {/*        <option value="">Barchasi</option>*/}
+                    {/*        {branches.map((branch) => (*/}
+                    {/*            <option value={branch.id} key={branch.id}>*/}
+                    {/*                {branch.name}*/}
+                    {/*            </option>*/}
+                    {/*        ))}*/}
+                    {/*    </select>*/}
+                    {/*</div>*/}
 
                     <div className={styles.filterGroup}>
                         <label className={styles.filterLabel} htmlFor="dateFrom">
