@@ -252,7 +252,7 @@ export default function SteamLead({
                             <thead>
                             <tr>
                                 <th scope="col" className={styles.thId}>
-                                    ID
+                                    No
                                 </th>
                                 <th scope="col">Ism</th>
                                 <th scope="col">Familiya</th>
@@ -262,9 +262,9 @@ export default function SteamLead({
                             </tr>
                             </thead>
                             <tbody>
-                            {results.map((row) => (
+                            {results.map((row , index) => (
                                 <tr key={row.id}>
-                                    <td className={styles.cellMono}>{row.id}</td>
+                                    <td className={styles.cellMono}>{index  + 1}</td>
                                     <td>{row.name}</td>
                                     <td>{row.surname}</td>
                                     <td className={styles.cellMono}>
