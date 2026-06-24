@@ -76,7 +76,7 @@ const CertificateDownload = memo(({ studentId }) => {
                 headers: headers(),
             });
 
-            if (!pdfRes.ok) throw new Error("PDF yuklab olishda xatolik");
+            if (!pdfRes.ok) throw new Error("PDF yuklab olishda xatolik yuz berdi");
 
             const blob = await pdfRes.blob();
             const url = URL.createObjectURL(blob);
