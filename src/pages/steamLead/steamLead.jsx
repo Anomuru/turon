@@ -7,7 +7,7 @@ import {API_URL} from "shared/api/base.js";
  *
  * Backend hujjatiga mos:
  *   GET /api/website-sources/admin/registrations/
- *   ?branch=&search=&date_from=&date_to=&ordering=-created&limit=&offset=
+ *   ?branch=&search=&type=&date_from=&date_to=&ordering=-created&limit=&offset=
  *
  * ESLATMA: bu endpoint admin uchun, demak autentifikatsiya talab qiladi.
  * Aniq usul (Bearer token / cookie session) hujjatda yozilmagan, shu sababli
@@ -27,6 +27,7 @@ const PAGE_SIZE_OPTIONS = [20, 30, 50 , 70 , 100];
 const initialFilters = {
     search: "",
     branch: "",
+    type: "",
     dateFrom: "",
     dateTo: "",
     ordering: "-created",
@@ -90,6 +91,7 @@ export default function SteamLead({
             const params = new URLSearchParams();
             if (filters.search) params.set("search", filters.search);
             if (branchId) params.set("branch", branchId);
+            if (filters.type) params.set("typee", filters.type);
             if (filters.dateFrom) params.set("date_from", filters.dateFrom);
             if (filters.dateTo) params.set("date_to", filters.dateTo);
             params.set("ordering", filters.ordering);
@@ -169,6 +171,22 @@ export default function SteamLead({
                             value={searchInput}
                             onChange={(e) => setSearchInput(e.target.value)}
                         />
+                    </div>
+
+                    <div className={styles.filterGroup}>
+                        <label className={styles.filterLabel} htmlFor="type">
+                            Type
+                        </label>
+                        <select
+                            id="type"
+                            className={styles.filterInput}
+                            value={filters.type}
+                            onChange={(e) => updateFilter("type", e.target.value)}
+                        >
+                            <option value="">Barchasi</option>
+                            <option value="turon">Turon</option>
+                            <option value="steam">Steam</option>
+                        </select>
                     </div>
 
                     {/*<div className={styles.filterGroup}>*/}
@@ -258,6 +276,7 @@ export default function SteamLead({
                                 <th scope="col">Familiya</th>
                                 <th scope="col">Telefon</th>
                                 <th scope="col">Filial</th>
+                                <th scope="col">Type</th>
                                 <th scope="col">Sana</th>
                             </tr>
                             </thead>
@@ -271,6 +290,7 @@ export default function SteamLead({
                                         {formatPhoneDisplay(row.phone)}
                                     </td>
                                     <td>{row.branch_name}</td>
+                                    <td>{row.type}</td>
                                     <td className={styles.cellMono} title={row.created}>
                                         {formatCreated(row.created)}
                                     </td>
@@ -279,7 +299,7 @@ export default function SteamLead({
 
                             {!isLoading && results.length === 0 && status === "success" && (
                                 <tr>
-                                    <td className={styles.emptyCell} colSpan={6}>
+                                    <td className={styles.emptyCell} colSpan={7}>
                                         Hozircha arizalar yo'q. Filtrlarni o'zgartirib ko'ring.
                                     </td>
                                 </tr>
